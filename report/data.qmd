@@ -1,0 +1,11 @@
+# Data
+
+```{r, echo = FALSE, message = FALSE}
+source(here::here("scripts/setup.R"))
+```
+
+* Sources
+* Description
+* Wrangling/cleaning
+* Spotting mistakes and missing data (could be part of EDA too)
+* Listing anomalies and outliers (could be part of EDA too)

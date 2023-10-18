@@ -1,0 +1,11 @@
+# Exploratory data analysis
+
+```{r, echo = FALSE, message = FALSE}
+source(here::here("scripts/setup.R"))
+```
+
+* Mapping out the underlying structure
+* Identifying the most important variables
+* Univariate visualizations
+* Multivariate visualizations
+* Summary tables

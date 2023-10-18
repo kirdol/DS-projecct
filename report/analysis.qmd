@@ -1,0 +1,10 @@
+# Analysis
+
+```{r, echo = FALSE, message = FALSE}
+source(here::here("scripts/setup.R"))
+```
+
+* Answers to the research questions
+* Different methods considered
+* Competing approaches
+* Justifications

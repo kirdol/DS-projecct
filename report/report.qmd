@@ -1,0 +1,9 @@
+---
+title: "A cool title"
+author: "Name I, First Name I and Name II, First Name II"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+```{r child = c('intro.qmd', 'data.qmd', 'eda.qmd', 'analysis.qmd', 'concl.qmd')}
+```
