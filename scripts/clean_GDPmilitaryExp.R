@@ -1,6 +1,8 @@
-GDPpercapita <- read.csv('C:/Users/Delia/Documents/1. Formations études école/HEC/MSc1/Data Science in Business Analytics/DS-projecct/GDPpercapita.csv', header=TRUE, sep=";")
-MilitaryExpenditurePercentGDP <- read.csv('C:/Users/Delia/Documents/1. Formations études école/HEC/MSc1/Data Science in Business Analytics/DS-projecct/MilitaryExpenditurePercentGDP.csv', header=TRUE, sep=";")
-MiliratyExpenditurePercentGovExp <- read.csv('C:/Users/Delia/Documents/1. Formations études école/HEC/MSc1/Data Science in Business Analytics/DS-projecct/MiliratyExpenditurePercentGovExp.csv', header=TRUE, sep=";")
+library(here)
+
+GDPpercapita <- read.csv(here("scripts/data/GDPpercapita.csv"), sep = ";")
+MilitaryExpenditurePercentGDP <- read.csv(here("scripts/data/MilitaryExpenditurePercentGDP.csv"), sep = ";")
+MiliratyExpenditurePercentGovExp <- read.csv(here("scripts/data/MiliratyExpenditurePercentGovExp.csv"), sep = ";")
 
 # libraries
 

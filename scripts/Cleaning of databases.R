@@ -1,6 +1,11 @@
+### Importation
+
+# libraries
+
+library(here)
 
 ### 1 Main Table
-#hello
+SDG <- read.csv(here("scripts/data/SDG.csv"), sep = ";")
 
 ### 2 World Index
 D2_1_Unemployment_rate <- read.csv(here("DS-project/scripts/data/UNE_2EAP_SEX_AGE_RT_A-full-2023-10-19.csv"))

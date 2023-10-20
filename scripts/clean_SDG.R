@@ -1,6 +1,8 @@
 # Import data
 
-SDG <- read.csv(here::here('SDG.csv'), sep=';')
+library(here)
+
+SDG <- read.csv(here("scripts/data/SDG.csv"), sep = ";")
 
 # Transform -> dataframe
 
@@ -43,3 +45,4 @@ propmissing
 # other
 
 length(unique(SDG$country))
+

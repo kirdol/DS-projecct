@@ -1,4 +1,4 @@
-COVID <- read.csv('C:/Users/Delia/Documents/1. Formations études école/HEC/MSc1/Data Science in Business Analytics/DS-projecct/COVID.csv')
+COVID <- read.csv(here("scripts/data/COVID.csv"))
 
 # Import data
 
