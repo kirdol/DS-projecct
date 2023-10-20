@@ -1,5 +1,3 @@
-SDG <- read.csv('C:/Users/Delia/Documents/1. Formations études école/HEC/MSc1/Data Science in Business Analytics/DS-projecct/SDG.csv', sep=';')
-
 # Import data
 
 SDG <- read.csv(here::here('SDG.csv'), sep=';')
