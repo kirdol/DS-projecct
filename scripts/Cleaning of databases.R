@@ -12,6 +12,7 @@ D2_3_Crime_index # TBF
 D4_0_Internet_usage <- read.csv(here("DS-project/scripts/data/share-of-individuals-using-the-internet-2.csv"))
 
 # 5 The Human Freedom Index
+hello
 
 # 6 Natural Disasters
 
