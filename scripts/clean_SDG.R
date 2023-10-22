@@ -45,4 +45,3 @@ propmissing
 # other
 
 length(unique(SDG$country))
-
