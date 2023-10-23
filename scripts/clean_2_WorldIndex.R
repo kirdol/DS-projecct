@@ -1,14 +1,14 @@
 
 ## 2 World Index
 D2_1_Unemployment_rate <- # import the dataset
-  read.csv(here("scripts/data/UNE_2EAP_SEX_AGE_RT_A-full-2023-10-19.csv"))
+  read.csv(here("DS-project/scripts/data/UNE_2EAP_SEX_AGE_RT_A-full-2023-10-19.csv"))
 
 D2_1_Unemployment_rate <- # make sure that we have a datafraame
   as.data.frame(D2_1_Unemployment_rate)
 
 # Here, we use the dataset of the internet usage to extract the code of the countries.
 D4_0_Internet_usage <- # We import the dataset of Internet Usage
-  read.csv(here("scripts/data/share-of-individuals-using-the-internet-2.csv"))
+  read.csv(here("DS-project/scripts/data/share-of-individuals-using-the-internet-2.csv"))
 
 countries_codes <- D4_0_Internet_usage %>% # We create a new dataframe with the coutriy names and code.
   select(Entity, Code) %>%
