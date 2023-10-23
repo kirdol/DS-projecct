@@ -4,7 +4,7 @@ library(here)
 library(dplyr)
 library(stringr)
 
-SDG <- read.csv(here("scripts/data/SDG.csv"), sep = ";")
+SDG <- read.csv(here("scripts","data","SDG.csv"), sep = ";")
 
 # Transform -> dataframe
 

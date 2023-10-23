@@ -1,7 +1,7 @@
 
 ## 4 Internet Usage
 D4_0_Internet_usage <- # import the dataset
-  read.csv(here("DS-project/scripts/data/share-of-individuals-using-the-internet-2.csv"))
+  read.csv(here("scripts","data","share-of-individuals-using-the-internet-2.csv"))
 
 D4_0_Internet_usage <- # make sure that we have a datafraame
   as.data.frame(D4_0_Internet_usage)

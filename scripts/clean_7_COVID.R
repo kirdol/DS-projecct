@@ -1,4 +1,4 @@
-COVID <- read.csv(here("scripts/data/COVID.csv"))
+COVID <- read.csv(here("scripts","data","COVID.csv"))
 
 # Import data
 

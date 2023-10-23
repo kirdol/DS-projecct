@@ -1,8 +1,9 @@
-library(here)
-
-GDPpercapita <- read.csv(here("scripts/data/GDPpercapita.csv"), sep = ";")
-MilitaryExpenditurePercentGDP <- read.csv(here("scripts/data/MilitaryExpenditurePercentGDP.csv"), sep = ";")
-MiliratyExpenditurePercentGovExp <- read.csv(here("scripts/data/MiliratyExpenditurePercentGovExp.csv"), sep = ";")
+GDPpercapita <-
+  read.csv(here("scripts","data","GDPpercapita.csv"), sep = ";")
+MilitaryExpenditurePercentGDP <-
+  read.csv(here("scripts","data","MilitaryExpenditurePercentGDP.csv"), sep = ";")
+MiliratyExpenditurePercentGovExp <-
+  read.csv(here("scripts","data","MiliratyExpenditurePercentGovExp.csv"), sep = ";")
 
 # libraries
 
