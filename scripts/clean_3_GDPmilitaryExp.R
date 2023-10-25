@@ -88,3 +88,7 @@ MilitaryExpenditurePercentGDP <- MilitaryExpenditurePercentGDP %>%
 
 MiliratyExpenditurePercentGovExp <- MiliratyExpenditurePercentGovExp %>%
   rename(MiliratyExpenditurePercentGovExp = data)
+
+mean(is.na(MiliratyExpenditurePercentGovExp$MiliratyExpenditurePercentGovExp))
+mean(is.na(MilitaryExpenditurePercentGDP$MilitaryExpenditurePercentGDP))
+mean(is.na(GDPpercapita$GDPpercapita))

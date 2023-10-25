@@ -83,7 +83,7 @@ SDG2 <- SDG |>
   filter(Na1 != 0 | Na10 != 0 | Na14 != 0)
 print(SDG2, n = 180)
 
-# A lot of countries don't have information on those 3 SDG, should we choose to not analyse these SDGs?
+# A lot of countries don't have information on those 3 SDG, should we choose to not analyse these SDGs? -> enlever 14 les autre environ 10% missing
 
 # Population has also some missing values, let's investigate
 
@@ -102,5 +102,4 @@ SDG <- SDG %>%
 # Now there isn't any more missing values in the variable population and we will see that we have information on 166 countries:
 
 length(unique(SDG$country))
-
 
