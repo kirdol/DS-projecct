@@ -85,14 +85,6 @@ MilitaryExpenditurePercentGDP <- MilitaryExpenditurePercentGDP %>%
 MiliratyExpenditurePercentGovExp <- MiliratyExpenditurePercentGovExp %>%
   rename(MiliratyExpenditurePercentGovExp = data)
 
-# What is the percentage of missing values in these 3 datasets?
-
-mean(is.na(MiliratyExpenditurePercentGovExp$MiliratyExpenditurePercentGovExp))
-mean(is.na(MilitaryExpenditurePercentGDP$MilitaryExpenditurePercentGDP))
-mean(is.na(GDPpercapita$GDPpercapita))
-
-# 31.6% for MiliratyExpenditurePercentGovExp, 27.1% for MilitaryExpenditurePercentGDP and 4.22% for GDPpercapita
-
 # Standardize the country code
 
 GDPpercapita$code <- countrycode(
@@ -125,3 +117,67 @@ MiliratyExpenditurePercentGovExp <- MiliratyExpenditurePercentGovExp %>% filter(
 length(unique(MiliratyExpenditurePercentGovExp$code))
 
 # There are only 157 countries that are both in the main SDG dataset and in these 3 datasets
+
+# What is the percentage of missing values in these 3 datasets?
+
+mean(is.na(MiliratyExpenditurePercentGovExp$MiliratyExpenditurePercentGovExp))
+mean(is.na(MilitaryExpenditurePercentGDP$MilitaryExpenditurePercentGDP))
+mean(is.na(GDPpercapita$GDPpercapita))
+
+# 15% for MiliratyExpenditurePercentGovExp, 12.5% for MilitaryExpenditurePercentGDP and 1.11% for GDPpercapita
+
+
+# Investigate missing values in GDPpercapita
+
+GDPpercapita1 <- GDPpercapita %>%
+  group_by(code) %>%
+  summarize(NaGDP = mean(is.na(GDPpercapita))) %>%
+  filter(NaGDP != 0)
+print(GDPpercapita1, n = 180)
+
+# Only SOM and SSD have a lot of missings and in total 9 countries with missings
+
+plot(
+  x = GDPpercapita$year[GDPpercapita$code == "AFG"],
+  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "AFG"],
+  xlab = "Year",
+  ylab = "GDP per Capita",
+  main = "GDP per Capita for AFG"
+)
+
+# Investigate missing values in MilitaryExpenditurePercentGDP
+
+MilitaryExpenditurePercentGDP1 <- MilitaryExpenditurePercentGDP %>%
+  group_by(code) %>%
+  summarize(NaGDP = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
+  filter(NaGDP != 0)
+print(MilitaryExpenditurePercentGDP1, n = 180)
+
+# 100% missing: a lot !
+
+plot(
+  x = MilitaryExpenditurePercentGDP$year[MilitaryExpenditurePercentGDP$code == "AFG"],
+  y = MilitaryExpenditurePercentGDP$MilitaryExpenditurePercentGDP[MilitaryExpenditurePercentGDP$code == "AFG"],
+  xlab = "Year",
+  ylab = "MilitaryExpenditurePercentGDP",
+  main = "MilitaryExpenditurePercentGDP for AFG"
+)
+
+# Investigate missing values in MilitaryExpenditurePercentGDP
+
+MiliratyExpenditurePercentGovExp1 <- MiliratyExpenditurePercentGovExp %>%
+  group_by(code) %>%
+  summarize(NaGDP = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
+  filter(NaGDP != 0)
+print(MiliratyExpenditurePercentGovExp1, n = 180)
+
+# 100% missing: a lot !
+
+plot(
+  x = MiliratyExpenditurePercentGovExp$year[MiliratyExpenditurePercentGovExp$code == "AFG"],
+  y = MiliratyExpenditurePercentGovExp$MiliratyExpenditurePercentGovExp[MiliratyExpenditurePercentGovExp$code == "AFG"],
+  xlab = "Year",
+  ylab = "MiliratyExpenditurePercentGovExp",
+  main = "MiliratyExpenditurePercentGovExp for AFG"
+)
+
