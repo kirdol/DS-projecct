@@ -6,7 +6,7 @@ library(dplyr)
 library(readxl)
 
 # Read the Excel data file into a data frame named "Conflicts"
-Conflicts <- read.csv("C:\\Users\\twins\\Desktop\\DS OUVRIR\\DS-project\\scripts\\Data\\Conflicts.csv")
+Conflicts <- read.csv("C:\\Users\\twins\\Desktop\\DS OUVRIR\\DS-project\\scripts\\data\\Conflicts.csv")
 
 
 # Convert "Conflicts" into a data frame (if it's not already)
