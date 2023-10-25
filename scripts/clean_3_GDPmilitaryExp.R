@@ -5,11 +5,6 @@ MilitaryExpenditurePercentGDP <-
 MiliratyExpenditurePercentGovExp <-
   read.csv(here("scripts","data","MiliratyExpenditurePercentGovExp.csv"), sep = ";")
 
-# libraries
-
-library('dplyr')
-library('tidyr')
-
 # remove the variables that we don't need
 
 remove <- function(data){
@@ -18,7 +13,7 @@ remove <- function(data){
   data <- data[, !(names(data) %in% c("Indicator.Name", "Indicator.Code", "X", removeyears))]
 }
 
-# Rename the variables to delete the X before the years and make sure they contain all numeric values
+# Make sure that the values are numeric
 
 makenum <- function(data) {
   for (i in 2000:2022) {
@@ -28,7 +23,7 @@ makenum <- function(data) {
   return(data)
 }
 
-# Rename years from Xyear to year and tranform them into integers
+# Rename years from Xyear 
 
 renameyear <- function(data) {
   for (i in 2000:2022) {
@@ -90,6 +85,43 @@ MilitaryExpenditurePercentGDP <- MilitaryExpenditurePercentGDP %>%
 MiliratyExpenditurePercentGovExp <- MiliratyExpenditurePercentGovExp %>%
   rename(MiliratyExpenditurePercentGovExp = data)
 
+# What is the percentage of missing values in these 3 datasets?
+
 mean(is.na(MiliratyExpenditurePercentGovExp$MiliratyExpenditurePercentGovExp))
 mean(is.na(MilitaryExpenditurePercentGDP$MilitaryExpenditurePercentGDP))
 mean(is.na(GDPpercapita$GDPpercapita))
+
+# 31.6% for MiliratyExpenditurePercentGovExp, 27.1% for MilitaryExpenditurePercentGDP and 4.22% for GDPpercapita
+
+# Standardize the country code
+
+GDPpercapita$code <- countrycode(
+  sourcevar = GDPpercapita$code,
+  origin = "iso3c",
+  destination = "iso3c",
+)
+
+MilitaryExpenditurePercentGDP$code <- countrycode(
+  sourcevar = MilitaryExpenditurePercentGDP$code,
+  origin = "iso3c",
+  destination = "iso3c",
+)
+
+MiliratyExpenditurePercentGovExp$code <- countrycode(
+  sourcevar = MiliratyExpenditurePercentGovExp$code,
+  origin = "iso3c",
+  destination = "iso3c",
+)
+
+# Remove the obervations of countries that aren't in our main dataset on SDGs: 
+
+GDPpercapita <- GDPpercapita %>% filter(code %in% list_country)
+length(unique(GDPpercapita$code))
+
+MilitaryExpenditurePercentGDP <- MilitaryExpenditurePercentGDP %>% filter(code %in% list_country)
+length(unique(MilitaryExpenditurePercentGDP$code))
+
+MiliratyExpenditurePercentGovExp <- MiliratyExpenditurePercentGovExp %>% filter(code %in% list_country)
+length(unique(MiliratyExpenditurePercentGovExp$code))
+
+# There are only 157 countries that are both in the main SDG dataset and in these 3 datasets

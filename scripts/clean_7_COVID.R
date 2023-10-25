@@ -1,17 +1,10 @@
+#Import data
+
 COVID <- read.csv(here("scripts","data","COVID.csv"))
-
-# Import data
-
-# COVID <- read.csv(here::here('COVID.csv'))
-
-# libraries
-
-library(lubridate)
-library(dplyr)
 
 # Only keep the variables that we are interested in
 
-COVID <- COVID[,c("iso_code", "location", "date", "continent", "new_cases_per_million", "new_deaths_per_million", "stringency_index")]
+COVID <- COVID[,c("iso_code", "location", "date", "new_cases_per_million", "new_deaths_per_million", "stringency_index")]
 
 # Transform the dates ("YYYY-MM-DD") into years ("YYYY") and integers
 
@@ -28,6 +21,8 @@ COVID <- COVID %>%
   )%>%
   ungroup()
 
+# Only have 1 obs per country per year
+
 COVID <- COVID %>%
   group_by(location, date) %>%
   distinct(date, .keep_all = TRUE) %>%
@@ -35,24 +30,11 @@ COVID <- COVID %>%
 
 # Remove the variable that have the information for every day and only keep those by year
 
-COVID <- subset(COVID, select = -c(new_cases_per_million, new_deaths_per_million, stringency_index))
+COVID <- COVID %>% select(-c(new_cases_per_million, new_deaths_per_million, stringency_index))
 
 # Rename the variables
 
-colnames(COVID) <- c("code", "country", "year", "continent", "cases_per_million", "deaths_per_million", "stringency")
-
-# Take the average stringency over the years for a country because of missing values
-
-mean(is.na(COVID$stringency))
-
-COVID <- COVID %>%
-  group_by(country) %>%
-  mutate(
-    stringency = mean(stringency, na.rm = TRUE)
-  )%>%
-  ungroup()
-
-mean(is.na(COVID$stringency))
+colnames(COVID) <- c("code", "country", "year", "cases_per_million", "deaths_per_million", "stringency")
 
 # Remove the years after 2022 to match our main database 
 
@@ -62,6 +44,25 @@ COVID <- COVID[COVID$year <= 2022, ]
 
 COVID$code <- gsub("OWID_", "", COVID$code)
 
-# Transform the continent variable (chr) into a factor
+# Investigation of the missing values
 
-COVID$continent <- as.factor(COVID$continent)
+mean(is.na(COVID$cases_per_million))
+mean(is.na(COVID$deaths_per_million))
+mean(is.na(COVID$stringency))
+
+# No missing values except in for the stringency, where there are 4.19% 
+
+# Standardize the country code
+
+COVID$code <- countrycode(
+  sourcevar = COVID$code,
+  origin = "iso3c",
+  destination = "iso3c",
+)
+
+# Remove the observations of countries that aren't in our main dataset on SDGs: 
+
+COVID <- COVID %>% filter(code %in% list_country)
+length(unique(COVID$code))
+
+# All the 166 countries that we have in the main SDG dataset are also in this one.

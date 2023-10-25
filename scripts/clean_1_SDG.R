@@ -1,9 +1,5 @@
 # Import data
 
-library(here)
-library(dplyr)
-library(stringr)
-
 SDG <- read.csv(here("scripts","data","SDG.csv"), sep = ";")
 
 # Transform -> dataframe
@@ -44,7 +40,25 @@ for (i in 1:length(SDG)){
 }
 propmissing
 
-# Where do we have missing values in the different goals? 
+# Population has some missing values, let's investigate
+
+SDG0 <- SDG |> 
+  group_by(code) |> 
+  select(population) |> 
+  summarize(NaPop = mean(is.na(population))) |>
+  filter(NaPop != 0)
+print(SDG0, n = 180)
+
+# Normal to have missing values because not countries but regions so we can drop these observations
+
+SDG <- SDG %>%
+  filter(!str_detect(code, "^_"))
+
+# Now there isn't any more missing values in the variable population and we will see that we have information on 166 countries:
+
+(country_number <- length(unique(SDG$country)))
+
+# Where do we have missing values in the different goal scores? 
 
 SDG1 <- SDG |> 
   group_by(code) |> 
@@ -73,33 +87,56 @@ print(SDG1, n = 180)
 # We that there are only missings in 3 SDG scores: 1, 10 and 14 and that when there are missings for a country, it is on all years or none. 
 
 # More investigations of those 3 SDG scores
+# A lot of countries don't have information on those 3 SDG, should we choose to not analyse these SDGs? 
 
 SDG2 <- SDG |> 
   group_by(code) |> 
   select(contains("goal")) |> 
-  summarize(Na1 = mean(is.na(goal1)),
-            Na10 = mean(is.na(goal10)),
-            Na14 = mean(is.na(goal14))) |>
-  filter(Na1 != 0 | Na10 != 0 | Na14 != 0)
+  summarize(Na1 = mean(is.na(goal1))) |>
+  filter(Na1 != 0)
 print(SDG2, n = 180)
 
-# A lot of countries don't have information on those 3 SDG, should we choose to not analyse these SDGs? -> enlever 14 les autre environ 10% missing
+length(unique(SDG2$code))/country_number
 
-# Population has also some missing values, let's investigate
+# there are only 9.04% missing values in 15 different countries, goal 1 being "end poverty", we 
+# decide to keep it and only remove the countries with no information for the analysis
 
 SDG3 <- SDG |> 
   group_by(code) |> 
-  select(population) |> 
-  summarize(NaPop = mean(is.na(population))) |>
-  filter(NaPop != 0)
+  select(contains("goal")) |> 
+  summarize(Na10 = mean(is.na(goal10))) |>
+  filter(Na10 != 0)
 print(SDG3, n = 180)
 
-# Normal to have missing values because not countries but regions so we can drop these observations
+length(unique(SDG3$code))/country_number
 
-SDG <- SDG %>%
-  filter(!str_detect(code, "^_"))
+# there are only 10.2% missing values in 17 different countries, goal 10 being "reduced inequalities", we 
+# decide to keep it and only remove the countries with no information for the analysis
 
-# Now there isn't any more missing values in the variable population and we will see that we have information on 166 countries:
+SDG4 <- SDG |> 
+  group_by(code) |> 
+  select(contains("goal")) |> 
+  summarize(Na14 = mean(is.na(goal14))) |>
+  filter(Na14 != 0)
+print(SDG4, n = 180)
 
-length(unique(SDG$country))
+length(unique(SDG4$code))/country_number
 
+# there are 24.1% missing values in 40 different countries, goal 14 being "life under water", we 
+# decide not to keep it, because other SDG such as life on earth and clean water already treat similar subjects
+
+# Delete SDG14
+
+SDG <- SDG %>% select(-goal14)
+
+# Standardize country code
+
+SDG$code <- countrycode(
+  sourcevar = SDG$code,
+  origin = "iso3c",
+  destination = "iso3c",
+)
+
+# Create a character vector with all the different country codes
+
+list_country <- c(unique(SDG$code))
