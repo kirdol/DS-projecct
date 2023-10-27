@@ -126,8 +126,7 @@ mean(is.na(GDPpercapita$GDPpercapita))
 
 # 15% for MiliratyExpenditurePercentGovExp, 12.5% for MilitaryExpenditurePercentGDP and 1.11% for GDPpercapita
 
-
-# Investigate missing values in GDPpercapita
+####### Investigate missing values in GDPpercapita #####
 
 GDPpercapita1 <- GDPpercapita %>%
   group_by(code) %>%
@@ -137,6 +136,17 @@ print(GDPpercapita1, n = 180)
 
 # Only SOM and SSD have a lot of missings and in total 9 countries with missings
 
+# What happens if we only take the years from 2005?
+
+GDPpercapita2 <- GDPpercapita %>% select(GDPpercapita$year>=2005)
+
+GDPpercapita3 <- GDPpercapita2 %>%
+  group_by(code) %>%
+  summarize(NaGDP = mean(is.na(GDPpercapita2))) %>%
+  filter(NaGDP != 0)
+print(GDPpercapita3, n = 180)
+
+# AFG -> could replace the values with those of the previous years
 plot(
   x = GDPpercapita$year[GDPpercapita$code == "AFG"],
   y = GDPpercapita$GDPpercapita[GDPpercapita$code == "AFG"],
@@ -145,7 +155,79 @@ plot(
   main = "GDP per Capita for AFG"
 )
 
-# Investigate missing values in MilitaryExpenditurePercentGDP
+# BTN: quite stable in the last years, replace missing value in 2022 with the mean of the 5 last years
+plot(
+  x = GDPpercapita$year[GDPpercapita$code == "BTN"],
+  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "BTN"],
+  xlab = "Year",
+  ylab = "GDP per Capita",
+  main = "GDP per Capita for BTN"
+)
+
+# CUB: increasing, what do we do ?
+plot(
+  x = GDPpercapita$year[GDPpercapita$code == "CUB"],
+  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "CUB"],
+  xlab = "Year",
+  ylab = "GDP per Capita",
+  main = "GDP per Capita for CUB"
+)
+
+# LBN: big drop, but could use the value of 2021 to fill in the missing value of 2022
+plot(
+  x = GDPpercapita$year[GDPpercapita$code == "LBN"],
+  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "LBN"],
+  xlab = "Year",
+  ylab = "GDP per Capita",
+  main = "GDP per Capita for LBN"
+)
+
+# SOM: we don't have data before 2013, we decide not to include SOM when using GDPpercapita
+plot(
+  x = GDPpercapita$year[GDPpercapita$code == "SOM"],
+  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "SOM"],
+  xlab = "Year",
+  ylab = "GDP per Capita",
+  main = "GDP per Capita for SOM"
+)
+
+# SSD: We only have some values between 2008-15, we decide not to include this country when using GDPpercapita
+plot(
+  x = GDPpercapita$year[GDPpercapita$code == "SSD"],
+  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "SSD"],
+  xlab = "Year",
+  ylab = "GDP per Capita",
+  main = "GDP per Capita for SSD"
+)
+
+#STP: only one missing value that we can replace with the one from the previous year or use the prediction of a linear regression 
+plot(
+  x = GDPpercapita$year[GDPpercapita$code == "STP"],
+  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "STP"],
+  xlab = "Year",
+  ylab = "GDP per Capita",
+  main = "GDP per Capita for STP"
+)
+
+#SYR: stable during the last years, we use the mean fôf the last 5 years to fill in the 2 missing values (2021-22)
+plot(
+  x = GDPpercapita$year[GDPpercapita$code == "SYR"],
+  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "SYR"],
+  xlab = "Year",
+  ylab = "GDP per Capita",
+  main = "GDP per Capita for SYR"
+)
+
+# TKM: increases in a linear wya during the last five years -> use linear reg to fill in the 2 missing values
+plot(
+  x = GDPpercapita$year[GDPpercapita$code == "TKM"],
+  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "TKM"],
+  xlab = "Year",
+  ylab = "GDP per Capita",
+  main = "GDP per Capita for TKM"
+)
+
+##### Investigate missing values in MilitaryExpenditurePercentGDP #####
 
 MilitaryExpenditurePercentGDP1 <- MilitaryExpenditurePercentGDP %>%
   group_by(code) %>%
@@ -153,7 +235,7 @@ MilitaryExpenditurePercentGDP1 <- MilitaryExpenditurePercentGDP %>%
   filter(NaGDP != 0)
 print(MilitaryExpenditurePercentGDP1, n = 180)
 
-# 100% missing: a lot !
+# 100% missing: a lot !11 countries
 
 plot(
   x = MilitaryExpenditurePercentGDP$year[MilitaryExpenditurePercentGDP$code == "AFG"],
@@ -163,7 +245,7 @@ plot(
   main = "MilitaryExpenditurePercentGDP for AFG"
 )
 
-# Investigate missing values in MilitaryExpenditurePercentGDP
+##### Investigate missing values in MilitaryExpenditurePercentGDP #####
 
 MiliratyExpenditurePercentGovExp1 <- MiliratyExpenditurePercentGovExp %>%
   group_by(code) %>%
@@ -171,7 +253,7 @@ MiliratyExpenditurePercentGovExp1 <- MiliratyExpenditurePercentGovExp %>%
   filter(NaGDP != 0)
 print(MiliratyExpenditurePercentGovExp1, n = 180)
 
-# 100% missing: a lot !
+# 100% missing: a lot ! 14 countries
 
 plot(
   x = MiliratyExpenditurePercentGovExp$year[MiliratyExpenditurePercentGovExp$code == "AFG"],
@@ -180,4 +262,5 @@ plot(
   ylab = "MiliratyExpenditurePercentGovExp",
   main = "MiliratyExpenditurePercentGovExp for AFG"
 )
+
 
