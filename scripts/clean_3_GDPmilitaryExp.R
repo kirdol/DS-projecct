@@ -229,24 +229,18 @@ ggplot(data = filtered_data_GDP) +
 
 MilitaryExpenditurePercentGDP1 <- MilitaryExpenditurePercentGDP %>%
   group_by(code) %>%
-  summarize(NaGDP = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
-  filter(NaGDP != 0)
+  summarize(NaMil1 = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
+  filter(NaMil1 != 0)
 print(MilitaryExpenditurePercentGDP1, n = 180)
 
 # 100% missing: a lot !11 countries
-
-MilitaryExpenditurePercentGDP2 <- MilitaryExpenditurePercentGDP %>%
-  group_by(code) %>%
-  summarize(NaGDP = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
-  filter(NaGDP != 0 & NaGDP <= 0.5)
-print(MilitaryExpenditurePercentGDP2, n = 180)
 
 # Test1
 
 MilitaryExpenditurePercentGDP2 <- MilitaryExpenditurePercentGDP %>%
   group_by(code) %>%
-  summarize(NaGDP = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
-  filter(NaGDP != 0 & NaGDP <= 0.5)
+  summarize(NaMil1 = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
+  filter(NaMil1 != 0 & NaMil1 <= 0.5)
 print(MilitaryExpenditurePercentGDP2, n = 180)
 
 for (country_code in MilitaryExpenditurePercentGDP2$code){
@@ -264,8 +258,8 @@ for (country_code in MilitaryExpenditurePercentGDP2$code){
 
 MilitaryExpenditurePercentGDP3 <- MilitaryExpenditurePercentGDP %>%
   group_by(code) %>%
-  summarize(NaGDP = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
-  filter(NaGDP != 0 & NaGDP <= 0.1)
+  summarize(NaMil1 = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
+  filter(NaMil1 != 0 & NaMil1 <= 0.1)
 print(MilitaryExpenditurePercentGDP3, n = 180)
 
 filtered_data <- MilitaryExpenditurePercentGDP %>%
@@ -275,8 +269,8 @@ ggplot(data = filtered_data) +
 
 MilitaryExpenditurePercentGDP4 <- MilitaryExpenditurePercentGDP %>%
   group_by(code) %>%
-  summarize(NaGDP = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
-  filter(NaGDP > 0.1 & NaGDP <= 0.15)
+  summarize(NaMil1 = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
+  filter(NaMil1 > 0.1 & NaMil1 <= 0.15)
 print(MilitaryExpenditurePercentGDP4, n = 180)
 
 filtered_data <- MilitaryExpenditurePercentGDP %>%
@@ -286,8 +280,8 @@ ggplot(data = filtered_data) +
 
 MilitaryExpenditurePercentGDP5 <- MilitaryExpenditurePercentGDP %>%
   group_by(code) %>%
-  summarize(NaGDP = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
-  filter(NaGDP > 0.15 & NaGDP <= 0.2)
+  summarize(NaMil1 = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
+  filter(NaMil1 > 0.15 & NaMil1 <= 0.2)
 print(MilitaryExpenditurePercentGDP5, n = 180)
 
 filtered_data <- MilitaryExpenditurePercentGDP %>%
@@ -297,8 +291,8 @@ ggplot(data = filtered_data) +
 
 MilitaryExpenditurePercentGDP6 <- MilitaryExpenditurePercentGDP %>%
   group_by(code) %>%
-  summarize(NaGDP = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
-  filter(NaGDP > 0.2 & NaGDP <= 0.3)
+  summarize(NaMil1 = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
+  filter(NaMil1 > 0.2 & NaMil1 <= 0.3)
 print(MilitaryExpenditurePercentGDP6, n = 180)
 
 filtered_data <- MilitaryExpenditurePercentGDP %>%
@@ -310,8 +304,8 @@ ggplot(data = filtered_data) +
 
 MiliratyExpenditurePercentGovExp1 <- MiliratyExpenditurePercentGovExp %>%
   group_by(code) %>%
-  summarize(NaGDP = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
-  filter(NaGDP != 0)
+  summarize(NaMil2 = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
+  filter(NaMil2 != 0)
 print(MiliratyExpenditurePercentGovExp1, n = 180)
 
 # 100% missing: a lot ! 14 countries
@@ -321,8 +315,8 @@ print(MiliratyExpenditurePercentGovExp1, n = 180)
 
 MilitaryExpenditurePercentGovExp3 <- MiliratyExpenditurePercentGovExp %>%
   group_by(code) %>%
-  summarize(NaGDP = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
-  filter(NaGDP != 0 & NaGDP <= 0.1)
+  summarize(NaMil2 = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
+  filter(NaMil2 != 0 & NaMil2 <= 0.1)
 print(MilitaryExpenditurePercentGovExp3, n = 180)
 
 filtered_data <- MiliratyExpenditurePercentGovExp %>%
@@ -332,8 +326,8 @@ ggplot(data = filtered_data) +
 
 MilitaryExpenditurePercentGovExp4 <- MiliratyExpenditurePercentGovExp %>%
   group_by(code) %>%
-  summarize(NaGDP = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
-  filter(NaGDP > 0.1 & NaGDP <= 0.15)
+  summarize(NaMil2 = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
+  filter(NaMil2 > 0.1 & NaMil2 <= 0.15)
 print(MilitaryExpenditurePercentGovExp4, n = 180)
 
 filtered_data <- MiliratyExpenditurePercentGovExp %>%
@@ -343,8 +337,8 @@ ggplot(data = filtered_data) +
 
 MilitaryExpenditurePercentGovExp5 <- MiliratyExpenditurePercentGovExp %>%
   group_by(code) %>%
-  summarize(NaGDP = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
-  filter(NaGDP > 0.15 & NaGDP <= 0.2)
+  summarize(NaMil2 = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
+  filter(NaMil2 > 0.15 & NaMil2 <= 0.2)
 print(MilitaryExpenditurePercentGDP5, n = 180)
 
 filtered_data <- MiliratyExpenditurePercentGovExp %>%
@@ -354,8 +348,8 @@ ggplot(data = filtered_data) +
 
 MilitaryExpenditurePercentGovExp6 <- MiliratyExpenditurePercentGovExp %>%
   group_by(code) %>%
-  summarize(NaGDP = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
-  filter(NaGDP > 0.2 & NaGDP <= 0.3)
+  summarize(NaMil2 = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
+  filter(NaMil2 > 0.2 & NaMil2 <= 0.3)
 print(MilitaryExpenditurePercentGDP6, n = 180)
 
 filtered_data <- MiliratyExpenditurePercentGovExp %>%
