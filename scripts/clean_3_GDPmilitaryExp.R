@@ -1,3 +1,6 @@
+library(gridExtra)
+library(patchwork)
+
 GDPpercapita <-
   read.csv(here("scripts","data","GDPpercapita.csv"), sep = ";")
 MilitaryExpenditurePercentGDP <-
@@ -136,16 +139,6 @@ print(GDPpercapita1, n = 180)
 
 # Only SOM and SSD have a lot of missings and in total 9 countries with missings
 
-# What happens if we only take the years from 2005?
-
-GDPpercapita2 <- GDPpercapita %>% select(GDPpercapita$year>=2005)
-
-GDPpercapita3 <- GDPpercapita2 %>%
-  group_by(code) %>%
-  summarize(NaGDP = mean(is.na(GDPpercapita2))) %>%
-  filter(NaGDP != 0)
-print(GDPpercapita3, n = 180)
-
 # AFG -> could replace the values with those of the previous years
 plot(
   x = GDPpercapita$year[GDPpercapita$code == "AFG"],
@@ -227,6 +220,11 @@ plot(
   main = "GDP per Capita for TKM"
 )
 
+filtered_data_GDP <- GDPpercapita %>%
+  filter(code %in% GDPpercapita1$code)
+ggplot(data = filtered_data_GDP) +
+  geom_line(mapping = aes(x = year, y = GDPpercapita, color = code))
+
 ##### Investigate missing values in MilitaryExpenditurePercentGDP #####
 
 MilitaryExpenditurePercentGDP1 <- MilitaryExpenditurePercentGDP %>%
@@ -237,13 +235,76 @@ print(MilitaryExpenditurePercentGDP1, n = 180)
 
 # 100% missing: a lot !11 countries
 
-plot(
-  x = MilitaryExpenditurePercentGDP$year[MilitaryExpenditurePercentGDP$code == "AFG"],
-  y = MilitaryExpenditurePercentGDP$MilitaryExpenditurePercentGDP[MilitaryExpenditurePercentGDP$code == "AFG"],
-  xlab = "Year",
-  ylab = "MilitaryExpenditurePercentGDP",
-  main = "MilitaryExpenditurePercentGDP for AFG"
-)
+MilitaryExpenditurePercentGDP2 <- MilitaryExpenditurePercentGDP %>%
+  group_by(code) %>%
+  summarize(NaGDP = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
+  filter(NaGDP != 0 & NaGDP <= 0.5)
+print(MilitaryExpenditurePercentGDP2, n = 180)
+
+# Test1
+
+MilitaryExpenditurePercentGDP2 <- MilitaryExpenditurePercentGDP %>%
+  group_by(code) %>%
+  summarize(NaGDP = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
+  filter(NaGDP != 0 & NaGDP <= 0.5)
+print(MilitaryExpenditurePercentGDP2, n = 180)
+
+for (country_code in MilitaryExpenditurePercentGDP2$code){
+  plot(
+    x = MilitaryExpenditurePercentGDP$year[MilitaryExpenditurePercentGDP$code == country_code],
+    y = MilitaryExpenditurePercentGDP$MilitaryExpenditurePercentGDP[MilitaryExpenditurePercentGDP$code == country_code],
+    xlab = "Year",
+    ylab = "Military Exp % GDP",
+    main = paste("Military Exp % GDP", country_code)
+  )
+} 
+
+# Test2 -> replace by mean when flat / replace by mean over 3 years before and after when 
+# different tendencies / replace by value of the year before or after when suited
+
+MilitaryExpenditurePercentGDP3 <- MilitaryExpenditurePercentGDP %>%
+  group_by(code) %>%
+  summarize(NaGDP = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
+  filter(NaGDP != 0 & NaGDP <= 0.1)
+print(MilitaryExpenditurePercentGDP3, n = 180)
+
+filtered_data <- MilitaryExpenditurePercentGDP %>%
+  filter(code %in% MilitaryExpenditurePercentGDP3$code)
+ggplot(data = filtered_data) +
+  geom_line(mapping = aes(x = year, y = MilitaryExpenditurePercentGDP, color = code))
+
+MilitaryExpenditurePercentGDP4 <- MilitaryExpenditurePercentGDP %>%
+  group_by(code) %>%
+  summarize(NaGDP = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
+  filter(NaGDP > 0.1 & NaGDP <= 0.15)
+print(MilitaryExpenditurePercentGDP4, n = 180)
+
+filtered_data <- MilitaryExpenditurePercentGDP %>%
+  filter(code %in% MilitaryExpenditurePercentGDP4$code)
+ggplot(data = filtered_data) +
+  geom_line(mapping = aes(x = year, y = MilitaryExpenditurePercentGDP, color = code))
+
+MilitaryExpenditurePercentGDP5 <- MilitaryExpenditurePercentGDP %>%
+  group_by(code) %>%
+  summarize(NaGDP = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
+  filter(NaGDP > 0.15 & NaGDP <= 0.2)
+print(MilitaryExpenditurePercentGDP5, n = 180)
+
+filtered_data <- MilitaryExpenditurePercentGDP %>%
+  filter(code %in% MilitaryExpenditurePercentGDP5$code)
+ggplot(data = filtered_data) +
+  geom_line(mapping = aes(x = year, y = MilitaryExpenditurePercentGDP, color = code))
+
+MilitaryExpenditurePercentGDP6 <- MilitaryExpenditurePercentGDP %>%
+  group_by(code) %>%
+  summarize(NaGDP = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
+  filter(NaGDP > 0.2 & NaGDP <= 0.3)
+print(MilitaryExpenditurePercentGDP6, n = 180)
+
+filtered_data <- MilitaryExpenditurePercentGDP %>%
+  filter(code %in% MilitaryExpenditurePercentGDP6$code)
+ggplot(data = filtered_data) +
+  geom_line(mapping = aes(x = year, y = MilitaryExpenditurePercentGDP, color = code))
 
 ##### Investigate missing values in MilitaryExpenditurePercentGDP #####
 
@@ -255,12 +316,50 @@ print(MiliratyExpenditurePercentGovExp1, n = 180)
 
 # 100% missing: a lot ! 14 countries
 
-plot(
-  x = MiliratyExpenditurePercentGovExp$year[MiliratyExpenditurePercentGovExp$code == "AFG"],
-  y = MiliratyExpenditurePercentGovExp$MiliratyExpenditurePercentGovExp[MiliratyExpenditurePercentGovExp$code == "AFG"],
-  xlab = "Year",
-  ylab = "MiliratyExpenditurePercentGovExp",
-  main = "MiliratyExpenditurePercentGovExp for AFG"
-)
+# Test2 -> replace by mean when flat / replace by mean over 3 years before and after when 
+# different tendencies / replace by value of the year before or after when suited
 
+MilitaryExpenditurePercentGovExp3 <- MiliratyExpenditurePercentGovExp %>%
+  group_by(code) %>%
+  summarize(NaGDP = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
+  filter(NaGDP != 0 & NaGDP <= 0.1)
+print(MilitaryExpenditurePercentGovExp3, n = 180)
+
+filtered_data <- MiliratyExpenditurePercentGovExp %>%
+  filter(code %in% MilitaryExpenditurePercentGovExp3$code)
+ggplot(data = filtered_data) +
+  geom_line(mapping = aes(x = year, y = MiliratyExpenditurePercentGovExp, color = code))
+
+MilitaryExpenditurePercentGovExp4 <- MiliratyExpenditurePercentGovExp %>%
+  group_by(code) %>%
+  summarize(NaGDP = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
+  filter(NaGDP > 0.1 & NaGDP <= 0.15)
+print(MilitaryExpenditurePercentGovExp4, n = 180)
+
+filtered_data <- MiliratyExpenditurePercentGovExp %>%
+  filter(code %in% MilitaryExpenditurePercentGovExp4$code)
+ggplot(data = filtered_data) +
+  geom_line(mapping = aes(x = year, y = MiliratyExpenditurePercentGovExp, color = code))
+
+MilitaryExpenditurePercentGovExp5 <- MiliratyExpenditurePercentGovExp %>%
+  group_by(code) %>%
+  summarize(NaGDP = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
+  filter(NaGDP > 0.15 & NaGDP <= 0.2)
+print(MilitaryExpenditurePercentGDP5, n = 180)
+
+filtered_data <- MiliratyExpenditurePercentGovExp %>%
+  filter(code %in% MilitaryExpenditurePercentGovExp5$code)
+ggplot(data = filtered_data) +
+  geom_line(mapping = aes(x = year, y = MiliratyExpenditurePercentGovExp, color = code))
+
+MilitaryExpenditurePercentGovExp6 <- MiliratyExpenditurePercentGovExp %>%
+  group_by(code) %>%
+  summarize(NaGDP = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
+  filter(NaGDP > 0.2 & NaGDP <= 0.3)
+print(MilitaryExpenditurePercentGDP6, n = 180)
+
+filtered_data <- MiliratyExpenditurePercentGovExp %>%
+  filter(code %in% MilitaryExpenditurePercentGovExp6$code)
+ggplot(data = filtered_data) +
+  geom_line(mapping = aes(x = year, y = MiliratyExpenditurePercentGovExp, color = code))
 
