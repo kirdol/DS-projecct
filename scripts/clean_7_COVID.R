@@ -109,4 +109,4 @@ COVID4 <- COVID %>%
 print(COVID4, n = 300)
 
 # Either all values are missing for one country, or 50% are missing, so these 7 countries 
-# won't be included when analysing the effetc of stringency
+# won't be included when analysing the effect of stringency

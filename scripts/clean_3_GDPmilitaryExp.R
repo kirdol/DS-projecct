@@ -221,7 +221,21 @@ plot(
 filtered_data_GDP <- GDPpercapita %>%
   filter(code %in% GDPpercapita1$code)
 ggplot(data = filtered_data_GDP) +
-  geom_line(mapping = aes(x = year, y = GDPpercapita, color = code))
+  geom_line(mapping = aes(x = year, y = GDPpercapita, color = code), size =1)
+
+# Look at the distribution of values for the countries that have missing values
+
+Freq_Missing_GDP <- ggplot(data=filtered_data_GDP) +
+  geom_histogram(aes(x=GDPpercapita), bins = 30) +
+  labs(title = "Histogram of GDP per Capita", x = "GDP per Capita", y = "Frequency")
+Freq_Missing_GDP + facet_wrap(~ code, nrow = 2)
+
+# Look at evolution over the years
+
+Freq_Missing_GDP <- ggplot(data=filtered_data_GDP) +
+  geom_point(mapping = aes(x=year, y=GDPpercapita))
+
+Freq_Missing_GDP + facet_wrap(~ code, nrow = 4)
 
 ##### Investigate missing values in MilitaryExpenditurePercentGDP #####
 
@@ -232,6 +246,23 @@ MilitaryExpenditurePercentGDP1 <- MilitaryExpenditurePercentGDP %>%
 print(MilitaryExpenditurePercentGDP1, n = 180)
 
 # 100% missing: a lot !11 countries
+
+# Look at the distribution of values for the countries that have missing values
+
+filtered_data_Mil1 <- MilitaryExpenditurePercentGDP %>%
+  filter(code %in% MilitaryExpenditurePercentGDP1$code)
+
+Freq_Missing_Mil1 <- ggplot(data=filtered_data_Mil1) +
+  geom_histogram(aes(x=MilitaryExpenditurePercentGDP), bins = 30)
+
+Freq_Missing_Mil1 + facet_wrap(~ code, nrow = 4)
+
+# Look at evolution over the years
+
+Freq_Missing_Mil1 <- ggplot(data=filtered_data_Mil1) +
+  geom_point(mapping = aes(x=year, y=MilitaryExpenditurePercentGDP))
+
+Freq_Missing_Mil1 + facet_wrap(~ code, nrow = 4)
 
 # Test1
 
@@ -307,6 +338,23 @@ MiliratyExpenditurePercentGovExp1 <- MiliratyExpenditurePercentGovExp %>%
 print(MiliratyExpenditurePercentGovExp1, n = 180)
 
 # 100% missing: a lot ! 14 countries
+
+# Look at the distribution of values for the countries that have missing values
+
+filtered_data_Mil2 <- MiliratyExpenditurePercentGovExp %>%
+  filter(code %in% MilitaryExpenditurePercentGDP1$code)
+
+Freq_Missing_Mil2 <- ggplot(data=filtered_data_Mil2) +
+  geom_histogram(aes(x=MiliratyExpenditurePercentGovExp), bins = 50)
+
+Freq_Missing_Mil2 + facet_wrap(~ code, nrow = 4)
+
+# Look at evolution over the years
+
+Freq_Missing_Mil2 <- ggplot(data=filtered_data_Mil2) +
+  geom_point(mapping = aes(x=year, y=MiliratyExpenditurePercentGovExp))
+
+Freq_Missing_Mil2 + facet_wrap(~ code, nrow = 4)
 
 # Test2 -> replace by mean when flat / replace by mean over 3 years before and after when 
 # different tendencies / replace by value of the year before or after when suited

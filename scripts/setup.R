@@ -13,7 +13,8 @@ packages <- c(
   "lubridate",
   "gridExtra",
   "readr",
-  "ggplot2"
+  "ggplot2", 
+  "countrycode"
 )
 purrr::walk(packages, library, character.only = TRUE)
 
