@@ -1,12 +1,7 @@
-#Natural Disasters
-
-# Load the required libraries
-library(lubridate)
-library(dplyr)
-library(readr)
+# Natural Disasters
 
 # Read the CSV data file into a data frame named "Disasters"
-Disasters <- read.csv("C:\\Users\\twins\\Desktop\\DS OUVRIR\\DS-project\\scripts\\data\\1970-2021_DISASTERS.xlsx - emdat data.csv")
+Disasters <- read.csv(here("scripts","data","1970-2021_DISASTERS.xlsx - emdat data.csv"))
 
 # Convert "Disasters" into a data frame (if it's not already)
 Disasters <- as.data.frame(Disasters)
@@ -48,6 +43,7 @@ Disasters <- Rearanged_Disasters %>%
   ) 
 
 # Select specific columns from the summarized data and arrange the data by specified columns
-disasters <- Disasters %>%
+D_6_0_Disasters <- Disasters %>%
   select(code, country, year, continent, total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages) %>%
   arrange(code, country, year, continent)
+

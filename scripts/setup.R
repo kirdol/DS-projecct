@@ -10,8 +10,10 @@ packages <- c(
   "stringr",
   "dplyr",
   "tidyr",
-  "countrycode",
-  "lubridate"
+  "lubridate",
+  "gridExtra",
+  "readr",
+  "ggplot2"
 )
 purrr::walk(packages, library, character.only = TRUE)
 
@@ -47,3 +49,5 @@ knitr::opts_chunk$set(
   echo = FALSE
 )
 
+# cleaning of the environment
+rm(packages)

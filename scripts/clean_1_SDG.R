@@ -1,48 +1,47 @@
 # Import data
-
-SDG <- read.csv(here("scripts","data","SDG.csv"), sep = ";")
+D1_0_SDG <- read.csv(here("scripts","data","SDG.csv"), sep = ";")
 
 # Transform -> dataframe
 
-SDG <- as.data.frame(SDG)
+D1_0_SDG <- as.data.frame(D1_0_SDG)
 
 # We only want to keep certain columns: country code, country, year, population, overall SDG score and the scores on each SDG
 
-SDG <- SDG[,1:22]
+D1_0_SDG <- D1_0_SDG[,1:22]
 
 # Rename the columns to have our variables
 
-colnames(SDG) <- c("code", "country", "year", "population", "overallscore", "goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal14", "goal15", "goal16", "goal17")
+colnames(D1_0_SDG) <- c("code", "country", "year", "population", "overallscore", "goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal14", "goal15", "goal16", "goal17")
 
 # Transform the SDG overall score into a numeric value
 
-SDG[["overallscore"]] <- as.double(gsub(",", ".", SDG[["overallscore"]]))
+D1_0_SDG[["overallscore"]] <- as.double(gsub(",", ".", D1_0_SDG[["overallscore"]]))
 
 # Function to transform the SDG score into numeric values
 
-makenumSDG <- function(SDG) {
+makenumSDG <- function(D1_0_SDG) {
   for (i in 1:17) {
     varname <- paste("goal", i, sep = "")
-    SDG[[varname]] <- as.double(gsub(",", ".", SDG[[varname]]))
+    D1_0_SDG[[varname]] <- as.double(gsub(",", ".", D1_0_SDG[[varname]]))
   }
-  return(SDG)
+  return(D1_0_SDG)
 }
 
-SDG <- makenumSDG(SDG)
+D1_0_SDG <- makenumSDG(D1_0_SDG)
 
 # inspection of missing values
 
-propmissing <- numeric(length(SDG))
+propmissing <- numeric(length(D1_0_SDG))
 
-for (i in 1:length(SDG)){
-  proportion <- mean(is.na(SDG[[i]]))
+for (i in 1:length(D1_0_SDG)){
+  proportion <- mean(is.na(D1_0_SDG[[i]]))
   propmissing[i] <- proportion
 }
 propmissing
 
 # Population has some missing values, let's investigate
 
-SDG0 <- SDG |> 
+SDG0 <- D1_0_SDG |> 
   group_by(code) |> 
   select(population) |> 
   summarize(NaPop = mean(is.na(population))) |>
@@ -51,16 +50,16 @@ print(SDG0, n = 180)
 
 # Normal to have missing values because not countries but regions so we can drop these observations
 
-SDG <- SDG %>%
+D1_0_SDG <- D1_0_SDG %>%
   filter(!str_detect(code, "^_"))
 
 # Now there isn't any more missing values in the variable population and we will see that we have information on 166 countries:
 
-(country_number <- length(unique(SDG$country)))
+(country_number <- length(unique(D1_0_SDG$country)))
 
 # Where do we have missing values in the different goal scores? 
 
-SDG1 <- SDG |> 
+SDG1 <- D1_0_SDG |> 
   group_by(code) |> 
   select(contains("goal")) |> 
   summarize(Na1 = mean(is.na(goal1)),
@@ -89,7 +88,7 @@ print(SDG1, n = 180)
 # More investigations of those 3 SDG scores
 # A lot of countries don't have information on those 3 SDG, should we choose to not analyse these SDGs? 
 
-SDG2 <- SDG |> 
+SDG2 <- D1_0_SDG |> 
   group_by(code) |> 
   select(contains("goal")) |> 
   summarize(Na1 = mean(is.na(goal1))) |>
@@ -101,7 +100,7 @@ length(unique(SDG2$code))/country_number
 # there are only 9.04% missing values in 15 different countries, goal 1 being "end poverty", we 
 # decide to keep it and only remove the countries with no information for the analysis
 
-SDG3 <- SDG |> 
+SDG3 <- D1_0_SDG |> 
   group_by(code) |> 
   select(contains("goal")) |> 
   summarize(Na10 = mean(is.na(goal10))) |>
@@ -113,7 +112,7 @@ length(unique(SDG3$code))/country_number
 # there are only 10.2% missing values in 17 different countries, goal 10 being "reduced inequalities", we 
 # decide to keep it and only remove the countries with no information for the analysis
 
-SDG4 <- SDG |> 
+SDG4 <- D1_0_SDG |> 
   group_by(code) |> 
   select(contains("goal")) |> 
   summarize(Na14 = mean(is.na(goal14))) |>
@@ -127,16 +126,16 @@ length(unique(SDG4$code))/country_number
 
 # Delete SDG14
 
-SDG <- SDG %>% select(-goal14)
+D1_0_SDG <- D1_0_SDG %>% select(-goal14)
 
 # Standardize country code
 
-SDG$code <- countrycode(
-  sourcevar = SDG$code,
+D1_0_SDG$code <- countrycode(
+  sourcevar = D1_0_SDG$code,
   origin = "iso3c",
   destination = "iso3c",
 )
 
 # Create a character vector with all the different country codes
 
-list_country <- c(unique(SDG$code))
+list_country <- c(unique(D1_0_SDG$code))

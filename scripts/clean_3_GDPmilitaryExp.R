@@ -1,5 +1,3 @@
-library(gridExtra)
-library(patchwork)
 
 GDPpercapita <-
   read.csv(here("scripts","data","GDPpercapita.csv"), sep = ";")
