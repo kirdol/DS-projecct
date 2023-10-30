@@ -16,11 +16,19 @@ for (script in liste_de_scripts) { # execute each sript
 merge_1_2 <- merge(D1_0_SDG,
                    D2_1_Unemployment_rate,
                    by = c("code", "year"), all.x = TRUE)
+merge_1_2 <- merge_1_2 %>%
+  select(-country.y)
+merge_1_2 <- merge_1_2 %>%
+  rename("country" = "country.x")
 
 # merge merge_1_2 with GDPpercapita 
 merge_12_3 <- merge(merge_1_2,
                     GDPpercapita,
                     by = c("code", "year"), all.x = TRUE)
+merge_12_3 <- merge_12_3 %>%
+  select(-country.y)
+merge_12_3 <- merge_12_3 %>%
+  rename("country" = "country.x")
 
 # Also add MilitaryExpenditurePercentGDP and MiliratyExpenditurePercentGovExp :)
 
@@ -28,31 +36,55 @@ merge_12_3 <- merge(merge_1_2,
 merge_123_4 <- merge(merge_12_3,
                      D4_0_Internet_usage,
                      by = c("code", "year"), all.x = TRUE)
+merge_123_4 <- merge_123_4 %>%
+  select(-country.y)
+merge_123_4 <- merge_123_4 %>%
+  rename("country" = "country.x")
 
 # merge merge_123_4 with ??? 
 merge_1234_5 <- merge(merge_123_4,
                       ???,
                       by = c("code", "year"), all.x = TRUE)
+merge_1234_5 <- merge_1234_5 %>%
+  select(-country.y)
+merge_1234_5 <- merge_1234_5 %>%
+  rename("country" = "country.x")
 
 # merge merge_1234_5 with D_6_0_Disasters
 merge_12345_6 <- merge(merge_1234_5,
                        D_6_0_Disasters,
                        by = c("code", "year"), all.x = TRUE)
+merge_12345_6 <- merge_12345_6 %>%
+  select(-country.y)
+merge_12345_6 <- merge_12345_6 %>%
+  rename("country" = "country.x")
 
 # merge merge_12345_6 with COVID
 merge_123456_7 <- merge(merge_12345_6,
                         COVID,
                         by = c("code", "year"), all.x = TRUE)
+merge_123456_7 <- merge_123456_7 %>%
+  select(-country.y)
+merge_123456_7 <- merge_123456_7 %>%
+  rename("country" = "country.x")
 
 # merge merge_123456_7 with ???
 merge_1234567_8 <- merge(merge_123456_7,
                          ???,
                          by = c("code", "year"), all.x = TRUE)
+merge_1234567_8 <- merge_1234567_8 %>%
+  select(-country.y)
+merge_1234567_8 <- merge_1234567_8 %>%
+  rename("country" = "country.x")
 
 # merge merge_1234567_8 with Conflicts
 All_merged<- merge(merge_1234567_8,
                    Conflicts,
                    by = c("code", "year"), all.x = TRUE)
+All_merged <- All_merged %>%
+  select(-country.y)
+All_merged <- All_merged %>%
+  rename("country" = "country.x")
 
 # cleaning of the environment
 rm(merge_1_2, # remove merge_1_2 from memory
