@@ -127,7 +127,7 @@ mean(is.na(GDPpercapita$GDPpercapita))
 
 # 15% for MiliratyExpenditurePercentGovExp, 12.5% for MilitaryExpenditurePercentGDP and 1.11% for GDPpercapita
 
-####### Investigate missing values in GDPpercapita #####
+####### Investigate missing values in GDPpercapita ######
 
 GDPpercapita1 <- GDPpercapita %>%
   group_by(code) %>%
@@ -137,24 +137,48 @@ print(GDPpercapita1, n = 180)
 
 # Only SOM and SSD have a lot of missings and in total 9 countries with missings
 
+# Create a dataframe that only have the coutnries with missing values and 
+# add a column which contains the % of missings for each country
+
 filtered_data_GDP <- GDPpercapita %>%
   filter(code %in% GDPpercapita1$code)
-ggplot(data = filtered_data_GDP) +
-  geom_line(mapping = aes(x = year, y = GDPpercapita, color = code), size =1)
+
+filtered_data_GDP <- filtered_data_GDP %>%
+  group_by(code) %>%
+  mutate(PercentageMissing = mean(is.na(GDPpercapita))) %>%
+  ungroup()
 
 # Look at the distribution of values for the countries that have missing values
 
-Freq_Missing_GDP <- ggplot(data=filtered_data_GDP) +
-  geom_histogram(aes(x=GDPpercapita), bins = 30) +
-  labs(title = "Histogram of GDP per Capita", x = "GDP per Capita", y = "Frequency")
-Freq_Missing_GDP + facet_wrap(~ code, nrow = 2)
+Freq_Missing_GDP <- ggplot(data = filtered_data_GDP) +
+  geom_histogram(aes(x = GDPpercapita, 
+                     fill = cut(PercentageMissing,
+                                breaks = c(0, 0.25, 0.5, 1),
+                                labels = c("0-24%", "25-49%", "50-100%"))),
+                 bins = 30) +
+  labs(title = "Histogram of GDP per capita", x = "GDP per capitaP", y = "Frequency") +
+  scale_fill_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"), labels = c("0-24%", "25-49%", "50-100%")) +
+  guides(fill = guide_legend(title = NULL)) +
+  facet_wrap(~ code, nrow = 4)
+
+print(Freq_Missing_GDP)
 
 # Look at the evolution over the years for the countries that have missing values
 
-Freq_Missing_GDP <- ggplot(data=filtered_data_GDP) +
-  geom_point(mapping = aes(x=year, y=GDPpercapita))
+Evol_Missing_GDP <- ggplot(data = filtered_data_GDP) +
+  geom_point(aes(x = year, y = GDPpercapita, 
+                 color = cut(PercentageMissing,
+                             breaks = c(0, 0.25, 0.5, 1),
+                             labels = c("0-24%", "25-49%", "50-100%")))) +
+  labs(title = "Scatter Plot of GDP per capita", x = "Year", y = "GDP per capita") +
+  scale_color_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"),
+                     labels = c("0-24%", "25-49%", "50-100%")) +
+  guides(color = guide_legend(title = "% missings")) +
+  facet_wrap(~ code, nrow = 4)
 
-Freq_Missing_GDP + facet_wrap(~ code, nrow = 4)
+print(Evol_Missing_GDP)
+
+####### Fill in missing values in GDPpercapita ######
 
 ##### Investigate missing values in MilitaryExpenditurePercentGDP #####
 
@@ -166,79 +190,54 @@ print(MilitaryExpenditurePercentGDP1, n = 180)
 
 # 100% missing: a lot! 11 countries
 
-# Look at the distribution of values for the countries that have missing values
+# Create a dataframe that only have the coutnries with missing values and 
+# add a column which contains the % of missings for each country
 
 filtered_data_Mil1 <- MilitaryExpenditurePercentGDP %>%
   filter(code %in% MilitaryExpenditurePercentGDP1$code)
 
-Freq_Missing_Mil1 <- ggplot(data=filtered_data_Mil1) +
-  geom_histogram(aes(x=MilitaryExpenditurePercentGDP), bins = 30)
+filtered_data_Mil1 <- filtered_data_Mil1 %>%
+  group_by(code) %>%
+  mutate(PercentageMissing = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
+  ungroup()
 
-Freq_Missing_Mil1 + facet_wrap(~ code, nrow = 4)
+# Look at the distribution of values for the countries that have missing values
+
+Freq_Missing_Mil1 <- ggplot(data = filtered_data_Mil1) +
+  geom_histogram(aes(x = MilitaryExpenditurePercentGDP, 
+                     fill = cut(PercentageMissing,
+                                breaks = c(0, 0.25, 0.5, 1),
+                                labels = c("0-24%", "25-49%", "50-100%"))),
+                 bins = 30) +
+  labs(title = "Histogram of Military exp in % of GDP", x = "Military exp in % of GDP", y = "Frequency") +
+  scale_fill_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"), labels = c("0-24%", "25-49%", "50-100%")) +
+  guides(fill = guide_legend(title = "% missings")) +
+  facet_wrap(~ code, nrow = 4)
+
+print(Freq_Missing_Mil1)
 
 # Look at evolution over the years
 
-Freq_Missing_Mil1 <- ggplot(data=filtered_data_Mil1) +
-  geom_point(mapping = aes(x=year, y=MilitaryExpenditurePercentGDP))
+Evol_Missing_Mil1 <- ggplot(data = filtered_data_Mil1) +
+  geom_point(aes(x = year, y = MilitaryExpenditurePercentGDP, 
+                 color = cut(PercentageMissing,
+                             breaks = c(0, 0.25, 0.5, 1),
+                             labels = c("0-24%", "25-49%", "50-100%")))) +
+  labs(title = "Scatter Plot of Military exp in % of GDP", x = "Year", y = "Military exp in % of GDP") +
+  scale_color_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"),
+                     labels = c("0-24%", "25-49%", "50-100%")) +
+  guides(color = guide_legend(title = "% missings")) +
+  facet_wrap(~ code, nrow = 4)
 
-Freq_Missing_Mil1 + facet_wrap(~ code, nrow = 4)
+print(Evol_Missing_Mil1)
 
-# Test1
 
-MilitaryExpenditurePercentGDP2 <- MilitaryExpenditurePercentGDP %>%
-  group_by(code) %>%
-  summarize(NaMil1 = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
-  filter(NaMil1 != 0 & NaMil1 <= 0.5)
-print(MilitaryExpenditurePercentGDP2, n = 180)
-
-# Test2 -> replace by mean when flat / replace by mean over 3 years before and after when 
+# Conculsion: replace by mean when flat / replace by mean over 3 years before and after when 
 # different tendencies / replace by value of the year before or after when suited
 
-MilitaryExpenditurePercentGDP3 <- MilitaryExpenditurePercentGDP %>%
-  group_by(code) %>%
-  summarize(NaMil1 = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
-  filter(NaMil1 != 0 & NaMil1 <= 0.1)
-print(MilitaryExpenditurePercentGDP3, n = 180)
+##### Fill in missing values in MilitaryExpenditurePercentGDP #####
 
-filtered_data <- MilitaryExpenditurePercentGDP %>%
-  filter(code %in% MilitaryExpenditurePercentGDP3$code)
-ggplot(data = filtered_data) +
-  geom_line(mapping = aes(x = year, y = MilitaryExpenditurePercentGDP, color = code))
-
-MilitaryExpenditurePercentGDP4 <- MilitaryExpenditurePercentGDP %>%
-  group_by(code) %>%
-  summarize(NaMil1 = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
-  filter(NaMil1 > 0.1 & NaMil1 <= 0.15)
-print(MilitaryExpenditurePercentGDP4, n = 180)
-
-filtered_data <- MilitaryExpenditurePercentGDP %>%
-  filter(code %in% MilitaryExpenditurePercentGDP4$code)
-ggplot(data = filtered_data) +
-  geom_line(mapping = aes(x = year, y = MilitaryExpenditurePercentGDP, color = code))
-
-MilitaryExpenditurePercentGDP5 <- MilitaryExpenditurePercentGDP %>%
-  group_by(code) %>%
-  summarize(NaMil1 = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
-  filter(NaMil1 > 0.15 & NaMil1 <= 0.2)
-print(MilitaryExpenditurePercentGDP5, n = 180)
-
-filtered_data <- MilitaryExpenditurePercentGDP %>%
-  filter(code %in% MilitaryExpenditurePercentGDP5$code)
-ggplot(data = filtered_data) +
-  geom_line(mapping = aes(x = year, y = MilitaryExpenditurePercentGDP, color = code))
-
-MilitaryExpenditurePercentGDP6 <- MilitaryExpenditurePercentGDP %>%
-  group_by(code) %>%
-  summarize(NaMil1 = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
-  filter(NaMil1 > 0.2 & NaMil1 <= 0.3)
-print(MilitaryExpenditurePercentGDP6, n = 180)
-
-filtered_data <- MilitaryExpenditurePercentGDP %>%
-  filter(code %in% MilitaryExpenditurePercentGDP6$code)
-ggplot(data = filtered_data) +
-  geom_line(mapping = aes(x = year, y = MilitaryExpenditurePercentGDP, color = code))
-
-##### Investigate missing values in MilitaryExpenditurePercentGDP #####
+##### Investigate missing values in MilitaryExpenditurePercentGovExp #####
 
 MiliratyExpenditurePercentGovExp1 <- MiliratyExpenditurePercentGovExp %>%
   group_by(code) %>%
@@ -248,67 +247,48 @@ print(MiliratyExpenditurePercentGovExp1, n = 180)
 
 # 100% missing: a lot ! 14 countries
 
-# Look at the distribution of values for the countries that have missing values
+# Create a dataframe that only have the coutnries with missing values and 
+# add a column which contains the % of missings for each country
 
 filtered_data_Mil2 <- MiliratyExpenditurePercentGovExp %>%
   filter(code %in% MilitaryExpenditurePercentGDP1$code)
 
-Freq_Missing_Mil2 <- ggplot(data=filtered_data_Mil2) +
-  geom_histogram(aes(x=MiliratyExpenditurePercentGovExp), bins = 50)
+filtered_data_Mil2 <- filtered_data_Mil2 %>%
+  group_by(code) %>%
+  mutate(PercentageMissing = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
+  ungroup()
 
-Freq_Missing_Mil2 + facet_wrap(~ code, nrow = 4)
+# Look at the distribution of values for the countries that have missing values
+
+Freq_Missing_Mil2 <- ggplot(data = filtered_data_Mil2) +
+  geom_histogram(aes(x = MiliratyExpenditurePercentGovExp, 
+                     fill = cut(PercentageMissing,
+                                breaks = c(0, 0.25, 0.5, 1),
+                                labels = c("0-24%", "25-49%", "50-100%"))),
+                 bins = 30) +
+  labs(title = "Histogram of Military exp in % of Gov Exp", x = "Military exp in % of Gov Exp", y = "Frequency") +
+  scale_fill_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"), labels = c("0-24%", "25-49%", "50-100%")) +
+  guides(fill = guide_legend(title = "% missings")) +
+  facet_wrap(~ code, nrow = 4)
+
+print(Freq_Missing_Mil2)
 
 # Look at evolution over the years
 
-Freq_Missing_Mil2 <- ggplot(data=filtered_data_Mil2) +
-  geom_point(mapping = aes(x=year, y=MiliratyExpenditurePercentGovExp))
+Evol_Missing_Mil2 <- ggplot(data = filtered_data_Mil2) +
+  geom_point(aes(x = year, y = MiliratyExpenditurePercentGovExp, 
+                 color = cut(PercentageMissing,
+                             breaks = c(0, 0.25, 0.5, 1),
+                             labels = c("0-24%", "25-49%", "50-100%")))) +
+  labs(title = "Scatter Plot of Military exp in % of Gov Exp", x = "Year", y = "Military exp in % of Gov Exp") +
+  scale_color_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"),
+                     labels = c("0-24%", "25-49%", "50-100%")) +
+  guides(color = guide_legend(title = "% missings")) +
+  facet_wrap(~ code, nrow = 4)
 
-Freq_Missing_Mil2 + facet_wrap(~ code, nrow = 4)
+print(Evol_Missing_Mil2)
 
-# Test2 -> replace by mean when flat / replace by mean over 3 years before and after when 
+# Conclusion: replace by mean when flat / replace by mean over 3 years before and after when 
 # different tendencies / replace by value of the year before or after when suited
 
-MilitaryExpenditurePercentGovExp3 <- MiliratyExpenditurePercentGovExp %>%
-  group_by(code) %>%
-  summarize(NaMil2 = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
-  filter(NaMil2 != 0 & NaMil2 <= 0.1)
-print(MilitaryExpenditurePercentGovExp3, n = 180)
-
-filtered_data <- MiliratyExpenditurePercentGovExp %>%
-  filter(code %in% MilitaryExpenditurePercentGovExp3$code)
-ggplot(data = filtered_data) +
-  geom_line(mapping = aes(x = year, y = MiliratyExpenditurePercentGovExp, color = code))
-
-MilitaryExpenditurePercentGovExp4 <- MiliratyExpenditurePercentGovExp %>%
-  group_by(code) %>%
-  summarize(NaMil2 = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
-  filter(NaMil2 > 0.1 & NaMil2 <= 0.15)
-print(MilitaryExpenditurePercentGovExp4, n = 180)
-
-filtered_data <- MiliratyExpenditurePercentGovExp %>%
-  filter(code %in% MilitaryExpenditurePercentGovExp4$code)
-ggplot(data = filtered_data) +
-  geom_line(mapping = aes(x = year, y = MiliratyExpenditurePercentGovExp, color = code))
-
-MilitaryExpenditurePercentGovExp5 <- MiliratyExpenditurePercentGovExp %>%
-  group_by(code) %>%
-  summarize(NaMil2 = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
-  filter(NaMil2 > 0.15 & NaMil2 <= 0.2)
-print(MilitaryExpenditurePercentGDP5, n = 180)
-
-filtered_data <- MiliratyExpenditurePercentGovExp %>%
-  filter(code %in% MilitaryExpenditurePercentGovExp5$code)
-ggplot(data = filtered_data) +
-  geom_line(mapping = aes(x = year, y = MiliratyExpenditurePercentGovExp, color = code))
-
-MilitaryExpenditurePercentGovExp6 <- MiliratyExpenditurePercentGovExp %>%
-  group_by(code) %>%
-  summarize(NaMil2 = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
-  filter(NaMil2 > 0.2 & NaMil2 <= 0.3)
-print(MilitaryExpenditurePercentGDP6, n = 180)
-
-filtered_data <- MiliratyExpenditurePercentGovExp %>%
-  filter(code %in% MilitaryExpenditurePercentGovExp6$code)
-ggplot(data = filtered_data) +
-  geom_line(mapping = aes(x = year, y = MiliratyExpenditurePercentGovExp, color = code))
-
+##### Fill in missing values in MilitaryExpenditurePercentGovExp #####
