@@ -1,5 +1,5 @@
-setwd("/Users/stefanfavre/Documents/GitHub/DS-projecct/scripts")
-data <- read.csv("Microhistorydatabase.csv")
+
+data <- read.csv(here("scripts", "data","Microhistorydatabase.csv"))
 
 library(dplyr)
 library(tibble)
