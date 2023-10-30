@@ -8,11 +8,6 @@ library("tidyr")
 #data in tibble 
 datatibble <- tibble(data)
 
-#Ranking which columns have most of the missing values
-datatibble |> 
-              colSums(is.na(datatibble)) |> 
-              sort(decreasing = TRUE) |> 
-              print()
 
 #Ranking which columns have most of the missing values
 na_counts <- colSums(is.na(datatibble))
@@ -38,9 +33,9 @@ na_rows <- datatibble[is.na(datatibble$ef_gender)|is.na(datatibble$pf_identity),
 #When investigating the columns containing the lowest NA values, we can see that the observations are also 
 #having NA values for the highest NA values columns. Therefore, it is more simple to get rid of the NA value. 
 
-
 dataWTNA <- drop_na(datatibble)
-
 dataWTNA <- select(dataWTNA,year, countries, region,hf_score, hf_rank, hf_quartile, everything())
 
-
+# How to select the NA values of a specific variable, arranged.
+# data <- data[is.na(data$column)]
+# arrange(select(data, column)) |> print(n = ...) 
