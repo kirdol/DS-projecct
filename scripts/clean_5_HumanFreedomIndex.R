@@ -1,5 +1,5 @@
-setwd("/Users/stefanfavre/Desktop/Data Science/Project SDG/Human freedom index ")
-data <- read.csv("human-freedom-index-2022 (1).csv")
+setwd("/Users/stefanfavre/Documents/GitHub/DS-projecct/scripts")
+data <- read.csv("human-freedom-index-2022.csv")
 
 library("dplyr")
 library("tibble")
@@ -36,7 +36,7 @@ na_rows <- datatibble[is.na(datatibble$ef_gender)|is.na(datatibble$pf_identity),
 dataWTNA <- drop_na(datatibble)
 dataWTNA <- select(dataWTNA,year, countries, region,hf_score, hf_rank, hf_quartile, everything())
 
-#D5_0_Human_freedom
+#D5_0_Human_freedom_index --> name final tibble
 
 # How to select the NA values of a specific variable, arranged.
 # data <- data[is.na(data$column)]

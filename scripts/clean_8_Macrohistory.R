@@ -1,4 +1,4 @@
-setwd("/Users/stefanfavre/Desktop/Data Science/Project SDG/Microhistory Database")
+setwd("/Users/stefanfavre/Documents/GitHub/DS-projecct/scripts")
 data <- read.csv("Microhistorydatabase.csv")
 
 library(dplyr)
