@@ -47,8 +47,8 @@ D2_1_Unemployment_rate$`unemployment rate` <-
 D2_1_Unemployment_rate_country_list <- unique(D2_1_Unemployment_rate$code)
 
 # Here we look at the country that are in the main dataframe but that are missing from the data on unemployment rate
-missing_countries <- setdiff(D1_0_SDG_country_list$code, D2_1_Unemployment_rate_country_list)
-print(missing_countries)
+D_2_1_Unemployment_rate_missing_countries <- setdiff(D1_0_SDG_country_list$code, D2_1_Unemployment_rate_country_list)
+print(D_2_1_Unemployment_rate_missing_countries)
 
 # Here, we select only the countries that we want (specifies in "list_country")
 D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
