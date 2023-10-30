@@ -14,7 +14,8 @@ packages <- c(
   "gridExtra",
   "readr",
   "readxl",
-  "ggplot2"
+  "ggplot2",
+  "countrycode"
 )
 purrr::walk(packages, library, character.only = TRUE)
 

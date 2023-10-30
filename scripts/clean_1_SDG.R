@@ -146,12 +146,8 @@ D1_0_SDG_country_list <- D1_0_SDG %>%
   filter(code %in% list_country) %>%
   select(code, country)
 
-# remove duplicated rowws
+# remove duplicated rows
 D1_0_SDG_country_list <- D1_0_SDG_country_list %>%
   select(code, country) %>%
   distinct()
-
-# cleaning of the environment
-rm(list_country,
-   country_number)
 
