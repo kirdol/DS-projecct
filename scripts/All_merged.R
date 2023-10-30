@@ -4,12 +4,12 @@ liste_de_scripts <- c("setup.R", # list of all the scripts needed to clean all i
                       "clean_1_SDG.R",
                       "clean_2_WorldIndex.R",
                       "clean_3_GDPmilitaryExp.R",
-                      "clean_4_InternetUsage",
+                      "clean_4_InternetUsage.R",
                       "clean_5_HumanFreedomIndex.R",
-                      "clean_6_Disasters",
-                      "clean_7_COVID",
+                      "clean_6_Disasters.R",
+                      "clean_7_COVID.R",
                       "clean_8_Macrohistory.R",
-                      "clean_9_Conflicts")
+                      "clean_9_Conflicts.R")
 
 for (script in liste_de_scripts) { # execute each sript
   source(here("scripts", script))}

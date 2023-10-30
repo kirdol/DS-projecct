@@ -48,17 +48,20 @@ conflicts <- Conflicts %>%
 # Print the summary of the "Rearanged_Conflicts" data frame
 #summary(conflicts)
 
+#creating a character vector that contains R scripts
 liste_de_scripts <- c("setup.R",
                       "clean_1_SDG.R")
 
-for (script in liste_de_scripts) { # execute each script
+#execute each scritp
+for (script in liste_de_scripts) {
   source(here("scripts", script))}
 
 
-# Effectuer la fusion en fonction du nom du pays
+# Merge by country name
 conflicts <- conflicts %>%
   left_join(D1_0_SDG_country_list, by = "country")
 
+#Rearrange the data
 conflicts <- conflicts %>%
   select(code, country, year, ongoing, sum_deaths, pop_affected, area_affected, maxintensity) %>%
   arrange(code, country, year)
