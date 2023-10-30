@@ -20,6 +20,8 @@ merge_12_3 <- merge(merge_1_2,
                     GDPpercapita,
                     by = c("code", "year"), all.x = TRUE)
 
+# Also add MilitaryExpenditurePercentGDP and MiliratyExpenditurePercentGovExp :)
+
 merge_123_4 <- merge(merge_12_3,
                      D4_0_Internet_usage,
                      by = c("code", "year"), all.x = TRUE)

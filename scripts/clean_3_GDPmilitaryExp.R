@@ -137,87 +137,6 @@ print(GDPpercapita1, n = 180)
 
 # Only SOM and SSD have a lot of missings and in total 9 countries with missings
 
-# AFG -> could replace the values with those of the previous years
-plot(
-  x = GDPpercapita$year[GDPpercapita$code == "AFG"],
-  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "AFG"],
-  xlab = "Year",
-  ylab = "GDP per Capita",
-  main = "GDP per Capita for AFG"
-)
-
-# BTN: quite stable in the last years, replace missing value in 2022 with the mean of the 5 last years
-plot(
-  x = GDPpercapita$year[GDPpercapita$code == "BTN"],
-  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "BTN"],
-  xlab = "Year",
-  ylab = "GDP per Capita",
-  main = "GDP per Capita for BTN"
-)
-
-# CUB: increasing, what do we do ?
-plot(
-  x = GDPpercapita$year[GDPpercapita$code == "CUB"],
-  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "CUB"],
-  xlab = "Year",
-  ylab = "GDP per Capita",
-  main = "GDP per Capita for CUB"
-)
-
-# LBN: big drop, but could use the value of 2021 to fill in the missing value of 2022
-plot(
-  x = GDPpercapita$year[GDPpercapita$code == "LBN"],
-  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "LBN"],
-  xlab = "Year",
-  ylab = "GDP per Capita",
-  main = "GDP per Capita for LBN"
-)
-
-# SOM: we don't have data before 2013, we decide not to include SOM when using GDPpercapita
-plot(
-  x = GDPpercapita$year[GDPpercapita$code == "SOM"],
-  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "SOM"],
-  xlab = "Year",
-  ylab = "GDP per Capita",
-  main = "GDP per Capita for SOM"
-)
-
-# SSD: We only have some values between 2008-15, we decide not to include this country when using GDPpercapita
-plot(
-  x = GDPpercapita$year[GDPpercapita$code == "SSD"],
-  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "SSD"],
-  xlab = "Year",
-  ylab = "GDP per Capita",
-  main = "GDP per Capita for SSD"
-)
-
-#STP: only one missing value that we can replace with the one from the previous year or use the prediction of a linear regression 
-plot(
-  x = GDPpercapita$year[GDPpercapita$code == "STP"],
-  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "STP"],
-  xlab = "Year",
-  ylab = "GDP per Capita",
-  main = "GDP per Capita for STP"
-)
-
-#SYR: stable during the last years, we use the mean fôf the last 5 years to fill in the 2 missing values (2021-22)
-plot(
-  x = GDPpercapita$year[GDPpercapita$code == "SYR"],
-  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "SYR"],
-  xlab = "Year",
-  ylab = "GDP per Capita",
-  main = "GDP per Capita for SYR"
-)
-
-# TKM: increases in a linear wya during the last five years -> use linear reg to fill in the 2 missing values
-plot(
-  x = GDPpercapita$year[GDPpercapita$code == "TKM"],
-  y = GDPpercapita$GDPpercapita[GDPpercapita$code == "TKM"],
-  xlab = "Year",
-  ylab = "GDP per Capita",
-  main = "GDP per Capita for TKM"
-)
-
 filtered_data_GDP <- GDPpercapita %>%
   filter(code %in% GDPpercapita1$code)
 ggplot(data = filtered_data_GDP) +
@@ -230,7 +149,7 @@ Freq_Missing_GDP <- ggplot(data=filtered_data_GDP) +
   labs(title = "Histogram of GDP per Capita", x = "GDP per Capita", y = "Frequency")
 Freq_Missing_GDP + facet_wrap(~ code, nrow = 2)
 
-# Look at evolution over the years
+# Look at the evolution over the years for the countries that have missing values
 
 Freq_Missing_GDP <- ggplot(data=filtered_data_GDP) +
   geom_point(mapping = aes(x=year, y=GDPpercapita))
@@ -245,7 +164,7 @@ MilitaryExpenditurePercentGDP1 <- MilitaryExpenditurePercentGDP %>%
   filter(NaMil1 != 0)
 print(MilitaryExpenditurePercentGDP1, n = 180)
 
-# 100% missing: a lot !11 countries
+# 100% missing: a lot! 11 countries
 
 # Look at the distribution of values for the countries that have missing values
 
@@ -271,16 +190,6 @@ MilitaryExpenditurePercentGDP2 <- MilitaryExpenditurePercentGDP %>%
   summarize(NaMil1 = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
   filter(NaMil1 != 0 & NaMil1 <= 0.5)
 print(MilitaryExpenditurePercentGDP2, n = 180)
-
-for (country_code in MilitaryExpenditurePercentGDP2$code){
-  plot(
-    x = MilitaryExpenditurePercentGDP$year[MilitaryExpenditurePercentGDP$code == country_code],
-    y = MilitaryExpenditurePercentGDP$MilitaryExpenditurePercentGDP[MilitaryExpenditurePercentGDP$code == country_code],
-    xlab = "Year",
-    ylab = "Military Exp % GDP",
-    main = paste("Military Exp % GDP", country_code)
-  )
-} 
 
 # Test2 -> replace by mean when flat / replace by mean over 3 years before and after when 
 # different tendencies / replace by value of the year before or after when suited
