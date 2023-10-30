@@ -36,6 +36,8 @@ na_rows <- datatibble[is.na(datatibble$ef_gender)|is.na(datatibble$pf_identity),
 dataWTNA <- drop_na(datatibble)
 dataWTNA <- select(dataWTNA,year, countries, region,hf_score, hf_rank, hf_quartile, everything())
 
+#D5_0_Human_freedom
+
 # How to select the NA values of a specific variable, arranged.
 # data <- data[is.na(data$column)]
 # arrange(select(data, column)) |> print(n = ...) 
