@@ -1,7 +1,7 @@
 # Natural Disasters
 
 # Read the CSV data file into a data frame named "Disasters"
-Disasters <- read.csv(here("scripts","data","1970-2021_DISASTERS.xlsx - emdat data.csv"))
+Disasters <- read.csv(here("scripts","data","Disasters.csv"))
 
 # Convert "Disasters" into a data frame (if it's not already)
 Disasters <- as.data.frame(Disasters)
