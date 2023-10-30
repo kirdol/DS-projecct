@@ -5,8 +5,10 @@ liste_de_scripts <- c("setup.R", # list of all the scripts needed to clean all i
                       "clean_2_WorldIndex.R",
                       "clean_3_GDPmilitaryExp.R",
                       "clean_4_InternetUsage",
+                      "clean_5_HumanFreedomIndex.R",
                       "clean_6_Disasters",
                       "clean_7_COVID",
+                      "clean_8_Macrohistory.R",
                       "clean_9_Conflicts")
 
 for (script in liste_de_scripts) { # execute each sript
@@ -43,7 +45,7 @@ merge_123_4 <- merge_123_4 %>%
 
 # merge merge_123_4 with ??? 
 merge_1234_5 <- merge(merge_123_4,
-                      ???,
+                      D5_0_Human_freedom_index,
                       by = c("code", "year"), all.x = TRUE)
 merge_1234_5 <- merge_1234_5 %>%
   select(-country.y)
@@ -70,7 +72,7 @@ merge_123456_7 <- merge_123456_7 %>%
 
 # merge merge_123456_7 with ???
 merge_1234567_8 <- merge(merge_123456_7,
-                         ???,
+                         D8_0_Macro_history,
                          by = c("code", "year"), all.x = TRUE)
 merge_1234567_8 <- merge_1234567_8 %>%
   select(-country.y)
