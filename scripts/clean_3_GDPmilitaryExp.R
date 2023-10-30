@@ -1,4 +1,3 @@
-
 GDPpercapita <-
   read.csv(here("scripts","data","GDPpercapita.csv"), sep = ";")
 MilitaryExpenditurePercentGDP <-
@@ -158,7 +157,7 @@ Freq_Missing_GDP <- ggplot(data = filtered_data_GDP) +
                  bins = 30) +
   labs(title = "Histogram of GDP per capita", x = "GDP per capitaP", y = "Frequency") +
   scale_fill_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"), labels = c("0-24%", "25-49%", "50-100%")) +
-  guides(fill = guide_legend(title = NULL)) +
+  guides(fill = guide_legend(title = "% missings")) +
   facet_wrap(~ code, nrow = 4)
 
 print(Freq_Missing_GDP)
