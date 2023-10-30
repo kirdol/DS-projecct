@@ -2,7 +2,7 @@
 ## Unemployment rate
 
 D2_1_Unemployment_rate <- # import the dataset
-  read.csv(here("scripts","data","UNE_2EAP_SEX_AGE_RT_A-full-2023-10-19.csv"))
+  read.csv(here("scripts","data","UnemploymentRate.csv"))
 
 D2_1_Unemployment_rate <- # make sure that we have a datafraame
   as.data.frame(D2_1_Unemployment_rate)
