@@ -24,10 +24,8 @@ Rearanged_Conflicts <- Conflicts %>%
     year = as.integer(year),
     gwsum_bestdeaths = as.numeric(gwsum_bestdeaths),
     pop_affected = as.numeric(pop_affected),
-    peaceyearshigh = as.numeric(peaceyearshigh),
     area_affected = as.numeric(area_affected),
     maxintensity = as.numeric(maxintensity),
-    maxcumulativeintensity = as.numeric(maxcumulativeintensity),
     )
 
 # Group the data by "year", "country" and summarize the data
@@ -37,17 +35,33 @@ Conflicts <- Rearanged_Conflicts %>%
     ongoing = sum (ongoing, na.rm = TRUE),
     sum_deaths = sum(gwsum_bestdeaths, na.rm = TRUE),
     pop_affected = sum(pop_affected, na.rm = TRUE),
-    peaceyearshigh = sum(peaceyearshigh, na.rm = TRUE),
     area_affected = sum(area_affected, na.rm = TRUE),
     maxintensity = sum(maxintensity, na.rm = TRUE),
-    maxcumulativeintensity = sum(maxcumulativeintensity, na.rm = TRUE),
   )
     
 # Select specific columns from the summarized data and arrange the data by specified columns
 conflicts <- Conflicts %>%
-  select(country, year, ongoing, sum_deaths, pop_affected, peaceyearshigh, area_affected, maxintensity, maxcumulativeintensity) %>%
+  select(country, year, ongoing, sum_deaths, pop_affected, area_affected, maxintensity) %>%
   arrange(country, year)
 
 
 # Print the summary of the "Rearanged_Conflicts" data frame
-summary(conflicts)
+#summary(conflicts)
+
+#creating a character vector that contains R scripts
+liste_de_scripts <- c("setup.R",
+                      "clean_1_SDG.R")
+
+#execute each scritp
+for (script in liste_de_scripts) {
+  source(here("scripts", script))}
+
+
+# Merge by country name
+conflicts <- conflicts %>%
+  left_join(D1_0_SDG_country_list, by = "country")
+
+#Rearrange the data
+conflicts <- conflicts %>%
+  select(code, country, year, ongoing, sum_deaths, pop_affected, area_affected, maxintensity) %>%
+  arrange(code, country, year)

@@ -1,4 +1,4 @@
-setwd("/Users/stefanfavre/Desktop/Data Science/Project SDG/Microhistory Database")
+setwd("/Users/stefanfavre/Documents/GitHub/DS-projecct/scripts")
 data <- read.csv("Microhistorydatabase.csv")
 
 library(dplyr)
@@ -39,4 +39,5 @@ dataWTNA <- drop_na(datatibble)
 
 dataWTNA <- select(dataWTNA, year, country, iso, ifs, pop, everything())
 
+# D8_0_Macro_history --> name final tibble
 
