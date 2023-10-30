@@ -39,4 +39,5 @@ dataWTNA <- drop_na(datatibble)
 
 dataWTNA <- select(dataWTNA, year, country, iso, ifs, pop, everything())
 
+# D8_0_Macro_history --> name final tibble
 
