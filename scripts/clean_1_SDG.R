@@ -139,3 +139,19 @@ D1_0_SDG$code <- countrycode(
 # Create a character vector with all the different country codes
 
 list_country <- c(unique(D1_0_SDG$code))
+
+# Create a dataframe with the list of countries and their respective codes
+
+D1_0_SDG_country_list <- D1_0_SDG %>%
+  filter(code %in% list_country) %>%
+  select(code, country)
+
+# remove duplicated rowws
+D1_0_SDG_country_list <- D1_0_SDG_country_list %>%
+  select(code, country) %>%
+  distinct()
+
+# cleaning of the environment
+rm(list_country,
+   country_number)
+

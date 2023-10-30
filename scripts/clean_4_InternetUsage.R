@@ -6,11 +6,11 @@ D4_0_Internet_usage <- # import the dataset
 D4_0_Internet_usage <- # make sure that we have a datafraame
   as.data.frame(D4_0_Internet_usage)
 
-D4_0_Internet_usage <- # keep only the data between 2000 and 2022 to match the main datast
+D4_0_Internet_usage <- # keep only the data between 2000 and 2022 to match the main dataset
   D4_0_Internet_usage[
     D4_0_Internet_usage$Year >= 2000 & D4_0_Internet_usage$Year <= 2022 , ]
 
-# renaming the colomns
+# renaming the colomns for clarity
 D4_0_Internet_usage <- D4_0_Internet_usage %>%
   rename(
     "code" = Code,
@@ -19,6 +19,6 @@ D4_0_Internet_usage <- D4_0_Internet_usage %>%
     "internet usage" = Individuals.using.the.Internet....of.population.
   )
 
-# changing to decimal values the internet usage
+# change to decimals internet usage
 D4_0_Internet_usage$`internet usage` <-
   D4_0_Internet_usage$`internet usage` / 100

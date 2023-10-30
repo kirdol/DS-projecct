@@ -1,22 +1,16 @@
 ### 2 World Index
-## Unemployment rate
+# Run "clean_1_SDG.R" to get the list of country codes (D1_0_SDG_country_list)
+source(here("scripts", "clean_1_SDG.R"))
 
+## D2.1 Unemployment rate
 D2_1_Unemployment_rate <- # import the dataset
   read.csv(here("scripts","data","UnemploymentRate.csv"))
 
 D2_1_Unemployment_rate <- # make sure that we have a datafraame
   as.data.frame(D2_1_Unemployment_rate)
 
-# Here, we use the dataset of the internet usage to extract the code of the countries.
-D4_0_Internet_usage <- # We import the dataset of Internet Usage
-  read.csv(here("scripts","data","InternetUsage.csv"))
-
-countries_codes <- D4_0_Internet_usage %>% # We create a new dataframe with the coutriy names and code.
-  select(Entity, Code) %>%
-  distinct()
-
 D2_1_Unemployment_rate <- # We merge the dataset of Unemployment rate with codes and the dataset containing the codes for each country
-  merge(D2_1_Unemployment_rate, countries_codes[, c("Entity", "Code")], by.x = "ref_area.label", by.y = "Entity", all.x = TRUE)
+  merge(D2_1_Unemployment_rate, D1_0_SDG_country_list[, c("country", "code")], by.x = "ref_area.label", by.y = "country", all.x = TRUE)
 
 D2_1_Unemployment_rate <- # keep only the data between 2000 and 2022 to match the main datast
   D2_1_Unemployment_rate[
@@ -28,12 +22,11 @@ D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
 
 # rearrange the columns
 D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
-  select(Code, ref_area.label, time, sex.label, classif1.label, obs_value)
+  select(code, ref_area.label, time, sex.label, classif1.label, obs_value)
 
 # rename columns
 D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
   rename(
-    "code" = Code,
     "country" = ref_area.label,
     "year" = time,
     "age category" = classif1.label,
@@ -50,18 +43,29 @@ D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
 D2_1_Unemployment_rate$`unemployment rate` <-
   D2_1_Unemployment_rate$`unemployment rate` / 100
 
-
-# cleaning of the environment
-rm(D4_0_Internet_usage, countries_codes)
-
 # We want to keep only the values for the country that appear in our main dataframe
-D2_1_unique_code <- unique(D2_1_Unemployment_rate$code)
+D2_1_Unemployment_rate_country_list <- unique(D2_1_Unemployment_rate$code)
 
 # Here we look at the country that are in the main dataframe but that are missing from the data on unemployment rate
-missing_countries <- setdiff(D2_1_unique_code, list_country)
-rm(D2_1_unique_code)
+missing_countries <- setdiff(D1_0_SDG_country_list$code, D2_1_Unemployment_rate_country_list)
 print(missing_countries)
 
 # Here, we select only the countries that we want (specifies in "list_country")
 D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
-  filter(code %in% list_country)
+  filter(code %in% D1_0_SDG_country_list$code)
+
+D2_1_Unemployment_rate_country_list <- D2_1_Unemployment_rate %>%
+  filter(code %in% D2_1_Unemployment_rate_country_list) %>%
+  select(code, country)
+
+D2_1_Unemployment_rate_country_list <- D2_1_Unemployment_rate_country_list %>%
+  select(code, country) %>%
+  distinct()
+
+# cleaning of the environment
+rm(D1_0_SDG,
+   SDG0,
+   SDG1,
+   SDG2,
+   SDG3,
+   SDG4)
