@@ -81,7 +81,7 @@ merge_1234567_8 <- merge_1234567_8 %>%
 
 # merge merge_1234567_8 with Conflicts
 All_merged<- merge(merge_1234567_8,
-                   Conflicts,
+                   conflicts,
                    by = c("code", "year"), all.x = TRUE)
 All_merged <- All_merged %>%
   select(-country.y)
