@@ -1,4 +1,4 @@
-setwd("/Users/stefanfavre/Documents/GitHub/DS-projecct/scripts")
+setwd("/Users/stefanfavre/Documents/GitHub/DS-projecct/scripts/data")
 data <- read.csv("human-freedom-index-2022.csv")
 
 library("dplyr")
@@ -41,3 +41,5 @@ dataWTNA <- select(dataWTNA,year, countries, region,hf_score, hf_rank, hf_quarti
 # How to select the NA values of a specific variable, arranged.
 # data <- data[is.na(data$column)]
 # arrange(select(data, column)) |> print(n = ...) 
+# length(unique(datatibble$country))
+
