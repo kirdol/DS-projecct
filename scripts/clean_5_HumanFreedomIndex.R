@@ -1,5 +1,4 @@
-setwd("/Users/stefanfavre/Documents/GitHub/DS-projecct/scripts/data")
-data <- read.csv("human-freedom-index-2022.csv")
+data <- read.csv(here("scripts", "data", "human-freedom-index-2022.csv"))
 
 library("dplyr")
 library("tibble")

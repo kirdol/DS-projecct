@@ -154,7 +154,7 @@ Freq_Missing_GDP <- ggplot(data = filtered_data_GDP) +
                      fill = cut(PercentageMissing,
                                 breaks = c(0, 0.25, 0.5, 1),
                                 labels = c("0-24%", "25-49%", "50-100%"))),
-                 bins = 30) +
+                 bins = 100) +
   labs(title = "Histogram of GDP per capita", x = "GDP per capitaP", y = "Frequency") +
   scale_fill_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"), labels = c("0-24%", "25-49%", "50-100%")) +
   guides(fill = guide_legend(title = "% missings")) +
@@ -211,7 +211,7 @@ Freq_Missing_Mil1 <- ggplot(data = filtered_data_Mil1) +
   labs(title = "Histogram of Military exp in % of GDP", x = "Military exp in % of GDP", y = "Frequency") +
   scale_fill_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"), labels = c("0-24%", "25-49%", "50-100%")) +
   guides(fill = guide_legend(title = "% missings")) +
-  facet_wrap(~ code, nrow = 4)
+  facet_wrap(~ code, nrow = 5)
 
 print(Freq_Missing_Mil1)
 
@@ -226,7 +226,7 @@ Evol_Missing_Mil1 <- ggplot(data = filtered_data_Mil1) +
   scale_color_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"),
                      labels = c("0-24%", "25-49%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
-  facet_wrap(~ code, nrow = 4)
+  facet_wrap(~ code, nrow = 5)
 
 print(Evol_Missing_Mil1)
 
@@ -268,11 +268,11 @@ Freq_Missing_Mil2 <- ggplot(data = filtered_data_Mil2) +
   labs(title = "Histogram of Military exp in % of Gov Exp", x = "Military exp in % of Gov Exp", y = "Frequency") +
   scale_fill_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"), labels = c("0-24%", "25-49%", "50-100%")) +
   guides(fill = guide_legend(title = "% missings")) +
-  facet_wrap(~ code, nrow = 4)
+  facet_wrap(~ code, nrow = 5)
 
 print(Freq_Missing_Mil2)
 
-# Look at evolution over the years
+ # Look at evolution over the years
 
 Evol_Missing_Mil2 <- ggplot(data = filtered_data_Mil2) +
   geom_point(aes(x = year, y = MiliratyExpenditurePercentGovExp, 
@@ -283,7 +283,7 @@ Evol_Missing_Mil2 <- ggplot(data = filtered_data_Mil2) +
   scale_color_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"),
                      labels = c("0-24%", "25-49%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
-  facet_wrap(~ code, nrow = 4)
+  facet_wrap(~ code, nrow = 5)
 
 print(Evol_Missing_Mil2)
 
