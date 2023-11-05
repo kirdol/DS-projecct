@@ -198,6 +198,19 @@ print(Evol_Missing_GDP)
 
 list_code <- c("AFG", "BTN", "CUB", "STP", "TKM")
 
+library(forecast)
+
+for (i in list_code) {
+  # Filter the dataset for the current country
+  country_data <- GDPpercapita %>% filter(code == i)
+  
+  # Perform linear interpolation for the current country's data
+  interpolated_data <- na.interp(country_data$GDPpercapita)
+  
+  # Update the original dataset with the interpolated values
+  GDPpercapita[GDPpercapita$code == i, "GDPpercapita"] <- interpolated_data
+}
+
 # SYR and YEM : we fit 2 lines to fill the values
 
 # LBN: weird at the end, we don't fill the missing value for now
@@ -244,6 +257,19 @@ print(Evol_Missing_Mil1)
 
 # "AFG", "BDI", "BEN", "CAF", "CIV", "COD", "GAB", "GMB", "KAZ", "LBN", "LBR", "MNE", "MRT", "NER", "TKJ", "TTO", "ZMB"
 # <30% missing and linear (17)
+
+list_code <- c("AFG", "BDI", "BEN", "CAF", "CIV", "COD", "GAB", "GMB", "KAZ", "LBN", "LBR", "MNE", "MRT", "NER", "TKJ", "TTO", "ZMB")
+
+for (i in list_code) {
+  # Filter the dataset for the current country
+  country_data <- MilitaryExpenditurePercentGDP %>% filter(code == i)
+  
+  # Perform linear interpolation for the current country's data
+  interpolated_data <- na.interp(country_data$MilitaryExpenditurePercentGDP)
+  
+  # Update the original dataset with the interpolated values
+  MilitaryExpenditurePercentGDP[MilitaryExpenditurePercentGDP$code == i, "MilitaryExpenditurePercentGDP"] <- interpolated_data
+}
 
 # "BIH", "COG", "IRQ", "MMR", "SDN", "TCD", "TGO", "ZWE"
 # <30% missing but not linear (keep but we will see later) (8)
@@ -293,6 +319,19 @@ print(Evol_Missing_Mil2)
 # "AFG", "ARM", BEN", "BIH", "BLR", COG", "ECU", GAB", "GMB", "KAZ", "LBN", "LBR", "MNE", "MWI", "NER", "TTO", "UKR", ZMB"
 # <30% missing and linear (18)
 
+list_code <- c("AFG", "ARM", "BEN", "BIH", "BLR", "COG", "ECU", "GAB", "GMB", "KAZ", "LBN", "LBR", "MNE", "MWI", "NER", "TTO", "UKR", "ZMB")
+
+for (i in list_code) {
+  # Filter the dataset for the current country
+  country_data <- MiliratyExpenditurePercentGovExp %>% filter(code == i)
+  
+  # Perform linear interpolation for the current country's data
+  interpolated_data <- na.interp(country_data$MiliratyExpenditurePercentGovExp)
+  
+  # Update the original dataset with the interpolated values
+  MiliratyExpenditurePercentGovExp[MiliratyExpenditurePercentGovExp$code == i, "MiliratyExpenditurePercentGovExp"] <- interpolated_data
+}
+
 # "BDI", "IRQ"
 # 2 lines (2)
 
@@ -300,3 +339,9 @@ print(Evol_Missing_Mil2)
 # <30% missing but not linear (keep but we will see later) (6)
 
 # Others have too much missing (31) -> very much maybe we will have to drop this variable for our analysis
+
+# ANd now, What is the percentage of missing values in these 3 datasets?
+
+mean(is.na(MiliratyExpenditurePercentGovExp$MiliratyExpenditurePercentGovExp))
+mean(is.na(MilitaryExpenditurePercentGDP$MilitaryExpenditurePercentGDP))
+mean(is.na(GDPpercapita$GDPpercapita))
