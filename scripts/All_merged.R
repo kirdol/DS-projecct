@@ -71,16 +71,16 @@ merge_123456_7 <- merge_123456_7 %>%
   rename("country" = "country.x")
 
 # merge merge_123456_7 with ???
-merge_1234567_8 <- merge(merge_123456_7,
-                         D8_0_Macro_history,
-                         by = c("code", "year"), all.x = TRUE)
-merge_1234567_8 <- merge_1234567_8 %>%
-  select(-country.y)
-merge_1234567_8 <- merge_1234567_8 %>%
-  rename("country" = "country.x")
+# merge_1234567_8 <- merge(merge_123456_7,
+                         #D8_0_Macro_history,
+                         #by = c("code", "year"), all.x = TRUE)
+#merge_1234567_8 <- merge_1234567_8 %>%
+  #select(-country.y)
+#merge_1234567_8 <- merge_1234567_8 %>%
+  #rename("country" = "country.x")
 
 # merge merge_1234567_8 with Conflicts
-All_merged<- merge(merge_1234567_8,
+All_merged<- merge(merge_123456_7,
                    conflicts,
                    by = c("code", "year"), all.x = TRUE)
 All_merged <- All_merged %>%

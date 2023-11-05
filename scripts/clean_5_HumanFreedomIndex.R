@@ -95,6 +95,10 @@ print(country_na_count)
 #HERE DONE PER COUNTRY PER VARIABLE 
 #I DON'T WANT TO ERASE A COUNTRY, JUST THE YEAR OF A COUNTRY
 
+# Only keep the years after 2000 and before 2022
+datatibble <- datatibble %>%
+  filter(year >= 2000 & year <= 2022)
+
 # Rename the column coutries into country to match the other datbases
 names(datatibble)[names(datatibble) == "countries"] <- "country"
 
@@ -120,3 +124,5 @@ list_country_free <- c(unique(datatibble$code))
 (missing <- setdiff(list_country, list_country_free))
 
 # Turkey was missing but present in the initial database (it was a problem when stadardizing the country names of D1_0SDG_country_list that we corrected) and the other missing countries are:"AFG" "CUB" "MDV" "STP" "SSD" "TKM" "UZB" 
+
+D5_0_Human_freedom_index <- datatibble
