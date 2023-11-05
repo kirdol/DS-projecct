@@ -5,6 +5,13 @@ MilitaryExpenditurePercentGDP <-
 MiliratyExpenditurePercentGovExp <-
   read.csv(here("scripts","data","MiliratyExpenditurePercentGovExp.csv"), sep = ";")
 
+# fill in the missing codes using the column Indicator.Name
+
+fill_code <- function(data){
+  data <- data %>%
+    mutate(Country.Code = ifelse(!grepl("^[A-Z]{3}$", Country.Code), Indicator.Name, Country.Code))
+}
+
 # remove the variables that we don't need
 
 remove <- function(data){
@@ -60,6 +67,7 @@ nameorder <- function(data) {
 # one function that contains all the others
 
 cleanwide2long <- function(data){
+  data <- fill_code(data)
   data <- remove(data)
   data <- makenum(data)
   data <- renameyear(data)
@@ -117,6 +125,24 @@ MiliratyExpenditurePercentGovExp <- MiliratyExpenditurePercentGovExp %>% filter(
 length(unique(MiliratyExpenditurePercentGovExp$code))
 
 # There are only 157 countries that are both in the main SDG dataset and in these 3 datasets
+# But we suspect that some of the missing countries were in the database but not rightly matched
+
+list_country_GDP <- c(unique(GDPpercapita$code))
+(missing <- setdiff(list_country, list_country_GDP))
+
+# 1. Bahamas was in the database but instead of the code "BHS" there is "The"
+# 2. "COD" "Dem. Rep."
+# 3. "COG" "Rep"
+# 4. "EGY" "Arab Rep."
+# 5. "GMB" "The"
+# 6. "IRN" "Islamic Rep."
+# 7. "KOR" "Rep."
+# 8. "VEN" "RB"
+# 9. "YEM" "Rep."
+# We remark that the code is in another column of the initial database: "Indicator.Name"
+# We go back to the initial database and before cleaning it we put the right codes
+
+# After rerunning the code we see that we have all our 166 countries from the initial dataset 
 
 # What is the percentage of missing values in these 3 datasets?
 
@@ -124,7 +150,7 @@ mean(is.na(MiliratyExpenditurePercentGovExp$MiliratyExpenditurePercentGovExp))
 mean(is.na(MilitaryExpenditurePercentGDP$MilitaryExpenditurePercentGDP))
 mean(is.na(GDPpercapita$GDPpercapita))
 
-# 15% for MiliratyExpenditurePercentGovExp, 12.5% for MilitaryExpenditurePercentGDP and 1.11% for GDPpercapita
+# 16.4% for MiliratyExpenditurePercentGovExp, 12.9% for MilitaryExpenditurePercentGDP and 1.31% for GDPpercapita
 
 ####### Investigate missing values in GDPpercapita ######
 
@@ -134,9 +160,9 @@ GDPpercapita1 <- GDPpercapita %>%
   filter(NaGDP != 0)
 print(GDPpercapita1, n = 180)
 
-# Only SOM and SSD have a lot of missings and in total 9 countries with missings
+# Only SOM and SSD have a lot of missings and in total 11 countries with missings
 
-# Create a dataframe that only have the coutnries with missing values and 
+# Create a dataframe that only have the countries with missing values and 
 # add a column which contains the % of missings for each country
 
 filtered_data_GDP <- GDPpercapita %>%
@@ -147,37 +173,34 @@ filtered_data_GDP <- filtered_data_GDP %>%
   mutate(PercentageMissing = mean(is.na(GDPpercapita))) %>%
   ungroup()
 
-# Look at the distribution of values for the countries that have missing values
-
-Freq_Missing_GDP <- ggplot(data = filtered_data_GDP) +
-  geom_histogram(aes(x = GDPpercapita, 
-                     fill = cut(PercentageMissing,
-                                breaks = c(0, 0.25, 0.5, 1),
-                                labels = c("0-24%", "25-49%", "50-100%"))),
-                 bins = 100) +
-  labs(title = "Histogram of GDP per capita", x = "GDP per capitaP", y = "Frequency") +
-  scale_fill_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"), labels = c("0-24%", "25-49%", "50-100%")) +
-  guides(fill = guide_legend(title = "% missings")) +
-  facet_wrap(~ code, nrow = 4)
-
-print(Freq_Missing_GDP)
-
 # Look at the evolution over the years for the countries that have missing values
 
 Evol_Missing_GDP <- ggplot(data = filtered_data_GDP) +
   geom_point(aes(x = year, y = GDPpercapita, 
                  color = cut(PercentageMissing,
-                             breaks = c(0, 0.25, 0.5, 1),
-                             labels = c("0-24%", "25-49%", "50-100%")))) +
+                             breaks = c(0, 0.1, 0.2, 0.3, 1),
+                             labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
   labs(title = "Scatter Plot of GDP per capita", x = "Year", y = "GDP per capita") +
-  scale_color_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"),
-                     labels = c("0-24%", "25-49%", "50-100%")) +
+  scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
+                     labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
   facet_wrap(~ code, nrow = 4)
 
 print(Evol_Missing_GDP)
 
+# We decide not to use SSD SOM and VEN since there are more than 30% missing
+
 ####### Fill in missing values in GDPpercapita ######
+
+# Almost all have a linear evolution over time, we fill in the missing values based on the lines
+
+# AFG, BTN, CUB, STP and TKM are easy with only one line
+
+list_code <- c("AFG", "BTN", "CUB", "STP", "TKM")
+
+# SYR and YEM : we fit 2 lines to fill the values
+
+# LBN: weird at the end, we don't fill the missing value for now
 
 ##### Investigate missing values in MilitaryExpenditurePercentGDP #####
 
@@ -187,7 +210,7 @@ MilitaryExpenditurePercentGDP1 <- MilitaryExpenditurePercentGDP %>%
   filter(NaMil1 != 0)
 print(MilitaryExpenditurePercentGDP1, n = 180)
 
-# 100% missing: a lot! 11 countries
+# 100% missing: a lot! 12 countries
 
 # Create a dataframe that only have the coutnries with missing values and 
 # add a column which contains the % of missings for each country
@@ -200,41 +223,32 @@ filtered_data_Mil1 <- filtered_data_Mil1 %>%
   mutate(PercentageMissing = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
   ungroup()
 
-# Look at the distribution of values for the countries that have missing values
-
-Freq_Missing_Mil1 <- ggplot(data = filtered_data_Mil1) +
-  geom_histogram(aes(x = MilitaryExpenditurePercentGDP, 
-                     fill = cut(PercentageMissing,
-                                breaks = c(0, 0.25, 0.5, 1),
-                                labels = c("0-24%", "25-49%", "50-100%"))),
-                 bins = 30) +
-  labs(title = "Histogram of Military exp in % of GDP", x = "Military exp in % of GDP", y = "Frequency") +
-  scale_fill_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"), labels = c("0-24%", "25-49%", "50-100%")) +
-  guides(fill = guide_legend(title = "% missings")) +
-  facet_wrap(~ code, nrow = 5)
-
-print(Freq_Missing_Mil1)
-
 # Look at evolution over the years
 
 Evol_Missing_Mil1 <- ggplot(data = filtered_data_Mil1) +
   geom_point(aes(x = year, y = MilitaryExpenditurePercentGDP, 
                  color = cut(PercentageMissing,
-                             breaks = c(0, 0.25, 0.5, 1),
-                             labels = c("0-24%", "25-49%", "50-100%")))) +
-  labs(title = "Scatter Plot of Military exp in % of GDP", x = "Year", y = "Military exp in % of GDP") +
-  scale_color_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"),
-                     labels = c("0-24%", "25-49%", "50-100%")) +
+                             breaks = c(0, 0.1, 0.2, 0.3, 1),
+                             labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
+  labs(title = "Scatter Plot of military expenditure in % of GDP", x = "Year", y = "GDP per capita") +
+  scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
+                     labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
   facet_wrap(~ code, nrow = 5)
 
 print(Evol_Missing_Mil1)
 
-
-# Conculsion: replace by mean when flat / replace by mean over 3 years before and after when 
-# different tendencies / replace by value of the year before or after when suited
+# Try to fill the missings if %missings < 30%
 
 ##### Fill in missing values in MilitaryExpenditurePercentGDP #####
+
+# "AFG", "BDI", "BEN", "CAF", "CIV", "COD", "GAB", "GMB", "KAZ", "LBN", "LBR", "MNE", "MRT", "NER", "TKJ", "TTO", "ZMB"
+# <30% missing and linear (17)
+
+# "BIH", "COG", "IRQ", "MMR", "SDN", "TCD", "TGO", "ZWE"
+# <30% missing but not linear (keep but we will see later) (8)
+
+# Others have too much missing (24)
 
 ##### Investigate missing values in MilitaryExpenditurePercentGovExp #####
 
@@ -244,50 +258,45 @@ MiliratyExpenditurePercentGovExp1 <- MiliratyExpenditurePercentGovExp %>%
   filter(NaMil2 != 0)
 print(MiliratyExpenditurePercentGovExp1, n = 180)
 
-# 100% missing: a lot ! 14 countries
+# 100% missing: a lot ! 17 countries
 
 # Create a dataframe that only have the coutnries with missing values and 
 # add a column which contains the % of missings for each country
 
 filtered_data_Mil2 <- MiliratyExpenditurePercentGovExp %>%
-  filter(code %in% MilitaryExpenditurePercentGDP1$code)
+  filter(code %in% MiliratyExpenditurePercentGovExp1$code)
 
 filtered_data_Mil2 <- filtered_data_Mil2 %>%
   group_by(code) %>%
   mutate(PercentageMissing = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
   ungroup()
 
-# Look at the distribution of values for the countries that have missing values
-
-Freq_Missing_Mil2 <- ggplot(data = filtered_data_Mil2) +
-  geom_histogram(aes(x = MiliratyExpenditurePercentGovExp, 
-                     fill = cut(PercentageMissing,
-                                breaks = c(0, 0.25, 0.5, 1),
-                                labels = c("0-24%", "25-49%", "50-100%"))),
-                 bins = 30) +
-  labs(title = "Histogram of Military exp in % of Gov Exp", x = "Military exp in % of Gov Exp", y = "Frequency") +
-  scale_fill_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"), labels = c("0-24%", "25-49%", "50-100%")) +
-  guides(fill = guide_legend(title = "% missings")) +
-  facet_wrap(~ code, nrow = 5)
-
-print(Freq_Missing_Mil2)
-
  # Look at evolution over the years
 
 Evol_Missing_Mil2 <- ggplot(data = filtered_data_Mil2) +
   geom_point(aes(x = year, y = MiliratyExpenditurePercentGovExp, 
                  color = cut(PercentageMissing,
-                             breaks = c(0, 0.25, 0.5, 1),
-                             labels = c("0-24%", "25-49%", "50-100%")))) +
-  labs(title = "Scatter Plot of Military exp in % of Gov Exp", x = "Year", y = "Military exp in % of Gov Exp") +
-  scale_color_manual(values = c("0-24%" = "blue", "25-49%" = "red", "50-100%" = "black"),
-                     labels = c("0-24%", "25-49%", "50-100%")) +
+                             breaks = c(0, 0.1, 0.2, 0.3, 1),
+                             labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
+  labs(title = "Scatter Plot of military expenditure in % of gov exp", x = "Year", y = "GDP per capita") +
+  scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
+                     labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
   facet_wrap(~ code, nrow = 5)
 
 print(Evol_Missing_Mil2)
 
-# Conclusion: replace by mean when flat / replace by mean over 3 years before and after when 
-# different tendencies / replace by value of the year before or after when suited
+# Try to fill the missings if %missings < 30%
 
 ##### Fill in missing values in MilitaryExpenditurePercentGovExp #####
+
+# "AFG", "ARM", BEN", "BIH", "BLR", COG", "ECU", GAB", "GMB", "KAZ", "LBN", "LBR", "MNE", "MWI", "NER", "TTO", "UKR", ZMB"
+# <30% missing and linear (18)
+
+# "BDI", "IRQ"
+# 2 lines (2)
+
+# "CAF", "MMR", "SDN", "TCD", "TGO", "TJK" 
+# <30% missing but not linear (keep but we will see later) (6)
+
+# Others have too much missing (31) -> very much maybe we will have to drop this variable for our analysis
