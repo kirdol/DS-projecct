@@ -1,39 +1,87 @@
 data <- read.csv(here("scripts", "data", "human-freedom-index-2022.csv"))
 
+# install.packages("viridis")
+# install.packages("viridisLite")
+
 library("dplyr")
 library("tibble")
 library("tidyr")
+library("ggplot2")
+library("viridis")
+library("viridisLite")
 
 #data in tibble 
 datatibble <- tibble(data)
 
+# erasing useless columns to keep only the general ones. 
 
-#Ranking which columns have most of the missing values
-na_counts <- colSums(is.na(datatibble))
-sorted_na_counts <- sort(na_counts, decreasing = TRUE) # Sort the columns by the number of NA values in descending order
+datatibble <- select(datatibble, year, countries, region, hf_score, pf_rol, pf_ss, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, pf_score, ef_government, ef_legal, ef_money, ef_trade, ef_regulation, ef_score)
 
-print(sorted_na_counts)
 
-# pf_identity_inheritance_widows    pf_identity_inheritance_daughters                    pf_rol_procedural 
-# 2548                                 2548                                 2075 
-# pf_rol_civil                      pf_rol_criminal       pf_ss_disappearances_organized 
-# 2075                                 2075                                 1494 
 
-#rank the columns by increasing order of NA missing values and get rid of the columns with more than 10% of missing values. 
+##### VISUALIZATION ##### 
 
-column_order <- order(na_counts)
 
-datatibble <- datatibble[, column_order]
-datatibble <- select(datatibble, -(ef_regulation_credit_ownership:pf_identity_inheritance_daughters))
 
-#Now all our columns have at least 85% of the total entries.
-na_rows <- datatibble[is.na(datatibble$ef_gender)|is.na(datatibble$pf_identity), ]
+#Find NA percentage per country per variable 
 
-#When investigating the columns containing the lowest NA values, we can see that the observations are also 
-#having NA values for the highest NA values columns. Therefore, it is more simple to get rid of the NA value. 
+na_percentage_by_country <- datatibble %>%
+  group_by(countries) %>%
+  summarise(across(everything(), ~mean(is.na(.))*100))
 
-dataWTNA <- drop_na(datatibble)
-dataWTNA <- select(dataWTNA,year, countries, region,hf_score, hf_rank, hf_quartile, everything())
+na_long <- na_percentage_by_country %>%
+  pivot_longer(
+    cols = -countries,
+    names_to = "Variable",
+    values_to = "NA_Percentage"
+  )
+
+# Order the countries with between 50 and 100 of NA values 
+
+na_long <- na_long %>%
+  group_by(countries) %>%
+  mutate(Count_NA_50_100 = sum(NA_Percentage >= 50 & NA_Percentage <= 100, na.rm = TRUE)) %>%
+  ungroup() %>%
+  arrange(desc(Count_NA_50_100))
+
+# Now, visualize
+
+heatmap_ordered <- ggplot(na_long, aes(x = reorder(countries, -Count_NA_50_100), y = Variable)) +
+  geom_tile(aes(fill = NA_Percentage), colour = "white") +
+  scale_fill_gradient(low = "white", high = "red") +
+  theme_minimal() +
+  labs(
+    title = "Heatmap of NA Percentages per Country and Variable",
+    x = "Country",
+    y = "Variable",
+    fill = "NA Percentage"
+  ) +
+  theme(
+    axis.text.x = element_text(angle = 90, hjust = 1),
+    axis.text.y = element_text(size = 7)
+  )
+
+# If you want to save this plot
+ggsave("heatmap_ordered.png", heatmap_ordered, width = 12, height = 8)
+
+# Now try to check for which year these missing values take place, in order to just erase one year instead of a country
+
+
+
+###### END VISUALIZATION ######
+
+
+
+#Checking the number of variables per countries where NA values percentage >=50%
+
+country_na_count <- na_long %>%
+  filter(NA_Percentage >= 50) %>%
+  group_by(countries) %>%
+  summarise(Count_NA_50_100 = n()) %>%
+  arrange(desc(Count_NA_50_100))
+
+print(country_na_count)
+
 
 #D5_0_Human_freedom_index --> name final tibble
 
@@ -41,4 +89,11 @@ dataWTNA <- select(dataWTNA,year, countries, region,hf_score, hf_rank, hf_quarti
 # data <- data[is.na(data$column)]
 # arrange(select(data, column)) |> print(n = ...) 
 # length(unique(datatibble$country))
+
+
+#IS THERE A POSSIBLE WAY TO FIND MISSING VALUES PER COUNTRY PER YEAR FOR EACH VARIABLE?
+#HERE DONE PER COUNTRY PER VARIABLE 
+#I DON'T WANT TO ERASE A COUNTRY, JUST THE YEAR OF A COUNTRY
+
+
 
