@@ -47,3 +47,7 @@ D_6_0_Disasters <- Disasters %>%
   select(code, country, year, continent, total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages) %>%
   arrange(code, country, year, continent)
 
+# Keep only the countries that are in our main dataset
+
+D_6_0_Disasters <- D_6_0_Disasters %>% filter(code %in% list_country)
+length(unique(D4_0_Internet_usage$code))

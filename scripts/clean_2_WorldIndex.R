@@ -50,7 +50,7 @@ D2_1_Unemployment_rate_country_list <- unique(D2_1_Unemployment_rate$code)
 D_2_1_Unemployment_rate_missing_countries <- setdiff(D1_0_SDG_country_list$code, D2_1_Unemployment_rate_country_list)
 print(D_2_1_Unemployment_rate_missing_countries)
 
-# Here, we select only the countries that we want (specifies in "list_country")
+# Here, we select only the countries that we want (specified in "list_country")
 D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
   filter(code %in% D1_0_SDG_country_list$code)
 
@@ -69,3 +69,10 @@ rm(D1_0_SDG,
    SDG2,
    SDG3,
    SDG4)
+
+# Je tente un truc pour les pays manquants
+
+list_country_Unemp <- c(unique(D2_1_Unemployment_rate_country_list$code))
+(missing <- setdiff(list_country, list_country_Unemp))
+
+# Si on cherche dans la base de donnée avant de la nettoyer on les trouve, mais les noms sont à rallonge c'est pour ça que ça n'a pas match les country code au début du code
