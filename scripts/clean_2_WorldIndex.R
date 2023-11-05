@@ -57,7 +57,7 @@ D2_1_Unemployment_rate_country_list <- unique(D2_1_Unemployment_rate$code)
 D_2_1_Unemployment_rate_missing_countries <- setdiff(D1_0_SDG_country_list$code, D2_1_Unemployment_rate_country_list)
 print(D_2_1_Unemployment_rate_missing_countries)
 
-# Here, we select only the countries that we want (specified in "list_country")
+# Here, we select only the countries that we want (specified in "D1_0_SDG_country_list")
 D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
   filter(code %in% D1_0_SDG_country_list$code)
 
@@ -68,6 +68,11 @@ D2_1_Unemployment_rate_country_list <- D2_1_Unemployment_rate %>%
 D2_1_Unemployment_rate_country_list <- D2_1_Unemployment_rate_country_list %>%
   select(code, country) %>%
   distinct()
+
+# Here we keep only the data for people 15 years old or above.
+D2_1_Unemployment_rate <-
+  D2_1_Unemployment_rate[grepl("15+", D2_1_Unemployment_rate$'unemployment rate'), ]
+
 
 # cleaning of the environment
 rm(D1_0_SDG,
