@@ -9,6 +9,13 @@ D2_1_Unemployment_rate <- # import the dataset
 D2_1_Unemployment_rate <- # make sure that we have a datafraame
   as.data.frame(D2_1_Unemployment_rate)
 
+# Make sure the encoding od the country names are UTF-8
+D2_1_Unemployment_rate$ref_area.label <- iconv(D2_1_Unemployment_rate$ref_area.label, to = "UTF-8", sub = "byte")
+
+# standardize country names
+D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
+  mutate(ref_area.label = countrycode(ref_area.label, "country.name", "country.name"))
+
 D2_1_Unemployment_rate <- # We merge the dataset of Unemployment rate with codes and the dataset containing the codes for each country
   merge(D2_1_Unemployment_rate, D1_0_SDG_country_list[, c("country", "code")], by.x = "ref_area.label", by.y = "country", all.x = TRUE)
 
@@ -74,5 +81,4 @@ rm(D1_0_SDG,
 
 list_country_Unemp <- c(unique(D2_1_Unemployment_rate_country_list$code))
 (missing <- setdiff(list_country, list_country_Unemp))
-
-# Si on cherche dans la base de donnée avant de la nettoyer on les trouve, mais les noms sont à rallonge c'est pour ça que ça n'a pas match les country code au début du code
+(length(unique(D2_1_Unemployment_rate$code)))

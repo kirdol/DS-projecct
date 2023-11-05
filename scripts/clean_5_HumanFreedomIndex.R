@@ -95,5 +95,28 @@ print(country_na_count)
 #HERE DONE PER COUNTRY PER VARIABLE 
 #I DON'T WANT TO ERASE A COUNTRY, JUST THE YEAR OF A COUNTRY
 
+# Rename the column coutries into country to match the other datbases
+names(datatibble)[names(datatibble) == "countries"] <- "country"
 
+# Make sure the encoding of the country names are UTF-8
+datatibble$country <- iconv(datatibble$country, to = "UTF-8", sub = "byte")
 
+# standardize country names
+datatibble <- datatibble %>%
+  mutate(country = countrycode(country, "country.name", "country.name"))
+
+# Merge by country name
+datatibble <- datatibble %>%
+  left_join(D1_0_SDG_country_list, by = "country")
+
+# Keep only the countries that are in our main dataset
+
+datatibble <- datatibble %>% filter(code %in% list_country)
+(length(unique(datatibble$code)))
+
+# See which ones are missing
+
+list_country_free <- c(unique(datatibble$code))
+(missing <- setdiff(list_country, list_country_free))
+
+# Turkey was missing but present in the initial database (it was a problem when stadardizing the country names of D1_0SDG_country_list that we corrected) and the other missing countries are:"AFG" "CUB" "MDV" "STP" "SSD" "TKM" "UZB" 

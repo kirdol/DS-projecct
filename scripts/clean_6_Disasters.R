@@ -50,4 +50,10 @@ D_6_0_Disasters <- Disasters %>%
 # Keep only the countries that are in our main dataset
 
 D_6_0_Disasters <- D_6_0_Disasters %>% filter(code %in% list_country)
-length(unique(D4_0_Internet_usage$code))
+length(unique(D_6_0_Disasters$code))
+
+# See which countries are missing
+list_country_disasters <- c(unique(D_6_0_Disasters$code))
+(missing <- setdiff(list_country, list_country_disasters))
+
+# Weird 3 missing: BHR, BRN and MLT

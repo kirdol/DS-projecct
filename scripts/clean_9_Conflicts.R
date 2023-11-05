@@ -56,6 +56,13 @@ liste_de_scripts <- c("setup.R",
 for (script in liste_de_scripts) {
   source(here("scripts", script))}
 
+# Make sure the encoding od the country names are UTF-8
+conflicts$country <- iconv(conflicts$country, to = "UTF-8", sub = "byte")
+
+# standardize country names
+conflicts <- conflicts %>%
+  mutate(country = countrycode(country, "country.name", "country.name"))
+
 # Merge by country name
 conflicts <- conflicts %>%
   left_join(D1_0_SDG_country_list, by = "country")
@@ -68,11 +75,11 @@ conflicts <- conflicts %>%
 # Keep only the countries that are in our main dataset
 
 conflicts <- conflicts %>% filter(code %in% list_country)
-length(unique(conflicts$code))
+(length(unique(conflicts$code)))
 
 # See which ones are missing
 
 list_country_conflicts <- c(unique(conflicts$code))
 (missing <- setdiff(list_country, list_country_conflicts))
 
-# Idem que pour unemployment rate: il y a pas tout qui s'est match comme il faut pour les codes, mais la plupart des pays manquants sont dans la base de données de départ
+# Only one country missing that wasn't in the inital conflicts database: BLR
