@@ -48,8 +48,6 @@ D5_0_Human_freedom_index <- D5_0_Human_freedom_index %>%
 
 ##### VISUALIZATION ##### 
 
-
-
 #Find NA percentage per country per variable 
 
 na_percentage_by_country <- D5_0_Human_freedom_index %>%
