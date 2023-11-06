@@ -80,6 +80,6 @@ D8_0_Conflicts <- conflicts %>% filter(code %in% list_country)
 # See which ones are missing
 
 list_country_conflicts <- c(unique(conflicts$code))
-(missing <- setdiff(list_country, list_country_conflicts))
+(missing <- c(missing, setdiff(list_country, list_country_conflicts)))
 
 # Only one country missing that wasn't in the inital conflicts database: BLR
