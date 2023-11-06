@@ -159,3 +159,5 @@ D1_0_SDG_country_list$country <- stri_encode(D1_0_SDG_country_list$country, to =
 D1_0_SDG_country_list <- D1_0_SDG_country_list %>%
   mutate(country = countrycode(country, "country.name", "country.name", custom_match = c("T<fc>rkiye"="Turkey")))
 
+# Complete database to make sure there aren't couples of (year, code) missing
+D1_0_SDG <- D1_0_SDG |> complete(code, year)
