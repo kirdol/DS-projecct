@@ -62,6 +62,35 @@ all_Merge <- all_Merge %>%
 
 # Complete the values of continent and region
 
+all_Merge <- all_Merge %>%
+  group_by(country) %>%
+  mutate(continent = ifelse(is.na(continent), first(na.omit(continent)), continent)) %>%
+  ungroup()
+
+all_Merge <- all_Merge %>%
+  group_by(country) %>%
+  mutate(region = ifelse(is.na(region), first(na.omit(region)), region)) %>%
+  ungroup()
+
+# Order database
+all_Merge <- all_Merge %>%
+  select(code, year, country, continent, region, everything())
+
+# subset of data
+# for question 1: factors (only until 2020 because no information for freedom index after)
+data_question1 <- all_Merge %>% filter(year<=2020) %>% select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages, cases_per_million, deaths_per_million, stringency, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
+
+# for question 2 and 4: time and relationship between SDGs
+data_question24 <- all_Merge %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7))
+
+# for question 3: events
+# Disasters (only until 2021 because no information for disasters after)
+data_question3_1 <- all_Merge %>% filter(year<=2021) %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages))
+# COVID
+data_question3_2 <- all_Merge %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, cases_per_million, deaths_per_million, stringency))
+# Conflicts (only until 2016 because no information for conflicts after)
+data_question3_3 <- all_Merge %>% filter(year<=2016) %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
+
 # cleaning of the environment
 rm(merge_1_2, # remove merge_1_2 from memory
    merge_12_3, # remove merge_12_3 from memory
@@ -129,4 +158,4 @@ rm(merge_1_2, # remove merge_1_2 from memory
    remove,
    renameyear,
    wide2long,
-   yearint) # remove list_country from memory
+   yearint)
