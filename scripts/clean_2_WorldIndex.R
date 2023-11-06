@@ -70,7 +70,7 @@ D2_1_Unemployment_rate_country_list <- D2_1_Unemployment_rate_country_list %>%
   distinct()
 
 # Filter to keep only unemployment rate for 15 years old and above.
-D2_1_Unemployment_rate_test2 <- D2_1_Unemployment_rate %>%
+D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
   filter(`age category` == "Age (Youth, adults): 15+")
 # cleaning of the environment
 rm(SDG0,
