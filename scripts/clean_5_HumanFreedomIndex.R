@@ -38,12 +38,12 @@ D5_0_Human_freedom_index <- datatibble
 
 # erasing useless columns to keep only the general ones. 
 
-datatibble <- select(datatibble, year, countries, region, hf_score, pf_rol, pf_ss, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, pf_score, ef_government, ef_legal, ef_money, ef_trade, ef_regulation, ef_score)
+D5_0_Human_freedom_index <- select(D5_0_Human_freedom_index, year, country, region, hf_score, pf_rol, pf_ss, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, pf_score, ef_government, ef_legal, ef_money, ef_trade, ef_regulation, ef_score)
 
-datatibble <- datatibble %>%
+D5_0_Human_freedom_index <- D5_0_Human_freedom_index %>%
   rename(
-    pf_law = names(datatibble)[5],      # Renames the 5th column to "pf_law"
-    pf_security = names(datatibble)[6]  # Renames the 6th column to "pf_security"
+    pf_law = names(D5_0_Human_freedom_index)[5],      # Renames the 5th column to "pf_law"
+    pf_security = names(D5_0_Human_freedom_index)[6]  # Renames the 6th column to "pf_security"
   )
 
 ##### VISUALIZATION ##### 
@@ -52,7 +52,7 @@ datatibble <- datatibble %>%
 
 #Find NA percentage per country per variable 
 
-na_percentage_by_country <- datatibble %>%
+na_percentage_by_country <- D5_0_Human_freedom_index %>%
   group_by(country) %>%
   summarise(across(everything(), ~mean(is.na(.))*100))
 
@@ -75,14 +75,14 @@ print(overall_na_percentage)
 # Order the countries with between 50 and 100 of NA values 
 
 na_long <- na_long %>%
-  group_by(countries) %>%
+  group_by(country) %>%
   mutate(Count_NA_50_100 = sum(NA_Percentage >= 50 & NA_Percentage <= 100, na.rm = TRUE)) %>%
   ungroup() %>%
   arrange(desc(Count_NA_50_100))
 
 # Now, visualize
 
-heatmap_ordered <- ggplot(na_long, aes(x = reorder(countries, -Count_NA_50_100), y = Variable)) +
+heatmap_ordered <- ggplot(na_long, aes(x = reorder(country, -Count_NA_50_100), y = Variable)) +
   geom_tile(aes(fill = NA_Percentage), colour = "white") +
   scale_fill_gradient(low = "white", high = "red") +
   theme_minimal() +
