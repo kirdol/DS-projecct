@@ -29,6 +29,14 @@ makenumSDG <- function(D1_0_SDG) {
 
 D1_0_SDG <- makenumSDG(D1_0_SDG)
 
+# Make sure the encoding of the country names are UTF-8
+D1_0_SDG$country <- stri_encode(D1_0_SDG$country, to = "UTF-8")
+
+
+# standardize country names
+D1_0_SDG <- D1_0_SDG %>%
+  mutate(country = countrycode(country, "country.name", "country.name", custom_match = c("T�rkiye"="Turkey")))
+
 # inspection of missing values
 
 propmissing <- numeric(length(D1_0_SDG))
@@ -150,14 +158,6 @@ D1_0_SDG_country_list <- D1_0_SDG %>%
 D1_0_SDG_country_list <- D1_0_SDG_country_list %>%
   select(code, country) %>%
   distinct()
-
-# Make sure the encoding of the country names are UTF-8
-D1_0_SDG_country_list$country <- stri_encode(D1_0_SDG_country_list$country, to = "UTF-8")
-
-
-# standardize country names
-D1_0_SDG_country_list <- D1_0_SDG_country_list %>%
-  mutate(country = countrycode(country, "country.name", "country.name", custom_match = c("T�rkiye"="Turkey")))
 
 # Complete database to make sure there aren't couples of (year, code) missing
 D1_0_SDG <- D1_0_SDG |> complete(code, year)
