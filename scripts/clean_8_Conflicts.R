@@ -74,7 +74,7 @@ conflicts <- conflicts %>%
 
 # Keep only the countries that are in our main dataset
 
-conflicts <- conflicts %>% filter(code %in% list_country)
+D8_0_Conflicts <- conflicts %>% filter(code %in% list_country)
 (length(unique(conflicts$code)))
 
 # See which ones are missing

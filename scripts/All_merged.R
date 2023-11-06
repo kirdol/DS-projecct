@@ -42,7 +42,7 @@ merge_123_4 <- merge_123_4 %>%
 merge_123_4 <- merge_123_4 %>%
   rename("country" = "country.x")
 
-# merge merge_123_4 with ??? 
+# merge merge_123_4 with D5_0_Human_freedom_index
 merge_1234_5 <- merge(merge_123_4,
                       D5_0_Human_freedom_index,
                       by = c("code", "year"), all.x = TRUE)
@@ -60,18 +60,18 @@ merge_12345_6 <- merge_12345_6 %>%
 merge_12345_6 <- merge_12345_6 %>%
   rename("country" = "country.x")
 
-# merge merge_12345_6 with D_7_0_COVID
+# merge merge_12345_6 with D7_0_COVID
 merge_123456_7 <- merge(merge_12345_6,
-                        D_7_0_COVID,
+                        D7_0_COVID,
                         by = c("code", "year"), all.x = TRUE)
 merge_123456_7 <- merge_123456_7 %>%
   select(-country.y)
 merge_123456_7 <- merge_123456_7 %>%
   rename("country" = "country.x")
 
-# merge merge_123456_7 with Conflicts
+# merge merge_123456_7 with D8_0_Conflicts
 All_merged<- merge(merge_123456_7,
-                   conflicts,
+                   D8_0_Conflicts,
                    by = c("code", "year"), all.x = TRUE)
 All_merged <- All_merged %>%
   select(-country.y)
