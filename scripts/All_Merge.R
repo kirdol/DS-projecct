@@ -102,7 +102,7 @@ rm(merge_1_2, # remove merge_1_2 from memory
 
 ##### Which countries have many missing observations over the different variables of the different subsets?
 
-# Question1 
+#### Question1 
 see_missing1_1 <- data_question1 %>%
   group_by(code) %>%
   summarise(across(-c(goal1, goal10),  # Exclude columns "goal1" and "goal10"
@@ -118,8 +118,11 @@ see_missing1 <- data_question1 %>%
                    ~ sum(is.na(.))) %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 0))
+# Delete MilitaryExpenditurePercentGovExp because it has too many missing values and remove the countries of MilitaryExpenditurePercentGDP with more than 25% missings
 
-# Questions 2 and 4
+# Fill in the missings for MilitaryExpenditurePercentGDP and GDPpercapita (mehtod?)
+
+#### Questions 2 and 4
 see_missing24 <- data_question24 %>%
   group_by(code) %>%
   summarise(across(everything(), ~ sum(is.na(.))) %>%
@@ -127,7 +130,7 @@ see_missing24 <- data_question24 %>%
               filter(num_missing > 0))
 # Nothing to remove, only goals 1 and 10 have misisng (already discussed before)
 
-# Question 3
+#### Question 3
 
 # Disasters
 see_missing3_1 <- data_question3_1 %>%
