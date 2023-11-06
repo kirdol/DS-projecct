@@ -1,6 +1,4 @@
 ### 2 World Index
-# Run "clean_1_SDG.R" to get the list of country codes (D1_0_SDG_country_list)
-source(here("scripts", "clean_1_SDG.R"))
 
 ## D2.1 Unemployment rate
 D2_1_Unemployment_rate <- # import the dataset
@@ -72,12 +70,6 @@ D2_1_Unemployment_rate_country_list <- D2_1_Unemployment_rate_country_list %>%
 # Filter to keep only unemployment rate for 15 years old and above.
 D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
   filter(`age category` == "Age (Youth, adults): 15+")
-# cleaning of the environment
-rm(SDG0,
-   SDG1,
-   SDG2,
-   SDG3,
-   SDG4)
 
 # Je tente un truc pour les pays manquants
 
