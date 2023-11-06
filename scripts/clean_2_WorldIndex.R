@@ -75,8 +75,7 @@ D2_1_Unemployment_rate <-
 
 
 # cleaning of the environment
-rm(D1_0_SDG,
-   SDG0,
+rm(SDG0,
    SDG1,
    SDG2,
    SDG3,

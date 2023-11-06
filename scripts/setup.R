@@ -16,7 +16,8 @@ packages <- c(
   "readxl",
   "ggplot2",
   "countrycode", 
-  "zoo"
+  "zoo",
+  "stringi"
 )
 purrr::walk(packages, library, character.only = TRUE)
 
