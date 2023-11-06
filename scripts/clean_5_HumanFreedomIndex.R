@@ -7,7 +7,7 @@ datatibble <- tibble(data)
 datatibble <- datatibble %>%
   filter(year >= 2000 & year <= 2022)
 
-# Rename the column coutries into country to match the other datbases
+# Rename the column countries into country to match the other datbases
 names(datatibble)[names(datatibble) == "countries"] <- "country"
 
 # Make sure the encoding of the country names are UTF-8
