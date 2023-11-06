@@ -1,4 +1,4 @@
-
+library(here)
 # Pre-cleaning of the datasets
 liste_de_scripts <- c("setup.R", # list of all the scripts needed to clean all individual dataset
                       "clean_1_SDG.R",
