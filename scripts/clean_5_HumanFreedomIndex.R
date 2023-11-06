@@ -1,23 +1,57 @@
 data <- read.csv(here("scripts", "data", "human-freedom-index-2022.csv"))
 
-# install.packages("viridis")
-# install.packages("viridisLite")
 
 library("dplyr")
 library("tibble")
 library("tidyr")
 library("ggplot2")
-library("viridis")
-library("viridisLite")
+
 
 #data in tibble 
 datatibble <- tibble(data)
+
+# Only keep the years after 2000 and before 2022
+datatibble <- datatibble %>%
+  filter(year >= 2000 & year <= 2022)
+
+# Rename the column coutries into country to match the other datbases
+names(datatibble)[names(datatibble) == "countries"] <- "country"
+
+# Make sure the encoding of the country names are UTF-8
+datatibble$country <- iconv(datatibble$country, to = "UTF-8", sub = "byte")
+
+# standardize country names
+datatibble <- datatibble %>%
+  mutate(country = countrycode(country, "country.name", "country.name"))
+
+# Merge by country name
+datatibble <- datatibble %>%
+  left_join(D1_0_SDG_country_list, by = "country")
+
+# Keep only the countries that are in our main dataset
+
+datatibble <- datatibble %>% filter(code %in% list_country)
+(length(unique(datatibble$code)))
+
+# See which ones are missing
+
+list_country_free <- c(unique(datatibble$code))
+(missing <- setdiff(list_country, list_country_free))
+
+# Turkey was missing but present in the initial database (it was a problem when stadardizing the country names of D1_0SDG_country_list that we corrected) and the other missing countries are:"AFG" "CUB" "MDV" "STP" "SSD" "TKM" "UZB" 
+
+D5_0_Human_freedom_index <- datatibble
+
 
 # erasing useless columns to keep only the general ones. 
 
 datatibble <- select(datatibble, year, countries, region, hf_score, pf_rol, pf_ss, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, pf_score, ef_government, ef_legal, ef_money, ef_trade, ef_regulation, ef_score)
 
-
+datatibble <- datatibble %>%
+  rename(
+    pf_law = names(datatibble)[5],      # Renames the 5th column to "pf_law"
+    pf_security = names(datatibble)[6]  # Renames the 6th column to "pf_security"
+  )
 
 ##### VISUALIZATION ##### 
 
@@ -26,15 +60,24 @@ datatibble <- select(datatibble, year, countries, region, hf_score, pf_rol, pf_s
 #Find NA percentage per country per variable 
 
 na_percentage_by_country <- datatibble %>%
-  group_by(countries) %>%
+  group_by(country) %>%
   summarise(across(everything(), ~mean(is.na(.))*100))
 
 na_long <- na_percentage_by_country %>%
   pivot_longer(
-    cols = -countries,
+    cols = -country,
     names_to = "Variable",
     values_to = "NA_Percentage"
   )
+
+# Assuming your dataframe is called 'na_long'
+overall_na_percentage <- na_long %>%
+  group_by(Variable) %>%
+  summarize(Avg_NA_Percentage = mean(NA_Percentage, na.rm = TRUE)) %>%
+  arrange(desc(Avg_NA_Percentage))
+
+# To view the result
+print(overall_na_percentage)
 
 # Order the countries with between 50 and 100 of NA values 
 
@@ -76,7 +119,7 @@ ggsave("heatmap_ordered.png", heatmap_ordered, width = 12, height = 8)
 
 country_na_count <- na_long %>%
   filter(NA_Percentage >= 50) %>%
-  group_by(countries) %>%
+  group_by(country) %>%
   summarise(Count_NA_50_100 = n()) %>%
   arrange(desc(Count_NA_50_100))
 
@@ -95,34 +138,4 @@ print(country_na_count)
 #HERE DONE PER COUNTRY PER VARIABLE 
 #I DON'T WANT TO ERASE A COUNTRY, JUST THE YEAR OF A COUNTRY
 
-# Only keep the years after 2000 and before 2022
-datatibble <- datatibble %>%
-  filter(year >= 2000 & year <= 2022)
 
-# Rename the column coutries into country to match the other datbases
-names(datatibble)[names(datatibble) == "countries"] <- "country"
-
-# Make sure the encoding of the country names are UTF-8
-datatibble$country <- iconv(datatibble$country, to = "UTF-8", sub = "byte")
-
-# standardize country names
-datatibble <- datatibble %>%
-  mutate(country = countrycode(country, "country.name", "country.name"))
-
-# Merge by country name
-datatibble <- datatibble %>%
-  left_join(D1_0_SDG_country_list, by = "country")
-
-# Keep only the countries that are in our main dataset
-
-datatibble <- datatibble %>% filter(code %in% list_country)
-(length(unique(datatibble$code)))
-
-# See which ones are missing
-
-list_country_free <- c(unique(datatibble$code))
-(missing <- setdiff(list_country, list_country_free))
-
-# Turkey was missing but present in the initial database (it was a problem when stadardizing the country names of D1_0SDG_country_list that we corrected) and the other missing countries are:"AFG" "CUB" "MDV" "STP" "SSD" "TKM" "UZB" 
-
-D5_0_Human_freedom_index <- datatibble
