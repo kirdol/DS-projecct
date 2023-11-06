@@ -345,3 +345,8 @@ for (i in list_code) {
 mean(is.na(MiliratyExpenditurePercentGovExp$MiliratyExpenditurePercentGovExp))
 mean(is.na(MilitaryExpenditurePercentGDP$MilitaryExpenditurePercentGDP))
 mean(is.na(GDPpercapita$GDPpercapita))
+
+# Standardize names for merge
+D3_1_GDP_per_capita <- GDPpercapita
+D3_2_Military_Expenditure_Percent_GDP <- MilitaryExpenditurePercentGDP
+D3_3_Miliraty_Expenditure_Percent_Gov_Exp <- MiliratyExpenditurePercentGovExp
