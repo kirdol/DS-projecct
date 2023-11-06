@@ -60,9 +60,9 @@ merge_12345_6 <- merge_12345_6 %>%
 merge_12345_6 <- merge_12345_6 %>%
   rename("country" = "country.x")
 
-# merge merge_12345_6 with COVID
+# merge merge_12345_6 with D_7_0_COVID
 merge_123456_7 <- merge(merge_12345_6,
-                        COVID,
+                        D_7_0_COVID,
                         by = c("code", "year"), all.x = TRUE)
 merge_123456_7 <- merge_123456_7 %>%
   select(-country.y)
