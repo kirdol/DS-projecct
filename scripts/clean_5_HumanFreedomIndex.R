@@ -1,12 +1,5 @@
 data <- read.csv(here("scripts", "data", "human-freedom-index-2022.csv"))
 
-
-library("dplyr")
-library("tibble")
-library("tidyr")
-library("ggplot2")
-
-
 #data in tibble 
 datatibble <- tibble(data)
 
