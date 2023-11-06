@@ -22,9 +22,25 @@ merge_1_2 <- merge_1_2 %>%
 merge_1_2 <- merge_1_2 %>%
   rename("country" = "country.x")
 
-# merge merge_1_2 with GDPpercapita 
+# merge merge_1_2 with D3_1_GDP_per_capita
 merge_12_3 <- merge(merge_1_2,
-                    GDPpercapita,
+                    D3_1_GDP_per_capita,
+                    by = c("code", "year"), all.x = TRUE)
+merge_12_3 <- merge_12_3 %>%
+  select(-country.y)
+merge_12_3 <- merge_12_3 %>%
+  rename("country" = "country.x")
+
+merge_12_3 <- merge(merge_1_2,
+                    D3_1_GDP_per_capita,
+                    by = c("code", "year"), all.x = TRUE)
+merge_12_3 <- merge_12_3 %>%
+  select(-country.y)
+merge_12_3 <- merge_12_3 %>%
+  rename("country" = "country.x")
+
+merge_12_3 <- merge(merge_1_2,
+                    D3_1_GDP_per_capita,
                     by = c("code", "year"), all.x = TRUE)
 merge_12_3 <- merge_12_3 %>%
   select(-country.y)
