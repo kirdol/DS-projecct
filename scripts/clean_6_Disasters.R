@@ -43,17 +43,17 @@ Disasters <- Rearanged_Disasters %>%
   ) 
 
 # Select specific columns from the summarized data and arrange the data by specified columns
-D_6_0_Disasters <- Disasters %>%
+D6_0_Disasters <- Disasters %>%
   select(code, country, year, continent, total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages) %>%
   arrange(code, country, year, continent)
 
 # Keep only the countries that are in our main dataset
 
-D_6_0_Disasters <- D_6_0_Disasters %>% filter(code %in% list_country)
-length(unique(D_6_0_Disasters$code))
+D6_0_Disasters <- D6_0_Disasters %>% filter(code %in% list_country)
+length(unique(D6_0_Disasters$code))
 
 # See which countries are missing
-list_country_disasters <- c(unique(D_6_0_Disasters$code))
+list_country_disasters <- c(unique(D6_0_Disasters$code))
 (missing <- c(missing,setdiff(list_country, list_country_disasters)))
 
 # Weird 3 missing: BHR, BRN and MLT

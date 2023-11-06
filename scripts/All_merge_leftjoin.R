@@ -29,24 +29,24 @@ merge_12_3 <- merge_12_3 |> left_join(D3_3_Miliraty_Expenditure_Percent_Gov_Exp,
 
 # merge merge_12_3 with D4_0_Internet_usage 
 D4_0_Internet_usage$country <- NULL
-merge_12_4 <- merge_12_3 |> left_join(D4_0_Internet_usage, join_by(code, year)) 
+merge_123_4 <- merge_12_3 |> left_join(D4_0_Internet_usage, join_by(code, year)) 
 
 # merge merge_123_4 with D5_0_Human_freedom_index
 D5_0_Human_freedom_index$country <- NULL
-merge_12_5 <- merge_12_4 |> left_join(D5_0_Human_freedom_index, join_by(code, year)) 
+merge_1234_5 <- merge_123_4 |> left_join(D5_0_Human_freedom_index, join_by(code, year)) 
 
 # merge merge_1234_5 with D_6_0_Disasters
-D_6_0_Disasters$country <- NULL
-merge_12_6 <- merge_12_5 |> left_join(D_6_0_Disasters, join_by(code, year)) 
+D6_0_Disasters$country <- NULL
+merge_12345_6 <- merge_1234_5 |> left_join(D6_0_Disasters, join_by(code, year)) 
 
 # merge merge_12345_6 with D7_0_COVID
 D7_0_COVID$country <- NULL
 D7_0_COVID <- D7_0_COVID |> distinct(code, year, .keep_all = TRUE)
-merge_12_7 <- merge_12_6 |> left_join(D7_0_COVID, join_by(code, year)) 
+merge_123456_7 <- merge_12345_6 |> left_join(D7_0_COVID, join_by(code, year)) 
 
 # merge merge_123456_7 with D8_0_Conflicts
 D8_0_Conflicts$country <- NULL
-all_merge <- merge_12_7 |> left_join(D8_0_Conflicts, join_by(code, year)) 
+all_merge <- merge_123456_7 |> left_join(D8_0_Conflicts, join_by(code, year)) 
 
 # Filter to delete the countries that were missing from some of our databases
 all_merge <- all_merge %>% filter(!code %in% missing)
@@ -61,6 +61,35 @@ all_merge <- all_merge %>%
 
 # Complete the values of continent and region
 
+all_merge <- all_merge %>%
+  group_by(country) %>%
+  mutate(continent = ifelse(is.na(continent), first(na.omit(continent)), continent)) %>%
+  ungroup()
+
+all_merge <- all_merge %>%
+  group_by(country) %>%
+  mutate(region = ifelse(is.na(region), first(na.omit(region)), region)) %>%
+  ungroup()
+
+# Order database
+all_merge <- all_merge %>%
+  select(code, year, country, continent, region, everything())
+
+# subset of data
+# for question 1: factors (only until 2020 because no information for freedom index after)
+data_question1 <- all_merge %>% filter(year<=2020) %>% select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages, cases_per_million, deaths_per_million, stringency, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
+
+# for question 2 and 4: time and relationship between SDGs
+data_question24 <- all_merge %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7))
+
+# for question 3: events
+# Disasters (only until 2021 because no information for disasters after)
+data_question3_1 <- all_merge %>% filter(year<=2021) %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages))
+# COVID
+data_question3_2 <- all_merge %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, cases_per_million, deaths_per_million, stringency))
+# Conflicts (only until 2016 because no information for conflicts after)
+data_question3_3 <- all_merge %>% filter(year<=2016) %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
+
 # cleaning of the environment
 rm(merge_1_2, # remove merge_1_2 from memory
    merge_12_3, # remove merge_12_3 from memory
@@ -68,5 +97,4 @@ rm(merge_1_2, # remove merge_1_2 from memory
    merge_1234_5, # remove merge_1234_5 from memory
    merge_12345_6, # remove merge_12345_6 from memory
    merge_123456_7, # remove merge_123456_7 from memory
-   merge_1234567_8, # remove merge_1234567_8 from memory
    liste_de_scripts) # remove the list of scripts from memory)
