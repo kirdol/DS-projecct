@@ -5,7 +5,7 @@ MilitaryExpenditurePercentGDP <-
 MiliratyExpenditurePercentGovExp <-
   read.csv(here("scripts","data","MiliratyExpenditurePercentGovExp.csv"), sep = ";")
 
-# fill in the missing codes using the column Indicator.Name
+# fill in the missing country codes using the column Indicator.Name
 
 fill_code <- function(data){
   data <- data %>%
@@ -338,7 +338,7 @@ for (i in list_code) {
 
 # Others have too much missing (31) -> very much maybe we will have to drop this variable for our analysis
 
-# ANd now, What is the percentage of missing values in these 3 datasets?
+# And now, What is the percentage of missing values in these 3 datasets?
 
 mean(is.na(MiliratyExpenditurePercentGovExp$MiliratyExpenditurePercentGovExp))
 mean(is.na(MilitaryExpenditurePercentGDP$MilitaryExpenditurePercentGDP))
