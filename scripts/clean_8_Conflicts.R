@@ -16,6 +16,7 @@ Conflicts <- Conflicts %>%
   select(year, country, ongoing, gwsum_bestdeaths, pop_affected, peaceyearshigh, area_affected, maxintensity, maxcumulativeintensity)
 
 # Filter rows based on the "year" column
+#Note: our data set has no more information about conflicts per country from 2016. As we consider conflicts as events, we will only take into account results between 2000 and 2016.
 Rearanged_Conflicts <- Conflicts %>%
   filter(year >= 2000 & year <= 2022)%>%
   mutate(
