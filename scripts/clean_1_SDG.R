@@ -152,7 +152,8 @@ D1_0_SDG_country_list <- D1_0_SDG_country_list %>%
   distinct()
 
 # Make sure the encoding of the country names are UTF-8
-D1_0_SDG_country_list$country <- iconv(D1_0_SDG_country_list$country, to = "UTF-8", sub = "byte")
+D1_0_SDG_country_list$country <- stri_encode(D1_0_SDG_country_list$country, to = "UTF-8")
+
 
 # standardize country names
 D1_0_SDG_country_list <- D1_0_SDG_country_list %>%
