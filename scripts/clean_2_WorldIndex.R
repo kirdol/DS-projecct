@@ -69,14 +69,9 @@ D2_1_Unemployment_rate_country_list <- D2_1_Unemployment_rate_country_list %>%
   select(code, country) %>%
   distinct()
 
-# Here we keep only the data for people 15 years old or above.
-# D2_1_Unemployment_rate <-
-  # D2_1_Unemployment_rate[grepl("15+", D2_1_Unemployment_rate$'unemployment rate'), ]
-
-# D2_1_Unemployment_rate_test <- D2_1_Unemployment_rate[grepl("Age (Youth, adults): 15+", D2_1_Unemployment_rate$'unemployment rate'), ]
-
-D2_1_Unemployment_rate_test <- D2_1_Unemployment_rate %>%
-  filter(str_detect('age category', "Age (Youth, adults): 15+"))
+# Filter to keep only unemployment rate for 15 years old and above.
+D2_1_Unemployment_rate_test2 <- D2_1_Unemployment_rate %>%
+  filter(`age category` == "Age (Youth, adults): 15+")
 # cleaning of the environment
 rm(SDG0,
    SDG1,
