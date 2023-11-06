@@ -98,3 +98,60 @@ rm(merge_1_2, # remove merge_1_2 from memory
    merge_12345_6, # remove merge_12345_6 from memory
    merge_123456_7, # remove merge_123456_7 from memory
    liste_de_scripts) # remove the list of scripts from memory)
+
+##### Which countries have many missing observations over the different variables of the different subsets?
+
+# Question1 
+see_missing1_1 <- data_question1 %>%
+  group_by(code) %>%
+  summarise(across(-c(goal1, goal10),  # Exclude columns "goal1" and "goal10"
+                   ~ sum(is.na(.))) %>%
+              mutate(num_missing = rowSums(across(everything()))) %>%
+              filter(num_missing > 50))
+# Remove countries where num_missing >= 50 ??
+data_question1_2 <- data_question1 %>% filter(!code %in% see_missing1$code)
+
+see_missing1 <- data_question1 %>%
+  group_by(code) %>%
+  summarise(across(-c(goal1, goal10),  # Exclude columns "goal1" and "goal10"
+                   ~ sum(is.na(.))) %>%
+              mutate(num_missing = rowSums(across(everything()))) %>%
+              filter(num_missing > 0))
+
+# Questions 2 and 4
+see_missing24 <- data_question24 %>%
+  group_by(code) %>%
+  summarise(across(everything(), ~ sum(is.na(.))) %>%
+              mutate(num_missing = rowSums(across(everything()))) %>%
+              filter(num_missing > 0))
+# Nothing to remove, only goals 1 and 10 have misisng (already discussed before)
+
+# Question 3
+
+# Disasters
+see_missing3_1 <- data_question3_1 %>%
+  group_by(code) %>%
+  summarise(across(-c(goal1, goal10),  # Exclude columns "goal1" and "goal10"
+                   ~ sum(is.na(.))) %>%
+              mutate(num_missing = rowSums(across(everything()))) %>%
+              filter(num_missing > 0))
+# Many missing, what do we do?
+
+# COVID
+see_missing3_2 <- data_question3_2 %>%
+  group_by(code) %>%
+  summarise(across(-c(goal1, goal10),  # Exclude columns "goal1" and "goal10"
+                   ~ sum(is.na(.))) %>%
+              mutate(num_missing = rowSums(across(everything()))) %>%
+              filter(num_missing > 0))
+# No missing
+
+# Conflicts
+see_missing3_3 <- data_question3_3 %>%
+  group_by(code) %>%
+  summarise(across(-c(goal1, goal10),  # Exclude columns "goal1" and "goal10"
+    ~ sum(is.na(.))) %>%
+    mutate(num_missing = rowSums(across(everything()))) %>%
+    filter(num_missing > 0))
+# 2 countries have missings, we remove them: MNE and SRB
+data_question3_3 <- data_question3_3 %>% filter(!code %in% c("MNE","SRB"))
