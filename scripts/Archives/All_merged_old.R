@@ -86,12 +86,12 @@ merge_123456_7 <- merge_123456_7 %>%
   rename("country" = "country.x")
 
 # merge merge_123456_7 with D8_0_Conflicts
-All_merged<- merge(merge_123456_7,
+All_Merged<- merge(merge_123456_7,
                    D8_0_Conflicts,
                    by = c("code", "year"), all.x = TRUE)
-All_merged <- All_merged %>%
+All_Merged <- All_Merged %>%
   select(-country.y)
-All_merged <- All_merged %>%
+All_Merged <- All_Merged %>%
   rename("country" = "country.x")
 
 # cleaning of the environment

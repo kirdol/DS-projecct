@@ -161,3 +161,4 @@ D1_0_SDG_country_list <- D1_0_SDG_country_list %>%
 
 # Complete database to make sure there aren't couples of (year, code) missing
 D1_0_SDG <- D1_0_SDG |> complete(code, year)
+

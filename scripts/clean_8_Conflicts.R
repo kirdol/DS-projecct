@@ -1,10 +1,5 @@
 #Conflicts
 
-# Load the required libraries
-library(lubridate)
-library(dplyr)
-library(readxl)
-
 # Read the Excel data file into a data frame named "Conflicts"
 Conflicts <- read.csv(here("scripts","data","Conflicts.csv"))
 

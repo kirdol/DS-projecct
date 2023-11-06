@@ -1,4 +1,4 @@
-library(here)
+library(here) # loading package here to be able to execute the other file.
 # Pre-cleaning of the datasets
 liste_de_scripts <- c("setup.R", # list of all the scripts needed to clean all individual dataset
                       "clean_1_SDG.R",
@@ -46,13 +46,14 @@ merge_123456_7 <- merge_12345_6 |> left_join(D7_0_COVID, join_by(code, year))
 
 # merge merge_123456_7 with D8_0_Conflicts
 D8_0_Conflicts$country <- NULL
-all_merge <- merge_123456_7 |> left_join(D8_0_Conflicts, join_by(code, year)) 
+all_Merge <- merge_123456_7 |> left_join(D8_0_Conflicts, join_by(code, year)) 
 
 # Filter to delete the countries that were missing from some of our databases
-all_merge <- all_merge %>% filter(!code %in% missing)
+all_Merge <- all_Merge %>% filter(!code %in% missing)
 
-# Replace the NAs of the COVID columns by 0 (because we don't have real missing, only introduced by merging for the years before COVID)
-all_merge <- all_merge %>%
+# Replace the NAs of the COVID columns by 0 (because we don't have real missing,
+# only introduced by merging for the years before COVID)
+all_Merge <- all_Merge %>%
   mutate(
     cases_per_million = ifelse(is.na(cases_per_million), 0, cases_per_million),
     deaths_per_million = ifelse(is.na(deaths_per_million), 0, deaths_per_million),
@@ -61,34 +62,34 @@ all_merge <- all_merge %>%
 
 # Complete the values of continent and region
 
-all_merge <- all_merge %>%
+all_Merge <- all_Merge %>%
   group_by(country) %>%
   mutate(continent = ifelse(is.na(continent), first(na.omit(continent)), continent)) %>%
   ungroup()
 
-all_merge <- all_merge %>%
+all_Merge <- all_Merge %>%
   group_by(country) %>%
   mutate(region = ifelse(is.na(region), first(na.omit(region)), region)) %>%
   ungroup()
 
 # Order database
-all_merge <- all_merge %>%
+all_Merge <- all_Merge %>%
   select(code, year, country, continent, region, everything())
 
 # subset of data
 # for question 1: factors (only until 2020 because no information for freedom index after)
-data_question1 <- all_merge %>% filter(year<=2020) %>% select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages, cases_per_million, deaths_per_million, stringency, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
+data_question1 <- all_Merge %>% filter(year<=2020) %>% select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages, cases_per_million, deaths_per_million, stringency, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
 
 # for question 2 and 4: time and relationship between SDGs
-data_question24 <- all_merge %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7))
+data_question24 <- all_Merge %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7))
 
 # for question 3: events
 # Disasters (only until 2021 because no information for disasters after)
-data_question3_1 <- all_merge %>% filter(year<=2021) %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages))
+data_question3_1 <- all_Merge %>% filter(year<=2021) %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages))
 # COVID
-data_question3_2 <- all_merge %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, cases_per_million, deaths_per_million, stringency))
+data_question3_2 <- all_Merge %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, cases_per_million, deaths_per_million, stringency))
 # Conflicts (only until 2016 because no information for conflicts after)
-data_question3_3 <- all_merge %>% filter(year<=2016) %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
+data_question3_3 <- all_Merge %>% filter(year<=2016) %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
 
 # cleaning of the environment
 rm(merge_1_2, # remove merge_1_2 from memory
