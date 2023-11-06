@@ -198,8 +198,6 @@ print(Evol_Missing_GDP)
 
 list_code <- c("AFG", "BTN", "CUB", "STP", "TKM")
 
-library(forecast)
-
 for (i in list_code) {
   # Filter the dataset for the current country
   country_data <- GDPpercapita %>% filter(code == i)
