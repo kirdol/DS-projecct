@@ -17,7 +17,8 @@ packages <- c(
   "ggplot2",
   "countrycode", 
   "stringi",
-  "forecast"
+  "forecast",
+  "tibble"
 )
 purrr::walk(packages, library, character.only = TRUE)
 
