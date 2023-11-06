@@ -48,6 +48,18 @@ merge_12_7 <- merge_12_6 |> left_join(D7_0_COVID, join_by(code, year))
 D8_0_Conflicts$country <- NULL
 all_merge <- merge_12_7 |> left_join(D8_0_Conflicts, join_by(code, year)) 
 
+# Filter to delete the countries that were missing from some of our databases
+all_merge <- all_merge %>% filter(!code %in% missing)
+
+# Replace the NAs of the COVID columns by 0 (because we don't have real missing, only introduced by merging for the years before COVID)
+all_merge <- all_merge %>%
+  mutate(
+    cases_per_million = ifelse(is.na(cases_per_million), 0, cases_per_million),
+    deaths_per_million = ifelse(is.na(deaths_per_million), 0, deaths_per_million),
+    stringency = ifelse(is.na(stringency), 0, stringency)
+  )
+
+# Complete the values of continent and region
 
 # cleaning of the environment
 rm(merge_1_2, # remove merge_1_2 from memory
