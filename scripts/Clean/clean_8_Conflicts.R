@@ -44,15 +44,7 @@ conflicts <- Conflicts %>%
 # Print the summary of the "Rearanged_Conflicts" data frame
 #summary(conflicts)
 
-#creating a character vector that contains R scripts
-liste_de_scripts <- c("setup.R",
-                      "clean_1_SDG.R")
-
-#execute each scritp
-for (script in liste_de_scripts) {
-  source(here("scripts", script))}
-
-# Make sure the encoding od the country names are UTF-8
+# Make sure the encoding of the country names are UTF-8
 conflicts$country <- iconv(conflicts$country, to = "UTF-8", sub = "byte")
 
 # standardize country names
