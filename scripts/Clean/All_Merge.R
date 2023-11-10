@@ -76,4 +76,6 @@ all_Merge <- all_Merge %>%
 all_Merge <- all_Merge %>%
   select(code, year, country, continent, region, everything())
 
-write.csv(all_Merge, file = "data/all_Merge.csv")
+write.csv(all_Merge, file = here("scripts","data","all_Merge.csv"))
+
+          

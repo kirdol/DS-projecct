@@ -381,8 +381,8 @@ data_question3_3 <- data_question3_3 %>% filter(!code %in% c("MNE","SRB"))
 
 ##### EXPORT as CSV #####
 
-write.csv(data_question1, file = "data/data_question1.csv")
-write.csv(data_question24, file = "data/data_question24.csv")
-write.csv(data_question3_1, file = "data/data_question3_1.csv")
-write.csv(data_question3_2, file = "data/data_question3_2.csv")
-write.csv(data_question3_3, file = "data/data_question3_3.csv")
+write.csv(data_question1, file = here("scripts","data","data_question1.csv"))
+write.csv(data_question24, file = here("scripts","data","data_question24.csv"))
+write.csv(data_question3_1, file = here("scripts","data","data_question3_1.csv"))
+write.csv(data_question3_2, file = here("scripts","data","data_question3_2.csv"))
+write.csv(data_question3_3, file = here("scripts","data","data_question3_3.csv"))
