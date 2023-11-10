@@ -76,7 +76,9 @@ list_country_deleted <- c(list_country_deleted, "BRB", "CRI", "HTI", "ISL", "PAN
 question1_missing_Military <- data_question1 %>%
   group_by(code) %>%
   mutate(PercentageMissing = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
-  filter(code %in% question1_missing_Military$code)
+  ungroup() %>%
+  group_by(region) %>%
+  filter(sum(PercentageMissing, na.rm = TRUE) > 0)
 
 # See the distribution of the missings per region
 Freq_Missing_Military <- ggplot(data = question1_missing_Military) +
@@ -230,12 +232,14 @@ for (i in list_code) {
   data_question1[data_question1$code == i, "ef_money"] <- interpolated_data
 }
 
-# ReCreate a dataframe that only have the countries with missing values and 
+# Create a dataframe that only have the countries with missing values and 
 # add a column which contains the % of missings for each country
 question1_missing_ef_money <- data_question1 %>%
   group_by(code) %>%
-  mutate(PercentageMissing = mean(is.na(ef_money))) #%>%
-#  filter(PercentageMissing !=0)
+  mutate(PercentageMissing = mean(is.na(ef_money))) %>%
+  ungroup() %>%
+  group_by(region) %>%
+  filter(sum(PercentageMissing, na.rm = TRUE) > 0)
 
 # See the distribution of the missings per region
 Freq_Missing_ef_money <- ggplot(data = question1_missing_ef_money) +
@@ -243,15 +247,32 @@ Freq_Missing_ef_money <- ggplot(data = question1_missing_ef_money) +
                      fill = cut(PercentageMissing,
                                 breaks = c(0, 0.1, 0.2, 0.3, 1),
                                 labels = c("0-10%", "10-20%", "20-30%", "30-100%"))),
-                 bins = 200) +
+                 bins = 30) +
   labs(title = "ef_money", x = "ef_money", y = "Frequency") +
   scale_fill_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%"="red","30-100%" = "black"), labels = c("0-10%", "10-20%", "20-30%","30-100%")) +
   guides(fill = guide_legend(title = "% missings")) +
   facet_wrap(~ region, nrow = 3)
 
 print(Freq_Missing_ef_money)
-# To be cont
 
+# All are skewed distributions, we decide to replace the missing values where there are less than 30% missing by the median by region
+
+data_question1 <- data_question1 %>%
+  group_by(code) %>%
+  mutate(
+    PercentageMissingByCode = mean(is.na(ef_money))
+  ) %>%
+  ungroup() %>%  # Remove grouping temporarily
+  group_by(region) %>%
+  mutate(
+    MedianByRegion = median(ef_money, na.rm = TRUE),
+    ef_money = ifelse(
+      PercentageMissingByCode < 0.3 & !is.na(ef_money),
+      ef_money,
+      ifelse(PercentageMissingByCode < 0.3, MedianByRegion, ef_money)
+    )
+  ) %>%
+  select(-PercentageMissingByCode, -MedianByRegion)
 
 # ef_trade
 question1_missing_ef_trade <- data_question1 %>%
@@ -259,13 +280,6 @@ question1_missing_ef_trade <- data_question1 %>%
   summarize(Na_ef_trade = mean(is.na(ef_trade)))%>%
   filter(Na_ef_trade != 0)
 # All below 25%
-
-# Create a dataframe that only have the countries with missing values and 
-# add a column which contains the % of missings for each country
-question1_missing_ef_trade <- data_question1 %>%
-  group_by(code) %>%
-  mutate(PercentageMissing = mean(is.na(ef_trade))) %>%
-  filter(code %in% question1_missing_ef_trade$code)
 
 # Look at the evolution over the years for the countries that have missing values
 Evol_Missing_ef_trade <- ggplot(data = question1_missing_ef_trade) +
@@ -294,7 +308,47 @@ for (i in list_code) {
   data_question1[data_question1$code == i, "ef_trade"] <- interpolated_data
 }
 
-# To be cont
+# Create a dataframe that only have the countries with missing values and 
+# add a column which contains the % of missings for each country
+question1_missing_ef_trade <- data_question1 %>%
+  group_by(code) %>%
+  mutate(PercentageMissing = mean(is.na(ef_trade))) %>%
+  ungroup() %>%
+  group_by(region) %>%
+  filter(sum(PercentageMissing, na.rm = TRUE) > 0)
+
+# See the distribution of the missings per region
+Freq_Missing_ef_trade <- ggplot(data = question1_missing_ef_trade) +
+  geom_histogram(aes(x = ef_trade, 
+                     fill = cut(PercentageMissing,
+                                breaks = c(0, 0.1, 0.2, 0.3, 1),
+                                labels = c("0-10%", "10-20%", "20-30%", "30-100%"))),
+                 bins = 30) +
+  labs(title = "ef_trade", x = "ef_trade", y = "Frequency") +
+  scale_fill_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%"="red","30-100%" = "black"), labels = c("0-10%", "10-20%", "20-30%","30-100%")) +
+  guides(fill = guide_legend(title = "% missings")) +
+  facet_wrap(~ region, nrow = 3)
+
+print(Freq_Missing_ef_trade)
+
+# All are skewed distributions, we decide to replace the missing values where there are less than 30% missing by the median by region
+
+data_question1 <- data_question1 %>%
+  group_by(code) %>%
+  mutate(
+    PercentageMissingByCode = mean(is.na(ef_trade))
+  ) %>%
+  ungroup() %>%  # Remove grouping temporarily
+  group_by(region) %>%
+  mutate(
+    MedianByRegion = median(ef_trade, na.rm = TRUE),
+    ef_trade = ifelse(
+      PercentageMissingByCode < 0.3 & !is.na(ef_trade),
+      ef_trade,
+      ifelse(PercentageMissingByCode < 0.3, MedianByRegion, ef_trade)
+    )
+  ) %>%
+  select(-PercentageMissingByCode, -MedianByRegion)
 
 # ef_regulation
 question1_missing_ef_regulation <- data_question1 %>%
@@ -337,7 +391,47 @@ for (i in list_code) {
   data_question1[data_question1$code == i, "ef_regulation"] <- interpolated_data
 }
 
-# To be cont
+# Create a dataframe that only have the countries with missing values and 
+# add a column which contains the % of missings for each country
+question1_missing_ef_regulation <- data_question1 %>%
+  group_by(code) %>%
+  mutate(PercentageMissing = mean(is.na(ef_regulation))) %>%
+  ungroup() %>%
+  group_by(region) %>%
+  filter(sum(PercentageMissing, na.rm = TRUE) > 0)
+
+# See the distribution of the missings per region
+Freq_Missing_ef_regulation <- ggplot(data = question1_missing_ef_regulation) +
+  geom_histogram(aes(x = ef_regulation, 
+                     fill = cut(PercentageMissing,
+                                breaks = c(0, 0.1, 0.2, 0.3, 1),
+                                labels = c("0-10%", "10-20%", "20-30%", "30-100%"))),
+                 bins = 100) +
+  labs(title = "ef_regulation", x = "ef_regulation", y = "Frequency") +
+  scale_fill_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%"="red","30-100%" = "black"), labels = c("0-10%", "10-20%", "20-30%","30-100%")) +
+  guides(fill = guide_legend(title = "% missings")) +
+  facet_wrap(~ region, nrow = 3)
+
+print(Freq_Missing_ef_regulation)
+
+# All are skewed distributions, we decide to replace the missing values where there are less than 30% missing by the median by region
+
+data_question1 <- data_question1 %>%
+  group_by(code) %>%
+  mutate(
+    PercentageMissingByCode = mean(is.na(ef_regulation))
+  ) %>%
+  ungroup() %>%  # Remove grouping temporarily
+  group_by(region) %>%
+  mutate(
+    MedianByRegion = median(ef_regulation, na.rm = TRUE),
+    ef_regulation = ifelse(
+      PercentageMissingByCode < 0.3 & !is.na(ef_regulation),
+      ef_regulation,
+      ifelse(PercentageMissingByCode < 0.3, MedianByRegion, ef_regulation)
+    )
+  ) %>%
+  select(-PercentageMissingByCode, -MedianByRegion)
 
 ##### No more missing, if we remove years 2000-2005 #####
 
