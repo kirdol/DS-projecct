@@ -191,6 +191,7 @@ data_question1 <- data_question1 %>%
 data_question1 <- data_question1 %>%
   mutate(ef_government = ifelse(code == "SRB" & year == 2001 & is.na(ef_government), ef_government[which(code == "SRB" & year == 2002)], ef_government))
 
+
 # ef_money
 question1_missing_ef_money <- data_question1 %>%
   group_by(code) %>%
@@ -280,6 +281,12 @@ question1_missing_ef_trade <- data_question1 %>%
   summarize(Na_ef_trade = mean(is.na(ef_trade)))%>%
   filter(Na_ef_trade != 0)
 # All below 25%
+
+question1_missing_ef_trade <- data_question1 %>%
+  group_by(code) %>%
+  mutate(PercentageMissing = mean(is.na(ef_trade))) %>%
+  filter(code %in% question1_missing_ef_trade$code)
+
 
 # Look at the evolution over the years for the countries that have missing values
 Evol_Missing_ef_trade <- ggplot(data = question1_missing_ef_trade) +
