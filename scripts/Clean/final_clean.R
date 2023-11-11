@@ -442,6 +442,16 @@ data_question1 <- data_question1 %>%
 
 ##### No more missing, if we remove years 2000-2005 #####
 
+#### Visualization NA Q1 HUMAN FREEDOM INDEX  ####
+na_counts <- data_question1 %>%
+  select(-goal1, -goal10) %>%  # Exclude "goal1" and "goal10" columns
+  summarise(across(everything(), ~ sum(is.na(.)), .names = "na_{.col}")) %>%
+  pivot_longer(cols = starts_with("na_"), names_to = "column", values_to = "na_count", names_prefix = "na_")
+
+######## NO MORE MISSINGS HUMAN FREEDOM INDEX
+
+
+
 #### Questions 2 and 4
 see_missing24 <- data_question24 %>%
   group_by(code) %>%
