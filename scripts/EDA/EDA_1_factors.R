@@ -9,6 +9,8 @@ library(reshape2)
 
 data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
 
+
+
 #### Correlations between variables ####
 
 Correlation_overall <- data_question1 %>% 
@@ -41,59 +43,50 @@ ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
 model_goal2 <- lm(goal2 ~ goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
 summary(model_goal2)
 
+# # Define the dependent variables (replace with your actual variables)
+# dependent_vars <- c("goal1",
+#                     "goal2",
+#                     "goal3",
+#                     "goal4",
+#                     "goal5",
+#                     "goal6",
+#                     "goal7",
+#                     "goal8",
+#                     "goal9",
+#                     "goal10",
+#                     "goal11",
+#                     "goal12",
+#                     "goal13",
+#                     "goal14",
+#                     "goal15",
+#                     "goal16",
+#                     "goal17"
+#                     )
+# # Define the independent variables
+# independent_vars <- c( "unemployment.rate", "GDPpercapita" ,                
+#                       "MilitaryExpenditurePercentGDP", "internet.usage",              "pf_law",                      "pf_security",               "pf_movement",                  
+#                       "pf_religion",                  "pf_assembly",                   "pf_expression",                 "pf_identity",                   "ef_government",                
+#                       "ef_legal",                     "ef_money",                      "ef_trade",                      "ef_regulation")
+# # Function to run linear regression
+# run_regression <- function(dep_var, indep_vars) {
+#   formula <- as.formula(paste(dep_var, "~", paste(indep_vars, collapse = " + ")))
+#   return(summary(lm(formula, data = Correlation_overall)))
+# }
+# # Store results
+# results <- list()
 
-
-# Summary of the model to see coefficients and statistics
-summary(model)
-
-
-# Define the dependent variables (replace with your actual variables)
-dependent_vars <- c("goal1" 
-                    "goal2",
-                    "goal3",
-                    "goal4",
-                    "goal5",
-                    "goal6",
-                    "goal7",
-                    "goal8",
-                    "goal9",
-                    "goal10",
-                    "goal11",
-                    "goal12",
-                    "goal13",
-                    "goal14",
-                    "goal15",
-                    "goal16",
-                    "goal17"
-                    )
-
-# Define the independent variables
-independent_vars <- c( "unemployment.rate", "GDPpercapita" ,                
-                      "MilitaryExpenditurePercentGDP", "internet.usage",              "pf_law",                      "pf_security",               "pf_movement",                  
-                      "pf_religion",                  "pf_assembly",                   "pf_expression",                 "pf_identity",                   "ef_government",                
-                      "ef_legal",                     "ef_money",                      "ef_trade",                      "ef_regulation")
-
-# Function to run linear regression
-run_regression <- function(dep_var, indep_vars) {
-  formula <- as.formula(paste(dep_var, "~", paste(indep_vars, collapse = " + ")))
-  return(summary(lm(formula, data = Correlation_overall)))
-}
-
-# Store results
-results <- list()
-
-# Loop over combinations
-for (dep_var in dependent_vars) {
-  for (i in 1:length(independent_vars)) {
-    combn_vars <- combn(independent_vars, i, simplify = FALSE)
-    for (vars in combn_vars) {
-      model_summary <- run_regression(dep_var, vars)
-      results[[paste(dep_var, paste(vars, collapse = "_"), sep = "_")]] <- model_summary
-    }
-  }
-}
-
-# Now, 'results' contains the summaries of all regressions
+# # Loop over combinations
+# for (dep_var in dependent_vars) {
+#   for (i in 1:length(independent_vars)) {
+#     combn_vars <- combn(independent_vars, i, simplify = FALSE)
+#     for (vars in combn_vars) {
+#       model_summary <- run_regression(dep_var, vars)
+#       results[[paste(dep_var, paste(vars, collapse = "_"), sep = "_")]] <- model_summary
+#     }
+#   }
+# }
+# 
+# # Now, 'results' contains the summaries of all regressions
 
 
 # Check if certain region and/or continents have better/worse scores for each goal
