@@ -18,7 +18,8 @@ packages <- c(
   "countrycode", 
   "stringi",
   "forecast",
-  "tibble"
+  "tibble",
+  "reshape2"
 )
 purrr::walk(packages, library, character.only = TRUE)
 
