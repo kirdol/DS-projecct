@@ -1,4 +1,14 @@
-# Importation of the data for this question.
+################
+## Question 4 ##
+################
+
+
+# Can we explain the scores of certain SDGs using the scores of other SDGs?
+# Can we predict a high score for one SDG using the
+# high score of one or some others?
+# (focus on relationship between SDGs)
+
+# Importation of the data for this question
 Q4 <- read.csv(here("scripts", "data", "data_question24.csv"))
 
 # Select SDG score columns

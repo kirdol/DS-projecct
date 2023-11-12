@@ -1,7 +1,7 @@
 # Introduction
 
 ```{r, echo = FALSE, message = FALSE}
-source(here::here("scripts/setup.R"))
+source(here::here("scripts/Clean/setup.R"))
 ```
 
 * Overview and Motivation

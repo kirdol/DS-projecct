@@ -1,6 +1,6 @@
 ---
-title: "A cool title"
-author: "Name I, First Name I and Name II, First Name II"
+title: "Comparative Analysis of SDG Implementation Evolution Worldwide"
+author: "Lodrik Adam, Sofia Benczédi, Stefan Favre, Delia Fuchs"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
