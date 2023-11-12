@@ -66,4 +66,6 @@ knitr::opts_chunk$set(
 )
 
 # cleaning of the environment
-rm(packages)
+rm(packages,i,install_if_missing)
+
+   
