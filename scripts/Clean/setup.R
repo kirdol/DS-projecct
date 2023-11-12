@@ -27,7 +27,6 @@ packages <- c(
   "forecast",
   "tibble",
   "reshape2",
-  "caret"
 )
 for (i in packages) {
   install_if_missing(i)

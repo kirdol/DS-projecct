@@ -46,40 +46,5 @@ ggplot(plot_data, aes(Var1, Var2, fill = value)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.text.y = element_text(angle = 45, hjust = 1),
         legend.position = "none") + # Hide the color legend
-  labs(x = 'SDG Goals', y = 'SDG Goals', title = 'Correlation Matrix with Significance Indicator')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-plot(Q4_SDG_only)
-
-ggplot(melted_data, aes(x = variable, y = 1:nrow(sorted_data), fill = value)) +
-  geom_tile() +
-  scale_fill_manual(values = c("TRUE" = "red", "FALSE" = "green")) +
-  labs(x = "Variables", y = "Observations", fill = "Donnée Manquante") +
-  theme_minimal()
-
-
-# Créer un dataframe indiquant les valeurs manquantes
-missing_values <- is.na(sorted_data)
-
-# Fondre les données pour le plotting
-melted_data <- melt(missing_values, varnames = c("Variable", "Observation"))
-
-# Créer la heatmap
-ggplot(melted_data, aes(x = Variable, y = Observation, fill = value)) +
-  geom_tile() +
-  scale_fill_manual(values = c("TRUE" = "red", "FALSE" = "green"), name = "Donnée Manquante") +
-  labs(x = "Variables", y = "Observations") +
-  theme_minimal()
+  labs(x = 'SDG Goals', y = 'SDG Goals',
+       title = 'Correlation Matrix with Significance Indicator')
