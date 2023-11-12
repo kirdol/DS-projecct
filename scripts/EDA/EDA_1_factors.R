@@ -7,9 +7,9 @@ library(corrplot)
 library(ggplot2)
 library(reshape2)
 
-
 data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
 
+#### Correlations between variables ####
 
 Correlation_overall <- data_question1 %>% 
       select(population:ef_regulation) %>%
@@ -17,10 +17,9 @@ Correlation_overall <- data_question1 %>%
 
 cor_matrix <- cor(Correlation_overall, use = "everything")
 print(cor_matrix)
-corrplot(cor_matrix, method = "square")
-
 
 #### Heatmap ####
+
 cor_melted <- melt(cor_matrix)
 
 ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
@@ -34,13 +33,24 @@ ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   coord_fixed() +
   labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
 #why does goal1 and goal10 NA values since cor_matrix? 
+#where is goal14 ?? 
 
-#### Check influence of variables on scores ####
+
+#### Check influence of variables on scores - Regressions ####
+
+model_goal2 <- lm(goal2 ~ goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+summary(model_goal2)
+
+
+
+# Summary of the model to see coefficients and statistics
+summary(model)
+
 
 # Define the dependent variables (replace with your actual variables)
-dependent_vars <- c("goal1", 
-                    "goal2", 
-                    "goal3", 
+dependent_vars <- c("goal1" 
+                    "goal2",
+                    "goal3",
                     "goal4",
                     "goal5",
                     "goal6",
@@ -54,7 +64,8 @@ dependent_vars <- c("goal1",
                     "goal14",
                     "goal15",
                     "goal16",
-                    "goal17" )
+                    "goal17"
+                    )
 
 # Define the independent variables
 independent_vars <- c( "unemployment.rate", "GDPpercapita" ,                
