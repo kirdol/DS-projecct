@@ -2,7 +2,14 @@
 ## The following loads the needed packages ##
 #############################################
 
-# load the required packages
+# load the required packages and install them if they are not.
+install_if_missing <- function(package) {
+  if (!require(package, character.only = TRUE)) {
+    install.packages(package)
+    library(package, character.only = TRUE)
+  }
+}
+
 packages <- c(
   "here", # for the project's organization
   "tidyverse", # for wrangling
@@ -19,9 +26,12 @@ packages <- c(
   "stringi",
   "forecast",
   "tibble",
-  "reshape2"
+  "reshape2",
+  "caret"
 )
-purrr::walk(packages, library, character.only = TRUE)
+for (i in packages) {
+  install_if_missing(i)
+}
 
 ######################################################
 ## The following sets a few option for nice reports ##
