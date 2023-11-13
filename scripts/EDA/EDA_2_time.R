@@ -70,71 +70,93 @@ server <- function(input, output, session) {
 # Run the Shiny app
 shinyApp(ui, server)
 
+# Save as html document
+
 ### First, look at the evolution of SDG achievement overall score over time
 
 # Evolution over time of the overall score: mean over all countries
 
 data1 <- data_question2 %>% group_by(year) %>%
   mutate(mean_overall_score_by_year=mean(overallscore))
+
 ggplot(data=data1) +
-  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year))
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year), color="blue", lwd=1) +
+  scale_y_continuous(limits = c(0, 100))
 
 # Evolution over time of the overall score: mean by continent
 
 data2 <- data_question2 %>% group_by(year, continent) %>%
   mutate(mean_overall_score_by_year=mean(overallscore))
+
 ggplot(data=data2) +
-  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=1)
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=1)+
+  scale_y_continuous(limits = c(0, 100))
 
 # Evolution over time of the overall score: mean by region
 
 data3 <- data_question2 %>% group_by(year, region) %>%
   mutate(mean_overall_score_by_year=mean(overallscore))
+
 ggplot(data=data3) +
-  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=region), lwd=1)
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=region), lwd=1)+
+  scale_y_continuous(limits = c(0, 100))
 
 ### Second, look at the evolution of SDG achievement scores (16) over time
 
 # Evolution over time of the SDGs' achievement: mean over all countries
 
-data4 <- data_question2 %>% group_by(year) %>%
-  mutate(mean_goal1_by_year=mean(goal1),
-         mean_goal2_by_year=mean(goal2),
-         mean_goal3_by_year=mean(goal3),
-         mean_goal4_by_year=mean(goal4),
-         mean_goal5_by_year=mean(goal5),
-         mean_goal6_by_year=mean(goal6),
-         mean_goal7_by_year=mean(goal7),
-         mean_goal8_by_year=mean(goal8),
-         mean_goal9_by_year=mean(goal9),
-         mean_goal10_by_year=mean(goal10),
-         mean_goal11_by_year=mean(goal11),
-         mean_goal12_by_year=mean(goal12),
-         mean_goal13_by_year=mean(goal13),
-         mean_goal15_by_year=mean(goal15),
-         mean_goal16_by_year=mean(goal16),
-         mean_goal17_by_year=mean(goal17))
-ggplot(data=data4) +
-  geom_line(mapping=aes(x=year, y=mean_goal1_by_year,
-                        mean_goal2_by_year,
-                        mean_goal3_by_year,
-                        mean_goal4_by_year,
-                        mean_goal5_by_year,
-                        mean_goal6_by_year,
-                        mean_goal7_by_year,
-                        mean_goal8_by_year,
-                        mean_goal9_by_year,
-                        mean_goal10_by_year,
-                        mean_goal11_by_year,
-                        mean_goal12_by_year,
-                        mean_goal13_by_year,
-                        mean_goal15_by_year,
-                        mean_goal16_by_year,
-                        mean_goal17_by_year))
+data4 <- data_question2 %>%
+  group_by(year) %>%
+  summarise(across(starts_with("goal"), mean, na.rm=TRUE)) %>%
+  pivot_longer(cols = starts_with("goal"), names_to = "goal", values_to = "mean_value")
+
+color_palette <- c("red", "blue", "green", "orange", "purple", "pink", "brown", "gray", "cyan", "magenta", "yellow", "darkgreen", "darkblue", "darkred", "darkorange", "darkcyan")
+
+ggplot(data = data4) +
+  geom_line(mapping = aes(x = year, y = mean_value, color = goal), size = 0.7) +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 100)) +
+  guides(
+    color = guide_legend(
+      ncol = 2,        # Number of columns
+      title.position = "top",  # Position of the legend title
+      title.hjust = 0.5        # Horizontal justification of the legend title
+    )
+  )
+
+ggplot(data = data4) +
+  geom_line(mapping = aes(x = year, y = mean_value), size = 0.7) +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 100)) +
+  facet_wrap(~ goal, nrow = 4)
 
 # Evolution over time of the SDGs' achievement: mean by continent
+data5 <- data_question2 %>%
+  group_by(year, continent) %>%
+  summarise(across(starts_with("goal"), mean, na.rm=TRUE)) %>%
+  pivot_longer(cols = starts_with("goal"), names_to = "goal", values_to = "mean_value")
+
+color_palette <- c("red", "blue", "green", "orange", "purple", "pink", "brown", "gray", "cyan", "magenta", "yellow", "darkgreen", "darkblue", "darkred", "darkorange", "darkcyan")
+
+ggplot(data = data5) +
+  geom_line(mapping = aes(x = year, y = mean_value, color=continent), size = 0.7) +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 100)) +
+  facet_wrap(~ goal, nrow = 4)
 
 # Evolution over time of the SDGs' achievement: mean by region
+data6 <- data_question2 %>%
+  group_by(year, region) %>%
+  summarise(across(starts_with("goal"), mean, na.rm=TRUE)) %>%
+  pivot_longer(cols = starts_with("goal"), names_to = "goal", values_to = "mean_value")
+
+color_palette <- c("red", "blue", "green", "orange", "purple", "pink", "brown", "gray", "cyan", "magenta", "yellow", "darkgreen", "darkblue", "darkred", "darkorange", "darkcyan")
+
+ggplot(data = data5) +
+  geom_line(mapping = aes(x = year, y = mean_value, color=region), size = 0.7) +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 100)) +
+  facet_wrap(~ goal, nrow = 4)
 
 # Evolution over time of the SDGs' achievement: mean by country
 

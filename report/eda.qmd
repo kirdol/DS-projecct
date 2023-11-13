@@ -1,11 +1,133 @@
 # Exploratory data analysis
 
-```{r, echo = FALSE, message = FALSE}
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
 source(here::here("scripts/Clean/setup.R"))
 ```
 
-* Mapping out the underlying structure
-* Identifying the most important variables
-* Univariate visualizations
-* Multivariate visualizations
-* Summary tables
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
+source(here::here("scripts/EDA/EDA_2_time.R"))
+```
+
+First, we look at the evolution of SDG achievement overall score over time for the whole world, by continent and by region.
+
+```{r, echo = TRUE, message = FALSE}
+data1 <- data_question2 %>% group_by(year) %>%
+  mutate(mean_overall_score_by_year=mean(overallscore))
+
+ggplot(data=data1) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year), color="blue", lwd=1) +
+  scale_y_continuous(limits = c(0, 100))
+```
+
+```{r, echo = TRUE, message = FALSE}
+data2 <- data_question2 %>% group_by(year, continent) %>%
+  mutate(mean_overall_score_by_year=mean(overallscore))
+
+ggplot(data=data2) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=1)+
+  scale_y_continuous(limits = c(0, 100))
+```
+
+```{r, echo = TRUE, message = FALSE}
+data3 <- data_question2 %>% group_by(year, region) %>%
+  mutate(mean_overall_score_by_year=mean(overallscore))
+
+ggplot(data=data3) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=region), lwd=1)+
+  scale_y_continuous(limits = c(0, 100))
+```
+
+Second, we look at the evolution of SDG achievement scores(16) over time for the whole world, by continent and by region. 
+
+```{r, echo = TRUE, message = FALSE}
+data4 <- data_question2 %>%
+  group_by(year) %>%
+  summarise(across(starts_with("goal"), mean, na.rm=TRUE)) %>%
+  pivot_longer(cols = starts_with("goal"), names_to = "goal", values_to = "mean_value")
+
+color_palette <- c("red", "blue", "green", "orange", "purple", "pink", "brown", "gray", "cyan", "magenta", "yellow", "darkgreen", "darkblue", "darkred", "darkorange", "darkcyan")
+
+ggplot(data = data4) +
+  geom_line(mapping = aes(x = year, y = mean_value, color = goal), size = 0.7) +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 100)) +
+  guides(
+    color = guide_legend(
+      ncol = 2,        # Number of columns
+      title.position = "top",  # Position of the legend title
+      title.hjust = 0.5        # Horizontal justification of the legend title
+    )
+  )
+```
+
+```{r, echo = TRUE, message = FALSE}
+ggplot(data = data4) +
+  geom_line(mapping = aes(x = year, y = mean_value), size = 0.7) +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 100)) +
+  facet_wrap(~ goal, nrow = 4)
+```
+
+```{r, echo = TRUE, message = FALSE}
+data5 <- data_question2 %>%
+  group_by(year, continent) %>%
+  summarise(across(starts_with("goal"), mean, na.rm=TRUE)) %>%
+  pivot_longer(cols = starts_with("goal"), names_to = "goal", values_to = "mean_value")
+
+color_palette <- c("red", "blue", "green", "orange", "purple", "pink", "brown", "gray", "cyan", "magenta", "yellow", "darkgreen", "darkblue", "darkred", "darkorange", "darkcyan")
+
+ggplot(data = data5) +
+  geom_line(mapping = aes(x = year, y = mean_value, color=continent), size = 0.7) +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 100)) +
+  facet_wrap(~ goal, nrow = 4)
+```
+
+```{r, echo = TRUE, message = TRUE}
+# Define UI logic
+ui <- function(request) {
+  fluidPage(
+    titlePanel("Interactive Map with Overall Score"),
+    plotlyOutput("map"),
+    sliderInput("year", "Select Year:", min = 2000, max = 2022, value = 2022, step = 1, width = "100%"),
+    textOutput("hovered_country_text")
+  )
+}
+
+# Define server logic
+server <- function(input, output, session) {
+  # Filter data based on the selected year
+  selected_data <- reactive({
+    filter(data0, year == as.numeric(input$year))
+  })
+  
+  # Create a plotly object with hover information
+  output$map <- renderPlotly({
+    plot_ly(
+      type = "choropleth",
+      z = ~selected_data()$overallscore,
+      locations = ~selected_data()$iso_a3,
+      text = ~paste("Country: ", selected_data()$name, "<br>Overall Score: ", selected_data()$overallscore),
+      colors = c("darkred", "orange", "yellow", "darkgreen"),
+      colorbar = list(title = "Overall Score"),
+      hoverinfo = "text"
+    )
+  })
+  
+  # Display the name and overall score of the hovered country
+  output$hovered_country_text <- renderText({
+    req(input$hovered_country)
+    country_data <- data0[data0$iso_a3 == input$hovered_country, ]
+    paste("Country: ", country_data$name, ", Overall Score: ", country_data$overallscore)
+  })
+}
+
+# Run the Shiny app
+shinyApp(ui, server)
+```
+
+-   Mapping out the underlying structure
+-   Identifying the most important variables
+-   Univariate visualizations
+-   Multivariate visualizations
+-   Summary tables
