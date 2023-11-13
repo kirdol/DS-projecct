@@ -26,7 +26,10 @@ packages <- c(
   "stringi",
   "forecast",
   "tibble",
-  "reshape2"
+  "reshape2",
+  "corrplot",
+  "stargazer",
+  "tinytex"
 )
 
 for (i in packages) {

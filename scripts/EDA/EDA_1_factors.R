@@ -1,30 +1,23 @@
 ##### How do complex structures, systems, relationships and events influence a country's SDG scores?  #####
 
-install.packages("corrplot")
-install.packages("ggplot2")
-install.packages("reshape2")
-library(corrplot)
-library(ggplot2)
-library(reshape2)
-
+#### data ####
 data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
-
-
 
 #### Correlations between variables ####
 
 Correlation_overall <- data_question1 %>% 
       select(population:ef_regulation) %>%
       select(-age.category)
+      # select(-c(goal1, goal10, age.category))
 
-cor_matrix <- cor(Correlation_overall, use = "everything")
+cor_matrix <- cor(Correlation_overall, use = "pairwise.complete.obs")
 print(cor_matrix)
 
 #### Heatmap ####
 
-cor_melted <- melt(cor_matrix)
+cor_melted <- melt(cor_matrix2)
 
-ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
+ggplot(data = cor_melted2, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
                        midpoint = 0, limit = c(-1, 1), space = "Lab", 
@@ -34,60 +27,58 @@ ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
         axis.text.y = element_text(size = 8)) +
   coord_fixed() +
   labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
-#why does goal1 and goal10 NA values since cor_matrix? 
-#where is goal14 ?? 
 
+#verify significance pval < 0.05
 
 #### Check influence of variables on scores - Regressions ####
+model_goal1 <- lm(goal1 ~ goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+model_goal2 <- lm(goal2 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+model_goal3 <- lm(goal3 ~ goal1 + goal2 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+model_goal4 <- lm(goal4 ~ goal1 + goal2 + goal3 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+model_goal5 <- lm(goal5 ~ goal1 + goal2 + goal3 + goal4 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+model_goal6 <- lm(goal6 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+model_goal7 <- lm(goal7 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+model_goal8 <- lm(goal8 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+model_goal9 <- lm(goal9 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+model_goal10 <- lm(goal10 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+model_goal11 <- lm(goal11 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+model_goal12 <- lm(goal12 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+model_goal13 <- lm(goal13 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+model_goal15 <- lm(goal15 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+model_goal16 <- lm(goal16 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+model_goal17 <- lm(goal17 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
+summary(model_goal11)
 
-model_goal2 <- lm(goal2 ~ goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
-summary(model_goal2)
+# Function to build the model
+build_model <- function(dependent_var, data) {
+  formula <- as.formula(paste(dependent_var, "~ ."))
+  lm(formula, data = Correlation_overall[, !(names(data) %in% dependent_var)])
+}
+
+# List of all goal variables
+goal_vars <- paste0("goal", c(1:13, 15:17))
+
+# List to store models
+models <- list()
+
+# Loop over each goal and build the model
+for (goal_var in goal_vars) {
+  models[[goal_var]] <- build_model(goal_var, Correlation_overall)
+}
+
+#### proving stargazer as visualization for regression ####
+
+stargazer(model_goal2, title="Regression Results",
+          align=TRUE, dep.var.labels=c("Overall Rating","High Rating"),
+          covariate.labels=c("Handling of Complaints","No Special Privileges",
+                             "Opportunity to Learn","Performance-Based Raises","Too Critical","Advancement"),
+          omit.stat=c("LL","ser","f"), no.space=TRUE)
+
+
 
 # # Define the dependent variables (replace with your actual variables)
-# dependent_vars <- c("goal1",
-#                     "goal2",
-#                     "goal3",
-#                     "goal4",
-#                     "goal5",
-#                     "goal6",
-#                     "goal7",
-#                     "goal8",
-#                     "goal9",
-#                     "goal10",
-#                     "goal11",
-#                     "goal12",
-#                     "goal13",
-#                     "goal14",
-#                     "goal15",
-#                     "goal16",
-#                     "goal17"
-#                     )
-# # Define the independent variables
-# independent_vars <- c( "unemployment.rate", "GDPpercapita" ,                
-#                       "MilitaryExpenditurePercentGDP", "internet.usage",              "pf_law",                      "pf_security",               "pf_movement",                  
-#                       "pf_religion",                  "pf_assembly",                   "pf_expression",                 "pf_identity",                   "ef_government",                
-#                       "ef_legal",                     "ef_money",                      "ef_trade",                      "ef_regulation")
-# # Function to run linear regression
-# run_regression <- function(dep_var, indep_vars) {
-#   formula <- as.formula(paste(dep_var, "~", paste(indep_vars, collapse = " + ")))
-#   return(summary(lm(formula, data = Correlation_overall)))
-# }
-# # Store results
-# results <- list()
 
-# # Loop over combinations
-# for (dep_var in dependent_vars) {
-#   for (i in 1:length(independent_vars)) {
-#     combn_vars <- combn(independent_vars, i, simplify = FALSE)
-#     for (vars in combn_vars) {
-#       model_summary <- run_regression(dep_var, vars)
-#       results[[paste(dep_var, paste(vars, collapse = "_"), sep = "_")]] <- model_summary
-#     }
-#   }
-# }
-# 
 # # Now, 'results' contains the summaries of all regressions
-
 
 # Check if certain region and/or continents have better/worse scores for each goal
 

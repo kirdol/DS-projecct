@@ -94,7 +94,7 @@ heatmap_ordered <- ggplot(na_long, aes(x = reorder(country, -Count_NA_50_100), y
     axis.text.x = element_text(angle = 90, hjust = 1),
     axis.text.y = element_text(size = 7)
   )
-
+print(heatmap_ordered)
 # If you want to save this plot
 ggsave("heatmap_ordered.png", heatmap_ordered, width = 12, height = 8)
 
