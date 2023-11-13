@@ -37,7 +37,7 @@ ggplot(data=data3) +
   scale_y_continuous(limits = c(0, 100))
 ```
 
-Second, we look at the evolution of SDG achievement scores(16) over time for the whole world, by continent and by region. 
+Second, we look at the evolution of SDG achievement scores(16) over time for the whole world, by continent and by region.
 
 ```{r, echo = TRUE, message = FALSE}
 data4 <- data_question2 %>%

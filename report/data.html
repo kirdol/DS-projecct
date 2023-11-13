@@ -50,16 +50,6 @@ ul.task-list li input[type="checkbox"] {
 <section id="sources" class="level2">
 <h2 class="anchored" data-anchor-id="sources">Sources</h2>
 <p>We are collecting our Data from the sustainability development report (SDG), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn’t find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next question.</p>
-<table>
-<thead>
-<tr class="header">
-<th>dhjdfhjdhjf</th>
-<th>fkgjdfjkgf</th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
 <table class="table">
 <colgroup>
 <col style="width: 49%">
@@ -136,57 +126,22 @@ Country-and-Population</td>
 <p>During the wrangling process: we add data to our table (D1_1_SDG) based on different other datasets and match them based on the country, the country code, and the year. The table below shows all our 9 databases that we merge to have our final table for the analysis, as well as each variable of interest that we keep.</p>
 <table class="table">
 <colgroup>
-<col style="width: 6%">
-<col style="width: 7%">
-<col style="width: 44%">
-<col style="width: 15%">
-<col style="width: 12%">
-<col style="width: 12%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 63%">
+<col style="width: 8%">
+<col style="width: 16%">
 </colgroup>
 <thead>
 <tr class="header">
-<th><strong>Table Name</strong></th>
-<th><strong>Variable Name</strong></th>
+<th><strong>Table<br>
+Name</strong></th>
+<th><strong>Variable<br>
+Name</strong></th>
 <th><strong>Explanation</strong></th>
-<th><strong>Source database</strong></th>
 <th><strong># obs before cleaning</strong></th>
-<th><strong># obs after cleaning</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>In all database</td>
-<td>code</td>
-<td>Country code (ISO)</td>
-<td>All databases have these variables</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>D1_1_SDG</td>
-<td>overallscore</td>
-<td>Overall score on all 17 SDGs (the score are % of achievement of the goals determined by the UN based on several indicators)</td>
-<td>https://dashboards.sdgindex.org/downloads</td>
-<td>4140 observations of 120 variables</td>
-<td>3818 observations of 21 variables</td>
-</tr>
-</tbody>
-</table>
-<table class="table">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 7%">
-<col style="width: 59%">
-<col style="width: 7%">
-<col style="width: 15%">
-</colgroup>
-<thead>
-<tr class="header">
-<th><strong>Name of the table</strong></th>
-<th><strong>Name of the variable</strong></th>
-<th><strong>Explanation</strong></th>
-<th><strong># obs / var before cleaning</strong></th>
-<th><strong># obs / var after cleaning</strong></th>
+<th><strong># obs<br>
+after cleaning</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -212,7 +167,8 @@ Country-and-Population</td>
 <td></td>
 </tr>
 <tr class="even">
-<td>D1_1_SDG</td>
+<td>D1_1_<br>
+SDG</td>
 <td>overallscore</td>
 <td>Overall score on all 17 SDGs (the score are % of achievement of the goals determined by the UN based on several indicators)</td>
 <td>4140 observations of 120 variables</td>
@@ -233,42 +189,52 @@ Country-and-Population</td>
 <td></td>
 </tr>
 <tr class="odd">
-<td>D2_2_Unemployment_rate</td>
+<td>D2_2_<br>
+Unemployment_rate</td>
 <td>unemployment.rate</td>
 <td>Unemployment rate (% of the population 15 years old and older)</td>
 <td>82800 observations of 8 variables</td>
 <td>571 observations of 5 variables</td>
 </tr>
 <tr class="even">
-<td>D3_0_GDP_per_capita</td>
+<td>D3_0_<br>
+GDP_per_capita</td>
 <td>GDPpercapita</td>
 <td>GDP per capita</td>
 <td>266 observations of 68 variables</td>
 <td>3818 observations of 4 variables</td>
 </tr>
 <tr class="odd">
-<td>D3_1_Military_expenditure_percent_GDP</td>
-<td>MilitaryExpenditurePercentGDP</td>
+<td>D3_1_<br>
+Military_expenditure_<br>
+percent_GDP</td>
+<td>MilitaryExpenditure<br>
+PercentGDP</td>
 <td>Military expenditures in percentage of GDP</td>
 <td>266 observations of 68 variables</td>
 <td>3818 observations of 4 variables</td>
 </tr>
 <tr class="even">
-<td>D3_2_Military_expenditure_percent_gov_exp</td>
-<td>MilitaryExpenditurePercentGovExp</td>
+<td>D3_2_<br>
+Military_expenditure_<br>
+percent_gov_exp</td>
+<td>MilitaryExpenditure<br>
+PercentGovExp</td>
 <td>Military expenditures in percentage of government expenditures</td>
 <td>266 observations of 68 variables</td>
 <td>3818 observations of 4 variables</td>
 </tr>
 <tr class="odd">
-<td>D4_0_Internet_usage</td>
+<td>D4_0_<br>
+Internet_usage</td>
 <td>internet.usage</td>
 <td>Internet usage (% of the population)</td>
 <td>6570 observations of 4 variables</td>
 <td>3433 observations of 4 variables</td>
 </tr>
 <tr class="even">
-<td>D5_0_Human_freedom_index</td>
+<td>D5_0_<br>
+Human_freedom_index</td>
 <td>region</td>
 <td>Part of the world, group of countries (e.g.&nbsp;Eastern Europe, Dub-Saharan Africa, South Asia, etc.)</td>
 <td>3465 observations of 141 variables</td>
@@ -420,7 +386,8 @@ Country-and-Population</td>
 <td></td>
 </tr>
 <tr class="even">
-<td>D6_0_Disaters</td>
+<td>D6_0_<br>
+Disaters</td>
 <td>continent</td>
 <td>Continents touched by the disasters such as floods, ouragan</td>
 <td>14644 observations of 47 variables</td>
@@ -470,7 +437,8 @@ Country-and-Population</td>
 <td></td>
 </tr>
 <tr class="odd">
-<td>D7_0_COVID</td>
+<td>D7_0_<br>
+COVID</td>
 <td>deaths_per_million</td>
 <td>Number of people dead due to COVID</td>
 <td>349966 observations of 67 variables</td>
@@ -491,7 +459,8 @@ Country-and-Population</td>
 <td></td>
 </tr>
 <tr class="even">
-<td>D8_0_Conflicts</td>
+<td>D8_0_<br>
+Conflicts</td>
 <td>ongoing</td>
 <td>Variable coded 1 for more than 25 deaths in intrastate conflict and 0 otherwise according to UCDP/PRIO Armed Conflict Dataset 17.1.</td>
 <td>5016 observations of 18 variables</td>
@@ -508,20 +477,6 @@ Country-and-Population</td>
 <td></td>
 <td>pop_affected</td>
 <td>Share of population affected by violence in percentage (0 to 100) measured as described above based on population data from CIESIN, the PRIO-GRID structure as well as UCDP GED.</td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td></td>
-<td></td>
-<td></td>
 <td></td>
 <td></td>
 </tr>

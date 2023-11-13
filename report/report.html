@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.3.433">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -76,11 +110,6 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: le package 'forecast' a été compilé avec la version R 4.3.2</code></pre>
-</div>
-</div>
 <section id="overview-and-motivation" class="level2">
 <h2 class="anchored" data-anchor-id="overview-and-motivation">Overview and Motivation</h2>
 <p>The global significance of the SDGs is our basis. The adoption of the SDGs by the United Nation in 2015 marked a significant global commitment to address pressing issues such as poverty, inequality, climate, change, and more. The fact that these goals were unanimously adopted by 193 member states underscores their importance. This prompted us to ask ourselves, can we evaluate the progress? What has really been done so far? Although the SDGs have attracted considerable attention and backing, it is essential to evaluate the events preceding and following their implementation. Understanding the actions taken and progress made is essential in determining if these global commitments are resulting in tangible enhancements to individuals’ lives. By examining the evolution of all countries and their respective contributions towards achieving the SDGs, we can develop a comprehensive understanding of collective efforts and identify potential disparities or gaps.</p>
@@ -92,7 +121,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="research-questions">Research questions</h2>
 <ol type="1">
 <li><p><strong>Focus on factors</strong>: What can explain the state of the countries regarding sustainable development? (we will analyse different factors: scores from the human freedom index, GDP per capita, military expenditures in % of GDP/government expenditure, unemployment rate, internet usage). See data description for more precise information about the factors.</p></li>
-<li><p><strong>Focus on time</strong>: How has the adoption of the SDGs in 2015 influenced the achievement of SDGs? (we want to compare the achievement (SDG scores: there are scores calculated even before the adoption) of the different countries before and after 2015 to see if the adoption of SDG gave a real "push" to sustainable development)</p></li>
+<li><p><strong>Focus on time</strong>: How has the adoption of the SDGs in 2015 influenced the achievement of SDGs? (we want to compare the achievement (SDG scores: there are scores calculated even before the adoption) of the different countries before and after 2015 to see if the adoption of SDG gave a real “push” to sustainable development)</p></li>
 <li><p><strong>Focus on events</strong>: Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crises and natural disasters? (we will analyse the impact of the COVID, natural disasters and conflicts (# deaths, damages, etc.) on the SDG scores). See data description for more precise information about how the impact of these events are materialized into data.</p></li>
 <li><p><strong>Focus on relationship between SDGs</strong>: How are the different SDGs linked? (We want to see if some SDGs are linked in the fact that a high score on one implies a high score on the other, and thus if we can make groups of SDGs that are comparable in that way).</p></li>
 </ol>
@@ -103,19 +132,98 @@ ul.task-list li input[type="checkbox"] {
 <section id="sources" class="level2">
 <h2 class="anchored" data-anchor-id="sources">Sources</h2>
 <p>We are collecting our Data from the sustainability development report (SDG), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn’t find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next question.</p>
+<table class="table">
+<colgroup>
+<col style="width: 49%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name of the Table</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>D1_1_SDG</td>
+<td>https://dashboards.sdgindex.org/<br>
+downloads</td>
+</tr>
+<tr class="even">
+<td>D2_2_Unemployment_rate</td>
+<td>https://www.ilo.org/<br>
+shinyapps/bulkexplorer3/<br>
+?lang=en&amp;segment=indicator<br>
+&amp;id=UNE_2EAP_SEX_AGE_RT_A</td>
+</tr>
+<tr class="odd">
+<td>D3_0_GDP_per_capita</td>
+<td>https://data.worldbank.org/<br>
+indicator/NY.GDP.PCAP.CD</td>
+</tr>
+<tr class="even">
+<td>D3_1_Military_expenditure_percent_GDP</td>
+<td>https://data.worldbank.org/<br>
+indicator/MS.MIL.XPND.GD.ZS</td>
+</tr>
+<tr class="odd">
+<td>D3_2_Military_expenditure_percent_gov_exp</td>
+<td>https://data.worldbank.org/<br>
+indicator/MS.MIL.XPND.ZS</td>
+</tr>
+<tr class="even">
+<td>D4_0_Internet_usage</td>
+<td>https://ourworldindata.org/<br>
+grapher/share-of-individuals-<br>
+using-the-internet</td>
+</tr>
+<tr class="odd">
+<td>D5_0_Human_freedom_index</td>
+<td>https://www.cato.org/<br>
+human-freedom-index/2022</td>
+</tr>
+<tr class="even">
+<td>D6_0_Disaters</td>
+<td>https://www.kaggle.com/<br>
+datasets/brsdincer/all-natural-<br>
+disasters-19002021-eosdis</td>
+</tr>
+<tr class="odd">
+<td>D7_0_COVID</td>
+<td>https://github.com/<br>
+owid/covid-19-data/tree/master/public/data</td>
+</tr>
+<tr class="even">
+<td>D8_0_Conflicts</td>
+<td>https://datacatalog.worldbank.org/<br>
+search/dataset/0041070/<br>
+Global-Spread-of-Conflict-by-<br>
+Country-and-Population</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="description" class="level2">
 <h2 class="anchored" data-anchor-id="description">Description</h2>
 <p>During the wrangling process: we add data to our table (D1_1_SDG) based on different other datasets and match them based on the country, the country code, and the year. The table below shows all our 9 databases that we merge to have our final table for the analysis, as well as each variable of interest that we keep.</p>
 <table class="table">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 63%">
+<col style="width: 8%">
+<col style="width: 16%">
+</colgroup>
 <thead>
 <tr class="header">
-<th>Name of the table</th>
-<th><strong>Name of the variable</strong></th>
-<th>Explanation</th>
-<th>Source database</th>
-<th><strong># obs / var before cleaning</strong></th>
-<th><strong># obs / var after cleaning</strong></th>
+<th><strong>Table<br>
+Name</strong></th>
+<th><strong>Variable<br>
+Name</strong></th>
+<th><strong>Explanation</strong></th>
+<th><strong># obs before cleaning</strong></th>
+<th><strong># obs<br>
+after cleaning</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -123,7 +231,6 @@ ul.task-list li input[type="checkbox"] {
 <td>In all database</td>
 <td>code</td>
 <td>Country code (ISO)</td>
-<td>All databases have these variables</td>
 <td></td>
 <td></td>
 </tr>
@@ -131,7 +238,6 @@ ul.task-list li input[type="checkbox"] {
 <td></td>
 <td>country</td>
 <td>Name of the country</td>
-<td>All databases have these variables</td>
 <td></td>
 <td></td>
 </tr>
@@ -139,15 +245,14 @@ ul.task-list li input[type="checkbox"] {
 <td></td>
 <td>year</td>
 <td>Year of the observation (2000-2022)</td>
-<td>All databases have these variables</td>
 <td></td>
 <td></td>
 </tr>
 <tr class="even">
-<td>D1_1_SDG</td>
+<td>D1_1_<br>
+SDG</td>
 <td>overallscore</td>
 <td>Overall score on all 17 SDGs (the score are % of achievement of the goals determined by the UN based on several indicators)</td>
-<td><a href="https://dashboards.sdgindex.org/downloads" class="uri">https://dashboards.sdgindex.org/downloads</a></td>
 <td>4140 observations of 120 variables</td>
 <td>3818 observations of 21 variables</td>
 </tr>
@@ -157,7 +262,6 @@ ul.task-list li input[type="checkbox"] {
 <td>Score on each SDG except SDG 14 (16 variables)</td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
@@ -165,56 +269,56 @@ ul.task-list li input[type="checkbox"] {
 <td>Number of people living in the country</td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="odd">
-<td>D2_2_Unemployment_rate</td>
+<td>D2_2_<br>
+Unemployment_rate</td>
 <td>unemployment.rate</td>
 <td>Unemployment rate (% of the population 15 years old and older)</td>
-<td>https://www.ilo.org/shinyapps/bulkexplorer3/?lang=en&amp;segment=indicator&amp;id=UNE_2EAP_SEX_AGE_RT_A</td>
 <td>82800 observations of 8 variables</td>
 <td>571 observations of 5 variables</td>
 </tr>
 <tr class="even">
-<td>D3_0_GDP_per_capita</td>
+<td>D3_0_<br>
+GDP_per_capita</td>
 <td>GDPpercapita</td>
 <td>GDP per capita</td>
-<td>https://data.worldbank.org/indicator/NY.GDP.PCAP.CD</td>
 <td>266 observations of 68 variables</td>
 <td>3818 observations of 4 variables</td>
 </tr>
 <tr class="odd">
-<td>D3_1_Military_expenditure_percent_GDP</td>
-<td>MilitaryExpenditurePercentGDP</td>
+<td>D3_1_<br>
+Military_expenditure_<br>
+percent_GDP</td>
+<td>MilitaryExpenditure<br>
+PercentGDP</td>
 <td>Military expenditures in percentage of GDP</td>
-<td>https://data.worldbank.org/indicator</td>
 <td>266 observations of 68 variables</td>
 <td>3818 observations of 4 variables</td>
 </tr>
 <tr class="even">
-<td>D3_2_Military_expenditure_percent_gov_exp</td>
-<td>MilitaryExpenditurePercentGovExp</td>
+<td>D3_2_<br>
+Military_expenditure_<br>
+percent_gov_exp</td>
+<td>MilitaryExpenditure<br>
+PercentGovExp</td>
 <td>Military expenditures in percentage of government expenditures</td>
-<td>https://data.worldbank.org/indicator/MS.MIL.XPND.ZS</td>
 <td>266 observations of 68 variables</td>
 <td>3818 observations of 4 variables</td>
 </tr>
 <tr class="odd">
-<td>D4_0_Internet_usage</td>
+<td>D4_0_<br>
+Internet_usage</td>
 <td>internet.usage</td>
 <td>Internet usage (% of the population)</td>
-<td>https://ourworldindata.org/grapher/share-of-individuals-using-the-internet</td>
 <td>6570 observations of 4 variables</td>
 <td>3433 observations of 4 variables</td>
 </tr>
 <tr class="even">
-<td>D5_0_Human_freedom_index</td>
+<td>D5_0_<br>
+Human_freedom_index</td>
 <td>region</td>
 <td>Part of the world, group of countries (e.g.&nbsp;Eastern Europe, Dub-Saharan Africa, South Asia, etc.)</td>
-<td><p><a href="https://www.cato.org/human-freedom-index/2022" class="uri">https://www.cato.org/human-freedom-index/2022</a></p>
-<p>How different scores are computed:<br>
-Each general variable is composed by sub-variables. The score of the general variable is computed by doing the average of the sub-variable scores. Concerning each sub-variable score, each one of them is based of different datasets related to the topic of the variable. Concerning the methodolody, the autors have used averages, data scaling and other computing methods. Data scaling has been mostly done by looking minimum and maximum in the dataset used and assigning scores related to that.</p>
-<p>E.g.: a country with a low number of homicides compared to the other countries will receive a high score. And vice-versa.</p></td>
 <td>3465 observations of 141 variables</td>
 <td>3339 observations of 18 variables</td>
 </tr>
@@ -222,7 +326,6 @@ Each general variable is composed by sub-variables. The score of the general var
 <td></td>
 <td>hf_score</td>
 <td>Human Freedom score = mean of personal freedom (PF) and economic freedom (EF).</td>
-<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -238,7 +341,6 @@ Each general variable is composed by sub-variables. The score of the general var
 </ul></td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td></td>
@@ -251,14 +353,12 @@ Each general variable is composed by sub-variables. The score of the general var
 </ul></td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
 <td>pf_movement</td>
 <td><p>Freedom of movement (V-Dem)</p>
 <p>Freedom of movement (CLD)</p></td>
-<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -269,7 +369,6 @@ Each general variable is composed by sub-variables. The score of the general var
 <p>Religious organizatio repression</p></td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
@@ -278,7 +377,6 @@ Each general variable is composed by sub-variables. The score of the general var
 <p>Freedom of assembly</p>
 <p>Freedom to form/run political parties</p>
 <p>Civil society repression</p></td>
-<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -292,7 +390,6 @@ Each general variable is composed by sub-variables. The score of the general var
 <p>Media and expression (CLD)</p></td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
@@ -303,13 +400,11 @@ Each general variable is composed by sub-variables. The score of the general var
 <p>Female genital mutilation</p></td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>pf_score</td>
 <td>Mean of every PF component score</td>
-<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -321,7 +416,6 @@ Each general variable is composed by sub-variables. The score of the general var
 <p>Government investment</p>
 <p>Top marginal tax rate</p>
 <p>State ownership of assets</p></td>
-<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -336,7 +430,6 @@ Each general variable is composed by sub-variables. The score of the general var
 <p>Reliability of police</p></td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
@@ -345,7 +438,6 @@ Each general variable is composed by sub-variables. The score of the general var
 <p>Standard deviation of inflation</p>
 <p>Inflation: Most recent year</p>
 <p>Freedom to own foreign currency</p></td>
-<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -358,7 +450,6 @@ Each general variable is composed by sub-variables. The score of the general var
 <p>Movement of capital and people</p></td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
@@ -368,7 +459,6 @@ Each general variable is composed by sub-variables. The score of the general var
 <p>Business regulations</p></td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td></td>
@@ -376,13 +466,12 @@ Each general variable is composed by sub-variables. The score of the general var
 <td>Mean of every EF component score</td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="even">
-<td>D6_0_Disaters</td>
+<td>D6_0_<br>
+Disaters</td>
 <td>continent</td>
 <td>Continents touched by the disasters such as floods, ouragan</td>
-<td><a href="https://www.kaggle.com/datasets/brsdincer/all-natural-disasters-19002021-eosdis" class="uri">https://www.kaggle.com/datasets/brsdincer/all-natural-disasters-19002021-eosdis</a></td>
 <td>14644 observations of 47 variables</td>
 <td><p>2435 observations</p>
 <p>of 10 variables</p></td>
@@ -393,13 +482,11 @@ Each general variable is composed by sub-variables. The score of the general var
 <td>Number of total deaths caused by the disasters</td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
 <td>no_injured</td>
 <td>Number of injured people</td>
-<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -409,13 +496,11 @@ Each general variable is composed by sub-variables. The score of the general var
 <td>Number of affected people</td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
 <td>no_homeless</td>
 <td>Number of people that lost their home and are now homeless</td>
-<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -425,7 +510,6 @@ Each general variable is composed by sub-variables. The score of the general var
 <td>Sum of people affected (sum of the variables: no_injured, no-affected, no_homeless)</td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
@@ -433,13 +517,12 @@ Each general variable is composed by sub-variables. The score of the general var
 <td>Total of infrastructure damages</td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="odd">
-<td>D7_0_COVID</td>
+<td>D7_0_<br>
+COVID</td>
 <td>deaths_per_million</td>
 <td>Number of people dead due to COVID</td>
-<td>https://github.com/owid/covid-19-data/tree/master/public/data</td>
 <td>349966 observations of 67 variables</td>
 <td>501 observations (only between 2020-2022, before no COVID) of 6 variables</td>
 </tr>
@@ -449,7 +532,6 @@ Each general variable is composed by sub-variables. The score of the general var
 <td>Number of COVID cases</td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td></td>
@@ -457,13 +539,12 @@ Each general variable is composed by sub-variables. The score of the general var
 <td>Government Response Stringency Index: composite measure based on 9 response indicators including school closures, workplace closures, and trave</td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="even">
-<td>D8_0_Conflicts</td>
+<td>D8_0_<br>
+Conflicts</td>
 <td>ongoing</td>
 <td>Variable coded 1 for more than 25 deaths in intrastate conflict and 0 otherwise according to UCDP/PRIO Armed Conflict Dataset 17.1.</td>
-<td><a href="https://datacatalog.worldbank.org/search/dataset/0041070/Global-Spread-of-Conflict-by-Country-and-Population" class="uri">https://datacatalog.worldbank.org/search/dataset/0041070/Global-Spread-of-Conflict-by-Country-and-Population</a></td>
 <td>5016 observations of 18 variables</td>
 <td>2782 observations of 8 variables</td>
 </tr>
@@ -473,13 +554,11 @@ Each general variable is composed by sub-variables. The score of the general var
 <td>Best estimate of deaths in all categories of violence (non-state, one-sided and state-based) recorded by the Uppsala Conflict Data Program in the country based on the UCDP GED dataset (unpublished 2016 data). The location of these events is used for estimating the extent of violence.</td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
 <td>pop_affected</td>
 <td>Share of population affected by violence in percentage (0 to 100) measured as described above based on population data from CIESIN, the PRIO-GRID structure as well as UCDP GED.</td>
-<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -489,37 +568,11 @@ Each general variable is composed by sub-variables. The score of the general var
 <td>Area affected by conflict</td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td></td>
 <td>maxintensity</td>
 <td>Two different intensity levels are coded: minor armed conflicts (1) and wars (2), Takes the max intensity of conflict in the country so that it is coded 2 if there is at least one war (&gt;=1000 deaths in intrastate conflict) during the year. Data from UCDP/PRIO Armed Conflict Dataset 17.1.</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
 <td></td>
 <td></td>
 </tr>
@@ -539,6 +592,160 @@ Each general variable is composed by sub-variables. The score of the general var
 </section>
 <section id="exploratory-data-analysis" class="level1">
 <h1>Exploratory data analysis</h1>
+<p>First, we look at the evolution of SDG achievement overall score over time for the whole world, by continent and by region.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="ot">&lt;-</span> data_question2 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_overall_score_by_year=</span><span class="fu">mean</span>(overallscore))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>data1) <span class="sc">+</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>mean_overall_score_by_year), <span class="at">color=</span><span class="st">"blue"</span>, <span class="at">lwd=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="report_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">&lt;-</span> data_question2 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year, continent) <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_overall_score_by_year=</span><span class="fu">mean</span>(overallscore))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>data2) <span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>mean_overall_score_by_year, <span class="at">color=</span>continent), <span class="at">lwd=</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="report_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data3 <span class="ot">&lt;-</span> data_question2 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year, region) <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_overall_score_by_year=</span><span class="fu">mean</span>(overallscore))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>data3) <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>mean_overall_score_by_year, <span class="at">color=</span>region), <span class="at">lwd=</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="report_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Second, we look at the evolution of SDG achievement scores(16) over time for the whole world, by continent and by region.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data4 <span class="ot">&lt;-</span> data_question2 <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"goal"</span>), mean, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"goal"</span>), <span class="at">names_to =</span> <span class="st">"goal"</span>, <span class="at">values_to =</span> <span class="st">"mean_value"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>color_palette <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"orange"</span>, <span class="st">"purple"</span>, <span class="st">"pink"</span>, <span class="st">"brown"</span>, <span class="st">"gray"</span>, <span class="st">"cyan"</span>, <span class="st">"magenta"</span>, <span class="st">"yellow"</span>, <span class="st">"darkgreen"</span>, <span class="st">"darkblue"</span>, <span class="st">"darkred"</span>, <span class="st">"darkorange"</span>, <span class="st">"darkcyan"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data4) <span class="sc">+</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> mean_value, <span class="at">color =</span> goal), <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> color_palette) <span class="sc">+</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">guide_legend</span>(</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">ncol =</span> <span class="dv">2</span>,        <span class="co"># Number of columns</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">title.position =</span> <span class="st">"top"</span>,  <span class="co"># Position of the legend title</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">title.hjust =</span> <span class="fl">0.5</span>        <span class="co"># Horizontal justification of the legend title</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="report_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data4) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> mean_value), <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> color_palette) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> goal, <span class="at">nrow =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="report_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data5 <span class="ot">&lt;-</span> data_question2 <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, continent) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"goal"</span>), mean, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"goal"</span>), <span class="at">names_to =</span> <span class="st">"goal"</span>, <span class="at">values_to =</span> <span class="st">"mean_value"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>color_palette <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"orange"</span>, <span class="st">"purple"</span>, <span class="st">"pink"</span>, <span class="st">"brown"</span>, <span class="st">"gray"</span>, <span class="st">"cyan"</span>, <span class="st">"magenta"</span>, <span class="st">"yellow"</span>, <span class="st">"darkgreen"</span>, <span class="st">"darkblue"</span>, <span class="st">"darkred"</span>, <span class="st">"darkorange"</span>, <span class="st">"darkcyan"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data5) <span class="sc">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> mean_value, <span class="at">color=</span>continent), <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> color_palette) <span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> goal, <span class="at">nrow =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="report_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define UI logic</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="cf">function</span>(request) {</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fluidPage</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">titlePanel</span>(<span class="st">"Interactive Map with Overall Score"</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plotlyOutput</span>(<span class="st">"map"</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sliderInput</span>(<span class="st">"year"</span>, <span class="st">"Select Year:"</span>, <span class="at">min =</span> <span class="dv">2000</span>, <span class="at">max =</span> <span class="dv">2022</span>, <span class="at">value =</span> <span class="dv">2022</span>, <span class="at">step =</span> <span class="dv">1</span>, <span class="at">width =</span> <span class="st">"100%"</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">textOutput</span>(<span class="st">"hovered_country_text"</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Define server logic</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter data based on the selected year</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  selected_data <span class="ot">&lt;-</span> <span class="fu">reactive</span>({</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(data0, year <span class="sc">==</span> <span class="fu">as.numeric</span>(input<span class="sc">$</span>year))</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a plotly object with hover information</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>map <span class="ot">&lt;-</span> <span class="fu">renderPlotly</span>({</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_ly</span>(</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">"choropleth"</span>,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">z =</span> <span class="sc">~</span><span class="fu">selected_data</span>()<span class="sc">$</span>overallscore,</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">locations =</span> <span class="sc">~</span><span class="fu">selected_data</span>()<span class="sc">$</span>iso_a3,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">"Country: "</span>, <span class="fu">selected_data</span>()<span class="sc">$</span>name, <span class="st">"&lt;br&gt;Overall Score: "</span>, <span class="fu">selected_data</span>()<span class="sc">$</span>overallscore),</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"darkred"</span>, <span class="st">"orange"</span>, <span class="st">"yellow"</span>, <span class="st">"darkgreen"</span>),</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">colorbar =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"Overall Score"</span>),</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">hoverinfo =</span> <span class="st">"text"</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Display the name and overall score of the hovered country</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>hovered_country_text <span class="ot">&lt;-</span> <span class="fu">renderText</span>({</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">req</span>(input<span class="sc">$</span>hovered_country)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    country_data <span class="ot">&lt;-</span> data0[data0<span class="sc">$</span>iso_a3 <span class="sc">==</span> input<span class="sc">$</span>hovered_country, ]</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span>(<span class="st">"Country: "</span>, country_data<span class="sc">$</span>name, <span class="st">", Overall Score: "</span>, country_data<span class="sc">$</span>overallscore)</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the Shiny app</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p></p><div style="width: 100% ; height: 400px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div><p></p>
+</div>
+</div>
 <ul>
 <li>Mapping out the underlying structure</li>
 <li>Identifying the most important variables</li>
