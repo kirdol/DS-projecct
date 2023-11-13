@@ -71,6 +71,9 @@ D2_1_Unemployment_rate_country_list <- D2_1_Unemployment_rate_country_list %>%
 D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
   filter(`age category` == "Age (Youth, adults): 15+")
 
+D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
+  select(-`age category`)
+
 # Je tente un truc pour les pays manquants
 
 list_country_Unemp <- c(unique(D2_1_Unemployment_rate_country_list$code))
