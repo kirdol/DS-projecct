@@ -4,8 +4,18 @@
 source(here::here("scripts/Clean/setup.R"))
 ```
 
-* Sources
-* Description
-* Wrangling/cleaning
-* Spotting mistakes and missing data (could be part of EDA too)
-* Listing anomalies and outliers (could be part of EDA too)
+## Sources
+
+We are collecting our Data from the sustainability development report (SDG), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn\'t find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next question.
+
+## Description
+
+During the wrangling process: we add data to our table (D0_1_SDG) based on different other datasets and match them based on the country, the country code, and the year. The table below shows all our 9 databases that we merge to have our final table for the analysis, as well as each variable of interest that we keep.
+
+## Wrangling/cleaning
+
+**Final structure of our merged database:** each country of the 166 countries from D0_1_SDG are observed each year from 2000 to 2022, thus each row has a key composed of (code, year) that uniquely identifies an observation. The other columns are the variables listed above. Due to some countries having a lot of missing information we will have to eliminate some of them, but we will still have more than 2000 rows in our database.
+
+## Spotting mistakes and missing data (could be part of EDA too)
+
+## Listing anomalies and outliers (could be part of EDA too)
