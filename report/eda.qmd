@@ -4,8 +4,8 @@
 source(here::here("scripts/Clean/setup.R"))
 ```
 
-* Mapping out the underlying structure
-* Identifying the most important variables
-* Univariate visualizations
-* Multivariate visualizations
-* Summary tables
+-   Mapping out the underlying structure
+-   Identifying the most important variables
+-   Univariate visualizations
+-   Multivariate visualizations
+-   Summary tables
