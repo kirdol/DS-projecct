@@ -108,6 +108,11 @@ data0 %>%
   theme_minimal()
 ```
 
+## Focus on factors
+
+
+
+
 ## **Focus on relationship between SDGs**
 
 **How are the different SDGs linked? (We want to see if some SDGs are linked in the fact that a high score on one implies a high score on the other, and thus if we can make groups of SDGs that are comparable in that way).**
