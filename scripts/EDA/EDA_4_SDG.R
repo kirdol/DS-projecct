@@ -58,3 +58,33 @@ ggplot(plot_data, aes(Var1, Var2, fill = value)) +
         legend.position = "none") + # Hide the color legend
   labs(x = 'SDG Goals', y = 'SDG Goals',
        title = 'Correlation Matrix with Significance Indicator')
+
+
+### General analysis
+
+# Create a matrix to represent data types
+data_types <- data
+data_types[] <- lapply(data_types, function(x) {
+  if (is.numeric(x)) {
+    ifelse(is.na(x), 0, 1)
+  } else {
+    ifelse(is.na(x), 0, 2)
+  }
+})
+
+# Add a row number column for melting
+data_types$row_number <- seq_len(nrow(data_types))
+
+# Convert to long format for ggplot
+data_long <- melt(data_types, id.vars = "row_number")
+
+# Plot
+ggplot(data_long, aes(x = variable, y = row_number)) +
+  geom_tile(aes(fill = factor(value)), color = "white") +
+  scale_fill_manual(values = c("white", "orange", "red")) +
+  theme_minimal() +
+  labs(fill = "Data Type",
+       x = "Columns",
+       y = "Rows",
+       title = "Data Type Visualization: Numerical (Light Blue), Textual (Light Green), NA (White)")
+

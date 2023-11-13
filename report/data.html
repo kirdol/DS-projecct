@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="data_files/libs/clipboard/clipboard.min.js"></script>
+<script src="data_files/libs/quarto-html/quarto.js"></script>
+<script src="data_files/libs/quarto-html/popper.min.js"></script>
+<script src="data_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="data_files/libs/quarto-html/anchor.min.js"></script>
+<link href="data_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="data_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="data_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="data_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="data_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="data" class="level1">
+<h1>Data</h1>
+<section id="sources" class="level2">
+<h2 class="anchored" data-anchor-id="sources">Sources</h2>
+<p>We are collecting our Data from the sustainability development report (SDG), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn’t find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next question.</p>
+</section>
+<section id="description" class="level2">
+<h2 class="anchored" data-anchor-id="description">Description</h2>
+<p>During the wrangling process: we add data to our table (D1_1_SDG) based on different other datasets and match them based on the country, the country code, and the year. The table below shows all our 9 databases that we merge to have our final table for the analysis, as well as each variable of interest that we keep.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Name of the table</th>
+<th><strong>Name of the variable</strong></th>
+<th>Explanation</th>
+<th>Source database</th>
+<th><strong># obs / var before cleaning</strong></th>
+<th><strong># obs / var after cleaning</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>In all database</td>
+<td>code</td>
+<td>Country code (ISO)</td>
+<td>All databases have these variables</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>country</td>
+<td>Name of the country</td>
+<td>All databases have these variables</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>year</td>
+<td>Year of the observation (2000-2022)</td>
+<td>All databases have these variables</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>D1_1_SDG</td>
+<td>overallscore</td>
+<td>Overall score on all 17 SDGs (the score are % of achievement of the goals determined by the UN based on several indicators)</td>
+<td><a href="https://dashboards.sdgindex.org/downloads" class="uri">https://dashboards.sdgindex.org/downloads</a></td>
+<td>4140 observations of 120 variables</td>
+<td>3818 observations of 21 variables</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>goal1:goal17</td>
+<td>Score on each SDG except SDG 14 (16 variables)</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>population</td>
+<td>Number of people living in the country</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>D2_2_Unemployment_rate</td>
+<td>unemployment.rate</td>
+<td>Unemployment rate (% of the population 15 years old and older)</td>
+<td>https://www.ilo.org/shinyapps/bulkexplorer3/?lang=en&amp;segment=indicator&amp;id=UNE_2EAP_SEX_AGE_RT_A</td>
+<td>82800 observations of 8 variables</td>
+<td>571 observations of 5 variables</td>
+</tr>
+<tr class="even">
+<td>D3_0_GDP_per_capita</td>
+<td>GDPpercapita</td>
+<td>GDP per capita</td>
+<td>https://data.worldbank.org/indicator/NY.GDP.PCAP.CD</td>
+<td>266 observations of 68 variables</td>
+<td>3818 observations of 4 variables</td>
+</tr>
+<tr class="odd">
+<td>D3_1_Military_expenditure_percent_GDP</td>
+<td>MilitaryExpenditurePercentGDP</td>
+<td>Military expenditures in percentage of GDP</td>
+<td>https://data.worldbank.org/indicator</td>
+<td>266 observations of 68 variables</td>
+<td>3818 observations of 4 variables</td>
+</tr>
+<tr class="even">
+<td>D3_2_Military_expenditure_percent_gov_exp</td>
+<td>MilitaryExpenditurePercentGovExp</td>
+<td>Military expenditures in percentage of government expenditures</td>
+<td>https://data.worldbank.org/indicator/MS.MIL.XPND.ZS</td>
+<td>266 observations of 68 variables</td>
+<td>3818 observations of 4 variables</td>
+</tr>
+<tr class="odd">
+<td>D4_0_Internet_usage</td>
+<td>internet.usage</td>
+<td>Internet usage (% of the population)</td>
+<td>https://ourworldindata.org/grapher/share-of-individuals-using-the-internet</td>
+<td>6570 observations of 4 variables</td>
+<td>3433 observations of 4 variables</td>
+</tr>
+<tr class="even">
+<td>D5_0_Human_freedom_index</td>
+<td>region</td>
+<td>Part of the world, group of countries (e.g.&nbsp;Eastern Europe, Dub-Saharan Africa, South Asia, etc.)</td>
+<td><p><a href="https://www.cato.org/human-freedom-index/2022" class="uri">https://www.cato.org/human-freedom-index/2022</a></p>
+<p>How different scores are computed:<br>
+Each general variable is composed by sub-variables. The score of the general variable is computed by doing the average of the sub-variable scores. Concerning each sub-variable score, each one of them is based of different datasets related to the topic of the variable. Concerning the methodolody, the autors have used averages, data scaling and other computing methods. Data scaling has been mostly done by looking minimum and maximum in the dataset used and assigning scores related to that.</p>
+<p>E.g.: a country with a low number of homicides compared to the other countries will receive a high score. And vice-versa.</p></td>
+<td>3465 observations of 141 variables</td>
+<td>3339 observations of 18 variables</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>hf_score</td>
+<td>Human Freedom score = mean of personal freedom (PF) and economic freedom (EF).</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>pf_law</td>
+<td><p>Rule of law, mean score of:</p>
+<ul>
+<li>Procedural justice</li>
+<li>Civil justice</li>
+<li>Criminal justice</li>
+<li>Rule of law (V-Dem)</li>
+</ul></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>pf_security</td>
+<td><p>Security and safety, mean score of:</p>
+<ul>
+<li>Homicide</li>
+<li>Disappearances conflicts,</li>
+<li>terrorism</li>
+</ul></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>pf_movement</td>
+<td><p>Freedom of movement (V-Dem)</p>
+<p>Freedom of movement (CLD)</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>pf_religion</td>
+<td><p>Freedom of religion</p>
+<p>Religious organizatio repression</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>pf_assembly</td>
+<td><p>Civil society entry and exit</p>
+<p>Freedom of assembly</p>
+<p>Freedom to form/run political parties</p>
+<p>Civil society repression</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>pf_expression</td>
+<td><p>Direct attacks on the press</p>
+<p>Media and expression (V-Dem)</p>
+<p>Media and expression (Freedom House)</p>
+<p>Media and expression (BTI)</p>
+<p>Media and expression (CLD)</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>pf_identity</td>
+<td><p>Same-sex relationships</p>
+<p>Divorce</p>
+<p>Inheritance rights</p>
+<p>Female genital mutilation</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>pf_score</td>
+<td>Mean of every PF component score</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>ef_government</td>
+<td><p>Government consumption</p>
+<p>Transfers and subsidies</p>
+<p>Government investment</p>
+<p>Top marginal tax rate</p>
+<p>State ownership of assets</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>ef_legal</td>
+<td><p>Judicial independence</p>
+<p>Impartial courts</p>
+<p>Protection of property rights</p>
+<p>Military interference Integrity of the legal system Legal enforcementof contracts</p>
+<p>Regulatory costs</p>
+<p>Reliability of police</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>ef_money</td>
+<td><p>Money growth</p>
+<p>Standard deviation of inflation</p>
+<p>Inflation: Most recent year</p>
+<p>Freedom to own foreign currency</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>ef_trade</td>
+<td><p>Tariffs</p>
+<p>Regulatory trade barriers</p>
+<p>Black-market exchange rates</p>
+<p>Movement of capital and people</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>ef_regulation</td>
+<td><p>Credit market regulations</p>
+<p>Labor market regulations</p>
+<p>Business regulations</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>ef_score</td>
+<td>Mean of every EF component score</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>D6_0_Disaters</td>
+<td>continent</td>
+<td>Continents touched by the disasters such as floods, ouragan</td>
+<td><a href="https://www.kaggle.com/datasets/brsdincer/all-natural-disasters-19002021-eosdis" class="uri">https://www.kaggle.com/datasets/brsdincer/all-natural-disasters-19002021-eosdis</a></td>
+<td>14644 observations of 47 variables</td>
+<td><p>2435 observations</p>
+<p>of 10 variables</p></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>total_deaths</td>
+<td>Number of total deaths caused by the disasters</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>no_injured</td>
+<td>Number of injured people</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>no_affected</td>
+<td>Number of affected people</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>no_homeless</td>
+<td>Number of people that lost their home and are now homeless</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>total_affected</td>
+<td>Sum of people affected (sum of the variables: no_injured, no-affected, no_homeless)</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>total_damages</td>
+<td>Total of infrastructure damages</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>D7_0_COVID</td>
+<td>deaths_per_million</td>
+<td>Number of people dead due to COVID</td>
+<td>https://github.com/owid/covid-19-data/tree/master/public/data</td>
+<td>349966 observations of 67 variables</td>
+<td>501 observations (only between 2020-2022, before no COVID) of 6 variables</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>cases_per_million</td>
+<td>Number of COVID cases</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>stringency</td>
+<td>Government Response Stringency Index: composite measure based on 9 response indicators including school closures, workplace closures, and trave</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>D8_0_Conflicts</td>
+<td>ongoing</td>
+<td>Variable coded 1 for more than 25 deaths in intrastate conflict and 0 otherwise according to UCDP/PRIO Armed Conflict Dataset 17.1.</td>
+<td><a href="https://datacatalog.worldbank.org/search/dataset/0041070/Global-Spread-of-Conflict-by-Country-and-Population" class="uri">https://datacatalog.worldbank.org/search/dataset/0041070/Global-Spread-of-Conflict-by-Country-and-Population</a></td>
+<td>5016 observations of 18 variables</td>
+<td>2782 observations of 8 variables</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>sum_deaths</td>
+<td>Best estimate of deaths in all categories of violence (non-state, one-sided and state-based) recorded by the Uppsala Conflict Data Program in the country based on the UCDP GED dataset (unpublished 2016 data). The location of these events is used for estimating the extent of violence.</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>pop_affected</td>
+<td>Share of population affected by violence in percentage (0 to 100) measured as described above based on population data from CIESIN, the PRIO-GRID structure as well as UCDP GED.</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>area_affected</td>
+<td>Area affected by conflict</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>maxintensity</td>
+<td>Two different intensity levels are coded: minor armed conflicts (1) and wars (2), Takes the max intensity of conflict in the country so that it is coded 2 if there is at least one war (&gt;=1000 deaths in intrastate conflict) during the year. Data from UCDP/PRIO Armed Conflict Dataset 17.1.</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="wranglingcleaning" class="level2">
+<h2 class="anchored" data-anchor-id="wranglingcleaning">Wrangling/cleaning</h2>
+<p><strong>Final structure of our merged database:</strong> each country of the 166 countries from D1_1_SDG are observed each year from 2000 to 2022, thus each row has a key composed of (code, year) that uniquely identifies an observation. The other columns are the variables listed above. Due to some countries having a lot of missing information we will have to eliminate some of them, but we will still have more than 2000 rows in our database.</p>
+</section>
+<section id="spotting-mistakes-and-missing-data-could-be-part-of-eda-too" class="level2">
+<h2 class="anchored" data-anchor-id="spotting-mistakes-and-missing-data-could-be-part-of-eda-too">Spotting mistakes and missing data (could be part of EDA too)</h2>
+</section>
+<section id="listing-anomalies-and-outliers-could-be-part-of-eda-too" class="level2">
+<h2 class="anchored" data-anchor-id="listing-anomalies-and-outliers-could-be-part-of-eda-too">Listing anomalies and outliers (could be part of EDA too)</h2>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
