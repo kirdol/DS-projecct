@@ -63,8 +63,7 @@ ggplot(plot_data, aes(Var1, Var2, fill = value)) +
 ### General analysis
 
 # Create a matrix to represent data types
-data_types <- data
-data_types[] <- lapply(data_types, function(x) {
+Q4[] <- lapply(Q4, function(x) {
   if (is.numeric(x)) {
     ifelse(is.na(x), 0, 1)
   } else {
@@ -73,10 +72,10 @@ data_types[] <- lapply(data_types, function(x) {
 })
 
 # Add a row number column for melting
-data_types$row_number <- seq_len(nrow(data_types))
+Q4$row_number <- seq_len(nrow(Q4))
 
 # Convert to long format for ggplot
-data_long <- melt(data_types, id.vars = "row_number")
+data_long <- melt(Q4, id.vars = "row_number")
 
 # Plot
 ggplot(data_long, aes(x = variable, y = row_number)) +
