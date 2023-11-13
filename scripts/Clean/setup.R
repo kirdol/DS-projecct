@@ -29,7 +29,9 @@ packages <- c(
   "reshape2",
   "corrplot",
   "stargazer",
-  "tinytex"
+  "tinytex",
+  "sf",
+  "rnaturalearth"
 )
 
 for (i in packages) {
