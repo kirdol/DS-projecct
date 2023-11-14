@@ -30,10 +30,7 @@ packages <- c(
   "corrplot",
   "stargazer",
   "tinytex",
-<<<<<<< Updated upstream
-  "cowplot"
-=======
->>>>>>> Stashed changes
+  "cowplot",
   #"sf",
   #"rnaturalearth"
   "knitr",
