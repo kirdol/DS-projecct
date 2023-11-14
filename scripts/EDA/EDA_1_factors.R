@@ -27,22 +27,28 @@ ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   coord_fixed() +
   labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
 
+#add back countries/region columns? 
+
+Correlation_overall_with_countries <-  Correlation_overall %>%
+    mutate(data_question1[,1:7])%>%
+    select(X.1, X, code, year, country, continent, region, everything())
+    
+
 #### cluster of the correlations ####
 
-Correlation_overall_scaled <- scale(Correlation_overall[,c(1:34)])
-distmat <- dist(Correlation_overall_scaled[,i], method="euclidean", diag=TRUE,upper=TRUE)
+Corr_scaled <- scale(cor_matrix[,c(1:34)])
+distmat <- dist(Corr_scaled, method="euclidean", diag=TRUE,upper=TRUE)
 avclust <- hclust(distmat, method="average")
 clusters <- cutree(avclust, k = 5)
 plot(clusters, labels=FALSE, hang = -1)
-rect.hclust(clusters, k = 5, border = 2)
+#rect.hclust(clusters, k = 5, border = 2)
 
 #via Kmean
 
 Correlation_overall_scaled <- scale(Correlation_overall[,c(1:34)])
-row.names(Correlation_overall_scaled) <- Correlation_overall[,1]
-kmean <- kmeans(Correlation_overall_scaled, 6)
+row.names(Corr_scaled) <- data_question1[,5]
+kmean <- kmeans(Corr_scaled, 6)
 print(kmean)
-
 
 #### boxplot goals ####
 
