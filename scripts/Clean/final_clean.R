@@ -28,6 +28,7 @@ rm(merge_1_2, # remove merge_1_2 from memory
 ##### Which countries have many missing observations over the different variables of the different subsets?
 
 #### Question1 
+
 see_missing1_1 <- data_question1 %>%
   group_by(code) %>%
   summarise(across(-c(goal1, goal10),  # Exclude columns "goal1" and "goal10"
@@ -448,9 +449,48 @@ na_counts <- data_question1 %>%
   summarise(across(everything(), ~ sum(is.na(.)), .names = "na_{.col}")) %>%
   pivot_longer(cols = starts_with("na_"), names_to = "column", values_to = "na_count", names_prefix = "na_")
 
-######## NO MORE MISSINGS HUMAN FREEDOM INDEX
+######## NO MORE MISSINGS HUMAN FREEDOM INDEX EXCEPT GOAL1 & 10 
 
 
+# Load the necessary library
+library(readr)
+
+# Count the number of NA values per column
+na_count <- sapply(data_question1, function(x) sum(is.na(x)))
+
+# Print the results
+print(na_count) #105 NA FOR GOAL1&5
+
+# goal1
+question1_missing_goal1 <- data_question1 %>%
+  group_by(code) %>%
+  summarize(Na_goal1 = mean(is.na(goal1)))%>%
+  filter(Na_goal1 != 0)
+
+#we can see that for "KWT" "NZL" "OMN" "SGP" "UKR", there are 100% missing values for goal1
+#we need to get rid of them
+data_question1 <- data_question1 %>% filter(!code %in% question1_missing_goal1$code)
+
+# Update List of countries deleted
+list_country_deleted <- c(list_country_deleted, "KWT","NZL","OMN","SGP","UKR")
+
+#still 42 NA values goal10
+
+#goal10
+
+question1_missing_goal10 <- data_question1 %>%
+  group_by(code) %>%
+  summarize(Na_goal10 = mean(is.na(goal10)))%>%
+  filter(Na_goal10 != 0)
+
+#100% missing for "GUY" "TTO" for goal10 -> get rid of these countries
+
+data_question1 <- data_question1 %>% filter(!code %in% question1_missing_goal10$code)
+
+# Update List of countries deleted
+list_country_deleted <- c(list_country_deleted, "GUY","TTO")
+
+#NO NA VALUES ANYMORE IN data_question1
 
 #### Questions 2 and 4
 see_missing24 <- data_question24 %>%
