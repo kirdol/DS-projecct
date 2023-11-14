@@ -1,5 +1,4 @@
 # Data
-
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 source(here::here("scripts/Clean/setup.R"))
 ```
@@ -455,18 +454,15 @@ MiliratyExpenditurePercentGovExp <-
 After importing the data, we fill in the missing country codes using the column Indicator.Name, because we realized after some manipulations, that some of the country codes were false, but the next column contained the right ones.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE}
-
 fill_code <- function(data){
   data <- data %>%
     mutate(Country.Code = ifelse(!grepl("^[A-Z]{3}$", Country.Code), Indicator.Name, Country.Code))
 }
-
 ```
 
 We create a set of functions that we will apply to each database. First, remove the variables that we don't need, which are the years before 2000. Second, make sure that the values are numeric and rename the year variables (because they all had an "X" before year number). Third, transform the database from wide to long, in order to match the main database. Fourth, transform the year variable into an integer variable and rearrange and rename the columns to match the ones of the other databases. Then, we apply these transformations to the three databases.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE}
-
 # remove the variables that we don't need
 
 remove <- function(data){
@@ -542,7 +538,6 @@ MiliratyExpenditurePercentGovExp <- cleanwide2long(MiliratyExpenditurePercentGov
 We rename the colums with the main information, standardize the country code and remove the countries that are not in our main database. We see that all the 166 countries are there.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE}
-
 # Rename the data columns to have the right name
 
 GDPpercapita <- GDPpercapita %>%
@@ -620,12 +615,11 @@ mean(is.na(GDPpercapita$GDPpercapita))
 
 ```
 
-\*\* GDP per capita
+#### GDP per capita
 
 For GDPpercapita, only two countries (SOM and SSD) have a lot of missing values and in total 11 countries countries have missing values.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE}
-
 ####### Investigate missing values in GDPpercapita ######
 
 GDPpercapita1 <- GDPpercapita %>%
@@ -640,8 +634,7 @@ print(GDPpercapita1, n = 180)
 
 We plot the evolution of GDPpercapita avec the years for each country containing missing values and distinguish the percentage of missing values with colors.
 
-```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE}
-
+```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE, out.width="100%"}
 # Create a dataframe that only have the countries with missing values and 
 # add a column which contains the % of missings for each country
 
@@ -660,9 +653,9 @@ Evol_Missing_GDP <- ggplot(data = filtered_data_GDP) +
                  color = cut(PercentageMissing,
                              breaks = c(0, 0.1, 0.2, 0.3, 1),
                              labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
-  labs(title = "Scatter Plot of GDP per capita", x = "Year", y = "GDP per capita") +
+  labs(title = "Evolution of GDP per capita over time", x = "Year", y = "GDP per capita") +
   scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
-                     labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
+                     labels = c("0-10%", "10-20%", "20-30%", "30-100%")) +
   guides(color = guide_legend(title = "% missings")) +
   facet_wrap(~ code, nrow = 4)
 
@@ -675,7 +668,6 @@ print(Evol_Missing_GDP)
 For the countries with less than 30% of missing values and a linear evolution in time, we fill the missing values using linear interpolation.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE}
-
 ####### Fill in missing values in GDPpercapita ######
 
 # Almost all have a linear evolution over time, we fill in the missing values based on the lines
@@ -701,12 +693,11 @@ for (i in list_code) {
 
 ```
 
-\*\* Military expenditures in percentage of GDP
+#### Military expenditures in percentage of GDP
 
 For MilitaryExpenditurePercentGDP, 12 countries have 100% of missing values. We further investigate and keep them for now, knowing that some of these coutries may also have many missing values in the other databases when wee merge everything and will be dropped later.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE}
-
 ##### Investigate missing values in MilitaryExpenditurePercentGDP #####
 
 MilitaryExpenditurePercentGDP1 <- MilitaryExpenditurePercentGDP %>%
@@ -721,8 +712,7 @@ print(MilitaryExpenditurePercentGDP1, n = 180)
 
 We plot the evolution of MilitaryExpenditurePercentGDP along the years for each country containing missing values and distinguish the percentage of missing values with colors.
 
-```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE}
-
+```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE, out.width="100%"}
 # Create a dataframe that only have the coutnries with missing values and 
 # add a column which contains the % of missings for each country
 
@@ -737,15 +727,18 @@ filtered_data_Mil1 <- filtered_data_Mil1 %>%
 # Look at evolution over the years
 
 Evol_Missing_Mil1 <- ggplot(data = filtered_data_Mil1) +
-  geom_point(aes(x = year, y = MilitaryExpenditurePercentGDP, 
+  geom_line(aes(x = year, y = MilitaryExpenditurePercentGDP, 
                  color = cut(PercentageMissing,
                              breaks = c(0, 0.1, 0.2, 0.3, 1),
                              labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
-  labs(title = "Scatter Plot of military expenditure in % of GDP", x = "Year", y = "GDP per capita") +
+  labs(title = "Military expenditure in % of GDP over time", x = "Years from 2000 to 2022", y = "GDP per capita") +
   scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
                      labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
-  facet_wrap(~ code, nrow = 5)
+  facet_wrap(~ code, nrow = 5) +
+  theme(strip.text = element_text(size = 6)) +
+  scale_x_continuous(breaks = NULL) +
+  scale_y_continuous(breaks = NULL)
 
 print(Evol_Missing_Mil1)
 
@@ -754,7 +747,6 @@ print(Evol_Missing_Mil1)
 For the countries with less than 30% of missing values and a linear evolution in time, we fill the missing values using linear interpolation.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE}
-
 # Try to fill the missings if %missings < 30%
 
 ##### Fill in missing values in MilitaryExpenditurePercentGDP #####
@@ -782,12 +774,11 @@ for (i in list_code) {
 
 ```
 
-\*\* Military expenditures in percentage of governement expenditures
+#### Military expenditures in percentage of governement expenditures
 
 For MilitaryExpenditurePercentGovExp, 17 countries have 100% of missing values. We further investigate and keep them for now, knowing that some of these coutries may also have many missing values in the other databases when wee merge everything and will be dropped later.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE}
-
 ##### Investigate missing values in MilitaryExpenditurePercentGovExp #####
 
 MiliratyExpenditurePercentGovExp1 <- MiliratyExpenditurePercentGovExp %>%
@@ -802,8 +793,7 @@ print(MiliratyExpenditurePercentGovExp1, n = 180)
 
 We plot the evolution of MilitaryExpenditurePercentGovExp along the years for each country containing missing values and distinguish the percentage of missing values with colors.
 
-```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE}
-
+```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE, out.width="100%"}
 # Create a dataframe that only have the coutnries with missing values and 
 # add a column which contains the % of missings for each country
 
@@ -818,15 +808,18 @@ filtered_data_Mil2 <- filtered_data_Mil2 %>%
  # Look at evolution over the years
 
 Evol_Missing_Mil2 <- ggplot(data = filtered_data_Mil2) +
-  geom_point(aes(x = year, y = MiliratyExpenditurePercentGovExp, 
+  geom_line(aes(x = year, y = MiliratyExpenditurePercentGovExp, 
                  color = cut(PercentageMissing,
                              breaks = c(0, 0.1, 0.2, 0.3, 1),
                              labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
-  labs(title = "Scatter Plot of military expenditure in % of gov exp", x = "Year", y = "GDP per capita") +
+  labs(title = "Military expenditure in % of government expenditures over time", x = "Year from 2000 to 2022", y = "GDP per capita") +
   scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
                      labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
-  facet_wrap(~ code, nrow = 5)
+  facet_wrap(~ code, nrow = 5) +
+  theme(strip.text = element_text(size = 6)) +
+  scale_x_continuous(breaks = NULL) +
+  scale_y_continuous(breaks = NULL)
 
 print(Evol_Missing_Mil2)
 
@@ -835,7 +828,6 @@ print(Evol_Missing_Mil2)
 For the countries with less than 30% of missing values and a linear evolution in time, we fill the missing values using linear interpolation.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE}
-
 # Try to fill the missings if %missings < 30%
 
 ##### Fill in missing values in MilitaryExpenditurePercentGovExp #####
@@ -869,7 +861,6 @@ for (i in list_code) {
 We now look again at the percentage of missing values for the trhee databases: 14.49% for MiliratyExpenditurePercentGovExp, 11.6% for MilitaryExpenditurePercentGDP and 1.07% for GDPpercapita
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE, cache = TRUE}
-
 # And now, What is the percentage of missing values in these 3 datasets?
 
 mean(is.na(MiliratyExpenditurePercentGovExp$MiliratyExpenditurePercentGovExp))
@@ -886,18 +877,21 @@ D3_3_Miliraty_Expenditure_Percent_Gov_Exp <- MiliratyExpenditurePercentGovExp
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
 datatable(D3_1_GDP_per_capita, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+
 ```
 
 **Here is the first few line of the cleaned dataset of military expenditures in percentage of GDP:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
 datatable(D3_3_Miliraty_Expenditure_Percent_Gov_Exp, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+
 ```
 
 **Here is the first few line of the cleaned dataset of military expenditures in percentage of government expenditures:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
 datatable(D3_2_Military_Expenditure_Percent_GDP, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+
 ```
 
 ### 4. Dataset on internet usage
@@ -1123,7 +1117,6 @@ list_country_disasters <- c(unique(D6_0_Disasters$code))
 This dataset contains information on the COVID19 pandemic between 2020 and 2022. The observation are by year, month, day. After importing the database, we transform the date in format YYYY-MM-DD in order to only keep the year.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 #Import data
 
 COVID <- read.csv(here("scripts","data","COVID.csv"))
@@ -1149,7 +1142,6 @@ We perform a first round of investigation of the missing values before aggregati
 We aggregate the observations of all days of a year in one observation per country using the mean.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 # Investigate missing values before aggregating
 
 COVID1 <- COVID %>%
@@ -1201,7 +1193,6 @@ COVID <- COVID %>%
 Now that all the variables of interest are aggregated by year, we remove all the variables that we don't need and rename all the remaining variables to match the main dataset. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 # Only have 1 obs per country per year
 
 COVID <- COVID %>%
@@ -1222,7 +1213,6 @@ colnames(COVID) <- c("code", "country", "year", "cases_per_million", "deaths_per
 We remove the years that exceed 2022, we make sure that the country codes are all iso codes with 3 letters (we observe that sometimes they are preceded by "OWID_") and we standardize the country codes. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 # Remove the years after 2022 to match our main database 
 
 COVID <- COVID[COVID$year <= 2022, ]
@@ -1244,7 +1234,6 @@ COVID$code <- countrycode(
 We remove the observations of countries that aren't in our main dataset on SDGs and find that all the 166 countries that we have in the main SDG dataset are also in this one.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 # Remove the observations of countries that aren't in our main dataset on SDGs: 
 
 COVID <- COVID %>% filter(code %in% list_country)
@@ -1257,7 +1246,6 @@ length(unique(COVID$code))
 We perform a second round of missing values investigation and find out that there are no missing values except for the stringency, where there are 4.19%. Either all values are missing for one country, or 50% are missing, so these 7 countries won't be included when analyzing the effect of stringency on the SDG scores. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 ##### Investigation of the missing values #####
 
 mean(is.na(COVID$cases_per_million))
@@ -1282,6 +1270,7 @@ D7_0_COVID <- COVID
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
 datatable(D7_0_COVID, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+
 ```
 
 ### 8. Dataset on Conflicts
@@ -1367,20 +1356,6 @@ list_country_conflicts <- c(unique(conflicts$code))
 By merging our eight pre-cleaned datasets, we create a final database. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-# Pre-cleaning of the datasets
-liste_de_scripts <- c("setup.R", # list of all the scripts needed to clean all individual dataset
-                      "clean_1_SDG.R",
-                      "clean_2_WorldIndex.R",
-                      "clean_3_GDPmilitaryExp.R",
-                      "clean_4_InternetUsage.R",
-                      "clean_5_HumanFreedomIndex.R",
-                      "clean_6_Disasters.R",
-                      "clean_7_COVID.R",
-                      "clean_8_Conflicts.R")
-
-for (script in liste_de_scripts) { # execute each sript
-  source(here("scripts", "Clean", script))}
-
 # merge D1_0_SDG with D2_1_Unemployment_rate 
 D2_1_Unemployment_rate$country <- NULL
 merge_1_2 <- D1_0_SDG |> left_join(D2_1_Unemployment_rate, join_by(code, year))
@@ -1426,7 +1401,6 @@ all_Merge <- all_Merge %>% filter(!code %in% missing)
 We replace the NAs of the COVID columns by 0 (because we don't have real missing, only introduced by merging for the years before COVID). 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 # Replace the NAs of the COVID columns by 0 (because we don't have real missing, only introduced by merging for the years before COVID)
 all_Merge <- all_Merge %>%
   mutate(
@@ -1440,7 +1414,6 @@ all_Merge <- all_Merge %>%
 Since we took the information on the continent and region from databases that are not the main one, we complete these inforamtion for the whole final dataset.  
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 # Complete the values of continent and region
 
 all_Merge <- all_Merge %>%
@@ -1458,7 +1431,6 @@ all_Merge <- all_Merge %>%
 We order the database, beginning by the information on the country, the year, the continent and the region. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 # Order database
 all_Merge <- all_Merge %>%
   select(code, year, country, continent, region, everything())
@@ -1470,6 +1442,7 @@ write.csv(all_Merge, file = here("scripts","data","all_Merge.csv"))
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
 datatable(all_Merge, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+
 ```
 
 **Final structure of our merged database:** each country of the 166 countries from D1_1_SDG are observed each year from 2000 to 2022, thus each row has a key composed of (code, year) that uniquely identifies an observation. The other columns are the variables listed above. Due to some countries having a lot of missing information we will have to eliminate some of them, but we will still have more than 2000 rows in our database.
@@ -1501,16 +1474,15 @@ data_question3_3 <- all_Merge %>% filter(year<=2016) %>% select(c(code, year, co
 
 ```
 
-**Data for question 1**
+#### Data for question 1
 
 We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We decide to remove the countries that have more than 50 missing values. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 #### Question1 
 see_missing1_1 <- data_question1 %>%
   group_by(code) %>%
-  summarise(across(-c(goal1, goal10),  # Exclude columns "goal1" and "goal10"
+  summarise(across(-c(X, year, country, continent, region, population, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17), 
                    ~ sum(is.na(.))) %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 50))
@@ -1525,16 +1497,16 @@ list_country_deleted <- c(unique(see_missing1_1$code))
 Here are the first lines of the database used to see the missing values over all variables per countries: 
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
-datatable(see_missing1_1, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+kable(see_missing1_1)
+
 ```
 
 Now, looking at the remaining countries that have missing values and there number accross all variables, we decide to remove MilitaryExpenditurePercentGovExp, because it has too many missing values and it contains similar information to MilitaryExpenditurePercentGDP. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 see_missing1_2 <- data_question1 %>%
   group_by(code) %>%
-  summarise(across(-c(goal1, goal10),  # Exclude columns "goal1" and "goal10"
+  summarise(across(-c(X, year, country, continent, region, population, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17),
                    ~ sum(is.na(.))) %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 0))
@@ -1548,15 +1520,16 @@ data_question1 <- data_question1 %>% select(-MiliratyExpenditurePercentGovExp)
 Here are the first lines of the database used to see the missing values over all variables per countries: 
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
-datatable(see_missing1_2, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+kable(see_missing1_2)
+
 ```
 
-***GDP per capita***
+
+**GDP per capita**
 
 Only Venezuela has missing values that we can not fill, so we delete the country. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 # GDPpercapita
 question1_missing_GDP <- data_question1 %>%
   group_by(code) %>%
@@ -1570,12 +1543,11 @@ list_country_deleted <- c(list_country_deleted, "VEN")
 
 ```
 
-***Military expenditure in % of GDP***
+**Military expenditure in % of GDP**
 
 To begin with, we delete the countries with more than 30% missing values. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 # Military expenditure in % of GDP
 question1_missing_Military <- data_question1 %>%
   group_by(code) %>%
@@ -1591,8 +1563,7 @@ list_country_deleted <- c(list_country_deleted, "BRB", "CRI", "HTI", "ISL", "PAN
 
 Then, we look at the distribution of the variable per region. Seeing that all are skewed distributions, we decide to replace the missing values, where there are less than 30% missing using the median by region.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.width="100%", out.height="100%"}
 # Create a dataframe that only have the countries with missing values and 
 # add a column which contains the % of missings for each country
 question1_missing_Military <- data_question1 %>%
@@ -1609,7 +1580,7 @@ Freq_Missing_Military <- ggplot(data = question1_missing_Military) +
                                 breaks = c(0, 0.1, 0.2, 0.3, 1),
                                 labels = c("0-10%", "10-20%", "20-30%", "30-100%"))),
                  bins = 30) +
-  labs(title = "Military", x = "Military", y = "Frequency") +
+  labs(title = "Distribution of Military expenditures in % of GDP", x = "Military expenditures in % of GDP", y = "Frequency") +
   scale_fill_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%"="red","30-100%" = "black"), labels = c("0-10%", "10-20%", "20-30%","30-100%")) +
   guides(fill = guide_legend(title = "% missings")) +
   facet_wrap(~ region, nrow = 3)
@@ -1637,12 +1608,11 @@ data_question1 <- data_question1 %>%
 
 ```
 
-***Internet usage***
+**Internet usage**
 
 There are only low percentage of missing values. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 # Internet usage
 question1_missing_Internet <- data_question1 %>%
   group_by(code) %>%
@@ -1653,10 +1623,9 @@ question1_missing_Internet <- data_question1 %>%
 
 ```
 
-We look at the evolution of the variable over time. We fill the missing values with linear interpolation, because all evolutions are in an increasing way and are almost straight lines, except for CIV that we delete. 
+We look at the evolution of the variable over time. We fill the missing values with linear interpolation, because all evolutions are in an increasing way and are almost straight lines, except for CIV that we delete.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.width="100%", out.height="100%"}
 # Create a dataframe that only have the countries with missing values and 
 # add a column which contains the % of missings for each country
 question1_missing_Internet <- data_question1 %>%
@@ -1670,10 +1639,11 @@ Evol_Missing_Internet <- ggplot(data = question1_missing_Internet) +
                  color = cut(PercentageMissing,
                              breaks = c(0, 0.1, 0.2, 0.3, 1),
                              labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
-  labs(title = "Internet", x = "Year", y = "Internet") +
+  labs(title = "Evolution of internet usage over time", x = "Years from 2000 to 2022", y = "Internet usage") +
   scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
                      labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
+  scale_x_continuous(breaks=NULL)+
   facet_wrap(~ code, nrow = 4)
 
 print(Evol_Missing_Internet)
@@ -1699,12 +1669,11 @@ list_country_deleted <- c(list_country_deleted, "CIV")
 
 ```
 
-***Human freedom index***
+**Human freedom index**
 
 First, we remove hf_score, pf_score and ef_score, because there are many missing values and since these variables summarize the other ones, deleting the will not make us loose information. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 # Human Freedom Index
 # Remove hf_score, pf_score and ef_score because many missing and since these variables are summary of other ones, deleting the mwon't make us loose information
 data_question1 <- data_question1 %>% select(-c(hf_score, pf_score, ef_score))
@@ -1717,24 +1686,23 @@ list_country_deleted <- c(list_country_deleted, "BLZ")
 
 ```
 
-####Economic freedom: government
+***Economic freedom: government***
 
 Only KGZ and SRB have missing values, we plot the values over time and fill in the missing values by the year before, since there are only one and two missing values. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 # ef_government: KGZ and SRB have missing values -> plot
 # KGZ
 Evol_Missing_ef_gov <- data_question1 %>% group_by(code) %>% filter(code=="KGZ")
 ggplot(Evol_Missing_ef_gov, aes(x = year, y = ef_government)) +
   geom_point() +
-  labs(x = "Years", y = "ef_gov")
+  labs(title = "Evolution of economic freedom: government over time in KGZ", x = "Years", y = "ef_gov")
 # Only one missing, in 2000, replace by the value of 2001
 # SRB
 Evol_Missing_ef_gov <- data_question1 %>% group_by(code) %>% filter(code=="SRB")
 ggplot(Evol_Missing_ef_gov, aes(x = year, y = ef_government)) +
   geom_point() +
-  labs(x = "Years", y = "ef_gov")
+  labs(title = "Evolution of economic freedom: government over time in SRB", x = "Years", y = "ef_gov")
 # Only 2 missing, replace by next value
 data_question1 <- data_question1 %>%
   mutate(ef_government = ifelse(code == "KGZ" & year == 2000 & is.na(ef_government), ef_government[which(code == "KGZ" & year == 2001)], ef_government))
@@ -1745,12 +1713,11 @@ data_question1 <- data_question1 %>%
 
 ```
 
-####Economic freedom: money
+***Economic freedom: money***
 
-X countries have missing values, but the percentage of missing values is always below 25%.  
+18 countries have missing values, but the percentage of missing values is always below 25%.  
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 # ef_money
 question1_missing_ef_money <- data_question1 %>%
   group_by(code) %>%
@@ -1762,8 +1729,7 @@ question1_missing_ef_money <- data_question1 %>%
 
 We look at the evolution of the variable over time. For the countries where this evolution is linear, we fill in the missing values using linear interpolation. 
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.width="100%"}
 # Create a dataframe that only have the countries with missing values and 
 # add a column which contains the % of missings for each country
 question1_missing_ef_money <- data_question1 %>%
@@ -1777,11 +1743,12 @@ Evol_Missing_ef_money <- ggplot(data = question1_missing_ef_money) +
                  color = cut(PercentageMissing,
                              breaks = c(0, 0.1, 0.2, 0.3, 1),
                              labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
-  labs(title = "ef_money", x = "Year", y = "ef_money") +
+  labs(title = "Evolution of economiv freedom: money over time", x = "Years from 2000 to 2022", y = "ef_money") +
   scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
                      labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
-  facet_wrap(~ code, nrow = 4)
+  facet_wrap(~ code, nrow = 4) +
+  scale_x_continuous(breaks = NULL)
 
 print(Evol_Missing_ef_money)
 
@@ -1802,8 +1769,7 @@ for (i in list_code) {
 
 Then, we look at the distribution of the variable per region. Seeing that all are skewed distributions, we decide to replace the missing values using the median by region.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.width="100%", out.height="100%"}
 # Create a dataframe that only have the countries with missing values and add a column which contains the % of missings for each country
 question1_missing_ef_money <- data_question1 %>%
   group_by(code) %>%
@@ -1819,7 +1785,7 @@ Freq_Missing_ef_money <- ggplot(data = question1_missing_ef_money) +
                                 breaks = c(0, 0.1, 0.2, 0.3, 1),
                                 labels = c("0-10%", "10-20%", "20-30%", "30-100%"))),
                  bins = 30) +
-  labs(title = "ef_money", x = "ef_money", y = "Frequency") +
+  labs(title = "Distribution of economic freedom: money", x = "ef_money", y = "Frequency") +
   scale_fill_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%"="red","30-100%" = "black"), labels = c("0-10%", "10-20%", "20-30%","30-100%")) +
   guides(fill = guide_legend(title = "% missings")) +
   facet_wrap(~ region, nrow = 3)
@@ -1847,12 +1813,11 @@ data_question1 <- data_question1 %>%
 
 ```
 
-####Economic freedom: trade
+***Economic freedom: trade***
 
-X countries have missing values, but the percentage of missing values is always below 25%.  
+19 countries have missing values, but the percentage of missing values is always below 25%.  
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 # ef_trade
 question1_missing_ef_trade <- data_question1 %>%
   group_by(code) %>%
@@ -1869,19 +1834,19 @@ question1_missing_ef_trade <- data_question1 %>%
 
 We look at the evolution of the variable over time. For the countries where this evolution is linear, we fill in the missing values using linear interpolation. 
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.width="100%", out.height="100%"}
 # Look at the evolution over the years for the countries that have missing values
 Evol_Missing_ef_trade <- ggplot(data = question1_missing_ef_trade) +
   geom_point(aes(x = year, y = ef_trade, 
                  color = cut(PercentageMissing,
                              breaks = c(0, 0.1, 0.2, 0.3, 1),
                              labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
-  labs(title = "ef_trade", x = "Year", y = "ef_trade") +
+  labs(title = "Evolution of economic freedom: trade over time", x = "Years from 2000 to 2022", y = "ef_trade") +
   scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
                      labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
-  facet_wrap(~ code, nrow = 4)
+  facet_wrap(~ code, nrow = 4) +
+  scale_x_continuous(breaks = NULL)
 
 print(Evol_Missing_ef_trade)
 
@@ -1902,8 +1867,7 @@ for (i in list_code) {
 
 Then, we look at the distribution of the variable per region. Seeing that all are skewed distributions, we decide to replace the missing values using the median by region.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.width="100%", out.height="100%"}
 # Create a dataframe that only have the countries with missing values and add a column which contains the % of missings for each country
 question1_missing_ef_trade <- data_question1 %>%
   group_by(code) %>%
@@ -1919,7 +1883,7 @@ Freq_Missing_ef_trade <- ggplot(data = question1_missing_ef_trade) +
                                 breaks = c(0, 0.1, 0.2, 0.3, 1),
                                 labels = c("0-10%", "10-20%", "20-30%", "30-100%"))),
                  bins = 30) +
-  labs(title = "ef_trade", x = "ef_trade", y = "Frequency") +
+  labs(title = "Distribution of economic freedom: trade", x = "ef_trade", y = "Frequency") +
   scale_fill_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%"="red","30-100%" = "black"), labels = c("0-10%", "10-20%", "20-30%","30-100%")) +
   guides(fill = guide_legend(title = "% missings")) +
   facet_wrap(~ region, nrow = 3)
@@ -1947,12 +1911,11 @@ data_question1 <- data_question1 %>%
 
 ```
 
-####Economic freedom: regulation
+***Economic freedom: regulation***
 
-X countries have missing values, but the percentage of missing values is always below 25%.  
+12 countries have missing values, but the percentage of missing values is always below 25%.  
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
 # ef_regulation
 question1_missing_ef_regulation <- data_question1 %>%
   group_by(code) %>%
@@ -1964,8 +1927,7 @@ question1_missing_ef_regulation <- data_question1 %>%
 
 We look at the evolution of the variable over time. For the countries where this evolution is linear, we fill in the missing values using linear interpolation. 
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.width="100%", out.height="100%"}
 # Create a dataframe that only have the countries with missing values and 
 # add a column which contains the % of missings for each country
 question1_missing_ef_regulation <- data_question1 %>%
@@ -1979,7 +1941,7 @@ Evol_Missing_ef_regulation <- ggplot(data = question1_missing_ef_regulation) +
                  color = cut(PercentageMissing,
                              breaks = c(0, 0.1, 0.2, 0.3, 1),
                              labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
-  labs(title = "ef_regulation", x = "Year", y = "ef_regulation") +
+  labs(title = "Evolution of economic freedom: regulation over time", x = "Years from 2000 to 2022", y = "ef_regulation") +
   scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
                      labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
@@ -2004,8 +1966,7 @@ for (i in list_code) {
 
 Then, we look at the distribution of the variable per region. Seeing that all are skewed distributions, we decide to replace the missing values using the median by region.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.width="100%", out.height="100%"}
 # Create a dataframe that only have the countries with missing values and 
 # add a column which contains the % of missings for each country
 question1_missing_ef_regulation <- data_question1 %>%
@@ -2022,7 +1983,7 @@ Freq_Missing_ef_regulation <- ggplot(data = question1_missing_ef_regulation) +
                                 breaks = c(0, 0.1, 0.2, 0.3, 1),
                                 labels = c("0-10%", "10-20%", "20-30%", "30-100%"))),
                  bins = 100) +
-  labs(title = "ef_regulation", x = "ef_regulation", y = "Frequency") +
+  labs(title = "Distribution of economic freedom: regulation", x = "ef_regulation", y = "Frequency") +
   scale_fill_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%"="red","30-100%" = "black"), labels = c("0-10%", "10-20%", "20-30%","30-100%")) +
   guides(fill = guide_legend(title = "% missings")) +
   facet_wrap(~ region, nrow = 3)
@@ -2058,7 +2019,7 @@ na_counts <- data_question1 %>%
 
 ```
 
-**Data for question 2 and 4**
+####Data for question 2 and 4
 
 We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Since there are no other missing values, we stop here. 
 
@@ -2074,11 +2035,11 @@ see_missing24 <- data_question24 %>%
 
 ```
 
-**Data for question 3**
+####Data for question 3
 
 We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Since there are no other missing values, we stop here. 
 
-***Disasters***
+**Disasters**
 
 We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We find out that there are many missing values... Sofia ? :) 
 
@@ -2097,7 +2058,7 @@ see_missing3_1 <- data_question3_1 %>%
 
 ```
 
-***COVID19***
+**COVID19**
 
 We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Since there are no other missing values, we stop here. 
 
@@ -2114,7 +2075,7 @@ see_missing3_2 <- data_question3_2 %>%
 
 ```
 
-***Conflicts***
+**Conflicts**
 
 We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed.Two countries have missing values, we remove them (MNE and SRB). 
 

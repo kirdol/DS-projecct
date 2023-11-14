@@ -27,3 +27,4 @@ knitr
 kableExtra
 DT
 cowplot
+sf

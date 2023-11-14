@@ -31,7 +31,7 @@ rm(merge_1_2, # remove merge_1_2 from memory
 
 see_missing1_1 <- data_question1 %>%
   group_by(code) %>%
-  summarise(across(-c(goal1, goal10),  # Exclude columns "goal1" and "goal10"
+  summarise(across(-c(year, country, continent, region, population, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17),  # Exclude columns "goal1" and "goal10"
                    ~ sum(is.na(.))) %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 50))
