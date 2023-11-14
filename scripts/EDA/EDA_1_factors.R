@@ -8,16 +8,15 @@ data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
 Correlation_overall <- data_question1 %>% 
       select(population:ef_regulation) %>%
       select(-age.category)
-      # select(-c(goal1, goal10, age.category))
 
 cor_matrix <- cor(Correlation_overall, use = "pairwise.complete.obs")
 print(cor_matrix)
 
 #### Heatmap ####
 
-cor_melted <- melt(cor_matrix2)
+cor_melted <- melt(cor_matrix)
 
-ggplot(data = cor_melted2, aes(Var1, Var2, fill = value)) +
+ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
                        midpoint = 0, limit = c(-1, 1), space = "Lab", 
@@ -28,9 +27,35 @@ ggplot(data = cor_melted2, aes(Var1, Var2, fill = value)) +
   coord_fixed() +
   labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
 
+#### cluster of the correlations ####
+
+Correlation_overall_scaled <- scale(Correlation_overall[,c(1:34)])
+distmat <- dist(Correlation_overall_scaled[,i], method="euclidean", diag=TRUE,upper=TRUE)
+avclust <- hclust(distmat, method="average")
+clusters <- cutree(avclust, k = 5)
+plot(clusters, labels=FALSE, hang = -1)
+rect.hclust(clusters, k = 5, border = 2)
+
+#via Kmean
+
+Correlation_overall_scaled <- scale(Correlation_overall[,c(1:34)])
+row.names(Correlation_overall_scaled) <- Correlation_overall[,1]
+kmean <- kmeans(Correlation_overall_scaled, 6)
+print(kmean)
+
+
+#### boxplot goals ####
+
+par(mfrow=c(2,3))
+for (i in 2:18){
+  boxplot(Correlation_overall[,i], main=names(Correlation_overall[i]), type="l")
+}
+par(mfrow=c(1,1))
+
 #verify significance pval < 0.05
 
 #### Check influence of variables on scores - Regressions ####
+
 model_goal1 <- lm(goal1 ~ goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
 model_goal2 <- lm(goal2 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
 model_goal3 <- lm(goal3 ~ goal1 + goal2 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + MilitaryExpenditurePercentGDP + internet.usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = Correlation_overall)
