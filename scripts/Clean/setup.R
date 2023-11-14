@@ -31,7 +31,7 @@ packages <- c(
   "stargazer",
   "tinytex",
   "cowplot",
-  #"sf",
+  "sf",
   #"rnaturalearth"
   "knitr",
   "kableExtra",

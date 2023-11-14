@@ -27,29 +27,48 @@ ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   coord_fixed() +
   labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
 
-#add back countries/region columns? 
+#### cluster dendogram of data_question1 ####
 
-Correlation_overall_with_countries <-  Correlation_overall %>%
-    mutate(data_question1[,1:7])%>%
-    select(X.1, X, code, year, country, continent, region, everything())
-    
-
-#### cluster of the correlations ####
-
-Corr_scaled <- scale(cor_matrix[,c(1:34)])
-distmat <- dist(Corr_scaled, method="euclidean", diag=TRUE,upper=TRUE)
+distmat <- dist(Correlation_overall, method="euclidean", diag=TRUE,upper=TRUE)
 avclust <- hclust(distmat, method="average")
+plot(avclust, labels=data_question1[,1])
+
+#too many observations? Possible to make a dendogram for clustering? 
+
 clusters <- cutree(avclust, k = 5)
 plot(clusters, labels=FALSE, hang = -1)
 #rect.hclust(clusters, k = 5, border = 2)
 
 #via Kmean
 
-Correlation_overall_scaled <- scale(Correlation_overall[,c(1:34)])
+
+library(factoextra)
+
+#try with data_question1 -> try to get rid of NA in goal1 & 10
+
+data1_scaled <- scale(Correlation_overall)
+row.names(data1_scaled) <- data_question1[,1]
+fviz_nbclust(data1_scaled, kmeans, method="wss")
+kmean <- kmeans(data1_scaled, 7)
+print(kmean)
+fviz_cluster(kmean, data=data1_scaled, repel=TRUE, depth =NULL)
+
+data1_scaled2 <- scale(Correlation_overall)
+row.names(data1_scaled2) <- data_question1[,5]
+fviz_nbclust(data1_scaled2, kmeans, method="wss")
+kmean <- kmeans(data1_scaled2, 7)
+print(kmean)
+fviz_cluster(kmean, data=data1_scaled2, repel=TRUE, depth =NULL)
+
+# Error in `.rowNamesDF<-`(x, value = value) : 
+#   duplicate 'row.names' are not allowed
+
+#try with correlations
+Corr_scaled <- scale(cor_matrix[,c(1:34)])
 row.names(Corr_scaled) <- data_question1[,5]
 kmean <- kmeans(Corr_scaled, 6)
 print(kmean)
-
+fviz_cluster(kmean, data=Corr_scaled, repel=TRUE)
 #### boxplot goals ####
 
 par(mfrow=c(2,3))
