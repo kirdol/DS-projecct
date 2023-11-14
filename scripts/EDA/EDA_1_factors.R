@@ -1,5 +1,7 @@
 ##### How do complex structures, systems, relationships and events influence a country's SDG scores?  #####
 
+library(factoextra)
+
 #### data ####
 data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
 
@@ -36,32 +38,28 @@ plot(avclust, labels=data_question1[,1])
 #too many observations? Possible to make a dendogram for clustering? 
 
 clusters <- cutree(avclust, k = 5)
-plot(clusters, labels=FALSE, hang = -1)
+plot(clusters, labels=FALSE)
 #rect.hclust(clusters, k = 5, border = 2)
 
-#via Kmean
-
-
-library(factoextra)
-
-#try with data_question1 -> try to get rid of NA in goal1 & 10
+#### Kmean ####
 
 data1_scaled <- scale(Correlation_overall)
 row.names(data1_scaled) <- data_question1[,1]
 fviz_nbclust(data1_scaled, kmeans, method="wss")
 kmean <- kmeans(data1_scaled, 7)
 print(kmean)
-fviz_cluster(kmean, data=data1_scaled, repel=TRUE, depth =NULL)
+fviz_cluster(kmean, data=data1_scaled, repel=TRUE, depth =NULL, ellipse.type = "norm")
+# Result:  (between_SS / total_SS =  58.4 %)
 
+#try with row.name = country
 data1_scaled2 <- scale(Correlation_overall)
 row.names(data1_scaled2) <- data_question1[,5]
 fviz_nbclust(data1_scaled2, kmeans, method="wss")
 kmean <- kmeans(data1_scaled2, 7)
 print(kmean)
-fviz_cluster(kmean, data=data1_scaled2, repel=TRUE, depth =NULL)
+fviz_cluster(kmean, data=data1_scaled2, repel=TRUE, depth =NULL, ellipse.type = "norm")
 
-# Error in `.rowNamesDF<-`(x, value = value) : 
-#   duplicate 'row.names' are not allowed
+#doesn't work as duplicates
 
 #try with correlations
 Corr_scaled <- scale(cor_matrix[,c(1:34)])
@@ -69,6 +67,10 @@ row.names(Corr_scaled) <- data_question1[,5]
 kmean <- kmeans(Corr_scaled, 6)
 print(kmean)
 fviz_cluster(kmean, data=Corr_scaled, repel=TRUE)
+
+
+
+
 #### boxplot goals ####
 
 par(mfrow=c(2,3))
