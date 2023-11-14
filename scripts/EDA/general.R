@@ -6,7 +6,7 @@ data <- read.csv(here("scripts", "data", "all_Merge.csv"))
 
 # different goals
 
-par(mfrow=c(3,6)) 
+par(mfrow=c(4,5)) 
 for (i in 8:24) { 
   boxplot(data[, i], main = names(data)[i], horizontal = TRUE, ylim = c(0, 100))
 }

@@ -29,7 +29,8 @@ packages <- c(
   "reshape2",
   "corrplot",
   "stargazer",
-  "tinytex"
+  "tinytex",
+  "cowplot"
   #"sf",
   #"rnaturalearth"
 )

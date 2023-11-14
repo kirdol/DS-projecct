@@ -29,31 +29,25 @@ data0 %>%
 
 ### First, look at the evolution of SDG achievement overall score over time
 
-# Evolution over time of the overall score: mean over all countries
-
 data1 <- data_question2 %>% group_by(year) %>%
   mutate(mean_overall_score_by_year=mean(overallscore))
-
-ggplot(data=data1) +
-  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year), color="blue", lwd=1) +
-  scale_y_continuous(limits = c(0, 100))
-
-# Evolution over time of the overall score: mean by continent
 
 data2 <- data_question2 %>% group_by(year, continent) %>%
   mutate(mean_overall_score_by_year=mean(overallscore))
 
-ggplot(data=data2) +
-  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=1)+
-  scale_y_continuous(limits = c(0, 100))
-
-# Evolution over time of the overall score: mean by region
-
 data3 <- data_question2 %>% group_by(year, region) %>%
   mutate(mean_overall_score_by_year=mean(overallscore))
 
-ggplot(data=data3) +
-  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=region), lwd=1)+
+ggplot(data1) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year), color="blue", lwd=1) +
+  scale_y_continuous(limits = c(0, 100)) 
+
+ggplot(data2) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=1) +
+  scale_y_continuous(limits = c(0, 100)) 
+
+ggplot(data3) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=region), lwd=1) +
   scale_y_continuous(limits = c(0, 100))
 
 ### Second, look at the evolution of SDG achievement scores (16) over time

@@ -8,32 +8,79 @@ source(here::here("scripts/EDA/EDA_4_SDG.R"))
 
 ## General exploration
 
+We display the distribution of the different SDG achievement scores, using boxplots to have an overview of the median, the range with most of the observations and the outliers. 
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+data <- read.csv(here("scripts", "data", "all_Merge.csv"))
+
+par(mfrow=c(4,5)) 
+for (i in 8:24) { 
+  boxplot(data[, i], main = names(data)[i], horizontal = TRUE, ylim = c(0, 100))
+}
+par(mfrow=c(1,1))
+```
+
+To have an overview of the relationship between our independent variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable. 
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+data_question1 <- read.csv(here("scripts", "data", "data_question1.csv"))
+data_question3_2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+data_question3_3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
+
+panel.hist <- function(x, ...){ 
+  usr <- par("usr"); on.exit(par(usr)) 
+  par(usr = c(usr[1:2], 0, 1.5) ) 
+  h <- hist(x, plot = FALSE) 
+  breaks <- h$breaks; nB <- length(breaks) 
+  y <- h$counts; y <- y/max(y) 
+  rect(breaks[-nB], 0, breaks[-1], y, col = "lightgreen", ...)
+}
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){ 
+  usr <- par("usr"); on.exit(par(usr)) 
+  par(usr = c(0, 1, 0, 1)) 
+  r <- (cor(x, y)) 
+  txt <- format(c(r, 0.123456789), digits = digits)[1] 
+  txt <- paste0(prefix, txt) 
+  if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt) 
+  text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+
+# Independent variables 
+pairs(data_question1[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet.usage")], upper.panel=panel.cor, diag.panel=panel.hist)
+pairs(data_question1[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly", "pf_expression", "pf_identity")], upper.panel=panel.cor, diag.panel=panel.hist)
+pairs(data_question1[,c("overallscore", "ef_government", "ef_legal", "ef_money", "ef_trade", "ef_regulation")], upper.panel=panel.cor, diag.panel=panel.hist)
+
+pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_million", "stringency")], upper.panel=panel.cor, diag.panel=panel.hist)
+pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")], upper.panel=panel.cor, diag.panel=panel.hist)
+
+```
+
+## Focus on time evolution
+
+## **Focus on the evolution of SDG scores over time**
+
 First, we look at the evolution of SDG achievement overall score over time for the whole world, by continent and by region.
 
 ```{r, echo = TRUE, message = FALSE, cache = TRUE}
 data1 <- data_question2 %>% group_by(year) %>%
   mutate(mean_overall_score_by_year=mean(overallscore))
 
-ggplot(data=data1) +
-  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year), color="blue", lwd=1) +
-  scale_y_continuous(limits = c(0, 100))
-```
-
-```{r, echo = TRUE, message = FALSE, cache = TRUE}
 data2 <- data_question2 %>% group_by(year, continent) %>%
   mutate(mean_overall_score_by_year=mean(overallscore))
 
-ggplot(data=data2) +
-  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=1)+
-  scale_y_continuous(limits = c(0, 100))
-```
-
-```{r, echo = TRUE, message = FALSE, cache = TRUE}
 data3 <- data_question2 %>% group_by(year, region) %>%
   mutate(mean_overall_score_by_year=mean(overallscore))
 
-ggplot(data=data3) +
-  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=region), lwd=1)+
+ggplot(data1) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year), color="blue", lwd=1) +
+  scale_y_continuous(limits = c(0, 100)) 
+
+ggplot(data2) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=1) +
+  scale_y_continuous(limits = c(0, 100)) 
+
+ggplot(data3) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=region), lwd=1) +
   scale_y_continuous(limits = c(0, 100))
 ```
 
