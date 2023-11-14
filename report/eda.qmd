@@ -8,7 +8,7 @@ source(here::here("scripts/EDA/EDA_4_SDG.R"))
 
 ## General exploration
 
-We display the distribution of the different SDG achievement scores, using boxplots to have an overview of the median, the range with most of the observations and the outliers. 
+We display the distribution of the different SDG achievement scores, using boxplots to have an overview of the median, the range with most of the observations and the outliers.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 data <- read.csv(here("scripts", "data", "all_Merge.csv"))
@@ -20,7 +20,7 @@ for (i in 8:24) {
 par(mfrow=c(1,1))
 ```
 
-To have an overview of the relationship between our independent variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable. 
+To have an overview of the relationship between our independent variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 data_question1 <- read.csv(here("scripts", "data", "data_question1.csv"))
