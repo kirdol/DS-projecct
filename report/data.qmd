@@ -1,8 +1,9 @@
 # Data
 
-```{r, echo = FALSE, message = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 source(here::here("scripts/Clean/setup.R"))
-source(here::here("scripts/EDA/EDA_4_SDG.R"))
+source(here::here("scripts/Clean/clean_1_SDG.R"))
+source(here::here("scripts/Clean/clean_4_InternetUsage.R"))
 ```
 
 ## Sources
@@ -224,6 +225,8 @@ During the wrangling process: we add data to our table (D1_1_SDG) based on diffe
 
 ## Wrangling/cleaning
 
+To accommodate the large scale of the datasets we intended to utilize, we decided to pre-clean each of our datasets before merging them. This allowed us to simplify the process of cleaning our final dataset afterwards.
+
 ### 1. Dataset on SDG
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
@@ -392,92 +395,42 @@ D1_0_SDG_country_list <- D1_0_SDG_country_list %>%
 D1_0_SDG <- D1_0_SDG |> complete(code, year)
 ```
 
+As said, this is now our main dataset. All subsequent datasets will be merged with this dataset. Therefore, for all the following datasets, we want to make sure that we only keep data for the same countries and years as in this dataset.
+
 ### 2. Dataset on Unemployment rate
 
-As for the SDG dataset, we first import the data and make sure that we have a proper dataframe.
+In this dataset, the initial step involves importing the data. Next, we ensure that the names and codes of the countries are formatted in UTF-8, preventing any discrepancies due to mismatches in country names. Following this, we modify the column names and filter the data to include only the relevant countries and years, specifically the years 2000 to 2022, covering 166 countries from our primary dataset.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
-D2_1_Unemployment_rate <-
-  read.csv(here("scripts","data","UnemploymentRate.csv"))
-D2_1_Unemployment_rate <-
-  as.data.frame(D2_1_Unemployment_rate)
+D2_1_Unemployment_rate <- read.csv(here("scripts","data","UnemploymentRate.csv")) %>%
+  as.data.frame() %>%
+  mutate(
+    country = iconv(ref_area.label, to = "UTF-8", sub = "byte"),
+    country = countrycode(country, "country.name", "country.name"),
+    year = time,
+    `unemployment rate` = obs_value / 100,
+    age_category = classif1.label,
+    sex = sex.label
+  ) %>%
+  select(-ref_area.label, -time, -obs_value, -classif1.label, -sex.label, -source.label, -obs_status.label, -indicator.label) %>%
+  merge(D1_0_SDG_country_list[, c("country", "code")], by = "country", all.x = TRUE) %>%
+  filter(year >= 2000 & year <= 2022,
+         !str_detect(sex, fixed("Male")) & !str_detect(sex, fixed("Female")),
+         code %in% D1_0_SDG_country_list$code,
+         age_category == "Age (Youth, adults): 15+") %>%
+  select(code, country, year, `unemployment rate`) %>%
+  distinct()
 ```
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-# Make sure the encoding od the country names are UTF-8
-D2_1_Unemployment_rate$ref_area.label <- iconv(D2_1_Unemployment_rate$ref_area.label, to = "UTF-8", sub = "byte")
+**Here is the first few line of the cleaned dataset on Unemployment rate:**
 
-# standardize country names
-D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
-  mutate(ref_area.label = countrycode(ref_area.label, "country.name", "country.name"))
-
-D2_1_Unemployment_rate <- # We merge the dataset of Unemployment rate with codes and the dataset containing the codes for each country
-  merge(D2_1_Unemployment_rate, D1_0_SDG_country_list[, c("country", "code")], by.x = "ref_area.label", by.y = "country", all.x = TRUE)
-
-D2_1_Unemployment_rate <- # keep only the data between 2000 and 2022 to match the main datast
-  D2_1_Unemployment_rate[
-    D2_1_Unemployment_rate$time >= 2000 & D2_1_Unemployment_rate$time <= 2022, ]
-
-# remove colums that we do not need
-D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
-  select(-source.label, -obs_status.label, -indicator.label)
-
-# rearrange the columns
-D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
-  select(code, ref_area.label, time, sex.label, classif1.label, obs_value)
-
-# rename columns
-D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
-  rename(
-    "country" = ref_area.label,
-    "year" = time,
-    "age category" = classif1.label,
-    "unemployment rate" = obs_value
-  )
-
-# drop rows with sex indications and remove the column linked to sex
-D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
-  filter(!str_detect(sex.label, fixed("Male")) & !str_detect(sex.label, fixed("Female")))
-D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
-  select(-sex.label)
-
-# changing to decimal values the unemployment rate
-D2_1_Unemployment_rate$`unemployment rate` <-
-  D2_1_Unemployment_rate$`unemployment rate` / 100
-
-# We want to keep only the values for the country that appear in our main dataframe
-D2_1_Unemployment_rate_country_list <- unique(D2_1_Unemployment_rate$code)
-
-# Here we look at the country that are in the main dataframe but that are missing from the data on unemployment rate
-D_2_1_Unemployment_rate_missing_countries <- setdiff(D1_0_SDG_country_list$code, D2_1_Unemployment_rate_country_list)
-print(D_2_1_Unemployment_rate_missing_countries)
-
-# Here, we select only the countries that we want (specified in "D1_0_SDG_country_list")
-D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
-  filter(code %in% D1_0_SDG_country_list$code)
-
-D2_1_Unemployment_rate_country_list <- D2_1_Unemployment_rate %>%
-  filter(code %in% D2_1_Unemployment_rate_country_list) %>%
-  select(code, country)
-
-D2_1_Unemployment_rate_country_list <- D2_1_Unemployment_rate_country_list %>%
-  select(code, country) %>%
-  distinct()
-
-# Filter to keep only unemployment rate for 15 years old and above.
-D2_1_Unemployment_rate <- D2_1_Unemployment_rate %>%
-  filter(`age category` == "Age (Youth, adults): 15+")
-
-# Je tente un truc pour les pays manquants
-
-list_country_Unemp <- c(unique(D2_1_Unemployment_rate_country_list$code))
-(missing <- setdiff(list_country, list_country_Unemp))
-(length(unique(D2_1_Unemployment_rate$code)))
+```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
+datatable(D2_1_Unemployment_rate, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
 
 ### 3. Dataset on GDP military Expenditures
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 GDPpercapita <-
   read.csv(here("scripts","data","GDPpercapita.csv"), sep = ";")
 MilitaryExpenditurePercentGDP <-
@@ -832,40 +785,30 @@ D3_3_Miliraty_Expenditure_Percent_Gov_Exp <- MiliratyExpenditurePercentGovExp
 
 ### 4. Dataset on internet usage
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+To prepare the dataset on internet usage in the world to be merge with the other data, we first, import the data. Then, we keep only the year that we are interested in (2000 to 2022). We also rename the column and keep only the country that match the list of the countries in the main dataset on the SDG.
 
-## 4 Internet Usage
-D4_0_Internet_usage <- # import the dataset
-  read.csv(here("scripts","data","InternetUsage.csv"))
-
-D4_0_Internet_usage <- # make sure that we have a datafraame
-  as.data.frame(D4_0_Internet_usage)
-
-D4_0_Internet_usage <- # keep only the data between 2000 and 2022 to match the main dataset
-  D4_0_Internet_usage[
-    D4_0_Internet_usage$Year >= 2000 & D4_0_Internet_usage$Year <= 2022 , ]
-
-# renaming the columns for clarity
-D4_0_Internet_usage <- D4_0_Internet_usage %>%
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
+D4_0_Internet_usage <- read.csv(here("scripts", "data", "InternetUsage.csv")) %>%
+  filter(Year >= 2000, Year <= 2022) %>%
   rename(
-    "code" = Code,
-    "country" = Entity,
-    "year" = Year,
-    "internet usage" = Individuals.using.the.Internet....of.population.
-  )
+    code = Code,
+    country = Entity,
+    year = Year,
+    internet_usage = Individuals.using.the.Internet....of.population.
+  ) %>%
+  mutate(internet_usage = internet_usage / 100) %>%
+  filter(code %in% list_country)
+```
 
-# change to decimals internet usage
-D4_0_Internet_usage$`internet usage` <-
-  D4_0_Internet_usage$`internet usage` / 100
+**Here is the first few line of the cleaned dataset of internet usage:**
 
-# Keep only the countries that are in our main dataset
-D4_0_Internet_usage <- D4_0_Internet_usage %>% filter(code %in% list_country)
-length(unique(D4_0_Internet_usage$code))
+```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
+datatable(D2_1_Unemployment_rate, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
 
 ### 5. Dataset on human freedom index
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 data <- read.csv(here("scripts", "data", "human-freedom-index-2022.csv"))
 
 #data in tibble 
@@ -1000,7 +943,7 @@ print(country_na_count)
 
 ### 6. Dataset on Disasters
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # Natural Disasters
 
 # Read the CSV data file into a data frame named "Disasters"
@@ -1064,7 +1007,7 @@ list_country_disasters <- c(unique(D6_0_Disasters$code))
 
 ### 7. Dataset on COVID
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 #Import data
 
 COVID <- read.csv(here("scripts","data","COVID.csv"))
@@ -1183,7 +1126,7 @@ D7_0_COVID <- COVID
 
 ### 8. Dataset on Conflicts
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 #Conflicts
 
 # Read the Excel data file into a data frame named "Conflicts"
@@ -1261,9 +1204,9 @@ list_country_conflicts <- c(unique(conflicts$code))
 
 **Final structure of our merged database:** each country of the 166 countries from D1_1_SDG are observed each year from 2000 to 2022, thus each row has a key composed of (code, year) that uniquely identifies an observation. The other columns are the variables listed above. Due to some countries having a lot of missing information we will have to eliminate some of them, but we will still have more than 2000 rows in our database.
 
-### **Merged data**
+### Merged data
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # Import merged database
 all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
 

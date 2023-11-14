@@ -1,28 +1,14 @@
-
-## 4 Internet Usage
-D4_0_Internet_usage <- # import the dataset
-  read.csv(here("scripts","data","InternetUsage.csv"))
-
-D4_0_Internet_usage <- # make sure that we have a datafraame
-  as.data.frame(D4_0_Internet_usage)
-
-D4_0_Internet_usage <- # keep only the data between 2000 and 2022 to match the main dataset
-  D4_0_Internet_usage[
-    D4_0_Internet_usage$Year >= 2000 & D4_0_Internet_usage$Year <= 2022 , ]
-
-# renaming the columns for clarity
-D4_0_Internet_usage <- D4_0_Internet_usage %>%
+# Load and transform the dataset in one pipeline
+D4_0_Internet_usage <- read.csv(here("scripts", "data", "InternetUsage.csv")) %>%
+  filter(Year >= 2000, Year <= 2022) %>%
   rename(
-    "code" = Code,
-    "country" = Entity,
-    "year" = Year,
-    "internet usage" = Individuals.using.the.Internet....of.population.
-  )
+    code = Code,
+    country = Entity,
+    year = Year,
+    internet_usage = Individuals.using.the.Internet....of.population.
+  ) %>%
+  mutate(internet_usage = internet_usage / 100) %>%
+  filter(code %in% list_country)
 
-# change to decimals internet usage
-D4_0_Internet_usage$`internet usage` <-
-  D4_0_Internet_usage$`internet usage` / 100
-
-# Keep only the countries that are in our main dataset
-D4_0_Internet_usage <- D4_0_Internet_usage %>% filter(code %in% list_country)
+# Output the number of unique country codes
 length(unique(D4_0_Internet_usage$code))

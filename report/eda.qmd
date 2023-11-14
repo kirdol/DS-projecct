@@ -86,7 +86,7 @@ ggplot(data3) +
 
 Second, we look at the evolution of SDG achievement scores(16) over time for the whole world, by continent and by region.
 
-```{r, echo = TRUE, message = FALSE, cache = TRUE}
+```{r, echo = TRUE, message = FALSE, cache = TRUE, warning = FALSE}
 data4 <- data_question2 %>%
   group_by(year) %>%
   summarise(across(starts_with("goal"), mean, na.rm=TRUE)) %>%
@@ -157,10 +157,7 @@ data0 %>%
 
 ## Focus on factors
 
-
-
-
-## **Focus on relationship between SDGs**
+## Focus on relationship between SDGs
 
 **How are the different SDGs linked? (We want to see if some SDGs are linked in the fact that a high score on one implies a high score on the other, and thus if we can make groups of SDGs that are comparable in that way).**
 
