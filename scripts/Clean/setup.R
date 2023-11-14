@@ -32,7 +32,7 @@ packages <- c(
   "tinytex",
   "cowplot",
   "sf",
-  #"rnaturalearth"
+  "rnaturalearth",
   "knitr",
   "kableExtra",
   "DT"
