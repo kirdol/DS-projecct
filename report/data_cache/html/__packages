@@ -26,3 +26,4 @@ tinytex
 knitr
 kableExtra
 DT
+cowplot

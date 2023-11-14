@@ -117,7 +117,7 @@ data_question1 <- data_question1 %>%
 # Internet usage
 question1_missing_Internet <- data_question1 %>%
   group_by(code) %>%
-  summarize(NaInternet = mean(is.na(internet.usage)))%>%
+  summarize(NaInternet = mean(is.na(internet_usage)))%>%
   filter(NaInternet != 0)
 
 # Only low % of missing
@@ -126,12 +126,12 @@ question1_missing_Internet <- data_question1 %>%
 # add a column which contains the % of missings for each country
 question1_missing_Internet <- data_question1 %>%
   group_by(code) %>%
-  mutate(PercentageMissing = mean(is.na(internet.usage))) %>%
+  mutate(PercentageMissing = mean(is.na(internet_usage))) %>%
   filter(code %in% question1_missing_Internet$code)
 
 # Look at the evolution over the years for the countries that have missing values
 Evol_Missing_Internet <- ggplot(data = question1_missing_Internet) +
-  geom_point(aes(x = year, y = internet.usage, 
+  geom_point(aes(x = year, y = internet_usage, 
                  color = cut(PercentageMissing,
                              breaks = c(0, 0.1, 0.2, 0.3, 1),
                              labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
@@ -150,10 +150,10 @@ for (i in list_code) {
   country_data <- data_question1 %>% filter(code == i)
   
   # Perform linear interpolation for the current country's data
-  interpolated_data <- na.interp(country_data$internet.usage)
+  interpolated_data <- na.interp(country_data$internet_usage)
   
   # Update the original dataset with the interpolated values
-  data_question1[data_question1$code == i, "internet.usage"] <- interpolated_data
+  data_question1[data_question1$code == i, "internet_usage"] <- interpolated_data
 }
 
 # Delete country CIV
