@@ -1,4 +1,5 @@
 # Data
+
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 source(here::here("scripts/Clean/setup.R"))
 ```
@@ -919,15 +920,13 @@ datatable(D2_1_Unemployment_rate, options = list(pageLength = 10, class = "hover
 
 ### 5. Dataset on human freedom index
 
+After importing the data from the CATO Institute website, we noticed that even if the file was called "Human Freedom Index 2022", the available observations were only going from 2000 up to 2020. We have decided first to modify it in order to match our other datasets, by renaming/encoding/standardizing the columns containing the country names.
+
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 data <- read.csv(here("scripts", "data", "human-freedom-index-2022.csv"))
 
 #data in tibble 
 datatibble <- tibble(data)
-
-# Only keep the years after 2000 and before 2022
-datatibble <- datatibble %>%
-  filter(year >= 2000 & year <= 2022)
 
 # Rename the column countries into country to match the other datbases
 names(datatibble)[names(datatibble) == "countries"] <- "country"
@@ -938,6 +937,11 @@ datatibble$country <- iconv(datatibble$country, to = "UTF-8", sub = "byte")
 # standardize country names
 datatibble <- datatibble %>%
   mutate(country = countrycode(country, "country.name", "country.name"))
+```
+
+Once done, we could verify which countries were or were not present between these observations and our main SDG dataset. We have decided to keep the ones that were matching between the two datasets.
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 
 # Merge by country name
 datatibble <- datatibble %>%
@@ -956,8 +960,11 @@ list_country_free <- c(unique(datatibble$code))
 # Turkey was missing but present in the initial database (it was a problem when stadardizing the country names of D1_0SDG_country_list that we corrected) and the other missing countries are:"AFG" "CUB" "MDV" "STP" "SSD" "TKM" "UZB" 
 
 D5_0_Human_freedom_index <- datatibble
+```
 
+Then, we noticed that there were a lot of columns that were not important for us, as we had 141 variables taken into account. So we have decided to keep the ones that refers to the countries informations (such as code, year, ..) and their human freedom scores per category (pf for personnal freedom, ef for economical freedom). After renaming the columns pf_law/security for comprehension purpose, we have made a heatmap that helped us to visualize in our data where were the NA values per country and per variable in percentage, ordered by countries having at least one variable with more than 50% of missing. This gave us a better comprehension of the distribution of the NA values. Finally, we noticed that only 13 countries of our dataset had more than 50% of missing values for one or more variables.
 
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # erasing useless columns to keep only the general ones. 
 
 D5_0_Human_freedom_index <- select(D5_0_Human_freedom_index, year, country, region, hf_score, pf_rol, pf_ss, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, pf_score, ef_government, ef_legal, ef_money, ef_trade, ef_regulation, ef_score, code)
@@ -983,13 +990,11 @@ na_long <- na_percentage_by_country %>%
     values_to = "NA_Percentage"
   )
 
-# Assuming your dataframe is called 'na_long'
 overall_na_percentage <- na_long %>%
   group_by(Variable) %>%
   summarize(Avg_NA_Percentage = mean(NA_Percentage, na.rm = TRUE)) %>%
   arrange(desc(Avg_NA_Percentage))
 
-# To view the result
 print(overall_na_percentage)
 
 # Order the countries with between 50 and 100 of NA values 
@@ -1017,10 +1022,6 @@ heatmap_ordered <- ggplot(na_long, aes(x = reorder(country, -Count_NA_50_100), y
     axis.text.y = element_text(size = 7)
   )
 print(heatmap_ordered)
-# If you want to save this plot
-ggsave("heatmap_ordered.png", heatmap_ordered, width = 12, height = 8)
-
-# Now try to check for which year these missing values take place, in order to just erase one year instead of a country
 
 ###### END VISUALIZATION ######
 
@@ -1033,20 +1034,9 @@ country_na_count <- na_long %>%
   arrange(desc(Count_NA_50_100))
 
 print(country_na_count)
-
-
-#D5_0_Human_freedom_index --> name final tibble
-
-# How to select the NA values of a specific variable, arranged.
-# data <- data[is.na(data$column)]
-# arrange(select(data, column)) |> print(n = ...) 
-# length(unique(datatibble$country))
-
-
-#IS THERE A POSSIBLE WAY TO FIND MISSING VALUES PER COUNTRY PER YEAR FOR EACH VARIABLE?
-#HERE DONE PER COUNTRY PER VARIABLE 
-#I DON'T WANT TO ERASE A COUNTRY, JUST THE YEAR OF A COUNTRY
 ```
+
+When discussing between us, we came to the conclusion that among these 13 countries, a great part of them were not going to be selected because they had a lot of missing values in our main dataset too. Therefore, we have decided to merge this data with the other datasets and finish the cleaning after. 
 
 ### 6. Dataset on Disasters
 
@@ -1137,7 +1127,7 @@ We perform a first round of investigation of the missing values before aggregati
 
 2.  all are missing : we can ignore the missing values when computing the mean, because it will still return a missing value
 
-3.   almost all are missing: here the mean doesn't make sense -\> we will replace the values by NAs to be coherent. The countries with this issues are: ERI, GUM, PRI and VIR. We verify if they are in our main dataset and since none of these countries are, we can ignore the issue, the lines will be remove later anyway.
+3.  almost all are missing: here the mean doesn't make sense -\> we will replace the values by NAs to be coherent. The countries with this issues are: ERI, GUM, PRI and VIR. We verify if they are in our main dataset and since none of these countries are, we can ignore the issue, the lines will be remove later anyway.
 
 We aggregate the observations of all days of a year in one observation per country using the mean.
 
@@ -1190,7 +1180,7 @@ COVID <- COVID %>%
 
 ```
 
-Now that all the variables of interest are aggregated by year, we remove all the variables that we don't need and rename all the remaining variables to match the main dataset. 
+Now that all the variables of interest are aggregated by year, we remove all the variables that we don't need and rename all the remaining variables to match the main dataset.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # Only have 1 obs per country per year
@@ -1210,7 +1200,7 @@ colnames(COVID) <- c("code", "country", "year", "cases_per_million", "deaths_per
 
 ```
 
-We remove the years that exceed 2022, we make sure that the country codes are all iso codes with 3 letters (we observe that sometimes they are preceded by "OWID_") and we standardize the country codes. 
+We remove the years that exceed 2022, we make sure that the country codes are all iso codes with 3 letters (we observe that sometimes they are preceded by "OWID\_") and we standardize the country codes.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # Remove the years after 2022 to match our main database 
@@ -1243,7 +1233,7 @@ length(unique(COVID$code))
 
 ```
 
-We perform a second round of missing values investigation and find out that there are no missing values except for the stringency, where there are 4.19%. Either all values are missing for one country, or 50% are missing, so these 7 countries won't be included when analyzing the effect of stringency on the SDG scores. 
+We perform a second round of missing values investigation and find out that there are no missing values except for the stringency, where there are 4.19%. Either all values are missing for one country, or 50% are missing, so these 7 countries won't be included when analyzing the effect of stringency on the SDG scores.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 ##### Investigation of the missing values #####
@@ -1353,7 +1343,7 @@ list_country_conflicts <- c(unique(conflicts$code))
 
 ### Merge data
 
-By merging our eight pre-cleaned datasets, we create a final database. 
+By merging our eight pre-cleaned datasets, we create a final database.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # merge D1_0_SDG with D2_1_Unemployment_rate 
@@ -1396,9 +1386,9 @@ all_Merge <- all_Merge %>% filter(!code %in% missing)
 
 ```
 
-### Cleaning of the final database 
+### Cleaning of the final database
 
-We replace the NAs of the COVID columns by 0 (because we don't have real missing, only introduced by merging for the years before COVID). 
+We replace the NAs of the COVID columns by 0 (because we don't have real missing, only introduced by merging for the years before COVID).
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # Replace the NAs of the COVID columns by 0 (because we don't have real missing, only introduced by merging for the years before COVID)
@@ -1411,7 +1401,7 @@ all_Merge <- all_Merge %>%
 
 ```
 
-Since we took the information on the continent and region from databases that are not the main one, we complete these inforamtion for the whole final dataset.  
+Since we took the information on the continent and region from databases that are not the main one, we complete these inforamtion for the whole final dataset.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # Complete the values of continent and region
@@ -1428,7 +1418,7 @@ all_Merge <- all_Merge %>%
 
 ```
 
-We order the database, beginning by the information on the country, the year, the continent and the region. 
+We order the database, beginning by the information on the country, the year, the continent and the region.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # Order database
@@ -1449,7 +1439,7 @@ datatable(all_Merge, options = list(pageLength = 10, class = "hover", searchHigh
 
 ### Treatment of missing values
 
-We load our final database and subset it according to the data that we will need in order to answer the different questions. This will help us dealing with the missing values. 
+We load our final database and subset it according to the data that we will need in order to answer the different questions. This will help us dealing with the missing values.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # Import merged database
@@ -1476,7 +1466,7 @@ data_question3_3 <- all_Merge %>% filter(year<=2016) %>% select(c(code, year, co
 
 #### Data for question 1
 
-We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We decide to remove the countries that have more than 50 missing values. 
+We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We decide to remove the countries that have more than 50 missing values.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 #### Question1 
@@ -1494,14 +1484,14 @@ list_country_deleted <- c(unique(see_missing1_1$code))
 
 ```
 
-Here are the first lines of the database used to see the missing values over all variables per countries: 
+Here are the first lines of the database used to see the missing values over all variables per countries:
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
 kable(see_missing1_1)
 
 ```
 
-Now, looking at the remaining countries that have missing values and there number accross all variables, we decide to remove MilitaryExpenditurePercentGovExp, because it has too many missing values and it contains similar information to MilitaryExpenditurePercentGDP. 
+Now, looking at the remaining countries that have missing values and there number accross all variables, we decide to remove MilitaryExpenditurePercentGovExp, because it has too many missing values and it contains similar information to MilitaryExpenditurePercentGDP.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 see_missing1_2 <- data_question1 %>%
@@ -1517,17 +1507,16 @@ data_question1 <- data_question1 %>% select(-MiliratyExpenditurePercentGovExp)
 
 ```
 
-Here are the first lines of the database used to see the missing values over all variables per countries: 
+Here are the first lines of the database used to see the missing values over all variables per countries:
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
 kable(see_missing1_2)
 
 ```
 
-
 **GDP per capita**
 
-Only Venezuela has missing values that we can not fill, so we delete the country. 
+Only Venezuela has missing values that we can not fill, so we delete the country.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # GDPpercapita
@@ -1545,7 +1534,7 @@ list_country_deleted <- c(list_country_deleted, "VEN")
 
 **Military expenditure in % of GDP**
 
-To begin with, we delete the countries with more than 30% missing values. 
+To begin with, we delete the countries with more than 30% missing values.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # Military expenditure in % of GDP
@@ -1610,7 +1599,7 @@ data_question1 <- data_question1 %>%
 
 **Internet usage**
 
-There are only low percentage of missing values. 
+There are only low percentage of missing values.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # Internet usage
@@ -1671,7 +1660,7 @@ list_country_deleted <- c(list_country_deleted, "CIV")
 
 **Human freedom index**
 
-First, we remove hf_score, pf_score and ef_score, because there are many missing values and since these variables summarize the other ones, deleting the will not make us loose information. 
+First, we remove hf_score, pf_score and ef_score, because there are many missing values and since these variables summarize the other ones, deleting the will not make us loose information.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # Human Freedom Index
@@ -1688,7 +1677,7 @@ list_country_deleted <- c(list_country_deleted, "BLZ")
 
 ***Economic freedom: government***
 
-Only KGZ and SRB have missing values, we plot the values over time and fill in the missing values by the year before, since there are only one and two missing values. 
+Only KGZ and SRB have missing values, we plot the values over time and fill in the missing values by the year before, since there are only one and two missing values.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # ef_government: KGZ and SRB have missing values -> plot
@@ -1715,7 +1704,7 @@ data_question1 <- data_question1 %>%
 
 ***Economic freedom: money***
 
-18 countries have missing values, but the percentage of missing values is always below 25%.  
+18 countries have missing values, but the percentage of missing values is always below 25%.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # ef_money
@@ -1727,7 +1716,7 @@ question1_missing_ef_money <- data_question1 %>%
 
 ```
 
-We look at the evolution of the variable over time. For the countries where this evolution is linear, we fill in the missing values using linear interpolation. 
+We look at the evolution of the variable over time. For the countries where this evolution is linear, we fill in the missing values using linear interpolation.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.width="100%"}
 # Create a dataframe that only have the countries with missing values and 
@@ -1815,7 +1804,7 @@ data_question1 <- data_question1 %>%
 
 ***Economic freedom: trade***
 
-19 countries have missing values, but the percentage of missing values is always below 25%.  
+19 countries have missing values, but the percentage of missing values is always below 25%.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # ef_trade
@@ -1832,7 +1821,7 @@ question1_missing_ef_trade <- data_question1 %>%
 
 ```
 
-We look at the evolution of the variable over time. For the countries where this evolution is linear, we fill in the missing values using linear interpolation. 
+We look at the evolution of the variable over time. For the countries where this evolution is linear, we fill in the missing values using linear interpolation.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.width="100%", out.height="100%"}
 # Look at the evolution over the years for the countries that have missing values
@@ -1913,7 +1902,7 @@ data_question1 <- data_question1 %>%
 
 ***Economic freedom: regulation***
 
-12 countries have missing values, but the percentage of missing values is always below 25%.  
+12 countries have missing values, but the percentage of missing values is always below 25%.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # ef_regulation
@@ -1925,7 +1914,7 @@ question1_missing_ef_regulation <- data_question1 %>%
 
 ```
 
-We look at the evolution of the variable over time. For the countries where this evolution is linear, we fill in the missing values using linear interpolation. 
+We look at the evolution of the variable over time. For the countries where this evolution is linear, we fill in the missing values using linear interpolation.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.width="100%", out.height="100%"}
 # Create a dataframe that only have the countries with missing values and 
@@ -2021,7 +2010,7 @@ na_counts <- data_question1 %>%
 
 ####Data for question 2 and 4
 
-We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Since there are no other missing values, we stop here. 
+We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Since there are no other missing values, we stop here.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 
@@ -2037,11 +2026,11 @@ see_missing24 <- data_question24 %>%
 
 ####Data for question 3
 
-We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Since there are no other missing values, we stop here. 
+We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Since there are no other missing values, we stop here.
 
 **Disasters**
 
-We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We find out that there are many missing values... Sofia ? :) 
+We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We find out that there are many missing values... Sofia ? :)
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 
@@ -2060,7 +2049,7 @@ see_missing3_1 <- data_question3_1 %>%
 
 **COVID19**
 
-We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Since there are no other missing values, we stop here. 
+We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Since there are no other missing values, we stop here.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 
@@ -2077,7 +2066,7 @@ see_missing3_2 <- data_question3_2 %>%
 
 **Conflicts**
 
-We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed.Two countries have missing values, we remove them (MNE and SRB). 
+We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed.Two countries have missing values, we remove them (MNE and SRB).
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 
