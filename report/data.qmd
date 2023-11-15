@@ -962,7 +962,7 @@ list_country_free <- c(unique(datatibble$code))
 D5_0_Human_freedom_index <- datatibble
 ```
 
-Then, we noticed that there were a lot of columns that were not important for us, as we had 141 variables taken into account. So we have decided to keep the ones that refers to the countries informations (such as code, year, ..) and their human freedom scores per category (pf for personnal freedom, ef for economical freedom). After renaming the columns pf_law/security for comprehension purpose, we have made a heatmap that helped us to visualize in our data where were the NA values per country and per variable in percentage, ordered by countries having at least one variable with more than 50% of missing. This gave us a better comprehension of the distribution of the NA values. Finally, we noticed that only 13 countries of our dataset had more than 50% of missing values for one or more variables.
+Then, we noticed that there were a lot of columns that were not important for us, as we had 141 variables taken into account. So we have decided to keep the ones that refers to the countries informations (such as code, year, ..) and their human freedom scores per category (pf for personnal freedom, ef for economical freedom).
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 # erasing useless columns to keep only the general ones. 
@@ -974,6 +974,11 @@ D5_0_Human_freedom_index <- D5_0_Human_freedom_index %>%
     pf_law = names(D5_0_Human_freedom_index)[5],      # Renames the 5th column to "pf_law"
     pf_security = names(D5_0_Human_freedom_index)[6]  # Renames the 6th column to "pf_security"
   )
+```
+
+After renaming the columns pf_law/security for comprehension purpose, we have made a heatmap that helped us to visualize in our data where were the NA values per country and per variable in percentage, ordered by countries having at least one variable with more than 50% of missing. This gave us a better comprehension of the distribution of the NA values. Finally, we noticed that only 13 countries of our dataset had more than 50% of missing values for one or more variables.
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
 
 ##### VISUALIZATION ##### 
 
@@ -1036,7 +1041,7 @@ country_na_count <- na_long %>%
 print(country_na_count)
 ```
 
-When discussing between us, we came to the conclusion that among these 13 countries, a great part of them were not going to be selected because they had a lot of missing values in our main dataset too. Therefore, we have decided to merge this data with the other datasets and finish the cleaning after. 
+When discussing between us, we came to the conclusion that among these 13 countries, a great part of them were not going to be selected because they had a lot of missing values in our main dataset too. Therefore, we have decided to merge this data with the other datasets and finish the cleaning after.
 
 ### 6. Dataset on Disasters
 
