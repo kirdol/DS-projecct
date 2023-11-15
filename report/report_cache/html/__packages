@@ -25,3 +25,7 @@ stargazer
 tinytex
 sf
 rnaturalearth
+cowplot
+knitr
+kableExtra
+DT
