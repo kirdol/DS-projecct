@@ -3,10 +3,6 @@ data <- read.csv(here("scripts", "data", "human-freedom-index-2022.csv"))
 #data in tibble 
 datatibble <- tibble(data)
 
-# Only keep the years after 2000 and before 2022
-datatibble <- datatibble %>%
-  filter(year >= 2000 & year <= 2022)
-
 # Rename the column countries into country to match the other datbases
 names(datatibble)[names(datatibble) == "countries"] <- "country"
 
@@ -35,7 +31,6 @@ list_country_free <- c(unique(datatibble$code))
 
 D5_0_Human_freedom_index <- datatibble
 
-
 # erasing useless columns to keep only the general ones. 
 
 D5_0_Human_freedom_index <- select(D5_0_Human_freedom_index, year, country, region, hf_score, pf_rol, pf_ss, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, pf_score, ef_government, ef_legal, ef_money, ef_trade, ef_regulation, ef_score, code)
@@ -61,13 +56,11 @@ na_long <- na_percentage_by_country %>%
     values_to = "NA_Percentage"
   )
 
-# Assuming your dataframe is called 'na_long'
 overall_na_percentage <- na_long %>%
   group_by(Variable) %>%
   summarize(Avg_NA_Percentage = mean(NA_Percentage, na.rm = TRUE)) %>%
   arrange(desc(Avg_NA_Percentage))
 
-# To view the result
 print(overall_na_percentage)
 
 # Order the countries with between 50 and 100 of NA values 
@@ -95,16 +88,8 @@ heatmap_ordered <- ggplot(na_long, aes(x = reorder(country, -Count_NA_50_100), y
     axis.text.y = element_text(size = 7)
   )
 print(heatmap_ordered)
-# If you want to save this plot
-ggsave("heatmap_ordered.png", heatmap_ordered, width = 12, height = 8)
-
-# Now try to check for which year these missing values take place, in order to just erase one year instead of a country
-
-
 
 ###### END VISUALIZATION ######
-
-
 
 #Checking the number of variables per countries where NA values percentage >=50%
 
@@ -116,17 +101,5 @@ country_na_count <- na_long %>%
 
 print(country_na_count)
 
-
-#D5_0_Human_freedom_index --> name final tibble
-
-# How to select the NA values of a specific variable, arranged.
-# data <- data[is.na(data$column)]
-# arrange(select(data, column)) |> print(n = ...) 
-# length(unique(datatibble$country))
-
-
-#IS THERE A POSSIBLE WAY TO FIND MISSING VALUES PER COUNTRY PER YEAR FOR EACH VARIABLE?
-#HERE DONE PER COUNTRY PER VARIABLE 
-#I DON'T WANT TO ERASE A COUNTRY, JUST THE YEAR OF A COUNTRY
 
 
