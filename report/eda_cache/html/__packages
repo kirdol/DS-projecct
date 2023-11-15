@@ -30,3 +30,7 @@ shiny
 ggpointdensity
 plotly
 shinyjs
+cowplot
+knitr
+kableExtra
+DT
