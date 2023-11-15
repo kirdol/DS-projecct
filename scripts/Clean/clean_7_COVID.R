@@ -14,15 +14,17 @@ COVID$date <- as.integer(year(COVID$date))
 
 COVID1 <- COVID %>%
   group_by(iso_code) %>%
-  summarize(NaCOVID = mean(is.na(new_cases_per_million))) %>%
+  summarize(NaCOVID = round(mean(is.na(new_cases_per_million)),3)) %>%
   filter(NaCOVID != 0)
-print(COVID1, n = 300)
+
+print(table(COVID1$NaCOVID))
 
 COVID2 <- COVID %>%
   group_by(iso_code) %>%
-  summarize(NaCOVID = mean(is.na(new_deaths_per_million))) %>%
+  summarize(NaCOVID = round(mean(is.na(new_deaths_per_million)),3)) %>%
   filter(NaCOVID != 0)
-print(COVID2, n = 300)
+
+print(table(COVID2$NaCOVID))
 
 # We see that for each country, we have either only missing values, either a very low % of 
 # missing ~1% -> we can compute the sum over each year and ignore the missing values without
@@ -30,9 +32,10 @@ print(COVID2, n = 300)
 
 COVID3 <- COVID %>%
   group_by(iso_code) %>%
-  summarize(NaCOVID = mean(is.na(stringency_index))) %>%
+  summarize(NaCOVID = round(mean(is.na(stringency_index)), 3)) %>%
   filter(NaCOVID != 0)
-print(COVID3, n = 300)
+
+print(table(COVID3$NaCOVID))
 
 # Here we have 3 scenarios: 
 # 1) ~20% missings -> ok to ignore missings when computing the mean to have an idea of stringency each year

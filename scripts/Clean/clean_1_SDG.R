@@ -89,7 +89,11 @@ SDG1 <- D1_0_SDG |>
             Na17 = mean(is.na(goal17))) |>
   filter(Na1 != 0 | Na2 != 0 | Na3 != 0| Na4 != 0| Na5 != 0| Na6 != 0| Na7 != 0| Na8 != 0| Na9 != 0| Na10 != 0| Na11 != 0| Na12 != 0| Na13 != 0| Na14 != 0| Na15 != 0| Na16 != 0| Na17 != 0)
 
-print(SDG1, n = 180)
+# Print the counts for each variable
+kable(for (col in names(SDG1)[-1]) {
+  print(paste(col, "count:", sum(SDG1[[col]] != 0)))
+})
+
 
 # We that there are only missings in 3 SDG scores: 1, 10 and 14 and that when there are missings for a country, it is on all years or none. 
 
@@ -101,7 +105,8 @@ SDG2 <- D1_0_SDG |>
   select(contains("goal")) |> 
   summarize(Na1 = mean(is.na(goal1))) |>
   filter(Na1 != 0)
-print(SDG2, n = 180)
+
+print(table(SDG2$Na1))
 
 length(unique(SDG2$code))/country_number
 
@@ -113,7 +118,8 @@ SDG3 <- D1_0_SDG |>
   select(contains("goal")) |> 
   summarize(Na10 = mean(is.na(goal10))) |>
   filter(Na10 != 0)
-print(SDG3, n = 180)
+
+print(table(SDG3$Na10))
 
 length(unique(SDG3$code))/country_number
 
@@ -125,7 +131,8 @@ SDG4 <- D1_0_SDG |>
   select(contains("goal")) |> 
   summarize(Na14 = mean(is.na(goal14))) |>
   filter(Na14 != 0)
-print(SDG4, n = 180)
+
+print(table(SDG4$Na14))
 
 length(unique(SDG4$code))/country_number
 

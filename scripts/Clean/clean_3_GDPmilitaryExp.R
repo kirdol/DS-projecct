@@ -156,9 +156,10 @@ mean(is.na(GDPpercapita$GDPpercapita))
 
 GDPpercapita1 <- GDPpercapita %>%
   group_by(code) %>%
-  summarize(NaGDP = mean(is.na(GDPpercapita))) %>%
+  summarize(NaGDP = round(mean(is.na(GDPpercapita)), 3)) %>%
   filter(NaGDP != 0)
-print(GDPpercapita1, n = 180)
+
+print(GDPpercapita1)
 
 # Only SOM and SSD have a lot of missings and in total 11 countries with missings
 
@@ -217,9 +218,10 @@ for (i in list_code) {
 
 MilitaryExpenditurePercentGDP1 <- MilitaryExpenditurePercentGDP %>%
   group_by(code) %>%
-  summarize(NaMil1 = mean(is.na(MilitaryExpenditurePercentGDP))) %>%
+  summarize(NaMil1 = round(mean(is.na(MilitaryExpenditurePercentGDP)),3)) %>%
   filter(NaMil1 != 0)
-print(MilitaryExpenditurePercentGDP1, n = 180)
+
+print(table(MilitaryExpenditurePercentGDP1$NaMil1))
 
 # 100% missing: a lot! 12 countries
 
@@ -278,9 +280,10 @@ for (i in list_code) {
 
 MiliratyExpenditurePercentGovExp1 <- MiliratyExpenditurePercentGovExp %>%
   group_by(code) %>%
-  summarize(NaMil2 = mean(is.na(MiliratyExpenditurePercentGovExp))) %>%
+  summarize(NaMil2 = round(mean(is.na(MiliratyExpenditurePercentGovExp)),3)) %>%
   filter(NaMil2 != 0)
-print(MiliratyExpenditurePercentGovExp1, n = 180)
+
+print(table(MiliratyExpenditurePercentGovExp1$NaMil2))
 
 # 100% missing: a lot ! 17 countries
 
