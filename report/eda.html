@@ -84,7 +84,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="general-exploration" class="level2">
 <h2 class="anchored" data-anchor-id="general-exploration">General exploration</h2>
 <p>We display the distribution of the different SDG achievement scores, using boxplots to have an overview of the median, the range with most of the observations and the outliers.</p>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-2_08faaef3af3e7c4eecac2eef4d1ab86a">
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-2_1c3b6f48e3114c182bdedb163338fe7d">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"data"</span>, <span class="st">"all_Merge.csv"</span>))</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>), <span class="at">oma =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">0</span>))</span>
@@ -118,8 +118,230 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="eda_files/figure-html/unnamed-chunk-2-3.png" style="width:100.0%;height:100.0%"></p>
 </div>
 </div>
+<p>We see different schemes among the different goals. Indeed some are quite homogeneous with a small spread of values (e.g.&nbsp;overall score, goals 2 and 8) while others have a large spread of values (e.g.&nbsp;goals 1 and 10). Goals 1, 3, 4, 7, 9, 10 and 13 have values across all possible percentages. Goals 2, 5, 8, 13 and 17 have extreme values situated outside the 95% confidence interval. It is interesting to see that goal 8 (decent work and economic growth) is the one with smaller spread of values, whereas goal 1 (no poverty) have the higher distance between the first and the third quartile. Goal 2 (no hunger) has a tight spread of values, but with the greater amount of outliers in the smaller values, meaning hunger is similar across most countries, but when it differs it is in very bad manner.</p>
+<p>We know look at the variables in a summary table to have a more precise view of the numbers.</p>
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-3_7f7ed3b814a1d4284efc03e6a4e36beb">
+<div class="cell-output-display">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">X</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">code</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">year</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">country</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">continent</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">region</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">overallscore</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal1</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal2</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal3</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal4</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal5</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal6</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal8</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal9</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal10</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal11</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal12</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal13</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal15</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal16</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">goal17</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Min. : 1</td>
+<td style="text-align: left;">Length:3565</td>
+<td style="text-align: left;">Min. :2000</td>
+<td style="text-align: left;">Length:3565</td>
+<td style="text-align: left;">Length:3565</td>
+<td style="text-align: left;">Length:3565</td>
+<td style="text-align: left;">Min. :37.4</td>
+<td style="text-align: left;">Min. : 0.0</td>
+<td style="text-align: left;">Min. :16.50</td>
+<td style="text-align: left;">Min. : 5.9</td>
+<td style="text-align: left;">Min. : 0.00</td>
+<td style="text-align: left;">Min. : 3.50</td>
+<td style="text-align: left;">Min. :23.30</td>
+<td style="text-align: left;">Min. : 0.10</td>
+<td style="text-align: left;">Min. :40.00</td>
+<td style="text-align: left;">Min. : 0.30</td>
+<td style="text-align: left;">Min. : 0.00</td>
+<td style="text-align: left;">Min. :20.30</td>
+<td style="text-align: left;">Min. :32.90</td>
+<td style="text-align: left;">Min. : 0.0</td>
+<td style="text-align: left;">Min. :26.00</td>
+<td style="text-align: left;">Min. :27.90</td>
+<td style="text-align: left;">Min. :15.10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">1st Qu.: 892</td>
+<td style="text-align: left;">Class :character</td>
+<td style="text-align: left;">1st Qu.:2005</td>
+<td style="text-align: left;">Class :character</td>
+<td style="text-align: left;">Class :character</td>
+<td style="text-align: left;">Class :character</td>
+<td style="text-align: left;">1st Qu.:55.0</td>
+<td style="text-align: left;">1st Qu.: 44.5</td>
+<td style="text-align: left;">1st Qu.:52.60</td>
+<td style="text-align: left;">1st Qu.:44.3</td>
+<td style="text-align: left;">1st Qu.: 55.60</td>
+<td style="text-align: left;">1st Qu.:43.20</td>
+<td style="text-align: left;">1st Qu.:53.00</td>
+<td style="text-align: left;">1st Qu.:41.50</td>
+<td style="text-align: left;">1st Qu.:64.00</td>
+<td style="text-align: left;">1st Qu.:15.50</td>
+<td style="text-align: left;">1st Qu.: 35.20</td>
+<td style="text-align: left;">1st Qu.:55.80</td>
+<td style="text-align: left;">1st Qu.:67.90</td>
+<td style="text-align: left;">1st Qu.:72.9</td>
+<td style="text-align: left;">1st Qu.:55.00</td>
+<td style="text-align: left;">1st Qu.:51.50</td>
+<td style="text-align: left;">1st Qu.:46.10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Median :1783</td>
+<td style="text-align: left;">Mode :character</td>
+<td style="text-align: left;">Median :2011</td>
+<td style="text-align: left;">Mode :character</td>
+<td style="text-align: left;">Mode :character</td>
+<td style="text-align: left;">Mode :character</td>
+<td style="text-align: left;">Median :65.5</td>
+<td style="text-align: left;">Median : 87.4</td>
+<td style="text-align: left;">Median :58.90</td>
+<td style="text-align: left;">Median :70.9</td>
+<td style="text-align: left;">Median : 80.60</td>
+<td style="text-align: left;">Median :58.00</td>
+<td style="text-align: left;">Median :65.30</td>
+<td style="text-align: left;">Median :65.50</td>
+<td style="text-align: left;">Median :70.20</td>
+<td style="text-align: left;">Median :29.40</td>
+<td style="text-align: left;">Median : 62.20</td>
+<td style="text-align: left;">Median :75.30</td>
+<td style="text-align: left;">Median :84.60</td>
+<td style="text-align: left;">Median :90.8</td>
+<td style="text-align: left;">Median :65.10</td>
+<td style="text-align: left;">Median :61.40</td>
+<td style="text-align: left;">Median :55.40</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Mean :1783</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Mean :2011</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Mean :64.0</td>
+<td style="text-align: left;">Mean : 71.7</td>
+<td style="text-align: left;">Mean :58.03</td>
+<td style="text-align: left;">Mean :64.1</td>
+<td style="text-align: left;">Mean : 71.97</td>
+<td style="text-align: left;">Mean :55.98</td>
+<td style="text-align: left;">Mean :64.97</td>
+<td style="text-align: left;">Mean :57.86</td>
+<td style="text-align: left;">Mean :70.04</td>
+<td style="text-align: left;">Mean :37.51</td>
+<td style="text-align: left;">Mean : 58.29</td>
+<td style="text-align: left;">Mean :70.32</td>
+<td style="text-align: left;">Mean :79.33</td>
+<td style="text-align: left;">Mean :82.1</td>
+<td style="text-align: left;">Mean :64.96</td>
+<td style="text-align: left;">Mean :62.63</td>
+<td style="text-align: left;">Mean :55.69</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">3rd Qu.:2674</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">3rd Qu.:2017</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">3rd Qu.:72.4</td>
+<td style="text-align: left;">3rd Qu.: 98.8</td>
+<td style="text-align: left;">3rd Qu.:65.30</td>
+<td style="text-align: left;">3rd Qu.:81.4</td>
+<td style="text-align: left;">3rd Qu.: 94.50</td>
+<td style="text-align: left;">3rd Qu.:68.90</td>
+<td style="text-align: left;">3rd Qu.:75.20</td>
+<td style="text-align: left;">3rd Qu.:72.60</td>
+<td style="text-align: left;">3rd Qu.:76.60</td>
+<td style="text-align: left;">3rd Qu.:53.90</td>
+<td style="text-align: left;">3rd Qu.: 81.60</td>
+<td style="text-align: left;">3rd Qu.:85.10</td>
+<td style="text-align: left;">3rd Qu.:94.10</td>
+<td style="text-align: left;">3rd Qu.:97.2</td>
+<td style="text-align: left;">3rd Qu.:74.30</td>
+<td style="text-align: left;">3rd Qu.:74.60</td>
+<td style="text-align: left;">3rd Qu.:65.10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Max. :3565</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Max. :2022</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">Max. :86.8</td>
+<td style="text-align: left;">Max. :100.0</td>
+<td style="text-align: left;">Max. :83.40</td>
+<td style="text-align: left;">Max. :97.3</td>
+<td style="text-align: left;">Max. :100.00</td>
+<td style="text-align: left;">Max. :94.00</td>
+<td style="text-align: left;">Max. :95.10</td>
+<td style="text-align: left;">Max. :99.60</td>
+<td style="text-align: left;">Max. :88.70</td>
+<td style="text-align: left;">Max. :99.20</td>
+<td style="text-align: left;">Max. :100.00</td>
+<td style="text-align: left;">Max. :99.10</td>
+<td style="text-align: left;">Max. :99.00</td>
+<td style="text-align: left;">Max. :99.9</td>
+<td style="text-align: left;">Max. :97.90</td>
+<td style="text-align: left;">Max. :96.00</td>
+<td style="text-align: left;">Max. :96.80</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA's :276</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA's :276</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
 <p>To have an overview of the relationship between our independent variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.</p>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-3_468010687852deae74effd48ee676963">
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-4_86b5c06946b19802cc107588fe8f021a">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data_question1 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"data"</span>, <span class="st">"data_question1.csv"</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>data_question2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"data"</span>, <span class="st">"data_question24.csv"</span>))</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>data_question3_2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"data"</span>, <span class="st">"data_question3_2.csv"</span>))</span>
@@ -146,75 +368,92 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Independent variables </span></span>
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question1[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"unemployment.rate"</span>, <span class="st">"GDPpercapita"</span>, <span class="st">"MilitaryExpenditurePercentGDP"</span>, <span class="st">"internet_usage"</span>)], <span class="at">upper.panel=</span>panel.cor, <span class="at">diag.panel=</span>panel.hist, <span class="at">main=</span><span class="st">"Correlation table and distribution of various variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-3-1.png" style="width:100.0%;height:100.0%"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-4-1.png" style="width:100.0%;height:100.0%"></p>
 </div>
+</div>
+<p>The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score.</p>
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-5_c7e15d9634e4f83a14f1da23fa7f5e89">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question1[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"pf_law"</span>, <span class="st">"pf_security"</span>, <span class="st">"pf_movement"</span>, <span class="st">"pf_religion"</span>, <span class="st">"pf_assembly"</span>, <span class="st">"pf_expression"</span>, <span class="st">"pf_identity"</span>)], <span class="at">upper.panel=</span>panel.cor, <span class="at">diag.panel=</span>panel.hist, <span class="at">main=</span><span class="st">"Correlation table and distribution of personal freedom variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-3-2.png" style="width:100.0%;height:100.0%"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
+</div>
+<p>The overall SDG achievement score is highly correlated with “personal freedom: law” (p=.69) and “personal freedom: identity” (p=.62). The other dimensions of personal freedom do not seem to have important influence. Regarding the distribution of the personal freedom variables, we notice that except for law, all have right-skewed distributions meaning that most of the countries have high scores.</p>
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-6_5c5fd95c8ae58b87d8d643971bcafb37">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question1[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"ef_government"</span>, <span class="st">"ef_legal"</span>, <span class="st">"ef_money"</span>, <span class="st">"ef_trade"</span>, <span class="st">"ef_regulation"</span>)], <span class="at">upper.panel=</span>panel.cor, <span class="at">diag.panel=</span>panel.hist, <span class="at">main=</span><span class="st">"Correlation table and distribution of economic freedom variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-3-3.png" style="width:100.0%;height:100.0%"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
+</div>
+<p>The overall SDG achievement score is highly correlated with “economical freedom: legal” (p=.77), “economical trade: legal” (p=.67) and “economical freedom: money” (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom.</p>
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-7_3c8b88ee271a0e06e913cde5799e5874">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question3_2[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"cases_per_million"</span>, <span class="st">"deaths_per_million"</span>, <span class="st">"stringency"</span>)], <span class="at">upper.panel=</span>panel.cor, <span class="at">diag.panel=</span>panel.hist, <span class="at">main=</span><span class="st">"Correlation table and distribution of COVID variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-3-4.png" style="width:100.0%;height:100.0%"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
+</div>
+<p>The different variables used to materialize the impact of COVID19 do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that COVID19 had a specific influence on some SDGs, for instance “good health and well-being” or “decent work and economic growth”.</p>
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-8_693b30327e61c251ce375e4647d402a5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question3_3[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"ongoing"</span>, <span class="st">"sum_deaths"</span>, <span class="st">"pop_affected"</span>, <span class="st">"area_affected"</span>, <span class="st">"maxintensity"</span>)], <span class="at">upper.panel=</span>panel.cor, <span class="at">diag.panel=</span>panel.hist, <span class="at">main=</span><span class="st">"Correlation table and distribution of conflicts variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-3-5.png" style="width:100.0%;height:100.0%"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
-</section>
-<section id="focus-on-time-evolution" class="level2">
-<h2 class="anchored" data-anchor-id="focus-on-time-evolution">Focus on time evolution</h2>
+<p>The different variables used to materialize the impact of conflicts do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that conflicts have a specific influence on some SDGs.</p>
 </section>
 <section id="focus-on-the-evolution-of-sdg-scores-over-time" class="level2">
 <h2 class="anchored" data-anchor-id="focus-on-the-evolution-of-sdg-scores-over-time"><strong>Focus on the evolution of SDG scores over time</strong></h2>
 <p>First, we look at the evolution of SDG achievement overall score over time for the whole world, by continent and by region.</p>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-4_51b1801ccff8707af12abfa334bef5ae">
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-9_ebd7231d1474564ccc20efbacd2cbed8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="ot">&lt;-</span> data_question2 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_overall_score_by_year=</span><span class="fu">mean</span>(overallscore))</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">&lt;-</span> data_question2 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year, continent) <span class="sc">%&gt;%</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_overall_score_by_year=</span><span class="fu">mean</span>(overallscore))</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>data3 <span class="ot">&lt;-</span> data_question2 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year, region) <span class="sc">%&gt;%</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_overall_score_by_year=</span><span class="fu">mean</span>(overallscore))</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data1) <span class="sc">+</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>mean_overall_score_by_year), <span class="at">color=</span><span class="st">"blue"</span>, <span class="at">lwd=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))  <span class="sc">+</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Evolution of the mean overall SDG achievement score across the world"</span>,</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean Overall SDG Score"</span>,</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>       )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data1) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>mean_overall_score_by_year), <span class="at">color=</span><span class="st">"blue"</span>, <span class="at">lwd=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))  <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Evolution of the mean overall SDG achievement score across the world"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean Overall SDG Score"</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>       )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data2) <span class="sc">+</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>mean_overall_score_by_year, <span class="at">color=</span>continent), <span class="at">lwd=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Evolution of the mean overall SDG achievement score by continent"</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean Overall SDG Score"</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>       )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The general évolution of SDG scores arround the world is increasing over the years.</p>
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-10_0467d6d15ed7a5002c0e75fed32818a8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">&lt;-</span> data_question2 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year, continent) <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_overall_score_by_year=</span><span class="fu">mean</span>(overallscore))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data2) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>mean_overall_score_by_year, <span class="at">color=</span>continent), <span class="at">lwd=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Evolution of the mean overall SDG achievement score by continent"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean Overall SDG Score"</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>       )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data3) <span class="sc">+</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>mean_overall_score_by_year, <span class="at">color=</span>region), <span class="at">lwd=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Evolution of the mean overall SDG achievement score by region"</span>,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean Overall SDG Score"</span>,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>       )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Looking at the continents, we see that Europe is above the others, while Africa is below, but in general, all have increasing overall scores.</p>
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-11_83d8f4aa37ea5b207e4c5e0c214a4de8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>data3 <span class="ot">&lt;-</span> data_question2 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year, region) <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_overall_score_by_year=</span><span class="fu">mean</span>(overallscore))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data3) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>mean_overall_score_by_year, <span class="at">color=</span>region), <span class="at">lwd=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Evolution of the mean overall SDG achievement score by region"</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean Overall SDG Score"</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>       )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid" width="672"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>This view that groups the countries by region gives us precision about the previous inforamtion. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below.</p>
 <p>Second, we look at the evolution of SDG achievement scores(16) over time for the whole world, by continent and by region.</p>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-5_a0d6928ef6ba43b56a2a6c516bcbab35">
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-12_3e576be76ed572a53630bdd23466b265">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data4 <span class="ot">&lt;-</span> data_question2 <span class="sc">%&gt;%</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"goal"</span>), mean, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
@@ -238,10 +477,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-5-1.png" style="width:100.0%;height:100.0%"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-12-1.png" style="width:100.0%;height:100.0%"></p>
 </div>
 </div>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-6_37d021e6d934deb0e948a2e40b137491">
+<p>Here, by looking at the SDGs individually, we notice that all SDGs except from goal 9 (industry innovation and infrastructure) are close to one another in terms of level and growth. Goal 9 starts far below the others in 2000 and growths faster until almost exceeding 50%.</p>
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-13_98d5339300a90f92352dc91a638d9cd6">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> data4) <span class="sc">+</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> mean_value), <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> color_palette) <span class="sc">+</span></span>
@@ -252,10 +492,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>       ) <span class="sc">+</span></span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> goal, <span class="at">nrow =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-6-1.png" style="width:100.0%;height:100.0%"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-13-1.png" style="width:100.0%;height:100.0%"></p>
 </div>
 </div>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-7_e2fb00ece0cdd4c54c77611bf825212d">
+<p>In contrast to the aspect discussed in the precedent graph, this graph shows us the same information in a different way and it pops out that some goals did not increase their scores much in the last two decades, for example goal 13 (climate action) and goal 12 (responsible consumption and production).</p>
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-14_992fb16e708779db1e79533b382d974c">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data5 <span class="ot">&lt;-</span> data_question2 <span class="sc">%&gt;%</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, continent) <span class="sc">%&gt;%</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">"goal"</span>), mean, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
@@ -274,51 +515,53 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> goal, <span class="at">nrow =</span> <span class="dv">4</span>)<span class="sc">+</span></span>
 <span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-7-1.png" style="width:100.0%;height:100.0%"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-14-1.png" style="width:100.0%;height:100.0%"></p>
 </div>
 </div>
+<p>Now, comparing the SDG scores by continent, we observe that most of the time, Europe is at the top of the graph and Africa at the bottom, exept for goals 12 and 13 that are linked to ecology. Some other information stand out:</p>
+<ul>
+<li><p>Americas are far behind the other parts of the world regarding goal 10: reduced inequalities.</p></li>
+<li><p>Africa is far behind the other continents (even if becoming better) for goals 1, 3, 4 and 7.</p></li>
+<li><p>Goal 9 (industry, innovation and infrastructure) show exponential growth for almost all continents.</p></li>
+</ul>
 <p>Third we create an interactive map of the world to be able to navidagte from year 2000 to 2022, seeing the level of achievement of the SDGs (overall score) for each country. To open it in your browser, use this html file: . Here is only a non-interactive world map of the overall SDGs achievement scores, not taking into account the evolution over the years.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearth)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Load world map data</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>world <span class="ot">&lt;-</span> <span class="fu">ne_countries</span>(<span class="at">scale =</span> <span class="st">"medium"</span>, <span class="at">returnclass =</span> <span class="st">"sf"</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge data with the world map data</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>data0 <span class="ot">&lt;-</span> <span class="fu">merge</span>(world, data_question2, <span class="at">by.x =</span> <span class="st">"iso_a3"</span>, <span class="at">by.y =</span> <span class="st">"code"</span>, <span class="at">all.x =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>data0 <span class="sc">%&gt;%</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="st">"+proj=robin"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">color =</span> <span class="st">"lightgrey"</span>) <span class="sc">+</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> overallscore), <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"darkred"</span>, <span class="st">"orange"</span>, <span class="st">"yellow"</span>, <span class="st">"darkgreen"</span>),</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> scales<span class="sc">::</span><span class="fu">rescale</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="dv">1</span>)),</span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Overall Score"</span>,</span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.value =</span> <span class="cn">NA</span></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mean overall SDG achievement score by country"</span>)<span class="sc">+</span></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">datum =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load world map data</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>world <span class="ot">&lt;-</span> <span class="fu">ne_countries</span>(<span class="at">scale =</span> <span class="st">"medium"</span>, <span class="at">returnclass =</span> <span class="st">"sf"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge data with the world map data</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>data0 <span class="ot">&lt;-</span> <span class="fu">merge</span>(world, data_question2, <span class="at">by.x =</span> <span class="st">"iso_a3"</span>, <span class="at">by.y =</span> <span class="st">"code"</span>, <span class="at">all.x =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>data0 <span class="sc">%&gt;%</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="st">"+proj=robin"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">color =</span> <span class="st">"lightgrey"</span>) <span class="sc">+</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> overallscore), <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"darkred"</span>, <span class="st">"orange"</span>, <span class="st">"yellow"</span>, <span class="st">"darkgreen"</span>),</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> scales<span class="sc">::</span><span class="fu">rescale</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="dv">1</span>)),</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Overall Score"</span>,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.value =</span> <span class="cn">NA</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mean overall SDG achievement score by country"</span>)<span class="sc">+</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">datum =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-8-1.png" style="width:100.0%;height:100.0%"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-15-1.png" style="width:100.0%;height:100.0%"></p>
 </div>
 </div>
-</section>
-<section id="focus-on-factors" class="level2">
-<h2 class="anchored" data-anchor-id="focus-on-factors">Focus on factors</h2>
 </section>
 <section id="focus-on-relationship-between-sdgs" class="level2">
 <h2 class="anchored" data-anchor-id="focus-on-relationship-between-sdgs">Focus on relationship between SDGs</h2>
 <p><strong>How are the different SDGs linked? (We want to see if some SDGs are linked in the fact that a high score on one implies a high score on the other, and thus if we can make groups of SDGs that are comparable in that way).</strong></p>
 <p>Let’s explore how the different SDG are correlated together by creating a heatmap of the correlation between our variables. We also added a small script to check whether the correlations are significantly different from 0. First, let’s select the SDGs scores.</p>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-9_1968018cc87207705ba17ba5f6a8840b">
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-16_fda2d8c91cde76e4e96d0250a3ce081e">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sdg_scores <span class="ot">&lt;-</span> Q4[, <span class="fu">c</span>(<span class="st">'goal1'</span>, <span class="st">'goal2'</span>, <span class="st">'goal3'</span>, <span class="st">'goal4'</span>, <span class="st">'goal5'</span>, <span class="st">'goal6'</span>,</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                     <span class="st">'goal7'</span>, <span class="st">'goal8'</span>, <span class="st">'goal9'</span>, <span class="st">'goal10'</span>, <span class="st">'goal11'</span>, <span class="st">'goal12'</span>,</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                     <span class="st">'goal13'</span>, <span class="st">'goal15'</span>, <span class="st">'goal16'</span>, <span class="st">'goal17'</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We then, initialize the matrices and calculate the correlation, and p-values of each combination of SDGs scores</p>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-10_f65a8d87a1a73382242db011c83e02cc">
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-17_b6c9ad258311c9d06f240cfe4ee24bd3">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cor_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="fu">ncol</span>(sdg_scores), <span class="at">ncol =</span> <span class="fu">ncol</span>(sdg_scores))</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>p_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="fu">ncol</span>(sdg_scores), <span class="at">ncol =</span> <span class="fu">ncol</span>(sdg_scores))</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(cor_matrix) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(sdg_scores)</span>
@@ -334,7 +577,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    p_matrix[i, j] <span class="ot">&lt;-</span> test_result<span class="sc">$</span>p.value}}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We then reshape our data to be able to use the package ggplot2 to create our heatmap.</p>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-11_6b898bd112d7eb814be5053e82760283">
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-18_8758efadd01381ce66206acbda336b4a">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>melted_cor_matrix <span class="ot">&lt;-</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">melt</span>(cor_matrix)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>melted_p_matrix <span class="ot">&lt;-</span></span>
@@ -358,15 +601,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'SDG Goals'</span>, <span class="at">y =</span> <span class="st">'SDG Goals'</span>,</span>
 <span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">'Correlation Matrix with Significance Indicator'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Note that as said previously, we assessed the correlations to ascertain if they substantially deviated from zero, setting the significance level at an alpha of 5%. To aid in visualization, we marked any correlations that did not meet this level of significance with a yellow highlight in our graphical representation. The absence of yellow markings on our plot suggests that all Sustainable Development Goal (SDG) scores demonstrate a statistically significant correlation.</p>
 <p>We can have a look at the shape of the corelation between the SDGs with the plot function.</p>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-12_8a12ef3a191eb77a2576dcb8377c220b">
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-19_bf8e37397f4afe93acb7f622282311cc">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sdg_scores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <ul>
