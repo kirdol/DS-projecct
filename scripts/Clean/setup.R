@@ -15,7 +15,6 @@ packages <- c(
   "tidyverse", # for wrangling
   "ggrepel", "gghighlight", "patchwork", "maps", "scales", # for plotting
   "stringr",
-  "dplyr",
   "tidyr",
   "lubridate",
   "gridExtra",
@@ -32,6 +31,7 @@ packages <- c(
   "tinytex",
   "cowplot",
   "sf",
+  "dplyr",
   "rnaturalearth",
   "knitr",
   "kableExtra",

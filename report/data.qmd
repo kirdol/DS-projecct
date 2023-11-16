@@ -384,7 +384,7 @@ D1_0_SDG_country_list <- D1_0_SDG_country_list %>%
 D1_0_SDG <- D1_0_SDG |> complete(code, year)
 ```
 
-**Here is the first few line of the cleaned dataset on SDG achievement scores:**
+**Here are the first few lines of the cleaned dataset on SDG achievement scores:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
 datatable(D1_0_SDG, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
@@ -417,7 +417,7 @@ D2_1_Unemployment_rate <- read.csv(here("scripts","data","UnemploymentRate.csv")
   distinct()
 ```
 
-**Here is the first few line of the cleaned dataset on Unemployment rate:**
+**Here are the first few lines of the cleaned dataset on Unemployment rate:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
 datatable(D2_1_Unemployment_rate, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
@@ -833,24 +833,24 @@ D3_2_Military_Expenditure_Percent_GDP <- MilitaryExpenditurePercentGDP
 D3_3_Miliraty_Expenditure_Percent_Gov_Exp <- MiliratyExpenditurePercentGovExp
 ```
 
-**Here is the first few line of the cleaned dataset of GDP per capita:**
+**Here are the first few lines of the cleaned dataset of GDP per capita:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
 datatable(D3_1_GDP_per_capita, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 
 ```
 
-**Here is the first few line of the cleaned dataset of military expenditures in percentage of GDP:**
-
-```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
-datatable(D3_3_Miliraty_Expenditure_Percent_Gov_Exp, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
-
-```
-
-**Here is the first few line of the cleaned dataset of military expenditures in percentage of government expenditures:**
+**Here are the first few lines of the cleaned dataset of military expenditures in percentage of GDP:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
 datatable(D3_2_Military_Expenditure_Percent_GDP, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+
+```
+
+**Here are the first few lines of the cleaned dataset of military expenditures in percentage of government expenditures:**
+
+```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
+datatable(D3_3_Miliraty_Expenditure_Percent_Gov_Exp, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 
 ```
 
@@ -871,10 +871,10 @@ D4_0_Internet_usage <- read.csv(here("scripts", "data", "InternetUsage.csv")) %>
   filter(code %in% list_country)
 ```
 
-**Here is the first few line of the cleaned dataset of internet usage:**
+**Here are the first few lines of the cleaned dataset of internet usage:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
-datatable(D2_1_Unemployment_rate, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+datatable(D4_0_Internet_usage, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
 
 ### 5. Dataset on human freedom index
@@ -1204,11 +1204,10 @@ D7_0_COVID <- COVID
 
 ```
 
-**Here is the first few line of the cleaned dataset on COVID19:**
+**Here are the first few lines of the cleaned dataset on COVID19:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
 datatable(D7_0_COVID, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
-
 ```
 
 ### 8. Dataset on Conflicts
@@ -1375,7 +1374,7 @@ all_Merge <- all_Merge %>%
 write.csv(all_Merge, file = here("scripts","data","all_Merge.csv"))
 ```
 
-**Here is the first few line of the final dataset:**
+**Here are the first few lines of the final dataset:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE, cache = TRUE}
 datatable(all_Merge, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)

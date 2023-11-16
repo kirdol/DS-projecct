@@ -15,10 +15,10 @@ par(mfrow=c(1,1))
 ### Corr + histograms
 
 data_question1 <- read.csv(here("scripts", "data", "data_question1.csv"))
+data_question24 <- read.csv(here("scripts", "data", "data_question24.csv"))
+data_question3_1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
 data_question3_2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
 data_question3_3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
-
-
 
 panel.hist <- function(x, ...){ 
   usr <- par("usr"); on.exit(par(usr)) 
@@ -45,4 +45,10 @@ pairs(data_question1[,c("overallscore", "ef_government", "ef_legal", "ef_money",
 
 pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_million", "stringency")], upper.panel=panel.cor, diag.panel=panel.hist)
 pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")], upper.panel=panel.cor, diag.panel=panel.hist)
+
+### Summary tables
+
+table1 <- summary(data_question24)
+kable(table1)
+
 
