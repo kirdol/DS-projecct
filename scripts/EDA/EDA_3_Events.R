@@ -134,7 +134,188 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
 
 
 
-#Faire des analyses avec les variables 
+#_____________________________________________________________________
+
+# Diviser la fenêtre graphique en deux colonnes
+par(mfrow = c(1, 2))
+
+# Tracer la première variable
+plot(Q3.1$region, Q3.1$goal1, type = "p", col = "blue", xlab = "region", ylab = "Goal1", main = "Goal1 Over Years")
+
+# Tracer la deuxième variable sur un deuxième axe
+par(new = TRUE)
+plot(Q3.1$region, Q3.1$total_death, type = "b", col = "red", xlab = "", ylab = "", main = "Total Death Over Years", axes = FALSE)
+axis(4, col = "red", col.axis = "red")
+mtext("Total Deaths", side = 4, line = 3)
+
+# Remettre les paramètres graphiques par défaut
+par(mfrow = c(1, 1), new = FALSE)
+
+
+#___________________________________________________
+
+#2. Data exploration
+#Correlation_matrix <- cor(Q3.1[, c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goa10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_deaths")])
+
+
+# Convert 'year' column to date format if it's not already in date format
+Q3.1$year <- as.Date(as.character(Q3.1$year), format = "%Y")
+Q3.2$year <- as.Date(as.character(Q3.2$year), format = "%Y")
+Q3.3$year <- as.Date(as.character(Q3.3$year), format = "%Y")
+
+# Explore descriptive statistics
+summary(Q3.1)  # Display summary statistics for all variables
+
+# Time-series analysis of SDG scores by region
+ggplot(data = Q3.1, aes(x = year, y = overallscore)) +
+  geom_line() +
+  labs(title = "Trend of SDG Overall scores Over Time", x = "Year", y = "Overall SDG Score")+
+  facet_wrap(~ region, nrow = 2)  # Modify nrow as per your preference for rows in facet grid
+
+
+# Time-series analysis of COVID-19 cases per million by region
+# Filter COVID-19 data for dates after 2020
+covid_filtered <- Q3.2[Q3.2$year >= as.Date("2020-01-01"), ]
+
+ggplot(data = covid_filtered, aes(x = year, y = cases_per_million)) +
+  geom_line() +
+  labs(title = "Trend of COVID-19 Cases per Million Over Time", x = "Year", y = "Cases per Million")+
+  facet_wrap(~ region, nrow = 2)  # Modify nrow as per your preference for rows in facet grid
+
+
+# Time-series analysis of climatic disasters (e.g., total affected)
+ggplot(data = Q3.1, aes(x = year, y = total_affected)) +
+  geom_line() +
+  labs(title = "Trend of Total Affected from Climatic Disasters Over Time", x = "Year", y = "Total Affected")+
+  facet_wrap(~ region, nrow = 2)  # Modify nrow as per your preference for rows in facet grid
+
+
+# Time-series analysis of Conflicts
+# Filter conflict data for the years between 2000 and 2016
+conflicts_filtered <- Q3.3[Q3.3$year >= as.Date("2000-01-01") & Q3.3$year <= as.Date("2016-12-31"), ]
+
+ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected)) +
+  geom_line() +
+  labs(title = "Trend of Population affcted by Conflicts Over Time", x = "Year", y = "pop_affected")+
+  facet_wrap(~ region, nrow = 2)  # Modify nrow as per your preference for rows in facet grid
+
+
+
+#___________________________________________________________________________________________
+#3. correlation Analysis per country -> irrelevant, I ll try to do it by region
+
+# Extract relevant columns (goals and disaster variables) from Q3.1
+disaster_data <- Q3.1[, c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_deaths", "no_injured", "no_affected", "no_homeless", "total_affected", "total_damages")]
+
+# Compute correlation matrix
+correlation_disaster <- cor(disaster_data)
+
+# Visualize correlation matrix (optional)
+corrplot::corrplot(correlation_disaster, method = "color")
+
+
+
+
+# Extract relevant columns (goals and COVID-19 variables) from Q3.2
+covid_data <- Q3.2[, c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "cases_per_million", "deaths_per_million", "stringency")]
+
+# Compute correlation matrix
+correlation_covid <- cor(covid_data)
+
+# Visualize correlation matrix (optional)
+corrplot::corrplot(correlation_covid, method = "color")
+
+
+
+
+# Extract relevant columns (goals and conflict variables) from Q3.3
+conflict_data <- Q3.3[, c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected", "area_affected", "max_intensity")]
+
+# Compute correlation matrix
+correlation_conflict <- cor(conflict_data)
+
+# Visualize correlation matrix (optional)
+corrplot::corrplot(correlation_conflict, method = "color")
+
+
+
+
+### 3. correlation Analysis per Region
+
+# Get the names of the regions from the disaster dataset
+regions <- unique(Q3.1$region)
+
+# Visualize correlation matrix for each region with region names
+corrplot::corrplot(
+  correlation_disaster_by_region,
+  method = "color",
+  title = "Correlation Matrix for Disaster Dataset by Region",
+  col.names = regions,
+  row.names = regions
+)
+
+# Group data by region and calculate mean for each variable
+disaster_data_by_region <- Q3.1 %>%
+  group_by(region) %>%
+  summarize(across(starts_with("goal"), mean),  # Compute mean for goal variables
+            across(total_deaths:total_damages, sum))  # Sum for disaster-related variables
+
+# Compute correlation matrix for each region
+correlation_disaster_by_region <- cor(disaster_data_by_region[, -1])
+
+# Visualize correlation matrix for each region (optional)
+corrplot::corrplot(correlation_disaster_by_region, method = "color")
+
+
+
+# Group data by region
+grouped_data_by_region <- Q3.1 %>%
+  group_by(region)
+
+# Compute correlations between SDG goals and disaster-related variables for each region
+correlations_by_region <- grouped_data_by_region %>%
+  summarize(across(starts_with("goal"), ~cor(.x, total_affected)),  # Correlations with total_affected variable
+            across(starts_with("goal"), ~cor(.x, total_deaths)),    # Correlations with total_deaths variable
+            .groups = "drop")
+
+
+
+
+
+grouped_data_by_region <- Q3.1 %>%
+  group_by(region)
+
+# Specify the list of disaster-related variables you want to correlate with SDG goals
+disaster_variables <- c("total_affected", "total_deaths", "no_injured", "total_damages", "no_homeless")  # Update with your desired variables
+
+# Compute correlations between SDG goals and multiple disaster-related variables for each region
+correlations_by_region <- grouped_data_by_region %>%
+  summarize(across(starts_with("goal"), ~cor(.x, across(all_of(disaster_variables)))), .groups = "drop")
+
+# View correlations by region
+print(correlations_by_region)
+
+
+
+
+
+
+
+# Your existing code
+grouped_data_by_region <- Q3.1 %>%
+  group_by(region)
+
+disaster_variables <- c("total_affected", "total_deaths", "no_injured", "total_damages", "no_homeless")
+
+correlations_by_region <- grouped_data_by_region %>%
+  summarize(across(starts_with("goal"), ~cor(.x, across(all_of(disaster_variables)))), .groups = "drop")
+
+# Save correlations to a CSV file
+write.csv(correlations_by_region, "correlations_by_region.csv", row.names = FALSE)
+
+
+
+
 
 
 
@@ -232,7 +413,7 @@ ggplot(data = plot_data, aes(Var1, Var2, fill = value)) +
 
 
 
-
+#____________________________________________________________________________________
 ##Conflicts
 Q3.3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
 str(Q3.3)
