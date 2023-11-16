@@ -35,24 +35,30 @@ print(Q3.1)
 summary(Q3.1)  # Display summary statistics for all variables
 
 
-# Time-series analysis of SDG scores by region
-ggplot(data = Q3.1, aes(x = year, y = overallscore)) +
-  geom_line() +
-  labs(title = "Trend of SDG Overall scores Over Time", x = "Year", y = "Overall SDG Score")+
-  facet_wrap(~ region, nrow = 2)  # Modify nrow as per your preference for rows in facet grid
-
-
 # Time-series analysis of COVID-19 cases per million by region
-# Filter COVID-19 data for dates after 2020
-covid_filtered <- Q3.2[Q3.2$year >= as.Date("2020-01-01"), ]
+# Filter COVID-19 data for dates after 2019
+covid_filtered <- Q3.2[Q3.2$year >= as.Date("2019-01-01"), ]
 
 ggplot(data = covid_filtered, aes(x = year, y = cases_per_million)) +
   geom_line() +
   labs(title = "Trend of COVID-19 Cases per Million Over Time", x = "Year", y = "Cases per Million")+
-  facet_wrap(~ region, nrow = 2)  # Modify nrow as per your preference for rows in facet grid
+  facet_wrap(~ region, nrow = 2)  
+
+# Time-series analysis of COVID-19 deaths per million by region
+ggplot(data = covid_filtered, aes(x = year, y = deaths_per_million)) +
+  geom_line() +
+  labs(title = "Trend of COVID-19 Deaths per Million Over Time", x = "Year", y = "Deaths per Million")+
+  facet_wrap(~ region, nrow = 2)  
+
+# Time-series analysis of COVID-19 stringency by region
+ggplot(data = covid_filtered, aes(x = year, y = stringency)) +
+  geom_line() +
+  labs(title = "Trend of COVID-19 Stringency Over Time", x = "Year", y = "Stringency")+
+  facet_wrap(~ region, nrow = 2)  
 
 
-# Time-series analysis of climatic disasters (e.g., total affected)
+
+# Time-series analysis of climatic disasters with total affected
 ggplot(data = Q3.1, aes(x = year, y = total_affected)) +
   geom_line() +
   labs(title = "Trend of Total Affected from Climatic Disasters Over Time", x = "Year", y = "Total Affected")+
@@ -63,12 +69,18 @@ ggplot(data = Q3.1, aes(x = year, y = total_affected)) +
 # Filter conflict data for the years between 2000 and 2016
 conflicts_filtered <- Q3.3[Q3.3$year >= as.Date("2000-01-01") & Q3.3$year <= as.Date("2016-12-31"), ]
 
+ggplot(data = conflicts_filtered, aes(x = year, y = sum_deaths)) +
+  geom_line() +
+  labs(title = "Trend of Deaths by Conflicts Over Time", x = "Year", y = "Sum Deaths")+
+  facet_wrap(~ region, nrow = 2)
+
+#We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-saharan Africa, South Asia, then less America & the Caribbean and Eastern Europe
+
 ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected)) +
   geom_line() +
-  labs(title = "Trend of Population affcted by Conflicts Over Time", x = "Year", y = "pop_affected")+
-  facet_wrap(~ region, nrow = 2)  # Modify nrow as per your preference for rows in facet grid
-
-
+  labs(title = "Trend of Population Affected by Conflicts Over Time", x = "Year", y = "pop_affected")+
+  facet_wrap(~ region, nrow = 2)  
+##We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-saharan Africa, South Asia, America & the Caribbean, Eastern Europe ans sometimes Caucasus and Central Asia
 
 #___________________________________________________________________________________________
 #3. correlation Analysis per country -> irrelevant, I ll try to do it by region
@@ -115,15 +127,6 @@ corrplot::corrplot(correlation_conflict, method = "color")
 # Get the names of the regions from the disaster dataset
 regions <- unique(Q3.1$region)
 
-# Visualize correlation matrix for each region with region names
-corrplot::corrplot(
-  correlation_disaster_by_region,
-  method = "color",
-  title = "Correlation Matrix for Disaster Dataset by Region",
-  col.names = regions,
-  row.names = regions
-)
-
 # Group data by region and calculate mean for each variable
 disaster_data_by_region <- Q3.1 %>%
   group_by(region) %>%
@@ -135,18 +138,6 @@ correlation_disaster_by_region <- cor(disaster_data_by_region[, -1])
 
 # Visualize correlation matrix for each region (optional)
 corrplot::corrplot(correlation_disaster_by_region, method = "color")
-
-
-
-# Group data by region
-grouped_data_by_region <- Q3.1 %>%
-  group_by(region)
-
-# Compute correlations between SDG goals and disaster-related variables for each region
-correlations_by_region <- grouped_data_by_region %>%
-  summarize(across(starts_with("goal"), ~cor(.x, total_affected)),  # Correlations with total_affected variable
-            across(starts_with("goal"), ~cor(.x, total_deaths)),    # Correlations with total_deaths variable
-            .groups = "drop")
 
 
 
@@ -174,147 +165,16 @@ south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
 
 
 # Select relevant columns for correlation analysis
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_deaths", "no_injured", "no_affected", "no_homeless", "total_affected", "total_damages")
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected")
 
 # Compute correlation matrix for South and East Asia data
-correlation_matrix <- cor(south_east_asia_data[, relevant_columns], use = "complete.obs")
+correlation_matrix_disaster_Asia <- cor(south_east_asia_data[, relevant_columns], use = "complete.obs")
 
 # View the correlation matrix
 print(correlation_matrix)
 
-# Plotting the correlation matrix
-corrplot(correlation_matrix, method = "color", type = "upper", order = "original", 
-         tl.col = "black", tl.srt = 45)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#______________________________________________________________________________________-
-##Disasters
-head(Q3.1)
-str(Q3.1)
-
-# Replace the missing values by zero
-Q3.1[is.na(Q3.1)] <- 0
-print(Q3.1)
-
-
-#Correlations between variables
-Q3.1_Correlation <- Q3.1 %>% 
-  select(overallscore:total_damages)
-
-#Calculate correlation matrix
-Q3.1_corr_matrix <- cor(Q3.1_Correlation, use = "everything")
-print(Q3.1_corr_matrix)
-
-## Heatmap
-# Melt the correlation matrix
-#cor_melted <- melt(Q3.1_corr_matrix)
-
-# Create p-value matrix
-cor_matrix <- matrix(nrow = ncol(Q3.1_corr_matrix), ncol = ncol(Q3.1_corr_matrix))
-p_matrix <- matrix(nrow = ncol(Q3.1_corr_matrix), ncol = ncol(Q3.1_corr_matrix))
-rownames(cor_matrix) <- colnames(Q3.1_corr_matrix)
-rownames(p_matrix) <- colnames(Q3.1_corr_matrix)
-colnames(cor_matrix) <- colnames(Q3.1_corr_matrix)
-colnames(p_matrix) <- colnames(Q3.1_corr_matrix)
-
-
-# Calculate p-values
-for (i in 1:ncol(Q3.1_corr_matrix)) {
-  for (j in 1:ncol(Q3.1_corr_matrix)) {
-    # Exclude missing values before performing the correlation test
-    non_missing_rows <- complete.cases(Q3.1_corr_matrix[, c(i, j)])
-    
-    if (sum(non_missing_rows) > 1) {  # Check if there are enough non-missing observations
-      test_result <- cor.test(Q3.1_corr_matrix[non_missing_rows, i], 
-                              Q3.1_corr_matrix[non_missing_rows, j])
-      cor_matrix[i, j] <- test_result$estimate
-      p_matrix[i, j] <- test_result$p.value
-    } else {
-      p_matrix[i, j] <- NA  # Set to NA if not enough non-missing observations
-    }
-  }
-}
-
-# Melt for ggplot2
-melted_cor_matrix <-
-  melt(cor_matrix)
-melted_p_matrix <-
-  melt(matrix(as.vector(p_matrix), nrow = ncol(Q3.1_corr_matrix)))
-
-# Combine the datasets
-plot_data <- cbind(melted_cor_matrix, p_value = melted_p_matrix$value)
-
-# Create the ggplot2 plot
-ggplot(data = plot_data, aes(Var1, Var2, fill = value)) +
-  geom_tile() +
-  
-  # Add text labels for correlation values and color based on significance
-  geom_text(aes(label = sprintf("%.2f", value), color = p_value < 0.05),
-            vjust = 1, size = 2.5) +
-  
-  # Customize the color scale
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
-                       name = "Pearson\nCorrelation") +
-  
-  # Customize the color legend for significance
-  scale_color_manual(values = c("black", "turquoise")) + # black when significant, yellow if not
-  
-  # Adjust the appearance of the plot
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 7, hjust = 1),
-        axis.text.y = element_text(size= 7, hjust = 1),
-        legend.position = "none") +
-  
-  # Little adjustments and labels
-  coord_fixed() +
-  labs(x = '', y = '', title = 'Correlation Matrix Heatmap Disaters')
-
-
-
-
-
-#2ème??
-
-#Correlations between variables
-Q3.1_Correlation <- Q3.1 %>% 
-  select(overallscore:total_damages)
-
-# Calculate the correlation matrix
-matrice_correlation <- cor(Q3.1_Correlation, use = "complete.obs")
-
-# Print  the correlation matrix
-print(matrice_correlation)
-
-
 # Melt the correlation matrix for ggplot2
-cor_melted <- as.data.frame(as.table(matrice_correlation))
+cor_melted <- as.data.frame(as.table(correlation_matrix_disaster_Asia))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 
 # Create the heatmap
@@ -322,171 +182,166 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white",
                        midpoint = 0, limit = c(-1, 1), space = "Lab",
-                       name = "Corrélation") +
+                       name = "Correlation") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
         axis.text.y = element_text(size = 8)) +
   coord_fixed() +
   labs(x = '', y = '',
-       title = 'Matrice de Corrélation et Heatmap')
+       title = 'Correlation between the climate disasters and the SDG goals in South and East Asia')
 
 
 
+##3. Correlation Analysis COVID###
 
-#__________________________________________________________________________________
+# Filter COVID-19 data for the relevant time period
+covid_filtered <- Q3.2[Q3.2$year >= as.Date("2019-01-01"), ]
 
+# Select relevant columns for correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million")
+# Subset data with relevant columns for correlation analysis
+relevant_data <- covid_filtered[, relevant_columns]
 
-##COVID
-Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
-str(Q3.2)
+# Compute correlation matrix for Covid Data
+correlation_matrix_Covid <- cor(relevant_data, use = "complete.obs")
 
-#Correlations between variables
-Q3.2_Correlation <- Q3.2 %>% 
-  select(overallscore:stringency)
+print(correlation_matrix_Covid)
 
-#Calculate correlation matrix
-Q3.2_corr_matrix <- cor(Q3.2_Correlation, use = "everything")
-print(Q3.2_corr_matrix)
+# Melt the correlation matrix for ggplot2
+cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 
-## Heatmap
-
-# Create p-value matrix
-cor_matrix <- matrix(nrow = ncol(Q3.2_corr_matrix), ncol = ncol(Q3.2_corr_matrix))
-p_matrix <- matrix(nrow = ncol(Q3.2_corr_matrix), ncol = ncol(Q3.2_corr_matrix))
-rownames(cor_matrix) <- colnames(Q3.2_corr_matrix)
-rownames(p_matrix) <- colnames(Q3.2_corr_matrix)
-colnames(cor_matrix) <- colnames(Q3.2_corr_matrix)
-colnames(p_matrix) <- colnames(Q3.2_corr_matrix)
-
-
-# Calculate p-values
-for (i in 1:ncol(Q3.2_corr_matrix)) {
-  for (j in 1:ncol(Q3.2_corr_matrix)) {
-    # Exclude missing values before performing the correlation test
-    non_missing_rows <- complete.cases(Q3.2_corr_matrix[, c(i, j)])
-    
-    if (sum(non_missing_rows) > 1) {  # Check if there are enough non-missing observations
-      test_result <- cor.test(Q3.2_corr_matrix[non_missing_rows, i], 
-                              Q3.2_corr_matrix[non_missing_rows, j])
-      cor_matrix[i, j] <- test_result$estimate
-      p_matrix[i, j] <- test_result$p.value
-    } else {
-      p_matrix[i, j] <- NA  # Set to NA if not enough non-missing observations
-    }
-  }
-}
-
-# Melt for ggplot2
-melted_cor_matrix <-
-  melt(cor_matrix)
-melted_p_matrix <-
-  melt(matrix(as.vector(p_matrix), nrow = ncol(Q3.2_corr_matrix)))
-
-# Combine the datasets
-plot_data <- cbind(melted_cor_matrix, p_value = melted_p_matrix$value)
-
-# Create the ggplot2 plot
-ggplot(data = plot_data, aes(Var1, Var2, fill = value)) +
+# Create the heatmap
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
   geom_tile() +
-  
-  # Add text labels for correlation values and color based on significance
-  geom_text(aes(label = sprintf("%.2f", value), color = p_value < 0.05),
-            vjust = 1, size = 2.5) +
-  
-  # Customize the color scale
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
-                       name = "Pearson\nCorrelation") +
-  
-  # Customize the color legend for significance
-  scale_color_manual(values = c("black", "turquoise")) + # black when significant, yellow if not
-  
-  # Adjust the appearance of the plot
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 7, hjust = 1),
-        axis.text.y = element_text(size=7, hjust = 1),
-        legend.position = "none") +
-  
-  # Little adjustments and labels
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
   coord_fixed() +
-  labs(x = '', y = '', title = 'Correlation Matrix Heatmap Covid')
+  labs(x = '', y = '',
+       title = 'Correlation between COVID and the SDG goals')
 
 
+##3. Correlation Analysis Conflicts###
 
+# Filter data for specific regions
+selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe")
+conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
 
-#____________________________________________________________________________________
-##Conflicts
-Q3.3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
-str(Q3.3)
+# Select relevant columns for the correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "sum_deaths")
 
-#Correlations between variables
-Q3.3_Correlation <- Q3.3 %>% 
-  select(overallscore:maxintensity)
+# Compute correlation matrix for the selected regions
+correlation_matrix_Conflicts_Deaths <- cor(conflicts_selected[, relevant_columns], use = "complete.obs")
 
-#Calculate correlation matrix
-Q3.3_corr_matrix <- cor(Q3.3_Correlation, use = "everything")
-print(Q3.2_corr_matrix)
+# View the correlation matrix
+print(correlation_matrix_Conflicts_Deaths)
 
-## Heatmap
+# Melt the correlation matrix for ggplot2
+cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 
-# Create p-value matrix
-cor_matrix <- matrix(nrow = ncol(Q3.3_corr_matrix), ncol = ncol(Q3.3_corr_matrix))
-p_matrix <- matrix(nrow = ncol(Q3.3_corr_matrix), ncol = ncol(Q3.3_corr_matrix))
-rownames(cor_matrix) <- colnames(Q3.3_corr_matrix)
-rownames(p_matrix) <- colnames(Q3.3_corr_matrix)
-colnames(cor_matrix) <- colnames(Q3.3_corr_matrix)
-colnames(p_matrix) <- colnames(Q3.3_corr_matrix)
-
-
-# Calculate p-values
-for (i in 1:ncol(Q3.3_corr_matrix)) {
-  for (j in 1:ncol(Q3.3_corr_matrix)) {
-    # Exclude missing values before performing the correlation test
-    non_missing_rows <- complete.cases(Q3.3_corr_matrix[, c(i, j)])
-    
-    if (sum(non_missing_rows) > 1) {  # Check if there are enough non-missing observations
-      test_result <- cor.test(Q3.3_corr_matrix[non_missing_rows, i], 
-                              Q3.3_corr_matrix[non_missing_rows, j])
-      cor_matrix[i, j] <- test_result$estimate
-      p_matrix[i, j] <- test_result$p.value
-    } else {
-      p_matrix[i, j] <- NA  # Set to NA if not enough non-missing observations
-    }
-  }
-}
-
-# Melt for ggplot2
-melted_cor_matrix <-
-  melt(cor_matrix)
-melted_p_matrix <-
-  melt(matrix(as.vector(p_matrix), nrow = ncol(Q3.3_corr_matrix)))
-
-# Combine the datasets
-plot_data <- cbind(melted_cor_matrix, p_value = melted_p_matrix$value)
-
-# Create the ggplot2 plot
-ggplot(data = plot_data, aes(Var1, Var2, fill = value)) +
+# Create the heatmap
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
   geom_tile() +
-  
-  # Add text labels for correlation values and color based on significance
-  geom_text(aes(label = sprintf("%.2f", value), color = p_value < 0.05),
-            vjust = 1, size = 2.5) +
-  
-  # Customize the color scale
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
-                       name = "Pearson\nCorrelation") +
-  
-  # Customize the color legend for significance
-  scale_color_manual(values = c("black", "turquoise")) + # black when significant, yellow if not
-  
-  # Adjust the appearance of the plot
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 7, hjust = 1),
-        axis.text.y = element_text(size=7, hjust = 1),
-        legend.position = "none") +
-  
-  # Little adjustments and labels
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
   coord_fixed() +
-  labs(x = '', y = '', title = 'Correlation Matrix Heatma Conflicts')
+  labs(x = '', y = '',
+       title = 'Correlation between Conflicts deaths and the SDG goals')
+
+
+
+
+# Filter data for specific regions
+selected_regions <- c("Latin America & the Caribbean")
+conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
+
+# Select relevant columns for the correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "sum_deaths")
+
+# Compute correlation matrix for the selected regions
+correlation_matrix_Conflicts_Deaths <- cor(conflicts_selected[, relevant_columns], use = "complete.obs")
+
+# View the correlation matrix
+print(correlation_matrix_Conflicts_Deaths)
+
+# Melt the correlation matrix for ggplot2
+cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+# Create the heatmap
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between Conflicts deaths and the SDG goals')
+
+
+
+
+
+
+# Filter data for specific regions (pop_affected)
+selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe","Caucasus and Central Asia")
+conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
+
+# Select relevant columns for the correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected")
+
+# Compute correlation matrix for the selected regions
+correlation_matrix_Conflicts_Pop_Affected <- cor(conflicts_selected[, relevant_columns], use = "complete.obs")
+
+# View the correlation matrix
+print(correlation_matrix_Conflicts_Pop_Affected)
+
+# Melt the correlation matrix for ggplot2
+cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Affected))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+# Create the heatmap
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between Conflicts Affected Population and the SDG goals')
+
+
+
+###4. Regressions
+
+#Disasters total affected, but which goal? 
+# Perform linear regression
+Lin_Reg_Disaster <- lm(goal1 ~ total_affected, data = Q3.1)
+
+# Summary of the regression model
+summary(Lin_Reg_Disaster)
+
+
+
+
+
+
+
+
+
 
