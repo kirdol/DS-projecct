@@ -1957,24 +1957,12 @@ data_question1 <- data_question1 %>%
       ifelse(PercentageMissingByCode < 0.3, MedianByRegion, ef_regulation)
     )
   ) %>%
-  select(-PercentageMissingByCode, -MedianByRegion)
+  select(-PercentageMissingByCode, -MedianByRegion) %>%
+  ungroup()
 
 ```
 
-We visualize the NAs for question 1 to make sure we did not miss any and we see that except for goals 1 and 10 that were already discussed, and we are surprised to see that even these variables don't have missing values anymore. Indeed, by removing some countries according to the number of missing values or difficulty to fill them, we removed the countries that were problematic for goals 1 et 10.
-
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### Visualization NA Q1 ####
-na_counts <- data_question1 %>%
-  group_by(code) %>%
-  summarise(across(-c(X), ~ sum(is.na(.)))) %>%
-  mutate(num_missing = rowSums(select(., where(is.numeric)))) %>%
-  filter(num_missing == 1)
-
-print(na_counts)
-######## NO MORE MISSINGS FOR QUESTION 1
-
-```
+NOT CORRECT !!! We visualize the NAs for question 1 to make sure we did not miss any and we see that except for goals 1 and 10 that were already discussed, and we are surprised to see that even these variables don't have missing values anymore. Indeed, by removing some countries according to the number of missing values or difficulty to fill them, we removed the countries that were problematic for goals 1 et 10.
 
 #### Data for question 2 and 4
 

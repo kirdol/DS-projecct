@@ -439,7 +439,8 @@ data_question1 <- data_question1 %>%
       ifelse(PercentageMissingByCode < 0.3, MedianByRegion, ef_regulation)
     )
   ) %>%
-  select(-PercentageMissingByCode, -MedianByRegion)
+  select(-PercentageMissingByCode, -MedianByRegion)%>%
+  ungroup()
 
 ##### No more missing, if we remove years 2000-2005 #####
 
@@ -449,8 +450,7 @@ na_counts <- data_question1 %>%
   summarise(across(everything(), ~ sum(is.na(.)), .names = "na_{.col}")) %>%
   pivot_longer(cols = starts_with("na_"), names_to = "column", values_to = "na_count", names_prefix = "na_")
 
-######## NO MORE MISSINGS HUMAN FREEDOM INDEX EXCEPT GOAL1 & 10 
-
+######## NO MORE MISSINGS HUMAN FREEDOM INDEX EXCEPT GOAL1 & 10 (not just human freedom index also other variables :))
 
 # Load the necessary library
 library(readr)
