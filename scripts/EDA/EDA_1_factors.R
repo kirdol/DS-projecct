@@ -1,11 +1,11 @@
 ##### How do complex structures, systems, relationships and events influence a country's SDG scores?  #####
 
 
-liste_de_scripts <- c("setup.R")
-
-for (script in liste_de_scripts) { # execute each sript
-  source(here("scripts", "Clean", script))}
-
+# liste_de_scripts <- c("setup.R")
+# 
+# for (script in liste_de_scripts) { # execute each sript
+#   source(here("scripts", "Clean", script))}
+# 
 
 
 #### data ####

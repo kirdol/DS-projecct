@@ -16,14 +16,14 @@ data_question3_2 <- all_Merge %>% select(c(code, year, country, continent, regio
 # Conflicts (only until 2016 because no information for conflicts after)
 data_question3_3 <- all_Merge %>% filter(year<=2016) %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
 
-# cleaning of the environment
-rm(merge_1_2, # remove merge_1_2 from memory
-   merge_12_3, # remove merge_12_3 from memory
-   merge_123_4, # remove merge_123_4 from memory
-   merge_1234_5, # remove merge_1234_5 from memory
-   merge_12345_6, # remove merge_12345_6 from memory
-   merge_123456_7, # remove merge_123456_7 from memory
-   liste_de_scripts) # remove the list of scripts from memory)
+# # cleaning of the environment
+# rm(merge_1_2, # remove merge_1_2 from memory
+#    merge_12_3, # remove merge_12_3 from memory
+#    merge_123_4, # remove merge_123_4 from memory
+#    merge_1234_5, # remove merge_1234_5 from memory
+#    merge_12345_6, # remove merge_12345_6 from memory
+#    merge_123456_7, # remove merge_123456_7 from memory
+#    liste_de_scripts) # remove the list of scripts from memory)
 
 ##### Which countries have many missing observations over the different variables of the different subsets?
 
