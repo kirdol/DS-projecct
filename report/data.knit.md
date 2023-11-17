@@ -4256,7 +4256,7 @@ print(na_counts)
 :::
 
 
-####Data for question 2 and 4
+#### Data for question 2 and 4
 
 We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Since there are no other missing values, we stop here.
 
@@ -4275,7 +4275,7 @@ see_missing24 <- data_question24 %>%
 :::
 
 
-####Data for question 3
+#### Data for question 3
 
 We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Since there are no other missing values, we stop here.
 
