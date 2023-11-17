@@ -35,7 +35,9 @@ packages <- c(
   "rnaturalearth",
   "knitr",
   "kableExtra",
-  "DT"
+  "DT",
+  "FactoMineR",
+  "factoextra"
 )
 
 for (i in packages) {
