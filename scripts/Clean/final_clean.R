@@ -444,7 +444,6 @@ data_question1 <- data_question1 %>%
 
 #### Visualization NA Q1 HUMAN FREEDOM INDEX  #### (not just human freedom index also other variables :))
 na_counts <- data_question1 %>%
-  select(-goal1, -goal10) %>%  # Exclude "goal1" and "goal10" columns
   summarise(across(everything(), ~ sum(is.na(.)), .names = "na_{.col}")) %>%
   pivot_longer(cols = starts_with("na_"), names_to = "column", values_to = "na_count", names_prefix = "na_")
 
