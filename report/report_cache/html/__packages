@@ -29,3 +29,5 @@ cowplot
 knitr
 kableExtra
 DT
+FactoMineR
+factoextra
