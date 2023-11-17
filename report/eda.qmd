@@ -110,7 +110,7 @@ The different variables used to materialize the impact of conflicts do not seem 
 
 ## Focus on the influence of the factors(?) over the SDG scores
 
-After importing our our cleaned data, we looked first at the correlations between our numerical variables. 
+After importing our our cleaned data, we looked first at the correlations between our numerical variables.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 
@@ -118,9 +118,8 @@ After importing our our cleaned data, we looked first at the correlations betwee
 
 
 ```
+
 ## **Focus on the evolution of SDG scores over time**
-
-
 
 First, we look at the evolution of SDG achievement overall score over time for the whole world, by continent and by region.
 
