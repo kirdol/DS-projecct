@@ -165,7 +165,7 @@ south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
 
 
 # Select relevant columns for correlation analysis
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected")
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "no_homeless")
 
 # Compute correlation matrix for South and East Asia data
 correlation_matrix_disaster_Asia <- cor(south_east_asia_data[, relevant_columns], use = "complete.obs")
@@ -198,7 +198,7 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
 covid_filtered <- Q3.2[Q3.2$year >= as.Date("2019-01-01"), ]
 
 # Select relevant columns for correlation analysis
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million")
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
 # Subset data with relevant columns for correlation analysis
 relevant_data <- covid_filtered[, relevant_columns]
 
@@ -265,7 +265,7 @@ selected_regions <- c("Latin America & the Caribbean")
 conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
 
 # Select relevant columns for the correlation analysis
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "sum_deaths")
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected")
 
 # Compute correlation matrix for the selected regions
 correlation_matrix_Conflicts_Deaths <- cor(conflicts_selected[, relevant_columns], use = "complete.obs")
