@@ -1,16 +1,11 @@
 ##### How do complex structures, systems, relationships and events influence a country's SDG scores?  #####
 
-library(factoextra)
-library(FactoMineR) 
-library(ggplot2) 
-library(corrplot)
-library(here) # loading package here to be able to execute the other file.
-# Pre-cleaning of the datasets
-liste_de_scripts <- c("setup.R")
 
-for (script in liste_de_scripts) { # execute each sript
-  source(here("scripts", "Clean", script))}
-
+# liste_de_scripts <- c("setup.R")
+# 
+# for (script in liste_de_scripts) { # execute each sript
+#   source(here("scripts", "Clean", script))}
+# 
 
 
 #### data ####
@@ -43,7 +38,7 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
   r <- abs(cor(x, y))
   txt <- format(c(r, 0.123456789), digits = digits)[1]
   txt <- paste0(prefix, txt)
-  if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+  if(missing(cex.cor)) cex.cor <- 2/strwidth(txt)
   text(0.5, 0.5, txt, cex = cex.cor * r)
 }
 pairs(data_question1[,10:25], upper.panel=panel.cor, diag.panel=panel.hist)
