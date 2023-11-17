@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.3.433">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -84,7 +84,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="general-exploration" class="level2">
 <h2 class="anchored" data-anchor-id="general-exploration">General exploration</h2>
 <p>We display the distribution of the different SDG achievement scores, using boxplots to have an overview of the median, the range with most of the observations and the outliers.</p>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-2_1c3b6f48e3114c182bdedb163338fe7d">
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-1_91e04d5b44396011f59e128a5b9cef0c">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"data"</span>, <span class="st">"all_Merge.csv"</span>))</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>), <span class="at">oma =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">0</span>))</span>
@@ -96,7 +96,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-2-1.png" style="width:100.0%;height:100.0%"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-1-1.png" style="width:100.0%;height:100.0%"></p>
 </div>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">14</span><span class="sc">:</span><span class="dv">19</span>) { </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">boxplot</span>(data[, i], <span class="at">main =</span> <span class="fu">names</span>(data)[i], <span class="at">horizontal =</span> <span class="cn">TRUE</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span>
@@ -105,7 +105,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-2-2.png" style="width:100.0%;height:100.0%"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-1-2.png" style="width:100.0%;height:100.0%"></p>
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">20</span><span class="sc">:</span><span class="dv">24</span>) { </span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">boxplot</span>(data[, i], <span class="at">main =</span> <span class="fu">names</span>(data)[i], <span class="at">horizontal =</span> <span class="cn">TRUE</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span>
@@ -115,12 +115,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-2-3.png" style="width:100.0%;height:100.0%"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-1-3.png" style="width:100.0%;height:100.0%"></p>
 </div>
 </div>
 <p>We see different schemes among the different goals. Indeed some are quite homogeneous with a small spread of values (e.g.&nbsp;overall score, goals 2 and 8) while others have a large spread of values (e.g.&nbsp;goals 1 and 10). Goals 1, 3, 4, 7, 9, 10 and 13 have values across all possible percentages. Goals 2, 5, 8, 13 and 17 have extreme values situated outside the 95% confidence interval. It is interesting to see that goal 8 (decent work and economic growth) is the one with smaller spread of values, whereas goal 1 (no poverty) have the higher distance between the first and the third quartile. Goal 2 (no hunger) has a tight spread of values, but with the greater amount of outliers in the smaller values, meaning hunger is similar across most countries, but when it differs it is in very bad manner.</p>
 <p>We know look at the variables in a summary table to have a more precise view of the numbers.</p>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-3_7f7ed3b814a1d4284efc03e6a4e36beb">
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-2_aa5b3b611436eb0d435ba159e492f1df">
 <div class="cell-output-display">
 <table data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
@@ -341,7 +341,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>To have an overview of the relationship between our independent variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.</p>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-4_86b5c06946b19802cc107588fe8f021a">
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-3_594d66edf4d60b94d169b5dc92961c9b">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data_question1 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"data"</span>, <span class="st">"data_question1.csv"</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>data_question2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"data"</span>, <span class="st">"data_question24.csv"</span>))</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>data_question3_2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"data"</span>, <span class="st">"data_question3_2.csv"</span>))</span>
@@ -368,38 +368,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Independent variables </span></span>
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question1[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"unemployment.rate"</span>, <span class="st">"GDPpercapita"</span>, <span class="st">"MilitaryExpenditurePercentGDP"</span>, <span class="st">"internet_usage"</span>)], <span class="at">upper.panel=</span>panel.cor, <span class="at">diag.panel=</span>panel.hist, <span class="at">main=</span><span class="st">"Correlation table and distribution of various variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-4-1.png" style="width:100.0%;height:100.0%"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-3-1.png" style="width:100.0%;height:100.0%"></p>
 </div>
 </div>
 <p>The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score.</p>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-5_c7e15d9634e4f83a14f1da23fa7f5e89">
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-4_9033670de7fb238d31c16def828ddb92">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question1[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"pf_law"</span>, <span class="st">"pf_security"</span>, <span class="st">"pf_movement"</span>, <span class="st">"pf_religion"</span>, <span class="st">"pf_assembly"</span>, <span class="st">"pf_expression"</span>, <span class="st">"pf_identity"</span>)], <span class="at">upper.panel=</span>panel.cor, <span class="at">diag.panel=</span>panel.hist, <span class="at">main=</span><span class="st">"Correlation table and distribution of personal freedom variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" style="width:100.0%"></p>
+</div>
+</div>
+<p>The overall SDG achievement score is highly correlated with “personal freedom: law” (p=.69) and “personal freedom: identity” (p=.62). The other dimensions of personal freedom do not seem to have important influence. Regarding the distribution of the personal freedom variables, we notice that except for law, all have right-skewed distributions meaning that most of the countries have high scores.</p>
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-5_1526d5fb45c0438fb8424fc3266f54f7">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question1[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"ef_government"</span>, <span class="st">"ef_legal"</span>, <span class="st">"ef_money"</span>, <span class="st">"ef_trade"</span>, <span class="st">"ef_regulation"</span>)], <span class="at">upper.panel=</span>panel.cor, <span class="at">diag.panel=</span>panel.hist, <span class="at">main=</span><span class="st">"Correlation table and distribution of economic freedom variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="eda_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
-<p>The overall SDG achievement score is highly correlated with “personal freedom: law” (p=.69) and “personal freedom: identity” (p=.62). The other dimensions of personal freedom do not seem to have important influence. Regarding the distribution of the personal freedom variables, we notice that except for law, all have right-skewed distributions meaning that most of the countries have high scores.</p>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-6_5c5fd95c8ae58b87d8d643971bcafb37">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question1[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"ef_government"</span>, <span class="st">"ef_legal"</span>, <span class="st">"ef_money"</span>, <span class="st">"ef_trade"</span>, <span class="st">"ef_regulation"</span>)], <span class="at">upper.panel=</span>panel.cor, <span class="at">diag.panel=</span>panel.hist, <span class="at">main=</span><span class="st">"Correlation table and distribution of economic freedom variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The overall SDG achievement score is highly correlated with “economical freedom: legal” (p=.77), “economical trade: legal” (p=.67) and “economical freedom: money” (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom.</p>
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-6_bb047e692d27767c094ae6a1bbae28ca">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question3_2[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"cases_per_million"</span>, <span class="st">"deaths_per_million"</span>, <span class="st">"stringency"</span>)], <span class="at">upper.panel=</span>panel.cor, <span class="at">diag.panel=</span>panel.hist, <span class="at">main=</span><span class="st">"Correlation table and distribution of COVID variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="eda_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
-<p>The overall SDG achievement score is highly correlated with “economical freedom: legal” (p=.77), “economical trade: legal” (p=.67) and “economical freedom: money” (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom.</p>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-7_3c8b88ee271a0e06e913cde5799e5874">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question3_2[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"cases_per_million"</span>, <span class="st">"deaths_per_million"</span>, <span class="st">"stringency"</span>)], <span class="at">upper.panel=</span>panel.cor, <span class="at">diag.panel=</span>panel.hist, <span class="at">main=</span><span class="st">"Correlation table and distribution of COVID variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The different variables used to materialize the impact of COVID19 do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that COVID19 had a specific influence on some SDGs, for instance “good health and well-being” or “decent work and economic growth”.</p>
+<div class="cell" data-hash="eda_cache/html/unnamed-chunk-7_e720dc50009a6379b8c3faa17101f3ab">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question3_3[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"ongoing"</span>, <span class="st">"sum_deaths"</span>, <span class="st">"pop_affected"</span>, <span class="st">"area_affected"</span>, <span class="st">"maxintensity"</span>)], <span class="at">upper.panel=</span>panel.cor, <span class="at">diag.panel=</span>panel.hist, <span class="at">main=</span><span class="st">"Correlation table and distribution of conflicts variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="eda_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
-<p>The different variables used to materialize the impact of COVID19 do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that COVID19 had a specific influence on some SDGs, for instance “good health and well-being” or “decent work and economic growth”.</p>
-<div class="cell" data-hash="eda_cache/html/unnamed-chunk-8_693b30327e61c251ce375e4647d402a5">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question3_3[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"ongoing"</span>, <span class="st">"sum_deaths"</span>, <span class="st">"pop_affected"</span>, <span class="st">"area_affected"</span>, <span class="st">"maxintensity"</span>)], <span class="at">upper.panel=</span>panel.cor, <span class="at">diag.panel=</span>panel.hist, <span class="at">main=</span><span class="st">"Correlation table and distribution of conflicts variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="eda_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" style="width:100.0%"></p>
-</div>
-</div>
 <p>The different variables used to materialize the impact of conflicts do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that conflicts have a specific influence on some SDGs.</p>
+</section>
+<section id="focus-on-the-influence-of-the-factors-over-the-sdg-scores" class="level2">
+<h2 class="anchored" data-anchor-id="focus-on-the-influence-of-the-factors-over-the-sdg-scores">Focus on the influence of the factors(?) over the SDG scores</h2>
+<p>After importing our our cleaned data, we looked first at the correlations between our numerical variables.</p>
 </section>
 <section id="focus-on-the-evolution-of-sdg-scores-over-time" class="level2">
 <h2 class="anchored" data-anchor-id="focus-on-the-evolution-of-sdg-scores-over-time"><strong>Focus on the evolution of SDG scores over time</strong></h2>
@@ -419,7 +423,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="eda_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>The general évolution of SDG scores arround the world is increasing over the years.</p>
+<p>The general evolution of SDG scores around the world is increasing over the years.</p>
 <div class="cell" data-hash="eda_cache/html/unnamed-chunk-10_0467d6d15ed7a5002c0e75fed32818a8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">&lt;-</span> data_question2 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year, continent) <span class="sc">%&gt;%</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_overall_score_by_year=</span><span class="fu">mean</span>(overallscore))</span>
@@ -451,7 +455,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="eda_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>This view that groups the countries by region gives us precision about the previous inforamtion. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below.</p>
+<p>This view that groups the countries by region gives us precision about the previous information. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below.</p>
 <p>Second, we look at the evolution of SDG achievement scores(16) over time for the whole world, by continent and by region.</p>
 <div class="cell" data-hash="eda_cache/html/unnamed-chunk-12_3e576be76ed572a53630bdd23466b265">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data4 <span class="ot">&lt;-</span> data_question2 <span class="sc">%&gt;%</span></span>
