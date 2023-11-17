@@ -1,6 +1,6 @@
 # Exploratory data analysis
 
-```{r, echo = FALSE, message = FALSE, warning=FALSE, cache = TRUE}
+```{r setup, echo = FALSE, message = FALSE, warning=FALSE, cache = TRUE}
 source(here::here("scripts/Clean/setup.R"))
 source(here::here("scripts/EDA/EDA_4_SDG.R"))
 ```
