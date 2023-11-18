@@ -2002,7 +2002,8 @@ see_missing3_1 <- data_question3_1 %>%
               filter(num_missing > 0))
 print (see_missing3_1)
 ```
-In this particular case, even it there are many missing values in our disaster dataset, we made the hypothesis that disaster events can not happen every year for every country given that these are uncontrollable and non-recurring events. Therefore the NAs that we encounter will become zeroes, implying that there have been no climatic disasters. 
+
+In this particular case, even it there are many missing values in our disaster dataset, we made the hypothesis that disaster events can not happen every year for every country given that these are uncontrollable and non-recurring events. Therefore the NAs that we encounter will become zeroes, implying that there have been no climatic disasters.
 
 **COVID19**
 
