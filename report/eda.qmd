@@ -121,9 +121,28 @@ data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
 
 Correlation_overall <- data_question1 %>% 
       select(population:ef_regulation)
-cor_matrix <- cor(Correlation_overall, use = "pairwise.complete.obs")
+cor_matrix <- cor(Correlation_overall, use = "everything")
 print(cor_matrix)
+```
+By doing so, we obtain a lot of positive and negative correlations. To help us to better understand and having a overall vision of the situation, we used the following heatmap.
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+#### Heatmap ####
 
+cor_melted <- melt(cor_matrix)
+
+ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
+```
+In the correlation matrix heatmap, we can notice that many goals from 1 to 11 are actually positively correlated together. On another hand, the goals 12 and 13 are have negative relationships with the majority of our variables, except between themself, whereas they are strongely correlated. In addition, we can notice another strongly correlation between personal freedom variables (pf) related to the scores given by the Human Freedom Index on movement, religion, assembly and expression. 
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### Pearson's correlation coeff ####
 
 #for goals
@@ -141,11 +160,18 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
   r <- cor(x, y)
   txt <- format(c(r, 0.123456789), digits = digits)[1]
   txt <- paste0(prefix, txt)
-  if(missing(cex.cor)) cex.cor <- 10/strwidth(txt)
-  text(0.5, 0.5, txt, cex = cex.cor * r)
+  if(missing(cex.cor)) cex.cor <- 2/strwidth(txt)
+  if(r < 0) {
+    cex <- cex.cor * (1 * abs(r))  # Adjust the multiplier as needed for desired size
+  } else {
+    cex <- cex.cor * r
+  }
+    text(0.5, 0.5, txt, cex = cex)
 }
 pairs(data_question1[,10:25], upper.panel=panel.cor, diag.panel=panel.hist)
-
+```
+The latter code showed us the Pearson's correlation coefficients. 
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #for Human Freedom Index scores 
 panel.hist <- function(x, ...){
   usr <- par("usr"); on.exit(par(usr))
