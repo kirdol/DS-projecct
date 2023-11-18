@@ -170,7 +170,7 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
 pairs(data_question1[,9:24], upper.panel=panel.cor, diag.panel=panel.hist)
 ```
 
-The latter Pearson's correlation coefficients method shows us the distribution of the goal scores, and again the positive and negative correlations between the goals. We notive again the same observations as we did in the previous correlation matrix heatmap. Now, we tried to use the same method for the Human Freedom Index scores.
+The latter Pearson's correlation coefficients method shows us the distribution of the goal scores, and again the positive and negative correlations between the goals. We noticed again the same observations as we did in the previous correlation matrix heatmap. Now, we tried to use the same method for the Human Freedom Index scores.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #for Human Freedom Index scores 
@@ -199,6 +199,8 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
 pairs(data_question1[,29:40], upper.panel=panel.cor, diag.panel=panel.hist)
 ```
 
+For going again deeper in the visualization of our dataset, we have decided to conduct a Principal component analysis, which allowed us to summarize more informations. To do so, we have decided to run this analysis for the goals and for the Human Freedom Index variables separately.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### PCA ####
 
@@ -206,16 +208,22 @@ pairs(data_question1[,29:40], upper.panel=panel.cor, diag.panel=panel.hist)
 myPCA_g <- PCA(data_question1[,9:24])
 summary(myPCA_g)
 myPCA_g$eig
+```
 
-#eigenvalue only >1 with dim1 
+Concerning the SDG goals, we conclude that most of our variables are going along the 1st component, except the goals 10 and 15 that are rather uncorrelated with the dimension 1. In addition, as seen before, the goals 12 and 13 are negatively correlated to the other goals. With a eigenvalue bigger than 1 for the first two components, we conclude that there are only 2 dimensions to take into account, according to the Kaiser-Guttman's rule. Nevertheless, they are explaining less than 80% of cumulated variance.
 
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #for HFI scores
 myPCA_s <- PCA(data_question1[,29:40])
 summary(myPCA_s)
 myPCA_s$eig
+```
 
-#3 revelant component according to eigenvalue of Kaiser-Guttman’s rule
+Now concerning the Human Freedom Index scores, most of the variables are positively correlated to the dimension 1, slightly less for the PF religion and security, and finaly the EF government variable is uncorrelated to the dimension 1. With a eigenvalue bigger than 1 for the three first components, we conclude that there are 3 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance.
 
+Kmean revelant ???? 
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### Kmean ####
 
 data1_scaled <- scale(Correlation_overall)
@@ -225,7 +233,9 @@ kmean <- kmeans(data1_scaled, 7)
 print(kmean)
 fviz_cluster(kmean, data=data1_scaled, repel=TRUE, depth =NULL, ellipse.type = "norm")
 # Result:  (between_SS / total_SS =  58.4 %)
-
+```
+Then, we have decided to use boxplots for visualizing the distribution of the goal and the Human Freedom Index scores, and also for the remaining variables. The separation was done for having all the variables on the same scale on one boxplot.
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### boxplots ####
 
 #for goals

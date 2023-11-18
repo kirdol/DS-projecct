@@ -21,7 +21,7 @@ cor_matrix <- cor(Correlation_overall, use = "everything")
 print(cor_matrix)
 
 #### Heatmap ####
-
+dev.off()
 cor_melted <- melt(cor_matrix)
 
 ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
@@ -95,14 +95,14 @@ pairs(data_question1[,29:40], upper.panel=panel.cor, diag.panel=panel.hist)
 
 # for goals
 
-myPCA_g <- PCA(data_question1[,9:20])
+myPCA_g <- PCA(data_question1[,9:24])
 summary(myPCA_g)
 myPCA_g$eig
 
 #eigenvalue only >1 with dim1 
 
 #for HFI scores
-myPCA_s <- PCA(data_question1[,30:41])
+myPCA_s <- PCA(data_question1[,29:40])
 summary(myPCA_s)
 myPCA_s$eig
 
@@ -151,7 +151,7 @@ boxplot(Correlation_overall[2:18],
         main = "Merged goals boxplot", # Title of the boxplot
         xlab = "Goals",  # X-axis label
         ylab = "Score")     # Y-axis label
-dev.off()
+
 #for Human Freedom Index scores 
 
 boxplot(Correlation_overall[23:34], 
