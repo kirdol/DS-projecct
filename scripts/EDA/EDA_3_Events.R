@@ -82,6 +82,22 @@ ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected)) +
   facet_wrap(~ region, nrow = 2)  
 ##We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-saharan Africa, South Asia, America & the Caribbean, Eastern Europe ans sometimes Caucasus and Central Asia
 
+#Histo? -----> nicer
+
+# Trend of Deaths by Conflicts Over Time
+ggplot(data = conflicts_filtered, aes(x = year, y = sum_deaths)) +
+  geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.5) +  # Using loess smoothing method
+  labs(title = "Trend of Deaths by Conflicts Over Time", x = "Year", y = "Sum Deaths") +
+  facet_wrap(~ region, nrow = 2)
+
+# Trend of Population Affected by Conflicts Over Time
+ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected)) +
+  geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.5) +  # Using loess smoothing method
+  labs(title = "Trend of Population Affected by Conflicts Over Time", x = "Year", y = "pop_affected") +
+  facet_wrap(~ region, nrow = 2)
+
+
+
 #___________________________________________________________________________________________
 #3. correlation Analysis per country -> irrelevant, I ll try to do it by region
 
