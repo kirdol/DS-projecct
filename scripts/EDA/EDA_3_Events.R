@@ -58,6 +58,7 @@ ggplot(data = covid_filtered, aes(x = year, y = cases_per_million, group = regio
   scale_color_brewer(palette = "Set1")  # Using a different color palette for lines
 
 
+
 #___-----____-----____-----
 # Time-series analysis of COVID-19 deaths per million by region
 ggplot(data = covid_filtered, aes(x = year, y = deaths_per_million)) +

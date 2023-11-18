@@ -418,6 +418,7 @@ data0 %>%
   coord_sf(datum = NA) +
   theme_minimal()
 ```
+
 ## Focus on the influence of events over the SDG scores
 
 To explore our data on events such as disasters, covid-19 and conflicts we have to first see which countries are the most touched by these. To do so, we made time-series analysis on this three events each time depending on different variables.
@@ -430,6 +431,7 @@ Q3.3$year <- as.Date(as.character(Q3.3$year), format = "%Y")
 ```
 
 These is our time-analysis concerning the COVID-19 cases per million by region between end 2018 and 2022
+
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 covid_filtered <- Q3.2[Q3.2$year >= as.Date("2018-12-12"), ]
 
@@ -440,37 +442,48 @@ ggplot(data = covid_filtered, aes(x = year, y = cases_per_million, group = regio
        x = "Year", y = "Cases per Million") +
   facet_wrap(~ region, nrow = 2) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 4))
 ```
+
 These is our time-analysis concerning the COVID-19 deaths per million per region between end 2018 and 2022
+
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 ggplot(data = covid_filtered, aes(x = year, y = deaths_per_million, group = region, color = region)) +
   geom_smooth(method = "loess",  se = FALSE, span = 0.8, size = 0.5) + 
   labs(title = "Trend of COVID-19 Deaths per Million Over Time", x = "Year", y = "Deaths per Million") +
   facet_wrap(~ region, nrow = 2) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 4))
 ```
+
 These is our time-analysis concerning the COVID-19 stringency per region between end 2018 and 2022
+
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 ggplot(data = covid_filtered, aes(x = year, y = stringency, group = region, color = region)) +
   geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
   labs(title = "Trend of COVID-19 Stringency Over Time", x = "Year", y = "Stringency") +
   facet_wrap(~ region, nrow = 2) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 4))
 ```
 
 These is our time-analysis concerning climatic disasters with total affected per region
+
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 ggplot(data = Q3.1, aes(x = year, y = total_affected, group = region, color = region)) +
   geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
   labs(title = "Trend of Total Affected from Climatic Disasters Over Time", x = "Year", y = "Total Affected") +
   facet_wrap(~ region, nrow = 2) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 4))
 ```
+
 These is our time-analysis concerning conflicts deaths per region between 2000 and 2016
+
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 conflicts_filtered <- Q3.3[Q3.3$year >= as.Date("2000-01-01") & Q3.3$year <= as.Date("2016-12-31"), ]
 
@@ -479,20 +492,25 @@ ggplot(data = conflicts_filtered, aes(x = year, y = sum_deaths, group = region, 
   labs(title = "Trend of Deaths by Conflicts Over Time", x = "Year", y = "Sum Deaths") +
   facet_wrap(~ region, nrow = 2) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 4))
 ```
-We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-saharan Africa, South Asia, then less America & the Caribbean and Eastern Europe
+
+We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, then less America & the Caribbean and Eastern Europe
 
 These is our time-analysis concerning conflicts affected population per region between 2000 and 2016
+
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region, color = region)) +
   geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.5) +  # Using loess smoothing method
   labs(title = "Trend of Population Affected by Conflicts Over Time", x = "Year", y = "pop_affected") +
   facet_wrap(~ region, nrow = 2) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 4))
 ```
-We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-saharan Africa, South Asia, America & the Caribbean, Eastern Europe ans sometimes Caucasus and Central Asia
+
+We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, America & the Caribbean, Eastern Europe ans sometimes Caucasus and Central Asia
 
 ## Focus on relationship between SDGs
 
