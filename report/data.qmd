@@ -935,16 +935,15 @@ D5_0_Human_freedom_index <- D5_0_Human_freedom_index %>%
   )
 ```
 
-After renaming the columns pf_law/security for comprehension purpose, we have made a heatmap that helped us to visualize in our data where were the NA values per country and per variable in percentage, ordered by countries having at least one variable with more than 50% of missing. This gave us a better comprehension of the distribution of the NA values. Finally, we noticed that only 13 countries of our dataset had more than 50% of missing values for one or more variables.
+After renaming the columns pf_law/security for comprehension purpose, we have investigated how are distributed the NA values among the countries and the variables. After having found the percentages of missing values per country and variable, heatmaps revealed themself to be a great tool for visualizing datas.
+
+have made a heatmap that helped us to visualize in our data where were the NA values per country and per variable in percentage, ordered by countries having at least one variable with more than 50% of missing. This gave us a better comprehension of the distribution of the NA values. Finally, we noticed that only 13 countries of our dataset had more than 50% of missing values for one or more variables.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-
-##### VISUALIZATION ##### 
-
 #Find NA percentage per country per variable 
-
 na_percentage_by_country <- D5_0_Human_freedom_index %>%
   group_by(country) %>%
+  select(-code) %>%
   summarise(across(everything(), ~mean(is.na(.))*100))
 
 na_long <- na_percentage_by_country %>%
@@ -958,10 +957,11 @@ overall_na_percentage <- na_long %>%
   group_by(Variable) %>%
   summarize(Avg_NA_Percentage = mean(NA_Percentage, na.rm = TRUE)) %>%
   arrange(desc(Avg_NA_Percentage))
-
 print(overall_na_percentage)
-
-# Order the countries with between 50 and 100 of NA values 
+```
+Then, for having a better understanding of the situation, we ordered the countries having at least 1 variable containing 50% and more of missing values
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+# Order the countries with between 50% and 100% of NA values 
 
 na_long <- na_long %>%
   group_by(country) %>%
@@ -969,25 +969,47 @@ na_long <- na_long %>%
   ungroup() %>%
   arrange(desc(Count_NA_50_100))
 
-# Now, visualize
-
-heatmap_ordered <- ggplot(na_long, aes(x = reorder(country, -Count_NA_50_100), y = Variable)) +
+heatmap_ordered_all <- ggplot(na_long, aes(x = reorder(country, -Count_NA_50_100), y = Variable)) +
   geom_tile(aes(fill = NA_Percentage), colour = "white") +
   scale_fill_gradient(low = "white", high = "red") +
   theme_minimal() +
   labs(
     title = "Heatmap of NA Percentages per Country and Variable",
-    x = "Country",
-    y = "Variable",
+    x = "Countries",
+    y = "Variables",
+    fill = "NA Percentage"
+  ) +
+  theme(
+    axis.text.x = element_blank(),  # Hide x-axis labels
+    axis.text.y = element_text(size = 9)
+  )
+print(heatmap_ordered_all)
+```
+We notice that only some countries look to contain at least 50% of missing values and in addition that most of the missing values are concerning the EF variables (Economic Freedom). Now, we tried to produce another heatmap only containing the ordered countries, and also counting for each one of these country the number of variables with at least 50% of NAs.
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+# Now, visualization with only countries with 50% and more of missing values for at least 1 variable. 
+na_long_filtered <- na_long %>%
+  group_by(country) %>%
+  mutate(Count_NA_50_100 = sum(NA_Percentage >= 50 & NA_Percentage <= 100, na.rm = TRUE)) %>%
+  filter(Count_NA_50_100 > 0) %>%
+  ungroup() %>%
+  arrange(desc(Count_NA_50_100))
+
+heatmap_ordered_filtered <- ggplot(na_long_filtered, aes(x = reorder(country, -Count_NA_50_100), y = Variable)) +
+  geom_tile(aes(fill = NA_Percentage), colour = "white") +
+  scale_fill_gradient(low = "white", high = "red") +
+  theme_minimal() +
+  labs(
+    title = "Heatmap of NA Percentages per Country and Variable",
+    x = "Countries",
+    y = "Variables",
     fill = "NA Percentage"
   ) +
   theme(
     axis.text.x = element_text(angle = 90, hjust = 1),
     axis.text.y = element_text(size = 7)
   )
-print(heatmap_ordered)
-
-###### END VISUALIZATION ######
+print(heatmap_ordered_filtered)
 
 #Checking the number of variables per countries where NA values percentage >=50%
 
@@ -996,11 +1018,9 @@ country_na_count <- na_long %>%
   group_by(country) %>%
   summarise(Count_NA_50_100 = n()) %>%
   arrange(desc(Count_NA_50_100))
-
 print(country_na_count)
 ```
-
-When discussing between us, we came to the conclusion that among these 13 countries, a great part of them were not going to be selected because they had a lot of missing values in our main dataset too. Therefore, we have decided to merge this data with the other datasets and finish the cleaning after.
+We conclude here that 13 countries were concerned by our selection of 50% and more of missing values. When discussing between us, we came to the conclusion that among these 13 countries, a great part of them were not going to be selected because they had a lot of missing values in our main dataset too. Therefore, we have decided to merge this data with the other datasets and finish the cleaning after.
 
 ### 6. Dataset on Disasters
 
@@ -1965,9 +1985,39 @@ data_question1 <- data_question1 %>%
   select(-PercentageMissingByCode, -MedianByRegion) %>%
   ungroup()
 
+na_count <- sapply(data_question1, function(x) sum(is.na(x)))
+print(na_count)
 ```
+Now, we notice that there were only missing values for goals 1 and 10. As we did before, we have started to investigate where are located the NAs in our dataset for first goal1, then goal 10.
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+# goal1
+question1_missing_goal1 <- data_question1 %>%
+  group_by(code) %>%
+  summarize(Na_goal1 = mean(is.na(goal1)))%>%
+  filter(Na_goal1 != 0)
 
-NOT CORRECT !!! We visualize the NAs for question 1 to make sure we did not miss any and we see that except for goals 1 and 10 that were already discussed, and we are surprised to see that even these variables don't have missing values anymore. Indeed, by removing some countries according to the number of missing values or difficulty to fill them, we removed the countries that were problematic for goals 1 et 10.
+data_question1 <- data_question1 %>% filter(!code %in% question1_missing_goal1$code)
+
+# Update List of countries deleted
+list_country_deleted <- c(list_country_deleted, "KWT","NZL","OMN","SGP","UKR")
+
+#still 42 NA values goal10
+```
+We had found that the missing values were located in only 5 countries. So we have decided to get rid of them. At this stage, there were only 42 remaining missing values. Then, same step for goal 10.
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+
+#goal10
+question1_missing_goal10 <- data_question1 %>%
+  group_by(code) %>%
+  summarize(Na_goal10 = mean(is.na(goal10)))%>%
+  filter(Na_goal10 != 0)
+
+data_question1 <- data_question1 %>% filter(!code %in% question1_missing_goal10$code)
+
+# Update List of countries deleted
+list_country_deleted <- c(list_country_deleted, "GUY","TTO")
+```
+We have found the 2 lasts contries containing missing values. Now, our dataset is completely clean and ready to be used for our question 1. 
 
 #### Data for question 2 and 4
 
@@ -2002,7 +2052,8 @@ see_missing3_1 <- data_question3_1 %>%
               filter(num_missing > 0))
 print (see_missing3_1)
 ```
-In this particular case, even it there are many missing values in our disaster dataset, we made the hypothesis that disaster events can not happen every year for every country given that these are uncontrollable and non-recurring events. Therefore the NAs that we encounter will become zeroes, implying that there have been no climatic disasters. 
+
+In this particular case, even it there are many missing values in our disaster dataset, we made the hypothesis that disaster events can not happen every year for every country given that these are uncontrollable and non-recurring events. Therefore the NAs that we encounter will become zeroes, implying that there have been no climatic disasters.
 
 **COVID19**
 

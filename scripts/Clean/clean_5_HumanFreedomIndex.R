@@ -47,6 +47,7 @@ D5_0_Human_freedom_index <- D5_0_Human_freedom_index %>%
 
 na_percentage_by_country <- D5_0_Human_freedom_index %>%
   group_by(country) %>%
+  select(-code) %>%
   summarise(across(everything(), ~mean(is.na(.))*100))
 
 na_long <- na_percentage_by_country %>%
@@ -60,7 +61,6 @@ overall_na_percentage <- na_long %>%
   group_by(Variable) %>%
   summarize(Avg_NA_Percentage = mean(NA_Percentage, na.rm = TRUE)) %>%
   arrange(desc(Avg_NA_Percentage))
-
 print(overall_na_percentage)
 
 # Order the countries with between 50 and 100 of NA values 
@@ -71,23 +71,45 @@ na_long <- na_long %>%
   ungroup() %>%
   arrange(desc(Count_NA_50_100))
 
-# Now, visualize
-
-heatmap_ordered <- ggplot(na_long, aes(x = reorder(country, -Count_NA_50_100), y = Variable)) +
+heatmap_ordered_all <- ggplot(na_long, aes(x = reorder(country, -Count_NA_50_100), y = Variable)) +
   geom_tile(aes(fill = NA_Percentage), colour = "white") +
   scale_fill_gradient(low = "white", high = "red") +
   theme_minimal() +
   labs(
     title = "Heatmap of NA Percentages per Country and Variable",
-    x = "Country",
-    y = "Variable",
+    x = "Countries",
+    y = "Variables",
+    fill = "NA Percentage"
+  ) +
+  theme(
+    axis.text.x = element_blank(),  # Hide x-axis labels
+    axis.text.y = element_text(size = 9)
+  )
+print(heatmap_ordered_all)
+
+# Now, visualization with only countries with 50% and more of missing values for at least 1 variable. 
+na_long_filtered <- na_long %>%
+  group_by(country) %>%
+  mutate(Count_NA_50_100 = sum(NA_Percentage >= 50 & NA_Percentage <= 100, na.rm = TRUE)) %>%
+  filter(Count_NA_50_100 > 0) %>%
+  ungroup() %>%
+  arrange(desc(Count_NA_50_100))
+
+heatmap_ordered_filtered <- ggplot(na_long_filtered, aes(x = reorder(country, -Count_NA_50_100), y = Variable)) +
+  geom_tile(aes(fill = NA_Percentage), colour = "white") +
+  scale_fill_gradient(low = "white", high = "red") +
+  theme_minimal() +
+  labs(
+    title = "Heatmap of NA Percentages per Country and Variable",
+    x = "Countries",
+    y = "Variables",
     fill = "NA Percentage"
   ) +
   theme(
     axis.text.x = element_text(angle = 90, hjust = 1),
     axis.text.y = element_text(size = 7)
   )
-print(heatmap_ordered)
+print(heatmap_ordered_filtered)
 
 ###### END VISUALIZATION ######
 
