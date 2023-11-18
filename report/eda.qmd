@@ -113,21 +113,18 @@ The different variables used to materialize the impact of conflicts do not seem 
 After importing our our cleaned data, we looked first at the correlations between our numerical variables.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
-#### data ####
-
-data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
-
 #### Correlations between variables ####
-
 Correlation_overall <- data_question1 %>% 
-      select(population:ef_regulation)
+      select(population:ef_regulation) #take years into consideration? 
 cor_matrix <- cor(Correlation_overall, use = "everything")
 print(cor_matrix)
 ```
+
 By doing so, we obtain a lot of positive and negative correlations. To help us to better understand and having a overall vision of the situation, we used the following heatmap.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### Heatmap ####
-
+dev.off()
 cor_melted <- melt(cor_matrix)
 
 ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
@@ -141,7 +138,9 @@ ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   coord_fixed() +
   labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
 ```
-In the correlation matrix heatmap, we can notice that many goals from 1 to 11 are actually positively correlated together. On another hand, the goals 12 and 13 are have negative relationships with the majority of our variables, except between themself, whereas they are strongely correlated. In addition, we can notice another strongly correlation between personal freedom variables (pf) related to the scores given by the Human Freedom Index on movement, religion, assembly and expression. 
+
+In the correlation matrix heatmap, we can notice that many goals from 1 to 11 are actually positively correlated together. On another hand, the goals 12 and 13 are have negative relationships with the majority of our variables, except between themself, whereas they are strongely correlated. In addition, we can notice another strongly correlation between personal freedom variables (pf) related to the scores given by the Human Freedom Index on movement, religion, assembly and expression.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### Pearson's correlation coeff ####
 
@@ -168,9 +167,11 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
   }
     text(0.5, 0.5, txt, cex = cex)
 }
-pairs(data_question1[,10:25], upper.panel=panel.cor, diag.panel=panel.hist)
+pairs(data_question1[,9:24], upper.panel=panel.cor, diag.panel=panel.hist)
 ```
-The latter Pearson's correlation coefficients method shows us the distribution of the goal scores, and again the positive and negative correlations between the goals. We notive again the same observations as we did in the previous correlation matrix heatmap. Now, we tried to use the same method for the Human Freedom Index scores. 
+
+The latter Pearson's correlation coefficients method shows us the distribution of the goal scores, and again the positive and negative correlations between the goals. We notive again the same observations as we did in the previous correlation matrix heatmap. Now, we tried to use the same method for the Human Freedom Index scores.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #for Human Freedom Index scores 
 panel.hist <- function(x, ...){
@@ -187,30 +188,35 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
   r <- cor(x, y)
   txt <- format(c(r, 0.123456789), digits = digits)[1]
   txt <- paste0(prefix, txt)
-  if(missing(cex.cor)) cex.cor <- 6/strwidth(txt)
-  text(0.5, 0.5, txt, cex = cex.cor * r)
+  if(missing(cex.cor)) cex.cor <- 1/strwidth(txt)
+  if(r < 0) {
+    cex <- cex.cor * (1.5 * abs(r))  # Adjust the multiplier as needed for desired size
+  } else {
+    cex <- cex.cor * r
+  }
+  text(0.5, 0.5, txt, cex = cex)
 }
-pairs(data_question1[,30:41], upper.panel=panel.cor, diag.panel=panel.hist)
+pairs(data_question1[,29:40], upper.panel=panel.cor, diag.panel=panel.hist)
 ```
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### PCA ####
 
 # for goals
-myPCA_g <- PCA(data_question1[,9:20])
+myPCA_g <- PCA(data_question1[,9:24])
 summary(myPCA_g)
 myPCA_g$eig
 
 #eigenvalue only >1 with dim1 
 
 #for HFI scores
-myPCA_s <- PCA(data_question1[,30:41])
+myPCA_s <- PCA(data_question1[,29:40])
 summary(myPCA_s)
 myPCA_s$eig
 
 #3 revelant component according to eigenvalue of Kaiser-Guttman’s rule
 
-#### Kmean clustering ####
+#### Kmean ####
 
 data1_scaled <- scale(Correlation_overall)
 row.names(data1_scaled) <- data_question1[,1]
@@ -218,13 +224,11 @@ fviz_nbclust(data1_scaled, kmeans, method="wss")
 kmean <- kmeans(data1_scaled, 7)
 print(kmean)
 fviz_cluster(kmean, data=data1_scaled, repel=TRUE, depth =NULL, ellipse.type = "norm")
-
-# Results:  (between_SS / total_SS =  58.4 %)
+# Result:  (between_SS / total_SS =  58.4 %)
 
 #### boxplots ####
 
 #for goals
-dev.off()
 boxplot(Correlation_overall[2:18], 
         las = 2,            # Makes the axis labels perpendicular to the axis
         par(mar = c(5, 4, 4, 2) + 0.1),  # Adjusts the margins to fit all labels
@@ -236,7 +240,6 @@ boxplot(Correlation_overall[2:18],
         ylab = "Score")     # Y-axis label
 
 #for Human Freedom Index scores 
-
 boxplot(Correlation_overall[23:34], 
         las = 2,            # Makes the axis labels perpendicular to the axis
         par(mar = c(7, 5, 2, 1)),  # Adjusts the margins to fit all labels
@@ -247,8 +250,7 @@ boxplot(Correlation_overall[23:34],
         xlab = "Categories",  # X-axis label
         ylab = "Score")     # Y-axis label
 
-# for the remaining variables
-
+#the remaining variables
 par(mfrow=c(2,3))
 for (i in 19:22){
   boxplot(Correlation_overall[,i], main=names(Correlation_overall[i]), type="l")

@@ -1965,9 +1965,46 @@ data_question1 <- data_question1 %>%
   select(-PercentageMissingByCode, -MedianByRegion) %>%
   ungroup()
 
-```
+#### Visualization NAs Q1  ####
 
-NOT CORRECT !!! We visualize the NAs for question 1 to make sure we did not miss any and we see that except for goals 1 and 10 that were already discussed, and we are surprised to see that even these variables don't have missing values anymore. Indeed, by removing some countries according to the number of missing values or difficulty to fill them, we removed the countries that were problematic for goals 1 et 10.
+na_counts <- data_question1 %>%
+  summarise(across(everything(), ~ sum(is.na(.)), .names = "na_{.col}")) %>%
+  pivot_longer(cols = starts_with("na_"), names_to = "column", values_to = "na_count", names_prefix = "na_")
+```
+Until now, the only remaining NA values were concentrated in the goals 1 and 10. 
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+# goal1
+question1_missing_goal1 <- data_question1 %>%
+  group_by(code) %>%
+  summarize(Na_goal1 = mean(is.na(goal1)))%>%
+  filter(Na_goal1 != 0)
+
+#we can see that for "KWT" "NZL" "OMN" "SGP" "UKR", there are 100% missing values for goal1
+#we need to get rid of them
+data_question1 <- data_question1 %>% filter(!code %in% question1_missing_goal1$code)
+
+# Update List of countries deleted
+list_country_deleted <- c(list_country_deleted, "KWT","NZL","OMN","SGP","UKR")
+
+#still 42 NA values goal10
+
+#goal10
+
+question1_missing_goal10 <- data_question1 %>%
+  group_by(code) %>%
+  summarize(Na_goal10 = mean(is.na(goal10)))%>%
+  filter(Na_goal10 != 0)
+
+#100% missing for "GUY" "TTO" for goal10 -> get rid of these countries
+
+data_question1 <- data_question1 %>% filter(!code %in% question1_missing_goal10$code)
+
+# Update List of countries deleted
+list_country_deleted <- c(list_country_deleted, "GUY","TTO")
+
+#NO NA VALUES ANYMORE IN data_question1
+```
+After investing about these NA values, we noticed that the missing values where concentrated in 7 countries. Therefore, we got rid of them and updated our Q1 dataset. 
 
 #### Data for question 2 and 4
 

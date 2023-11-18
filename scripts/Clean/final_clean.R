@@ -447,12 +447,7 @@ na_counts <- data_question1 %>%
   summarise(across(everything(), ~ sum(is.na(.)), .names = "na_{.col}")) %>%
   pivot_longer(cols = starts_with("na_"), names_to = "column", values_to = "na_count", names_prefix = "na_")
 
-na_counts
-
-######## NO MORE MISSINGS HUMAN FREEDOM INDEX EXCEPT GOAL1 & 10 (not just human freedom index also other variables :))
-
-# Load the necessary library
-library(readr)
+######## NO MORE MISSINGS EXCEPT GOAL1 & 10
 
 # Count the number of NA values per column
 na_count <- sapply(data_question1, function(x) sum(is.na(x)))

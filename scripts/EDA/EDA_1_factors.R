@@ -17,8 +17,23 @@ data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
 Correlation_overall <- data_question1 %>% 
       select(population:ef_regulation) #take years into consideration? 
 
-cor_matrix <- cor(Correlation_overall, use = "pairwise.complete.obs")
+cor_matrix <- cor(Correlation_overall, use = "everything")
 print(cor_matrix)
+
+#### Heatmap ####
+
+cor_melted <- melt(cor_matrix)
+
+ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
 
 #### Pearson's correlation coeff ####
 
@@ -35,13 +50,18 @@ panel.hist <- function(x, ...){
 panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
   usr <- par("usr"); on.exit(par(usr))
   par(usr = c(0, 1, 0, 1))
-  r <- abs(cor(x, y))
+  r <- cor(x, y)
   txt <- format(c(r, 0.123456789), digits = digits)[1]
   txt <- paste0(prefix, txt)
   if(missing(cex.cor)) cex.cor <- 2/strwidth(txt)
-  text(0.5, 0.5, txt, cex = cex.cor * r)
+  if(r < 0) {
+    cex <- cex.cor * (1 * abs(r))  # Adjust the multiplier as needed for desired size
+  } else {
+    cex <- cex.cor * r
+  }
+    text(0.5, 0.5, txt, cex = cex)
 }
-pairs(data_question1[,10:25], upper.panel=panel.cor, diag.panel=panel.hist)
+pairs(data_question1[,9:24], upper.panel=panel.cor, diag.panel=panel.hist)
 
 #too many goals for making this in once
 
@@ -58,28 +78,18 @@ panel.hist <- function(x, ...){
 panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
   usr <- par("usr"); on.exit(par(usr))
   par(usr = c(0, 1, 0, 1))
-  r <- abs(cor(x, y))
+  r <- cor(x, y)
   txt <- format(c(r, 0.123456789), digits = digits)[1]
   txt <- paste0(prefix, txt)
-  if(missing(cex.cor)) cex.cor <- 2/strwidth(txt)
-  text(0.5, 0.5, txt, cex = cex.cor * r)
+  if(missing(cex.cor)) cex.cor <- 1/strwidth(txt)
+  if(r < 0) {
+    cex <- cex.cor * (1.5 * abs(r))  # Adjust the multiplier as needed for desired size
+  } else {
+    cex <- cex.cor * r
+  }
+  text(0.5, 0.5, txt, cex = cex)
 }
-pairs(data_question1[,30:41], upper.panel=panel.cor, diag.panel=panel.hist)
-
-#### Heatmap ####
-
-cor_melted <- melt(cor_matrix)
-
-ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
-  geom_tile() +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
-                       name="Pearson\nCorrelation") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
-        axis.text.y = element_text(size = 8)) +
-  coord_fixed() +
-  labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
+pairs(data_question1[,29:40], upper.panel=panel.cor, diag.panel=panel.hist)
 
 #### PCA ####
 
@@ -134,14 +144,14 @@ fviz_cluster(kmean, data=data1_scaled2, repel=TRUE, depth =NULL, ellipse.type = 
 
 boxplot(Correlation_overall[2:18], 
         las = 2,            # Makes the axis labels perpendicular to the axis
-        par(mar = c(7, 5, 2, 1)),  # Adjusts the margins to fit all labels
+        par(mar = c(5, 4, 4, 2) + 0.1),  # Adjusts the margins to fit all labels
         cex.axis = 0.7,      # Reduces the size of the axis labels
         cex.lab = 1,       # Reduces the size of the x and y labels
         notch = TRUE,       # Specifies whether to add notches or not
         main = "Merged goals boxplot", # Title of the boxplot
         xlab = "Goals",  # X-axis label
         ylab = "Score")     # Y-axis label
-
+dev.off()
 #for Human Freedom Index scores 
 
 boxplot(Correlation_overall[23:34], 
