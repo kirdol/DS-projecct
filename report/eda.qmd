@@ -108,6 +108,14 @@ pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected
 
 The different variables used to materialize the impact of conflicts do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that conflicts have a specific influence on some SDGs.
 
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+# Replace the missing values by zero
+data_question3_1[is.na(data_question3_1)] <- 0
+pairs(data_question3_1[,c("overallscore", "total_deaths", "no_injured", "no_affected", "no_homeless", "total_affected", "total_damages")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of disasters variables")
+```
+
+We chose to replace the missing values of this dataset by zeros because we made the hypothesis that it's normal that disasters are not going to happen every year and in the same areas. So when we replace the NA by 0 we meant that at that moment any disaster did take place. The different variables used to materialize the impact of disasters do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that disasters have a specific influence on some SDGs.
+
 ## Focus on the influence of the factors(?) over the SDG scores
 
 After importing our our cleaned data, we looked first at the correlations between our numerical variables.
@@ -124,7 +132,9 @@ Correlation_overall <- data_question1 %>%
 cor_matrix <- cor(Correlation_overall, use = "everything")
 print(cor_matrix)
 ```
+
 By doing so, we obtain a lot of positive and negative correlations. To help us to better understand and having a overall vision of the situation, we used the following heatmap.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### Heatmap ####
 
@@ -141,7 +151,9 @@ ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   coord_fixed() +
   labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
 ```
-In the correlation matrix heatmap, we can notice that many goals from 1 to 11 are actually positively correlated together. On another hand, the goals 12 and 13 are have negative relationships with the majority of our variables, except between themself, whereas they are strongely correlated. In addition, we can notice another strongly correlation between personal freedom variables (pf) related to the scores given by the Human Freedom Index on movement, religion, assembly and expression. 
+
+In the correlation matrix heatmap, we can notice that many goals from 1 to 11 are actually positively correlated together. On another hand, the goals 12 and 13 are have negative relationships with the majority of our variables, except between themself, whereas they are strongely correlated. In addition, we can notice another strongly correlation between personal freedom variables (pf) related to the scores given by the Human Freedom Index on movement, religion, assembly and expression.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### Pearson's correlation coeff ####
 
@@ -170,7 +182,9 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
 }
 pairs(data_question1[,10:25], upper.panel=panel.cor, diag.panel=panel.hist)
 ```
-The latter Pearson's correlation coefficients method shows us the distribution of the goal scores, and again the positive and negative correlations between the goals. We notive again the same observations as we did in the previous correlation matrix heatmap. Now, we tried to use the same method for the Human Freedom Index scores. 
+
+The latter Pearson's correlation coefficients method shows us the distribution of the goal scores, and again the positive and negative correlations between the goals. We notive again the same observations as we did in the previous correlation matrix heatmap. Now, we tried to use the same method for the Human Freedom Index scores.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #for Human Freedom Index scores 
 panel.hist <- function(x, ...){
@@ -220,7 +234,9 @@ print(kmean)
 fviz_cluster(kmean, data=data1_scaled, repel=TRUE, depth =NULL, ellipse.type = "norm")
 
 # Results:  (between_SS / total_SS =  58.4 %)
+```
 
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### boxplots ####
 
 #for goals
@@ -402,6 +418,81 @@ data0 %>%
   coord_sf(datum = NA) +
   theme_minimal()
 ```
+## Focus on the influence of events over the SDG scores
+
+To explore our data on events such as disasters, covid-19 and conflicts we have to first see which countries are the most touched by these. To do so, we made time-series analysis on this three events each time depending on different variables.
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+# Converted 'year' column to date format
+Q3.1$year <- as.Date(as.character(Q3.1$year), format = "%Y")
+Q3.2$year <- as.Date(as.character(Q3.2$year), format = "%Y")
+Q3.3$year <- as.Date(as.character(Q3.3$year), format = "%Y")
+```
+
+These is our time-analysis concerning the COVID-19 cases per million by region between end 2018 and 2022
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+covid_filtered <- Q3.2[Q3.2$year >= as.Date("2018-12-12"), ]
+
+# Creating the ggplot with geom_smooth for each year
+ggplot(data = covid_filtered, aes(x = year, y = cases_per_million, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.8, size = 0.5) + 
+  labs(title = "Trend of COVID-19 Cases per Million Over Time",
+       x = "Year", y = "Cases per Million") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+These is our time-analysis concerning the COVID-19 deaths per million per region between end 2018 and 2022
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+ggplot(data = covid_filtered, aes(x = year, y = deaths_per_million, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.8, size = 0.5) + 
+  labs(title = "Trend of COVID-19 Deaths per Million Over Time", x = "Year", y = "Deaths per Million") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+These is our time-analysis concerning the COVID-19 stringency per region between end 2018 and 2022
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+ggplot(data = covid_filtered, aes(x = year, y = stringency, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
+  labs(title = "Trend of COVID-19 Stringency Over Time", x = "Year", y = "Stringency") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+These is our time-analysis concerning climatic disasters with total affected per region
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+ggplot(data = Q3.1, aes(x = year, y = total_affected, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
+  labs(title = "Trend of Total Affected from Climatic Disasters Over Time", x = "Year", y = "Total Affected") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+These is our time-analysis concerning conflicts deaths per region between 2000 and 2016
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+conflicts_filtered <- Q3.3[Q3.3$year >= as.Date("2000-01-01") & Q3.3$year <= as.Date("2016-12-31"), ]
+
+ggplot(data = conflicts_filtered, aes(x = year, y = sum_deaths, group = region, color = region)) +
+  geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.5) +  # Using loess smoothing method
+  labs(title = "Trend of Deaths by Conflicts Over Time", x = "Year", y = "Sum Deaths") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-saharan Africa, South Asia, then less America & the Caribbean and Eastern Europe
+
+These is our time-analysis concerning conflicts affected population per region between 2000 and 2016
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region, color = region)) +
+  geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.5) +  # Using loess smoothing method
+  labs(title = "Trend of Population Affected by Conflicts Over Time", x = "Year", y = "pop_affected") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-saharan Africa, South Asia, America & the Caribbean, Eastern Europe ans sometimes Caucasus and Central Asia
 
 ## Focus on relationship between SDGs
 

@@ -31,9 +31,8 @@ Q3.3$year <- as.Date(as.character(Q3.3$year), format = "%Y")
 Q3.1[is.na(Q3.1)] <- 0
 print(Q3.1)
 
-# Explore descriptive statistics
-summary(Q3.1)  # Display summary statistics for all variables
 
+##COVID***
 
 # Time-series analysis of COVID-19 cases per million by region
 # Filter COVID-19 data for dates after 2019
@@ -44,19 +43,55 @@ ggplot(data = covid_filtered, aes(x = year, y = cases_per_million)) +
   labs(title = "Trend of COVID-19 Cases per Million Over Time", x = "Year", y = "Cases per Million")+
   facet_wrap(~ region, nrow = 2)  
 
+#Nicer------------->
+# Filtering the data for the relevant time period
+covid_filtered <- Q3.2[Q3.2$year >= as.Date("2018-12-12"), ]
+
+# Creating the ggplot with geom_smooth for each year
+ggplot(data = covid_filtered, aes(x = year, y = cases_per_million, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.8, size = 0.5) + 
+  labs(title = "Trend of COVID-19 Cases per Million Over Time",
+       x = "Year", y = "Cases per Million") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_color_brewer(palette = "Set1")  # Using a different color palette for lines
+
+
+#___-----____-----____-----
 # Time-series analysis of COVID-19 deaths per million by region
 ggplot(data = covid_filtered, aes(x = year, y = deaths_per_million)) +
   geom_line() +
   labs(title = "Trend of COVID-19 Deaths per Million Over Time", x = "Year", y = "Deaths per Million")+
   facet_wrap(~ region, nrow = 2)  
+#Nicer ----->
+# Creating the ggplot with geom_smooth for each year
+ggplot(data = covid_filtered, aes(x = year, y = deaths_per_million, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.8, size = 0.5) + 
+  labs(title = "Trend of COVID-19 Deaths per Million Over Time", x = "Year", y = "Deaths per Million") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_color_brewer(palette = "Set1")  # Using a different color palette for lines
 
+#____----____----____----____----
 # Time-series analysis of COVID-19 stringency by region
 ggplot(data = covid_filtered, aes(x = year, y = stringency)) +
   geom_line() +
   labs(title = "Trend of COVID-19 Stringency Over Time", x = "Year", y = "Stringency")+
   facet_wrap(~ region, nrow = 2)  
+#Nicer ------>
+# Creating the ggplot with geom_smooth for each year
+ggplot(data = covid_filtered, aes(x = year, y = stringency, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
+  labs(title = "Trend of COVID-19 Stringency Over Time", x = "Year", y = "Stringency") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_color_brewer(palette = "Set1")  # Using a different color palette for lines
 
 
+###DISASTERS***
 
 # Time-series analysis of climatic disasters with total affected
 ggplot(data = Q3.1, aes(x = year, y = total_affected)) +
@@ -64,6 +99,18 @@ ggplot(data = Q3.1, aes(x = year, y = total_affected)) +
   labs(title = "Trend of Total Affected from Climatic Disasters Over Time", x = "Year", y = "Total Affected")+
   facet_wrap(~ region, nrow = 2)  # Modify nrow as per your preference for rows in facet grid
 
+#Nicer -------->
+# Creating the ggplot with geom_smooth for each year
+ggplot(data = Q3.1, aes(x = year, y = total_affected, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
+  labs(title = "Trend of Total Affected from Climatic Disasters Over Time", x = "Year", y = "Total Affected") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_color_brewer(palette = "Set1")  # Using a different color palette for lines
+
+
+###CONFLICTS***
 
 # Time-series analysis of Conflicts
 # Filter conflict data for the years between 2000 and 2016
@@ -82,19 +129,26 @@ ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected)) +
   facet_wrap(~ region, nrow = 2)  
 ##We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-saharan Africa, South Asia, America & the Caribbean, Eastern Europe ans sometimes Caucasus and Central Asia
 
-#Histo? -----> nicer
+#Nicer --------> 
 
 # Trend of Deaths by Conflicts Over Time
-ggplot(data = conflicts_filtered, aes(x = year, y = sum_deaths)) +
+ggplot(data = conflicts_filtered, aes(x = year, y = sum_deaths, group = region, color = region)) +
   geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.5) +  # Using loess smoothing method
   labs(title = "Trend of Deaths by Conflicts Over Time", x = "Year", y = "Sum Deaths") +
-  facet_wrap(~ region, nrow = 2)
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_color_brewer(palette = "Set1")
+
 
 # Trend of Population Affected by Conflicts Over Time
-ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected)) +
+ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region, color = region)) +
   geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.5) +  # Using loess smoothing method
   labs(title = "Trend of Population Affected by Conflicts Over Time", x = "Year", y = "pop_affected") +
-  facet_wrap(~ region, nrow = 2)
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_color_brewer(palette = "Set1")
 
 
 

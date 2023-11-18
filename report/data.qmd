@@ -1990,11 +1990,9 @@ We create a column with the number of missing values by country over all the var
 
 **Disasters**
 
-We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We find out that there are many missing values... Sofia ? :)
+We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We find out that there are many missing values
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### Question 3
-
 # Disasters
 see_missing3_1 <- data_question3_1 %>%
   group_by(code) %>%
@@ -2002,9 +2000,9 @@ see_missing3_1 <- data_question3_1 %>%
                    ~ sum(is.na(.))) %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 0))
-# Many missing, what do we do?
-
+print (see_missing3_1)
 ```
+In this particular case, even it there are many missing values in our disaster dataset, we made the hypothesis that disaster events can not happen every year for every country given that these are uncontrollable and non-recurring events. Therefore the NAs that we encounter will become zeroes, implying that there have been no climatic disasters. 
 
 **COVID19**
 
