@@ -113,7 +113,6 @@ The different variables used to materialize the impact of conflicts do not seem 
 After importing our our cleaned data, we looked first at the correlations between our numerical variables.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
-
 #### data ####
 
 data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
@@ -121,15 +120,13 @@ data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
 #### Correlations between variables ####
 
 Correlation_overall <- data_question1 %>% 
-      select(population:ef_regulation) #take years into consideration? 
-
+      select(population:ef_regulation)
 cor_matrix <- cor(Correlation_overall, use = "pairwise.complete.obs")
 print(cor_matrix)
 
 #### Pearson's correlation coeff ####
 
 #for goals
-
 panel.hist <- function(x, ...){
   usr <- par("usr"); on.exit(par(usr))
   par(usr = c(usr[1:2], 0, 1.5) )
@@ -149,10 +146,7 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
 }
 pairs(data_question1[,10:25], upper.panel=panel.cor, diag.panel=panel.hist)
 
-#too many goals for making this in once
-
-#for HFI scores 
-
+#for Human Freedom Index scores 
 panel.hist <- function(x, ...){
   usr <- par("usr"); on.exit(par(usr))
   par(usr = c(usr[1:2], 0, 1.5) )
@@ -190,7 +184,6 @@ ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
 #### PCA ####
 
 # for goals
-
 myPCA_g <- PCA(data_question1[,9:20])
 summary(myPCA_g)
 myPCA_g$eig
@@ -202,7 +195,7 @@ myPCA_s <- PCA(data_question1[,30:41])
 summary(myPCA_s)
 myPCA_s$eig
 
-#3 revelant component according to eigen value of Kaiser-Guttman’s rule
+#3 revelant component according to eigenvalue of Kaiser-Guttman’s rule
 
 #### Kmean clustering ####
 
@@ -241,7 +234,7 @@ boxplot(Correlation_overall[23:34],
         xlab = "Categories",  # X-axis label
         ylab = "Score")     # Y-axis label
 
-# the rest
+# for the remaining variables
 
 par(mfrow=c(2,3))
 for (i in 19:22){
