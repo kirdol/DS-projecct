@@ -901,12 +901,9 @@ datatibble <- datatibble %>%
 Once done, we could verify which countries were or were not present between these observations and our main SDG dataset. We have decided to keep the ones that were matching between the two datasets.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-
 # Merge by country name
 datatibble <- datatibble %>%
   left_join(D1_0_SDG_country_list, by = "country")
-
-# Keep only the countries that are in our main dataset
 
 datatibble <- datatibble %>% filter(code %in% list_country)
 (length(unique(datatibble$code)))
@@ -937,10 +934,7 @@ D5_0_Human_freedom_index <- D5_0_Human_freedom_index %>%
 
 After renaming the columns pf_law/security for comprehension purpose, we have investigated how are distributed the NA values among the countries and the variables. After having found the percentages of missing values per country and variable, heatmaps revealed themself to be a great tool for visualizing datas.
 
-have made a heatmap that helped us to visualize in our data where were the NA values per country and per variable in percentage, ordered by countries having at least one variable with more than 50% of missing. This gave us a better comprehension of the distribution of the NA values. Finally, we noticed that only 13 countries of our dataset had more than 50% of missing values for one or more variables.
-
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#Find NA percentage per country per variable 
 na_percentage_by_country <- D5_0_Human_freedom_index %>%
   group_by(country) %>%
   select(-code) %>%
@@ -959,10 +953,10 @@ overall_na_percentage <- na_long %>%
   arrange(desc(Avg_NA_Percentage))
 print(overall_na_percentage)
 ```
-Then, for having a better understanding of the situation, we ordered the countries having at least 1 variable containing 50% and more of missing values
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-# Order the countries with between 50% and 100% of NA values 
 
+Then, for having a better understanding of the situation, we ordered the countries having at least 1 variable containing 50% and more of missing values
+
+```{r, echo = TRUE, message = TRUE, warning = FALSE, out.width="100%"}
 na_long <- na_long %>%
   group_by(country) %>%
   mutate(Count_NA_50_100 = sum(NA_Percentage >= 50 & NA_Percentage <= 100, na.rm = TRUE)) %>%
@@ -985,9 +979,10 @@ heatmap_ordered_all <- ggplot(na_long, aes(x = reorder(country, -Count_NA_50_100
   )
 print(heatmap_ordered_all)
 ```
+
 We notice that only some countries look to contain at least 50% of missing values and in addition that most of the missing values are concerning the EF variables (Economic Freedom). Now, we tried to produce another heatmap only containing the ordered countries, and also counting for each one of these country the number of variables with at least 50% of NAs.
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-# Now, visualization with only countries with 50% and more of missing values for at least 1 variable. 
+
+```{r, echo = TRUE, message = TRUE, warning = FALSE, out.width="100%"}
 na_long_filtered <- na_long %>%
   group_by(country) %>%
   mutate(Count_NA_50_100 = sum(NA_Percentage >= 50 & NA_Percentage <= 100, na.rm = TRUE)) %>%
@@ -1011,8 +1006,6 @@ heatmap_ordered_filtered <- ggplot(na_long_filtered, aes(x = reorder(country, -C
   )
 print(heatmap_ordered_filtered)
 
-#Checking the number of variables per countries where NA values percentage >=50%
-
 country_na_count <- na_long %>%
   filter(NA_Percentage >= 50) %>%
   group_by(country) %>%
@@ -1020,7 +1013,14 @@ country_na_count <- na_long %>%
   arrange(desc(Count_NA_50_100))
 print(country_na_count)
 ```
+
 We conclude here that 13 countries were concerned by our selection of 50% and more of missing values. When discussing between us, we came to the conclusion that among these 13 countries, a great part of them were not going to be selected because they had a lot of missing values in our main dataset too. Therefore, we have decided to merge this data with the other datasets and finish the cleaning after.
+
+**Here are the first few lines of the partialy cleaned dataset on Human Freedom Index scores:**
+
+```{r, echo = FALSE, message = TRUE, warning = FALSE}
+datatable(D5_0_Human_freedom_index, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+```
 
 ### 6. Dataset on Disasters
 
@@ -1988,7 +1988,9 @@ data_question1 <- data_question1 %>%
 na_count <- sapply(data_question1, function(x) sum(is.na(x)))
 print(na_count)
 ```
+
 Now, we notice that there were only missing values for goals 1 and 10. As we did before, we have started to investigate where are located the NAs in our dataset for first goal1, then goal 10.
+
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 # goal1
 question1_missing_goal1 <- data_question1 %>%
@@ -2003,7 +2005,9 @@ list_country_deleted <- c(list_country_deleted, "KWT","NZL","OMN","SGP","UKR")
 
 #still 42 NA values goal10
 ```
+
 We had found that the missing values were located in only 5 countries. So we have decided to get rid of them. At this stage, there were only 42 remaining missing values. Then, same step for goal 10.
+
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 
 #goal10
@@ -2017,7 +2021,8 @@ data_question1 <- data_question1 %>% filter(!code %in% question1_missing_goal10$
 # Update List of countries deleted
 list_country_deleted <- c(list_country_deleted, "GUY","TTO")
 ```
-We have found the 2 lasts contries containing missing values. Now, our dataset is completely clean and ready to be used for our question 1. 
+
+We have found the 2 lasts contries containing missing values. Now, our dataset is completely clean and ready to be used for our question 1.
 
 #### Data for question 2 and 4
 
