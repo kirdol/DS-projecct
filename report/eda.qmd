@@ -52,6 +52,7 @@ To have an overview of the relationship between our independent variables and th
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 data_question1 <- read.csv(here("scripts", "data", "data_question1.csv"))
 data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"))
+data_question3_1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
 data_question3_2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
 data_question3_3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
 
@@ -515,6 +516,7 @@ We can see that the regions' the most affected by the conflicts are : Middle eas
 Now that we could visualize which regions are the most impacted by these three events we can do correlations analysis per region to see if this events have indeed an impact on the evolution of SDG goals.
 
 Here we want to analyse the correlation between the climate disasters and the SDG goals in South and East Asia.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 Q3.1[is.na(Q3.1)] <- 0
 
@@ -543,9 +545,11 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
        title = 'Correlation between the climate disasters and the SDG goals in South and East Asia')
 
 ```
+
 We conclude that climate disasters do not really have a big impact on SDG goals.
 
 Here we want to analyse the correlation between the Covid-19 and the SDG goals only during Covid time.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 covid_filtered <- Q3.2[Q3.2$year >= as.Date("2019-01-01"), ]
 
@@ -572,9 +576,11 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
   labs(x = '', y = '',
        title = 'Correlation between COVID and the SDG goals')
 ```
+
 Same conclusion, really weird.
 
 Here we want to analyse the correlation between conflicts deaths and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Eastern Europe regions.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 
 # Filter data for specific regions
@@ -607,7 +613,6 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
   labs(x = '', y = '',
        title = 'Correlation between Conflicts deaths and the SDG goals')
 ```
-
 
 Finally, we want to analyse the correlation between conflicts affected population and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean, Eastern Europe regions and Caucasus and Central Asia.
 
@@ -643,7 +648,6 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
   labs(x = '', y = '',
        title = 'Correlation between Conflicts Affected Population and the SDG goals')
 ```
-
 
 ## Focus on relationship between SDGs
 
