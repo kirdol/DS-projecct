@@ -170,7 +170,7 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
 }
 pairs(data_question1[,10:25], upper.panel=panel.cor, diag.panel=panel.hist)
 ```
-The latter code showed us the Pearson's correlation coefficients. 
+The latter Pearson's correlation coefficients method shows us the distribution of the goal scores, and again the positive and negative correlations between the goals. We notive again the same observations as we did in the previous correlation matrix heatmap. Now, we tried to use the same method for the Human Freedom Index scores. 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #for Human Freedom Index scores 
 panel.hist <- function(x, ...){
@@ -191,22 +191,9 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
   text(0.5, 0.5, txt, cex = cex.cor * r)
 }
 pairs(data_question1[,30:41], upper.panel=panel.cor, diag.panel=panel.hist)
+```
 
-#### Heatmap ####
-
-cor_melted <- melt(cor_matrix)
-
-ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
-  geom_tile() +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
-                       name="Pearson\nCorrelation") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
-        axis.text.y = element_text(size = 8)) +
-  coord_fixed() +
-  labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
-
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### PCA ####
 
 # for goals
