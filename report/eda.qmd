@@ -435,7 +435,6 @@ These is our time-analysis concerning the COVID-19 cases per million by region b
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 covid_filtered <- Q3.2[Q3.2$year >= as.Date("2018-12-12"), ]
 
-# Creating the ggplot with geom_smooth for each year
 ggplot(data = covid_filtered, aes(x = year, y = cases_per_million, group = region, color = region)) +
   geom_smooth(method = "loess",  se = FALSE, span = 0.8, size = 0.5) + 
   labs(title = "Trend of COVID-19 Cases per Million Over Time",
@@ -473,6 +472,7 @@ ggplot(data = covid_filtered, aes(x = year, y = stringency, group = region, colo
 These is our time-analysis concerning climatic disasters with total affected per region
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+Q3.1[is.na(Q3.1)] <- 0
 ggplot(data = Q3.1, aes(x = year, y = total_affected, group = region, color = region)) +
   geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
   labs(title = "Trend of Total Affected from Climatic Disasters Over Time", x = "Year", y = "Total Affected") +
@@ -511,6 +511,139 @@ ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region
 ```
 
 We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, America & the Caribbean, Eastern Europe ans sometimes Caucasus and Central Asia
+
+Now that we could visualize which regions are the most impacted by these three events we can do correlations analysis per region to see if this events have indeed an impact on the evolution of SDG goals.
+
+Here we want to analyse the correlation between the climate disasters and the SDG goals in South and East Asia.
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+Q3.1[is.na(Q3.1)] <- 0
+
+south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
+
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "no_homeless")
+
+correlation_matrix_disaster_Asia <- cor(south_east_asia_data[, relevant_columns], use = "complete.obs")
+
+print(correlation_matrix_disaster_Asia)
+
+
+cor_melted <- as.data.frame(as.table(correlation_matrix_disaster_Asia))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between the climate disasters and the SDG goals in South and East Asia')
+
+```
+We conclude that climate disasters do not really have a big impact on SDG goals.
+
+Here we want to analyse the correlation between the Covid-19 and the SDG goals only during Covid time.
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+covid_filtered <- Q3.2[Q3.2$year >= as.Date("2019-01-01"), ]
+
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
+# Subset data with relevant columns for correlation analysis
+relevant_data <- covid_filtered[, relevant_columns]
+
+correlation_matrix_Covid <- cor(relevant_data, use = "complete.obs")
+
+print(correlation_matrix_Covid)
+
+cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between COVID and the SDG goals')
+```
+Same conclusion, really weird.
+
+Here we want to analyse the correlation between conflicts deaths and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Eastern Europe regions.
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+
+# Filter data for specific regions
+selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe")
+conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
+
+# Select relevant columns for the correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "sum_deaths")
+
+# Compute correlation matrix for the selected regions
+correlation_matrix_Conflicts_Deaths <- cor(conflicts_selected[, relevant_columns], use = "complete.obs")
+
+# View the correlation matrix
+print(correlation_matrix_Conflicts_Deaths)
+
+# Melt the correlation matrix for ggplot2
+cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+# Create the heatmap
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between Conflicts deaths and the SDG goals')
+```
+
+
+Finally, we want to analyse the correlation between conflicts affected population and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean, Eastern Europe regions and Caucasus and Central Asia.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+
+# Filter data for specific regions (pop_affected)
+selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe","Caucasus and Central Asia")
+conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
+
+# Select relevant columns for the correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected")
+
+# Compute correlation matrix for the selected regions
+correlation_matrix_Conflicts_Pop_Affected <- cor(conflicts_selected[, relevant_columns], use = "complete.obs")
+
+# View the correlation matrix
+print(correlation_matrix_Conflicts_Pop_Affected)
+
+# Melt the correlation matrix for ggplot2
+cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Affected))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+# Create the heatmap
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between Conflicts Affected Population and the SDG goals')
+```
+
 
 ## Focus on relationship between SDGs
 

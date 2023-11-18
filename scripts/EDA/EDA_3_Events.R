@@ -193,7 +193,7 @@ corrplot::corrplot(correlation_conflict, method = "color")
 
 
 
-####### 3. correlation Analysis per Region#####
+####### 3. correlation Analysis per Region#####_________________________________
 
 # Get the names of the regions from the disaster dataset
 regions <- unique(Q3.1$region)
@@ -209,6 +209,7 @@ correlation_disaster_by_region <- cor(disaster_data_by_region[, -1])
 
 # Visualize correlation matrix for each region (optional)
 corrplot::corrplot(correlation_disaster_by_region, method = "color")
+
 
 
 
@@ -242,7 +243,7 @@ relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goa
 correlation_matrix_disaster_Asia <- cor(south_east_asia_data[, relevant_columns], use = "complete.obs")
 
 # View the correlation matrix
-print(correlation_matrix)
+print(correlation_matrix_disaster_Asia)
 
 # Melt the correlation matrix for ggplot2
 cor_melted <- as.data.frame(as.table(correlation_matrix_disaster_Asia))
@@ -260,6 +261,43 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
   coord_fixed() +
   labs(x = '', y = '',
        title = 'Correlation between the climate disasters and the SDG goals in South and East Asia')
+
+
+
+
+
+
+
+# Subset data for South and East Asia from Q3.1 dataset
+south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
+
+
+# Select relevant columns for correlation analysis
+relevant_columns <- Q3.1[Q3.1$region %in% c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "no_homeless")]
+
+# Compute correlation matrix for South and East Asia data
+correlation_matrix_disaster_Asia <- cor(south_east_asia_data, relevant_columns, use = "complete.obs")
+
+# View the correlation matrix
+print(correlation_matrix_disaster_Asia)
+
+# Melt the correlation matrix for ggplot2
+cor_melted <- as.data.frame(as.table(correlation_matrix_disaster_Asia))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+# Create the heatmap
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between the climate disasters and the SDG goals in South and East Asia')
+
 
 
 
