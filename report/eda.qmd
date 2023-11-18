@@ -114,9 +114,140 @@ After importing our our cleaned data, we looked first at the correlations betwee
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 
+#### data ####
 
+data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
 
+#### Correlations between variables ####
 
+Correlation_overall <- data_question1 %>% 
+      select(population:ef_regulation) #take years into consideration? 
+
+cor_matrix <- cor(Correlation_overall, use = "pairwise.complete.obs")
+print(cor_matrix)
+
+#### Pearson's correlation coeff ####
+
+#for goals
+
+panel.hist <- function(x, ...){
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(usr[1:2], 0, 1.5) )
+  h <- hist(x, plot = FALSE)
+  breaks <- h$breaks; nB <- length(breaks)
+  y <- h$counts; y <- y/max(y)
+  rect(breaks[-nB], 0, breaks[-1], y, col = "cyan", ...)
+}
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(0, 1, 0, 1))
+  r <- cor(x, y)
+  txt <- format(c(r, 0.123456789), digits = digits)[1]
+  txt <- paste0(prefix, txt)
+  if(missing(cex.cor)) cex.cor <- 10/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+pairs(data_question1[,10:25], upper.panel=panel.cor, diag.panel=panel.hist)
+
+#too many goals for making this in once
+
+#for HFI scores 
+
+panel.hist <- function(x, ...){
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(usr[1:2], 0, 1.5) )
+  h <- hist(x, plot = FALSE)
+  breaks <- h$breaks; nB <- length(breaks)
+  y <- h$counts; y <- y/max(y)
+  rect(breaks[-nB], 0, breaks[-1], y, col = "cyan", ...)
+}
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(0, 1, 0, 1))
+  r <- cor(x, y)
+  txt <- format(c(r, 0.123456789), digits = digits)[1]
+  txt <- paste0(prefix, txt)
+  if(missing(cex.cor)) cex.cor <- 6/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+pairs(data_question1[,30:41], upper.panel=panel.cor, diag.panel=panel.hist)
+
+#### Heatmap ####
+
+cor_melted <- melt(cor_matrix)
+
+ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
+
+#### PCA ####
+
+# for goals
+
+myPCA_g <- PCA(data_question1[,9:20])
+summary(myPCA_g)
+myPCA_g$eig
+
+#eigenvalue only >1 with dim1 
+
+#for HFI scores
+myPCA_s <- PCA(data_question1[,30:41])
+summary(myPCA_s)
+myPCA_s$eig
+
+#3 revelant component according to eigen value of Kaiser-Guttman’s rule
+
+#### Kmean clustering ####
+
+data1_scaled <- scale(Correlation_overall)
+row.names(data1_scaled) <- data_question1[,1]
+fviz_nbclust(data1_scaled, kmeans, method="wss")
+kmean <- kmeans(data1_scaled, 7)
+print(kmean)
+fviz_cluster(kmean, data=data1_scaled, repel=TRUE, depth =NULL, ellipse.type = "norm")
+
+# Results:  (between_SS / total_SS =  58.4 %)
+
+#### boxplots ####
+
+#for goals
+dev.off()
+boxplot(Correlation_overall[2:18], 
+        las = 2,            # Makes the axis labels perpendicular to the axis
+        par(mar = c(5, 4, 4, 2) + 0.1),  # Adjusts the margins to fit all labels
+        cex.axis = 0.7,      # Reduces the size of the axis labels
+        cex.lab = 1,       # Reduces the size of the x and y labels
+        notch = TRUE,       # Specifies whether to add notches or not
+        main = "Merged goals boxplot", # Title of the boxplot
+        xlab = "Goals",  # X-axis label
+        ylab = "Score")     # Y-axis label
+
+#for Human Freedom Index scores 
+
+boxplot(Correlation_overall[23:34], 
+        las = 2,            # Makes the axis labels perpendicular to the axis
+        par(mar = c(7, 5, 2, 1)),  # Adjusts the margins to fit all labels
+        cex.axis = 0.7,      # Reduces the size of the axis labels
+        cex.lab = 1,       # Reduces the size of the x and y labels
+        notch = TRUE,       # Specifies whether to add notches or not
+        main = "Merged Human Freedom Index scores boxplot", # Title of the boxplot
+        xlab = "Categories",  # X-axis label
+        ylab = "Score")     # Y-axis label
+
+# the rest
+
+par(mfrow=c(2,3))
+for (i in 19:22){
+  boxplot(Correlation_overall[,i], main=names(Correlation_overall[i]), type="l")
+}
+par(mfrow=c(1,1))
 ```
 
 ## **Focus on the evolution of SDG scores over time**
