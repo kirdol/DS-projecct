@@ -148,9 +148,9 @@ boxplot(Correlation_overall[2:18],
         cex.axis = 0.7,      # Reduces the size of the axis labels
         cex.lab = 1,       # Reduces the size of the x and y labels
         notch = TRUE,       # Specifies whether to add notches or not
-        main = "Merged goals boxplot", # Title of the boxplot
+        main = "Merged SDG Goals Scores Boxplot", # Title of the boxplot
         xlab = "Goals",  # X-axis label
-        ylab = "Score")     # Y-axis label
+        ylab = "Scores")     # Y-axis label
 
 #for Human Freedom Index scores 
 
@@ -160,9 +160,9 @@ boxplot(Correlation_overall[23:34],
         cex.axis = 0.7,      # Reduces the size of the axis labels
         cex.lab = 1,       # Reduces the size of the x and y labels
         notch = TRUE,       # Specifies whether to add notches or not
-        main = "Merged Human Freedom Index scores boxplot", # Title of the boxplot
+        main = "Merged Human Freedom Index Scores Boxplot", # Title of the boxplot
         xlab = "Categories",  # X-axis label
-        ylab = "Score")     # Y-axis label
+        ylab = "Scores")     # Y-axis label
 
 # the rest
 

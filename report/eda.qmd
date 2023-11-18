@@ -235,6 +235,8 @@ fviz_cluster(kmean, data=data1_scaled, repel=TRUE, depth =NULL, ellipse.type = "
 # Result:  (between_SS / total_SS =  58.4 %)
 ```
 Then, we have decided to use boxplots for visualizing the distribution of the goal and the Human Freedom Index scores, and also for the remaining variables. The separation was done for having all the variables on the same scale on one boxplot.
+
+The following boxplot is concerning the SDG goal scores. On the graph we can see that there are a lot of extreme values for the goal 2 (), 4() and 13(), which could show inequalities within certain countries. 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### boxplots ####
 
@@ -245,10 +247,12 @@ boxplot(Correlation_overall[2:18],
         cex.axis = 0.7,      # Reduces the size of the axis labels
         cex.lab = 1,       # Reduces the size of the x and y labels
         notch = TRUE,       # Specifies whether to add notches or not
-        main = "Merged goals boxplot", # Title of the boxplot
+        main = "Merged SDG Goals Scores Boxplot", # Title of the boxplot
         xlab = "Goals",  # X-axis label
-        ylab = "Score")     # Y-axis label
+        ylab = "Scores")     # Y-axis label
+```
 
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #for Human Freedom Index scores 
 boxplot(Correlation_overall[23:34], 
         las = 2,            # Makes the axis labels perpendicular to the axis
@@ -256,11 +260,12 @@ boxplot(Correlation_overall[23:34],
         cex.axis = 0.7,      # Reduces the size of the axis labels
         cex.lab = 1,       # Reduces the size of the x and y labels
         notch = TRUE,       # Specifies whether to add notches or not
-        main = "Merged Human Freedom Index scores boxplot", # Title of the boxplot
+        main = "Merged Human Freedom Index Scores Boxplot", # Title of the boxplot
         xlab = "Categories",  # X-axis label
-        ylab = "Score")     # Y-axis label
+        ylab = "Scores")     # Y-axis label
+```
 
-#the remaining variables
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 par(mfrow=c(2,3))
 for (i in 19:22){
   boxplot(Correlation_overall[,i], main=names(Correlation_overall[i]), type="l")
