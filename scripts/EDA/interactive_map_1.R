@@ -52,13 +52,4 @@ server <- function(input, output, session) {
 }
 
 # Run the Shiny app
-interactive_map_1 <- shinyApp(ui, server)
-interactive_map_1
-
-# Save as html document
-app_dir <- shinyAppDir(
-  system.file("appdir", package="shinytest"), 
-  appFiles = c("ui.R", "server.R")
-)
-
-save_html(interactive_map_1, file = here("scripts", "EDA", "interactive_map_1.html"))
+shinyApp(ui, server)
