@@ -29,3 +29,5 @@ DT
 cowplot
 sf
 rnaturalearth
+FactoMineR
+factoextra

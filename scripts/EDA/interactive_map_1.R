@@ -2,6 +2,7 @@ library(sf)
 library(rnaturalearth)
 library(shiny)
 library(plotly)
+library(shinytest)
 
 # Import data
 data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"), sep=",")
@@ -51,6 +52,13 @@ server <- function(input, output, session) {
 }
 
 # Run the Shiny app
-shinyApp(ui, server)
+interactive_map_1 <- shinyApp(ui, server)
+interactive_map_1
 
 # Save as html document
+app_dir <- shinyAppDir(
+  system.file("appdir", package="shinytest"), 
+  appFiles = c("ui.R", "server.R")
+)
+
+save_html(interactive_map_1, file = here("scripts", "EDA", "interactive_map_1.html"))

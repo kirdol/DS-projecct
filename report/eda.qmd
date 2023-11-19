@@ -27,7 +27,7 @@ Correlation_overall <- data_question1 %>%
 #### boxplots ####
 
 #for goals
-dev.off()
+#dev.off()
 boxplot(Correlation_overall[2:18], 
         las = 2,            # Makes the axis labels perpendicular to the axis
         par(mar = c(5, 4, 4, 2) + 0.1),  # Adjusts the margins to fit all labels
@@ -69,13 +69,6 @@ We now look at the variables in a summary table to have a more precise view of t
 table1 <- summary(data_question24)
 kable(table1)
 ```
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-# Replace the missing values by zero
-data_question3_1[is.na(data_question3_1)] <- 0
-```
-
-We chose to replace the missing values of this dataset by zeros because we made the hypothesis that it's normal that disasters are not going to happen every year and in the same areas. So when we replace the NA by 0 we meant that at that moment any disaster did take place. The different variables used to materialize the impact of disasters do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that disasters have a specific influence on some SDGs.
 
 ## Focus on the influence of the factors over the SDG scores
 
@@ -559,6 +552,7 @@ correlation_matrix_Conflicts_Pop_Affected <- cor(conflicts_selected[, relevant_c
 
 # View the correlation matrix
 print(correlation_matrix_Conflicts_Pop_Affected)
+kable(correlation_matrix_Conflicts_Pop_Affected)
 
 # Melt the correlation matrix for ggplot2
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Affected))
@@ -642,9 +636,3 @@ We can have a look at the shape of the corelation between the SDGs with the plot
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 plot(sdg_scores)
 ```
-
--   Mapping out the underlying structure
--   Identifying the most important variables
--   Univariate visualizations
--   Multivariate visualizations
--   Summary tables

@@ -510,6 +510,9 @@ see_missing3_1 <- data_question3_1 %>%
               filter(num_missing > 0))
 # Many missing, what do we do?
 
+# Replace the missing values by zero
+data_question3_1[is.na(data_question3_1)] <- 0
+
 # COVID
 see_missing3_2 <- data_question3_2 %>%
   group_by(code) %>%
