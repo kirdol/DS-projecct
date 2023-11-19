@@ -1,9 +1,5 @@
 # Introduction
 
-```{r, echo = FALSE, message = FALSE}
-source(here::here("scripts/Clean/setup.R"))
-```
-
 ## Overview and Motivation
 
 The global significance of the SDGs is our basis. The adoption of the SDGs by the United Nation in 2015 marked a significant global commitment to address pressing issues such as poverty, inequality, climate, change, and more. The fact that these goals were unanimously adopted by 193 member states underscores their importance. This prompted us to ask ourselves, can we evaluate the progress? What has really been done so far? Although the SDGs have attracted considerable attention and backing, it is essential to evaluate the events preceding and following their implementation. Understanding the actions taken and progress made is essential in determining if these global commitments are resulting in tangible enhancements to individuals' lives. By examining the evolution of all countries and their respective contributions towards achieving the SDGs, we can develop a comprehensive understanding of collective efforts and identify potential disparities or gaps.
