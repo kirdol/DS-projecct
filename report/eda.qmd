@@ -440,7 +440,7 @@ Now that we could visualize which regions are the most impacted by these three e
 
 Here we want to analyse the correlation between the climate disasters and the SDG goals in South and East Asia.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 Q3.1[is.na(Q3.1)] <- 0
 
 south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
@@ -472,7 +472,7 @@ We conclude that climate disasters do not really have a big impact on SDG goals.
 
 Here we want to analyse the correlation between the Covid-19 and the SDG goals only during Covid time.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 covid_filtered <- Q3.2[Q3.2$year >= as.Date("2019-01-01"), ]
 
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
@@ -503,7 +503,7 @@ Same conclusion, really weird.
 
 Here we want to analyse the correlation between conflicts deaths and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Eastern Europe regions.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 
 # Filter data for specific regions
 selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe")
@@ -538,7 +538,7 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
 
 Finally, we want to analyse the correlation between conflicts affected population and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean, Eastern Europe regions and Caucasus and Central Asia.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 
 # Filter data for specific regions (pop_affected)
 selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe","Caucasus and Central Asia")
@@ -577,7 +577,7 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
 
 Let's explore how the different SDG are correlated together by creating a heatmap of the correlation between our variables. We also added a small script to check whether the correlations are significantly different from 0. First, let's select the SDGs scores.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 sdg_scores <- Q4[, c('goal1', 'goal2', 'goal3', 'goal4', 'goal5', 'goal6',
                      'goal7', 'goal8', 'goal9', 'goal10', 'goal11', 'goal12',
                      'goal13', 'goal15', 'goal16', 'goal17')]
@@ -585,7 +585,7 @@ sdg_scores <- Q4[, c('goal1', 'goal2', 'goal3', 'goal4', 'goal5', 'goal6',
 
 We then, initialize the matrices and calculate the correlation, and p-values of each combination of SDGs scores
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 cor_matrix <- matrix(nrow = ncol(sdg_scores), ncol = ncol(sdg_scores))
 p_matrix <- matrix(nrow = ncol(sdg_scores), ncol = ncol(sdg_scores))
 rownames(cor_matrix) <- colnames(sdg_scores)
@@ -603,7 +603,7 @@ for (i in 1:ncol(sdg_scores)) {
 
 We then reshape our data to be able to use the package ggplot2 to create our heatmap.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.width="100%"}
 melted_cor_matrix <-
   melt(cor_matrix)
 melted_p_matrix <-
@@ -632,6 +632,6 @@ Note that as said previously, we assessed the correlations to ascertain if they 
 
 We can have a look at the shape of the corelation between the SDGs with the plot function.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 plot(sdg_scores)
 ```
