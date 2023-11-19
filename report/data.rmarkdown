@@ -2038,7 +2038,8 @@ see_missing3_1 <- data_question3_1 %>%
                    ~ sum(is.na(.))) %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 0))
-kable(head((see_missing3_1(), 10)))
+for_kable <- head(see_missing3_1, 10)
+kable(for_kable)
 ```
 
 
