@@ -1855,7 +1855,7 @@ see_missing3_1 <- data_question3_1 %>%
                    ~ sum(is.na(.))) %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 0))
-print (see_missing3_1)
+kable(head((see_missing3_1(), 10)))
 ```
 
 In this particular case, even if there are many missing values in our disaster dataset, we made the hypothesis that disaster events can not happen every year for every country given that these are uncontrollable and non-recurring events. Therefore the NAs that we encounter will become zeroes, implying that there have been no climatic disasters.
