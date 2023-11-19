@@ -52,7 +52,6 @@ boxplot(Correlation_overall[23:34],
         cex.lab = 1,       # Reduces the size of the x and y labels
         notch = TRUE,       # Specifies whether to add notches or not
         main = "Merged Human Freedom Index scores boxplot", # Title of the boxplot
-        xlab = "Categories",  # X-axis label
         ylab = "Score")     # Y-axis label
 
 # for the remaining variables
@@ -80,7 +79,6 @@ After importing our our cleaned data, we looked first at the correlations betwee
 Correlation_overall <- data_question1 %>% 
       select(population:ef_regulation)
 cor_matrix <- cor(Correlation_overall, use = "everything")
-print(cor_matrix)
 kable(cor_matrix)
 ```
 
@@ -134,13 +132,13 @@ pairs(data_question1[,c("overallscore", "unemployment.rate", "GDPpercapita", "Mi
 
 The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%", out.height="100%"}
 pairs(data_question1[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly", "pf_expression", "pf_identity")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of personal freedom variables")
 ```
 
 The overall SDG achievement score is highly correlated with "personal freedom: law" (p=.69) and "personal freedom: identity" (p=.62). The other dimensions of personal freedom do not seem to have important influence. Regarding the distribution of the personal freedom variables, we notice that except for law, all have right-skewed distributions meaning that most of the countries have high scores.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%", out.height="100%"}
 pairs(data_question1[,c("overallscore", "ef_government", "ef_legal", "ef_money", "ef_trade", "ef_regulation")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of economic freedom variables")
 ```
 
@@ -301,7 +299,7 @@ Now, comparing the SDG scores by continent, we observe that most of the time, Eu
 
 -   Goal 9 (industry, innovation and infrastructure) show exponential growth for almost all continents.
 
-Third we create an interactive map of the world to be able to navidagte from year 2000 to 2022, seeing the level of achievement of the SDGs (overall score) for each country. To open it in your browser, use this html file: . Here is only a non-interactive world map of the overall SDGs achievement scores, not taking into account the evolution over the years.
+Third we create an interactive map of the world to be able to navigate from year 2000 to 2022, seeing the level of achievement of the SDGs (overall score) for each country. To open it in your browser, use this R file: interactive_map_1. Here is only a non-interactive world map of the overall SDGs achievement scores, not taking into account the evolution over the years.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 library(rnaturalearth)
