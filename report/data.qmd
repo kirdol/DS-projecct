@@ -227,25 +227,20 @@ To accommodate the large scale of the datasets we intended to utilize, we decide
 
 ### 1. Dataset on SDG
 
-This is our main dataset, that we clean in order to keep the columns containing the following inforamtion: country name, country code, year, population, overall score and the 17 SDGs and the score of each SDG exept for SDG 14 (life under water), because there was 24.1% of missing values. We couldn't replace them, because the information was always missing for a courty across all years. Since the other SDGs such as life on earth and clean water already treat similar subjects, we decided to delete the variable. Two other goals had some missing values: SDG 1 (end poverty) with 9.04% missing values in 15 different countries and SDG 10 (reduced inequalities) with 10.2% missing values.We decide to keep both SDGs and only remove the countries with no information for the analysis, because it isn't too much countries and that these SDGs are very important. The column population also contained some missing values, but we found out that it was for aggregate groups of countries, that we removed from the database, since we are interested in the different countries only.
+This is our main dataset, that we clean in order to keep the columns containing the following information: country name, country code, year, population, overall score and the SDGs scores.
+
+We begin by importing the data and transforming it into a dataframe. We rename the columns and transform the scores into numeric variables. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-# Import data
 D1_0_SDG <- read.csv(here("scripts","data","SDG.csv"), sep = ";")
-
-# Transform -> dataframe
 D1_0_SDG <- as.data.frame(D1_0_SDG)
 
-# We only want to keep certain columns: country code, country, year, population, overall SDG score and the scores on each SDG
 D1_0_SDG <- D1_0_SDG[,1:22]
 
-# Rename the columns to have our variables
 colnames(D1_0_SDG) <- c("code", "country", "year", "population", "overallscore", "goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal14", "goal15", "goal16", "goal17")
 
-# Transform the SDG overall score into a numeric value
 D1_0_SDG[["overallscore"]] <- as.double(gsub(",", ".", D1_0_SDG[["overallscore"]]))
 
-# Function to transform the SDG score into numeric values
 makenumSDG <- function(D1_0_SDG) {
   for (i in 1:17) {
     varname <- paste("goal", i, sep = "")
@@ -256,14 +251,11 @@ makenumSDG <- function(D1_0_SDG) {
 
 D1_0_SDG <- makenumSDG(D1_0_SDG)
 
-# Make sure the encoding of the country names are UTF-8
-D1_0_SDG$country <- stri_encode(D1_0_SDG$country, to = "UTF-8")
+```
 
-# standardize country names
-D1_0_SDG <- D1_0_SDG %>%
-  mutate(country = countrycode(country, "country.name", "country.name", custom_match = c("T�rkiye"="Turkey")))
+We continue by inspecting the missing values.
 
-# inspection of missing values
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 propmissing <- numeric(length(D1_0_SDG))
 
 for (i in 1:length(D1_0_SDG)){
@@ -272,7 +264,11 @@ for (i in 1:length(D1_0_SDG)){
 }
 propmissing
 
-# Population has some missing values, let's investigate
+```
+
+Seeing that population has a lot of NAs, we investigate and find out that it is normal to have missing values, because some of the observations are not countries but regions, so we can drop these observations.
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 SDG0 <- D1_0_SDG |> 
   group_by(code) |> 
   select(population) |> 
@@ -280,14 +276,21 @@ SDG0 <- D1_0_SDG |>
   filter(NaPop != 0)
 print(SDG0, n = 180)
 
-# Normal to have missing values because not countries but regions so we can drop these observations
 D1_0_SDG <- D1_0_SDG %>%
   filter(!str_detect(code, "^_"))
 
-# Now there isn't any more missing values in the variable population and we will see that we have information on 166 countries:
+```
+
+Now there is no more missing values in the variable population and we see that we have information on 166 countries. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 (country_number <- length(unique(D1_0_SDG$country)))
 
-# Where do we have missing values in the different goal scores? 
+```
+
+We see that there are only NAs in 3 SDG scores: 1, 10 and 14 and that when there are NAs for a country, it is on all years or none. We decide to run ore investigations of those 3 SDG scores to decide if we keep them or not for the analysis. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 SDG1 <- D1_0_SDG |> 
   group_by(code) |> 
   select(contains("goal")) |> 
@@ -310,14 +313,15 @@ SDG1 <- D1_0_SDG |>
             Na17 = mean(is.na(goal17))) |>
   filter(Na1 != 0 | Na2 != 0 | Na3 != 0| Na4 != 0| Na5 != 0| Na6 != 0| Na7 != 0| Na8 != 0| Na9 != 0| Na10 != 0| Na11 != 0| Na12 != 0| Na13 != 0| Na14 != 0| Na15 != 0| Na16 != 0| Na17 != 0)
 
-# Print the counts for each variable
 kable(for (col in names(SDG1)[-1]) {
   print(paste(col, "count:", sum(SDG1[[col]] != 0)))
 })
 
-# We see that there are only missings in 3 SDG scores: 1, 10 and 14 and that when there are missings for a country, it is on all years or none. 
+```
 
-# More investigations of those 3 SDG scores. A lot of countries don't have information on those 3 SDG, should we choose to not analyse these SDGs? 
+For goal 1, there are only 9.04% missing values in 15 different countries. Goal 1 being "end poverty", we decide to keep it and only remove the countries with no information for the analysis. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 SDG2 <- D1_0_SDG |> 
   group_by(code) |> 
   select(contains("goal")) |> 
@@ -328,7 +332,11 @@ print(table(SDG2$Na1))
 
 length(unique(SDG2$code))/country_number
 
-# there are only 9.04% missing values in 15 different countries, goal 1 being "end poverty", we decide to keep it and only remove the countries with no information for the analysis
+```
+
+For goal 10, there are only 10.2% missing values in 17 different countries. Goal 10 being "reduced inequalities", we decide to keep it and only remove the countries with no information for the analysis. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 SDG3 <- D1_0_SDG |> 
   group_by(code) |> 
   select(contains("goal")) |> 
@@ -339,7 +347,11 @@ print(table(SDG3$Na10))
 
 length(unique(SDG3$code))/country_number
 
-# there are only 10.2% missing values in 17 different countries, goal 10 being "reduced inequalities", we decide to keep it and only remove the countries with no information for the analysis
+```
+
+For goal 14, there are 24.1% missing values in 40 different countries. Goal 14 being "life under water", we decide not to keep it, because other SDG such as "life on earth" and "clean water" already treat similar subjects. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 SDG4 <- D1_0_SDG |> 
   group_by(code) |> 
   select(contains("goal")) |> 
@@ -350,37 +362,39 @@ print(table(SDG4$Na14))
 
 length(unique(SDG4$code))/country_number
 
-# there are 24.1% missing values in 40 different countries, goal 14 being "life under water", we decide not to keep it, because other SDG such as life on earth and clean water already treat similar subjects
-
-# Delete SDG14
 D1_0_SDG <- D1_0_SDG %>% select(-goal14)
 
 ```
 
-We will be working with different datasets and merge them based on the country code and the year. To make sure the match will work well, we standardize the name of the countries and country code using the countrycode library. In addition, we create a liste of all the country codes contained in the main database in order to filter the other databases. Finally, we complete the database to make sure all the combinations of "country, year" are in the database. The number of rows isn't changed.
+We will be working with different datasets and merge them based on the country code and the year. To make sure the match will work well, we verify that the country names are encoded in UTF-8 format, then we standardize the name of the countries (we needed to make a custom matrch for Turkey) and the country codes using the countrycode library. In addition, we create a list of all the country codes contained in the main database in order to filter the other databases. Finally, we complete the database to make sure all the combinations of "country, year" are in the database. The number of rows isn't changed.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-# Standardize country code
+D1_0_SDG$country <- stri_encode(D1_0_SDG$country, to = "UTF-8")
+
+D1_0_SDG <- D1_0_SDG %>%
+  mutate(country = countrycode(country, "country.name", "country.name", custom_match = c("T�rkiye"="Turkey")))
+
 D1_0_SDG$code <- countrycode(
   sourcevar = D1_0_SDG$code,
   origin = "iso3c",
   destination = "iso3c",
 )
 
-# Create a character vector with all the different country codes
 list_country <- c(unique(D1_0_SDG$code))
 
-# Create a dataframe with the list of countries and their respective codes
 D1_0_SDG_country_list <- D1_0_SDG %>%
   filter(code %in% list_country) %>%
   select(code, country)
 
-# remove duplicated rows
 D1_0_SDG_country_list <- D1_0_SDG_country_list %>%
   select(code, country) %>%
   distinct()
 
-# Complete database to make sure there aren't couples of (year, code) missing
+```
+
+Finally, we complete database to make sure there are not couples of (year, code) missing. 
+
+```{r, echo = FALSE, message = TRUE, warning = FALSE}
 D1_0_SDG <- D1_0_SDG |> complete(code, year)
 ```
 
@@ -449,14 +463,12 @@ fill_code <- function(data){
 We create a set of functions that we will apply to each database. First, remove the variables that we don't need, which are the years before 2000. Second, make sure that the values are numeric and rename the year variables (because they all had an "X" before year number). Third, transform the database from wide to long, in order to match the main database. Fourth, transform the year variable into an integer variable and rearrange and rename the columns to match the ones of the other databases. Then, we apply these transformations to the three databases.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE}
-# remove the variables that we don't need
 remove <- function(data){
   years <- seq(1960, 1999)
   removeyears <- paste("X", years, sep = "")
   data <- data[, !(names(data) %in% c("Indicator.Name", "Indicator.Code", "X", removeyears))]
 }
 
-# Make sure that the values are numeric
 makenum <- function(data) {
   for (i in 2000:2022) {
     year <- paste("X", i, sep = "")
@@ -465,7 +477,6 @@ makenum <- function(data) {
   return(data)
 }
 
-# Rename years from Xyear 
 renameyear <- function(data) {
   for (i in 2000:2022) {
     varname <- paste("X", i, sep = "")
@@ -474,7 +485,6 @@ renameyear <- function(data) {
   return(data)
 }
 
-# Transform the database from wide to long
 wide2long <- function(data) {
   data <- pivot_longer(data, 
                        cols = -c("Country.Name", "Country.Code"), 
@@ -483,19 +493,16 @@ wide2long <- function(data) {
   return(data)
 }
 
-# Transform the year variable into an integer variable
 yearint <- function(data) {
   data$year <- as.integer(data$year)
   return(data)
 }
 
-# Rearrange and rename the columns to match the ones of the other datasets
 nameorder <- function(data) {
   colnames(data) <- c("country", "code", "year", "data")
   data <- data %>% select(c("code", "country", "year", "data"))
 }
 
-# One function that contains all the others
 cleanwide2long <- function(data){
   data <- fill_code(data)
   data <- remove(data)
@@ -506,7 +513,6 @@ cleanwide2long <- function(data){
   data <- nameorder(data)
 }
 
-# Apply function to three database
 GDPpercapita <- cleanwide2long(GDPpercapita)
 MilitaryExpenditurePercentGDP <- cleanwide2long(MilitaryExpenditurePercentGDP)
 MiliratyExpenditurePercentGovExp <- cleanwide2long(MiliratyExpenditurePercentGovExp)
@@ -516,17 +522,13 @@ MiliratyExpenditurePercentGovExp <- cleanwide2long(MiliratyExpenditurePercentGov
 We rename the colums with the main information, standardize the country code and remove the countries that are not in our main database. We see that all the 166 countries are there.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE}
-# Rename the data columns to have the right name
 GDPpercapita <- GDPpercapita %>%
   rename(GDPpercapita = data)
-
 MilitaryExpenditurePercentGDP <- MilitaryExpenditurePercentGDP %>%
   rename(MilitaryExpenditurePercentGDP = data)
-
 MiliratyExpenditurePercentGovExp <- MiliratyExpenditurePercentGovExp %>%
   rename(MiliratyExpenditurePercentGovExp = data)
 
-# Standardize the country code
 GDPpercapita$code <- countrycode(
   sourcevar = GDPpercapita$code,
   origin = "iso3c",
@@ -545,7 +547,6 @@ MiliratyExpenditurePercentGovExp$code <- countrycode(
   destination = "iso3c",
 )
 
-# Remove the obervations of countries that aren't in our main dataset on SDGs: 
 GDPpercapita <- GDPpercapita %>% filter(code %in% list_country)
 length(unique(GDPpercapita$code))
 
@@ -555,23 +556,13 @@ length(unique(MilitaryExpenditurePercentGDP$code))
 MiliratyExpenditurePercentGovExp <- MiliratyExpenditurePercentGovExp %>% filter(code %in% list_country)
 length(unique(MiliratyExpenditurePercentGovExp$code))
 
-# There are only 157 countries that are both in the main SDG dataset and in these 3 datasets. But we suspect that some of the missing countries were in the database but not rightly matched
+```
+
+There were only 157 countries that were both in the main SDG dataset and in these 3 datasets, but we suspected that some of the missing countries were in the database but not rightly matched. Indeed, Bahamas was in the database but instead of the code "BHS" there was "The", for "COD" it was "Dem. Rep.", for "COG" it was "Rep", etc. We remarked that the code is in another column of the initial database: "Indicator.Name". We went back to the initial database and before cleaning it we put the right codes (as seen above) and after rerunning the code we see that we have all our 166 countries from the initial dataset. 
+
+```{r, echo = TRUE, message = TRUE, warning = FALSE}
 list_country_GDP <- c(unique(GDPpercapita$code))
 (missing <- setdiff(list_country, list_country_GDP))
-
-# 1. Bahamas was in the database but instead of the code "BHS" there is "The"
-# 2. "COD" "Dem. Rep."
-# 3. "COG" "Rep"
-# 4. "EGY" "Arab Rep."
-# 5. "GMB" "The"
-# 6. "IRN" "Islamic Rep."
-# 7. "KOR" "Rep."
-# 8. "VEN" "RB"
-# 9. "YEM" "Rep."
-# We remark that the code is in another column of the initial database: "Indicator.Name"
-# We go back to the initial database and before cleaning it we put the right codes
-
-# After rerunning the code we see that we have all our 166 countries from the initial dataset 
 
 ```
 
