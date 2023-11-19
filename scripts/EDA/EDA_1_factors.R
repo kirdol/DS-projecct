@@ -19,6 +19,7 @@ Correlation_overall <- data_question1 %>%
 
 cor_matrix <- cor(Correlation_overall, use = "pairwise.complete.obs")
 print(cor_matrix)
+kable(cor_matrix)
 
 #### Pearson's correlation coeff ####
 
@@ -94,6 +95,7 @@ myPCA_g$eig
 #for HFI scores
 myPCA_s <- PCA(data_question1[,30:41])
 summary(myPCA_s)
+kable(myPCA_s)
 myPCA_s$eig
 
 #3 revelant component according to eigen value of Kaiser-Guttman’s rule
@@ -111,7 +113,7 @@ plot(avclust, labels=data_question1[,1])
 data1_scaled <- scale(Correlation_overall)
 row.names(data1_scaled) <- data_question1[,1]
 fviz_nbclust(data1_scaled, kmeans, method="wss")
-kmean <- kmeans(data1_scaled, 7)
+kmean <- kmeans(data1_scaled, 7, nstart = 25)
 print(kmean)
 fviz_cluster(kmean, data=data1_scaled, repel=TRUE, depth =NULL, ellipse.type = "norm")
 # Result:  (between_SS / total_SS =  58.4 %)
@@ -120,7 +122,7 @@ fviz_cluster(kmean, data=data1_scaled, repel=TRUE, depth =NULL, ellipse.type = "
 data1_scaled2 <- scale(Correlation_overall)
 row.names(data1_scaled2) <- data_question1[,5]
 fviz_nbclust(data1_scaled2, kmeans, method="wss")
-kmean <- kmeans(data1_scaled2, 7)
+kmean <- kmeans(data1_scaled2, 7, nstart = 25)
 print(kmean)
 fviz_cluster(kmean, data=data1_scaled2, repel=TRUE, depth =NULL, ellipse.type = "norm")
 
