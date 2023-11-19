@@ -310,6 +310,7 @@ Now, comparing the SDG scores by continent, we observe that most of the time, Eu
 Third we create an interactive map of the world to be able to navidagte from year 2000 to 2022, seeing the level of achievement of the SDGs (overall score) for each country. To open it in your browser, use this html file: . Here is only a non-interactive world map of the overall SDGs achievement scores, not taking into account the evolution over the years.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+library(rnaturalearth)
 # Load world map data
 world <- ne_countries(scale = "medium", returnclass = "sf")
 
