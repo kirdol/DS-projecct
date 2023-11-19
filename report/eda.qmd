@@ -16,6 +16,9 @@ data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"))
 data_question3_1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
 data_question3_2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
 data_question3_3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
+Q3.1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
+Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+Q3.3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
 data <- read.csv(here("scripts", "data", "all_Merge.csv"))
 
 #### boxplots ####
@@ -330,19 +333,8 @@ data0 %>%
 ```
 
 ## Focus on the influence of events over the SDG scores
-
-To explore our data on events such as disasters, covid-19 and conflicts we have to first see which countries are the most touched by these. To do so, we made time-series analysis on this three events each time depending on different variables.
-
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
-Q3.1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
-Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
-Q3.3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
-
-# Converted 'year' column to date format
-Q3.1$year <- as.Date(as.character(Q3.1$year), format = "%Y")
-Q3.2$year <- as.Date(as.character(Q3.2$year), format = "%Y")
-Q3.3$year <- as.Date(as.character(Q3.3$year), format = "%Y")
-```
+ 
+In order to have an overview of the relationship between the different events variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_million", "stringency")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of COVID variables")
@@ -357,6 +349,15 @@ pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected
 ```
 
 The different variables used to materialize the impact of conflicts do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that conflicts have a specific influence on some SDGs.
+
+To explore our data on events such as disasters, covid-19 and conflicts we have to first see which countries are the most touched by these. To do so, we made time-series analysis on this three events each time depending on different variables.
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+# Converted 'year' column to date format
+Q3.1$year <- as.Date(as.character(Q3.1$year), format = "%Y")
+Q3.2$year <- as.Date(as.character(Q3.2$year), format = "%Y")
+Q3.3$year <- as.Date(as.character(Q3.3$year), format = "%Y")
+```
 
 These is our time-analysis concerning the COVID-19 cases per million by region between end 2018 and 2022. 
 
