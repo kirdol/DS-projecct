@@ -21,11 +21,14 @@ Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
 Q3.3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
 data <- read.csv(here("scripts", "data", "all_Merge.csv"))
 
+Correlation_overall <- data_question1 %>% 
+      select(population:ef_regulation)
+
 #### boxplots ####
 
 #for goals
 dev.off()
-boxplot(data[8:24], 
+boxplot(Correlation_overall[2:18], 
         las = 2,            # Makes the axis labels perpendicular to the axis
         par(mar = c(5, 4, 4, 2) + 0.1),  # Adjusts the margins to fit all labels
         cex.axis = 0.7,      # Reduces the size of the axis labels
@@ -41,9 +44,6 @@ We see different schemes among the different goals. Indeed some are quite homoge
 We now display boxplpots for the different variables of the human freedom index, and then also for our other independent variables. 
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-Correlation_overall <- data_question1 %>% 
-      select(population:ef_regulation)
-
 #for Human Freedom Index scores 
 boxplot(Correlation_overall[23:34], 
         las = 2,            # Makes the axis labels perpendicular to the axis
