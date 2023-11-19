@@ -1846,7 +1846,7 @@ We create a column with the number of missing values by country over all the var
 
 **Disasters**
 
-We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We find out that there are many missing values
+We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We find out that there are many missing values and here are the first few lines identifying them by country. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 see_missing3_1 <- data_question3_1 %>%
