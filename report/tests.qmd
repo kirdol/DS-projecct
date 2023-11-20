@@ -97,3 +97,14 @@ server <- function(input, output) {
   })
 }
 ``` 
+
+```{r}
+library(shiny)
+selectInput("goal", "Choose a variable:", choices = c("overallscore", "goal1", "goal2"), selected = "overallscore")
+```
+
+```{r}
+renderPlot({
+    ggplot(data_question2) + geom_line(aes(mapping(x=year, y=input$goal, color=continent)))
+})
+```

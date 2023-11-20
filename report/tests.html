@@ -33,6 +33,9 @@ ul.task-list li input[type="checkbox"] {
 <script src="tests_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="tests_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="tests_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="tests_files/libs/selectize-0.12.4/css/selectize.bootstrap3.css" rel="stylesheet">
+<script src="tests_files/libs/selectize-0.12.4/js/selectize.min.js"></script>
+<script src="tests_files/libs/selectize-0.12.4/accessibility/js/selectize-plugin-a11y.min.js"></script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -66,7 +69,26 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="define-server-logic" class="level1">
 <h1>Define server logic</h1>
-<p>server &lt;- function(input, output) { output<span class="math inline">\(map &lt;- renderPlotly({  plot_map(data0_robin, input\)</span>variable, input$year) }) } ```</p>
+<p>server &lt;- function(input, output) { output<span class="math inline">\(map &lt;- renderPlotly({  plot_map(data0_robin, input\)</span>variable, input$year) }) }</p>
+<pre><code>
+::: {.cell layout-align="center"}
+::: {.cell-output-display}
+```{=html}
+&lt;div class="form-group shiny-input-container"&gt;
+&lt;label class="control-label" id="goal-label" for="goal"&gt;Choose a variable:&lt;/label&gt;
+&lt;div&gt;
+&lt;select id="goal" class="shiny-input-select"&gt;&lt;option value="overallscore" selected&gt;overallscore&lt;/option&gt;
+&lt;option value="goal1"&gt;goal1&lt;/option&gt;
+&lt;option value="goal2"&gt;goal2&lt;/option&gt;&lt;/select&gt;
+&lt;script type="application/json" data-for="goal" data-nonempty=""&gt;{"plugins":["selectize-plugin-a11y"]}&lt;/script&gt;
+&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+<p>::: :::</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="shiny-plot-output html-fill-item" id="out1dba4840bb2c9f3c" style="width:100%;height:400px;"></div>
+</div>
+</div>
 </section>
 
 </main>
