@@ -219,7 +219,7 @@ To accommodate the large scale of the datasets we intended to utilize, we decide
 
 This is our main dataset, that we clean in order to keep the columns containing the following information: country name, country code, year, population, overall score and the SDGs scores.
 
-We begin by importing the data and transforming it into a dataframe. We rename the columns and transform the scores into numeric variables. 
+We begin by importing the data and transforming it into a dataframe. We rename the columns and transform the scores into numeric variables.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 D1_0_SDG <- read.csv(here("scripts","data","SDG.csv"), sep = ";")
@@ -271,14 +271,14 @@ D1_0_SDG <- D1_0_SDG %>%
 
 ```
 
-Now there is no more missing values in the variable population and we see that we have information on 166 countries. 
+Now there is no more missing values in the variable population and we see that we have information on 166 countries.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 (country_number <- length(unique(D1_0_SDG$country)))
 
 ```
 
-We see that there are only NAs in 3 SDG scores: 1, 10 and 14 and that when there are NAs for a country, it is on all years or none. We decide to run ore investigations of those 3 SDG scores to decide if we keep them or not for the analysis. 
+We see that there are only NAs in 3 SDG scores: 1, 10 and 14 and that when there are NAs for a country, it is on all years or none. We decide to run ore investigations of those 3 SDG scores to decide if we keep them or not for the analysis.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 SDG1 <- D1_0_SDG |> 
@@ -309,7 +309,7 @@ kable(for (col in names(SDG1)[-1]) {
 
 ```
 
-For goal 1, there are only 9.04% missing values in 15 different countries. Goal 1 being "end poverty", we decide to keep it and only remove the countries with no information for the analysis. 
+For goal 1, there are only 9.04% missing values in 15 different countries. Goal 1 being "end poverty", we decide to keep it and only remove the countries with no information for the analysis.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 SDG2 <- D1_0_SDG |> 
@@ -324,7 +324,7 @@ length(unique(SDG2$code))/country_number
 
 ```
 
-For goal 10, there are only 10.2% missing values in 17 different countries. Goal 10 being "reduced inequalities", we decide to keep it and only remove the countries with no information for the analysis. 
+For goal 10, there are only 10.2% missing values in 17 different countries. Goal 10 being "reduced inequalities", we decide to keep it and only remove the countries with no information for the analysis.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 SDG3 <- D1_0_SDG |> 
@@ -339,7 +339,7 @@ length(unique(SDG3$code))/country_number
 
 ```
 
-For goal 14, there are 24.1% missing values in 40 different countries. Goal 14 being "life under water", we decide not to keep it, because other SDG such as "life on earth" and "clean water" already treat similar subjects. 
+For goal 14, there are 24.1% missing values in 40 different countries. Goal 14 being "life under water", we decide not to keep it, because other SDG such as "life on earth" and "clean water" already treat similar subjects.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 SDG4 <- D1_0_SDG |> 
@@ -382,7 +382,7 @@ D1_0_SDG_country_list <- D1_0_SDG_country_list %>%
 
 ```
 
-Finally, we complete database to make sure there are not couples of (year, code) missing. 
+Finally, we complete database to make sure there are not couples of (year, code) missing.
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 D1_0_SDG <- D1_0_SDG |> complete(code, year)
@@ -548,7 +548,7 @@ length(unique(MiliratyExpenditurePercentGovExp$code))
 
 ```
 
-There were only 157 countries that were both in the main SDG dataset and in these 3 datasets, but we suspected that some of the missing countries were in the database but not rightly matched. Indeed, Bahamas was in the database but instead of the code "BHS" there was "The", for "COD" it was "Dem. Rep.", for "COG" it was "Rep", etc. We remarked that the code is in another column of the initial database: "Indicator.Name". We went back to the initial database and before cleaning it we put the right codes (as seen above) and after rerunning the code we see that we have all our 166 countries from the initial dataset. 
+There were only 157 countries that were both in the main SDG dataset and in these 3 datasets, but we suspected that some of the missing countries were in the database but not rightly matched. Indeed, Bahamas was in the database but instead of the code "BHS" there was "The", for "COD" it was "Dem. Rep.", for "COG" it was "Rep", etc. We remarked that the code is in another column of the initial database: "Indicator.Name". We went back to the initial database and before cleaning it we put the right codes (as seen above) and after rerunning the code we see that we have all our 166 countries from the initial dataset.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE}
 list_country_GDP <- c(unique(GDPpercapita$code))
@@ -1492,7 +1492,7 @@ data_question1 <- data_question1 %>% select(-c(hf_score, pf_score, ef_score))
 
 **Human freedom index**
 
-The variable pf_law has (many) NAs, but only for one country: BLZ, so we decide to remove it. 
+The variable pf_law has (many) NAs, but only for one country: BLZ, so we decide to remove it.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 data_question1 <- data_question1 %>% filter(code!="BLZ")
@@ -1836,7 +1836,7 @@ We create a column with the number of missing values by country over all the var
 
 **Disasters**
 
-We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We find out that there are many missing values and here are the first few lines identifying them by country. 
+We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We find out that there are many missing values and here are the first few lines identifying them by country.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 see_missing3_1 <- data_question3_1 %>%

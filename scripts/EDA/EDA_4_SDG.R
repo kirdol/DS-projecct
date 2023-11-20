@@ -62,28 +62,29 @@ ggplot(plot_data, aes(Var1, Var2, fill = value)) +
 
 ### General analysis
 
-# Create a matrix to represent data types
-Q4[] <- lapply(Q4, function(x) {
-  if (is.numeric(x)) {
-    ifelse(is.na(x), 0, 1)
-  } else {
-    ifelse(is.na(x), 0, 2)
-  }
-})
-
-# Add a row number column for melting
-Q4$row_number <- seq_len(nrow(Q4))
-
-# Convert to long format for ggplot
-data_long <- melt(Q4, id.vars = "row_number")
-
-# Plot
-ggplot(data_long, aes(x = variable, y = row_number)) +
-  geom_tile(aes(fill = factor(value)), color = "white") +
-  scale_fill_manual(values = c("white", "orange", "red")) +
-  theme_minimal() +
-  labs(fill = "Data Type",
-       x = "Columns",
-       y = "Rows",
-       title = "Data Type Visualization: Numerical (Light Blue), Textual (Light Green), NA (White)")
+# # Create a matrix to represent data types
+# Q4_bis <- matrix(nrow = 0, ncol = 0)
+# Q4_bis[] <- lapply(Q4, function(x) {
+#   if (is.numeric(x)) {
+#     ifelse(is.na(x), 0, 1)
+#   } else {
+#     ifelse(is.na(x), 0, 2)
+#   }
+# })
+# 
+# # Add a row number column for melting
+# Q4_bis$row_number <- seq_len(nrow(Q4_bis))
+# 
+# # Convert to long format for ggplot
+# data_long <- melt(Q4_bis, id.vars = "row_number")
+# 
+# # Plot
+# ggplot(data_long, aes(x = variable, y = row_number)) +
+#   geom_tile(aes(fill = factor(value)), color = "white") +
+#   scale_fill_manual(values = c("white", "orange", "red")) +
+#   theme_minimal() +
+#   labs(fill = "Data Type",
+#        x = "Columns",
+#        y = "Rows",
+#        title = "Data Type Visualization: Numerical (Light Blue), Textual (Light Green), NA (White)")
 

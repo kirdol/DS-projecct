@@ -37,7 +37,8 @@ packages <- c(
   "kableExtra",
   "DT",
   "FactoMineR",
-  "factoextra"
+  "factoextra",
+  "dplyr"
 )
 
 for (i in packages) {
