@@ -30,9 +30,9 @@ packages <- c(
   "stargazer",
   "tinytex",
   "cowplot",
-  "sf"
-  "rnaturalearth",
+  "sf",
   "dplyr",
+  "rnaturalearth",
   "knitr",
   "kableExtra",
   "DT",
