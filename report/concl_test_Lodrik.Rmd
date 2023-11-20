@@ -1,0 +1,8 @@
+# Conclusion
+```{r, echo = FALSE, message = FALSE}
+source(here::here("scripts/Clean/setup.R"))
+```
+
+* Take home message
+* Limitations
+* Future work?

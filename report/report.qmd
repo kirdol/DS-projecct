@@ -2,11 +2,14 @@
 title: "Comparative Analysis of SDG Implementation Evolution Worldwide"
 author: "Lodrik Adam, Sofia Benczédi, Stefan Favre, Delia Fuchs"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: 
-  pdf:
+format:
+  html:
     toc: true
     embed-resources: true
+    self-contained: true
     number-sections: true
+    code-fold: true
+    code-tools: true
 ---
 ```{r child = c('intro.qmd', 'data.qmd', 'eda.qmd', 'analysis.qmd', 'concl.qmd')}
 ```
