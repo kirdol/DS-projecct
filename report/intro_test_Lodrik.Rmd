@@ -1,0 +1,17 @@
+# Introduction
+
+## Overview and Motivation
+
+The global significance of the SDGs is our basis. The adoption of the SDGs by the United Nation in 2015 marked a significant global commitment to address pressing issues such as poverty, inequality, climate, change, and more. The fact that these goals were unanimously adopted by 193 member states underscores their importance. This prompted us to ask ourselves, can we evaluate the progress? What has really been done so far? Although the SDGs have attracted considerable attention and backing, it is essential to evaluate the events preceding and following their implementation. Understanding the actions taken and progress made is essential in determining if these global commitments are resulting in tangible enhancements to individuals' lives. By examining the evolution of all countries and their respective contributions towards achieving the SDGs, we can develop a comprehensive understanding of collective efforts and identify potential disparities or gaps.
+
+## Related Work
+
+## Research questions
+
+1.  **Focus on factors**: What can explain the state of the countries regarding sustainable development? (we will analyse different factors: scores from the human freedom index, GDP per capita, military expenditures in % of GDP/government expenditure, unemployment rate, internet usage). See data description for more precise information about the factors.
+
+2.  **Focus on time**: How has the adoption of the SDGs in 2015 influenced the achievement of SDGs? (we want to compare the achievement (SDG scores: there are scores calculated even before the adoption) of the different countries before and after 2015 to see if the adoption of SDG gave a real "push" to sustainable development)
+
+3.  **Focus on events**: Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crises and natural disasters? (we will analyse the impact of the COVID, natural disasters and conflicts (# deaths, damages, etc.) on the SDG scores). See data description for more precise information about how the impact of these events are materialized into data.
+
+4.  **Focus on relationship between SDGs**: How are the different SDGs linked? (We want to see if some SDGs are linked in the fact that a high score on one implies a high score on the other, and thus if we can make groups of SDGs that are comparable in that way).
