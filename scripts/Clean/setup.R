@@ -30,15 +30,14 @@ packages <- c(
   "stargazer",
   "tinytex",
   "cowplot",
-  "sf",
-  "dplyr",
+  "sf"
   "rnaturalearth",
+  "dplyr",
   "knitr",
   "kableExtra",
   "DT",
   "FactoMineR",
   "factoextra",
-  "dplyr"
 )
 
 for (i in packages) {
