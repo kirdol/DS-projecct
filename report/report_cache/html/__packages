@@ -23,9 +23,9 @@ reshape2
 corrplot
 stargazer
 tinytex
+cowplot
 sf
 rnaturalearth
-cowplot
 knitr
 kableExtra
 DT
