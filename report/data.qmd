@@ -215,7 +215,7 @@ During the wrangling process: we add data to our table (D1_1_SDG) based on diffe
 
 To accommodate the large scale of the datasets we intended to utilize, we decided to pre-clean each of our datasets before merging them. This allowed us to simplify the process of cleaning our final dataset afterwards.
 
-### 1. Dataset on SDG
+### Dataset on SDG
 
 This is our main dataset, that we clean in order to keep the columns containing the following information: country name, country code, year, population, overall score and the SDGs scores.
 
@@ -396,7 +396,7 @@ datatable(D1_0_SDG, options = list(pageLength = 10, class = "hover", searchHighl
 
 As said, this is now our main dataset. All subsequent datasets will be merged with this dataset. Therefore, for all the following datasets, we want to make sure that we only keep data for the same countries and years as in this dataset. We have a total of `r length(list_country)` countries and the years range from 2000 to 2022.
 
-### 2. Dataset on Unemployment rate
+### Dataset on Unemployment rate
 
 In this dataset, the initial step involves importing the data. Next, we ensure that the names and codes of the countries are formatted in UTF-8, preventing any discrepancies due to mismatches in country names. Following this, we modify the column names and filter the data to include only the relevant countries and years, specifically the years 2000 to 2022, covering 166 countries from our primary dataset.
 
@@ -427,7 +427,7 @@ D2_1_Unemployment_rate <- read.csv(here("scripts","data","UnemploymentRate.csv")
 datatable(D2_1_Unemployment_rate, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
 
-### 3. Dataset on GDP military Expenditures
+### Dataset on GDP military Expenditures
 
 We have three different databases which contain information on each countries over the years. Each year represent one variable. We want to extract three variables for our analysis: GDP per capita, military expenditures in percentage of the GDP and military expenditures in percentage of government expenditures.
 
@@ -761,7 +761,7 @@ datatable(D3_3_Miliraty_Expenditure_Percent_Gov_Exp, options = list(pageLength =
 
 ```
 
-### 4. Dataset on internet usage
+### Dataset on internet usage
 
 To prepare the dataset on internet usage in the world to be merge with the other data, we first, import the data. Then, we keep only the year that we are interested in (2000 to 2022). We also rename the column and keep only the country that match the list of the countries in the main dataset on the SDG.
 
@@ -784,7 +784,7 @@ D4_0_Internet_usage <- read.csv(here("scripts", "data", "InternetUsage.csv")) %>
 datatable(D4_0_Internet_usage, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
 
-### 5. Dataset on human freedom index
+### Dataset on human freedom index
 
 After importing the data from the CATO Institute website, we noticed that even if the file was called "Human Freedom Index 2022", the available observations were only going from 2000 up to 2020. We have decided first to modify it in order to match our other datasets, by renaming/encoding/standardizing the columns containing the country names.
 
@@ -927,7 +927,7 @@ We conclude here that 13 countries were concerned by our selection of 50% and mo
 datatable(D5_0_Human_freedom_index, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
 
-### 6. Dataset on Disasters
+### Dataset on Disasters
 
 For this dataset concerning the Disasters we imported the data from Kaggle as we couldn't find the original dataset that is private coming from the EOSDIS SYSTEM, an interactive interface for browsing full-resolution, global, daily satellite images from NASA. Once we made sure that our file called "Disasters" was convert into a data frame, we selected some specific columns that we where interested in.
 
@@ -1000,7 +1000,7 @@ list_country_disasters <- c(unique(D6_0_Disasters$code))
 datatable(D6_0_Disasters, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
 
-### 7. Dataset on COVID
+### Dataset on COVID
 
 This dataset contains information on the COVID19 pandemic between 2020 and 2022. The observation are by year, month, day. After importing the database, we transform the date in format YYYY-MM-DD in order to only keep the year.
 
@@ -1119,7 +1119,7 @@ D7_0_COVID <- COVID
 datatable(D7_0_COVID, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
 
-### 8. Dataset on Conflicts
+### Dataset on Conflicts
 
 For our conflicts dataset, we imported the data from "The World Banck" data catalog. Once we made sure that our file called "Disasters" was convert into a data frame, we selected some specific columns that we where interested in.
 

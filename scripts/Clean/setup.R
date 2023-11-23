@@ -3,13 +3,6 @@
 #############################################
 
 # load the required packages and install them if they are not.
-install_if_missing <- function(package) {
-  if (!require(package, character.only = TRUE)) {
-    install.packages(package)
-    library(package, character.only = TRUE)
-  }
-}
-
 packages <- c(
   "here", # for the project's organization
   "tidyverse", # for wrangling
@@ -41,9 +34,13 @@ packages <- c(
   "dplyr"
 )
 
-for (i in packages) {
-  install_if_missing(i)
-}
+for (pkg in packages) {
+  if (!pkg %in% installed.packages()) {
+    install.packages(pkg)}}
+
+for (pkg in packages) {
+  library(pkg, character.only = TRUE)}
+
 
 ######################################################
 ## The following sets a few option for nice reports ##
@@ -78,6 +75,6 @@ knitr::opts_chunk$set(
 )
 
 # cleaning of the environment
-rm(packages,i,install_if_missing)
+rm(packages, pkg)
 
    
