@@ -7,6 +7,19 @@ binary2015 <- data_question2 %>%
 reg2.1 <- lm(overallscore ~ after2015, data=binary2015, year>=2010)
 summary(reg2.1)
 
+library(plm)
+# Create a panel data object
+panel_data <- pdata.frame(binary2015, index = c("country", "year")) %>% filter(year==2015|year==2016)
+
+# Run the difference-in-differences model
+did_model <- plm(overallscore ~ after2015 + year + after2015:year, 
+                 data = panel_data,
+                 model = "within")
+summary(did_model)
+
+reg2.3 <- lm(overallscore ~ after2015 + after2015:year, data=binary2015, year>=2010)
+summary(reg2.3)
+
 ggplot(data = binary2015, aes(x = year, y = overallscore)) +
   geom_smooth(data = filter(binary2015, year > 2015), method = "lm", se = FALSE)+
   geom_smooth(data = filter(binary2015, year>=2010 & year <= 2015), aes(col="red"), method = "lm", se = FALSE)
