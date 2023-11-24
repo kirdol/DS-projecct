@@ -8,7 +8,7 @@ format:
     embed-resources: true
     self-contained: true
     number-sections: true
-    code-fold: false
+    code-fold: true
     code-tools: true
     theme: flatly
 ---
