@@ -31,7 +31,8 @@ packages <- c(
   "DT",
   "FactoMineR",
   "factoextra",
-  "dplyr"
+  "dplyr",
+  "visdat"
 )
 
 for (pkg in packages) {

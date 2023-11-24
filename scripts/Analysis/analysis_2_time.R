@@ -8,7 +8,16 @@ binary2015 <- data_question2 %>%
 
 # Simple linear regression of the overall score on the variables "after2015"
 reg2.1 <- lm(overallscore ~ after2015, data=binary2015)
+
 summary(reg2.1)
+
+library(huxtable)
+huxreg(reg2.1)
+
+stargazer(reg2.1, 
+          title="Impact of the 2015 adoption of SDG by the UN",
+          type='html',
+          digits=3)
 
 library(plm)
 # Create a panel data object
@@ -19,64 +28,190 @@ reg2.2 <- plm(overallscore ~ after2015 + year + after2015:year,
                  data = panel_data,
                  model = "within")
 summary(reg2.2)
+huxreg(reg2.2)
 
 # taking into account the years in a multiple regression
 reg2.3 <- lm(overallscore ~ after2015 + as.factor(year), data=binary2015)
 summary(reg2.3)
 
 # controlling for the region
-reg2.4 <- lm(overallscore ~ after2015 + as.factor(year) + region, data=binary2015)
+reg2.4 <- lm(overallscore ~ after2015 + as.factor(region), data=binary2015)
 summary(reg2.4)
+
+stargazer(reg2.1, reg2.2, reg2.3, reg2.4, 
+          title="Impact of the 2015 adoption of SDG by the UN",
+          type='html',
+          column.labels=c("Simple", "DiD", "+ years", "+ regions"),
+          digits=3)
+
+huxreg(reg2.1, reg2.2, reg2.3, reg2.4)
+
 
 # Graphs to show the jump (or not) in 2015
 library(plotly)
 
 # Filter data
-data_after_2015 <- filter(binary2015, as.numeric(year) > 2015)
+data_after_2015 <- filter(binary2015, as.numeric(year) >= 2015)
 data_before_2016 <- filter(binary2015, as.numeric(year) <= 2015)
 
-# Create Plotly graph
 graph1 <- plot_ly() %>%
-  add_trace(data = data_after_2015, x = ~year, y = ~overallscore, type = 'scatter', mode = 'lines', line = list(color = 'blue')) %>%
-  add_trace(data = data_before_2016, x = ~year, y = ~overallscore, type = 'scatter', mode = 'lines', line = list(color = 'red')) %>%
-  layout(title = "Overallscore Over Time",
+  add_trace(data = data_after_2015, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_after_2015)), type = 'scatter', mode = 'lines', line = list(color = 'blue'), name = "After 2015") %>%
+  add_trace(data = data_before_2016, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_before_2016)), type = 'scatter', mode = 'lines', line = list(color = 'red'), name = "Before 2015") %>%
+  layout(title = "Different patterns across SDGs before and after 2015",
          xaxis = list(title = "Year"),
-         yaxis = list(title = "Overallscore"))
-
-graph1 <- ggplot(data = binary2015, aes(x = year, y = overallscore)) +
-  geom_smooth(data = filter(binary2015, year > 2015), method = "lm", se = FALSE)+
-  geom_smooth(data = filter(binary2015, year>=2010 & year <= 2015), aes(col="red"), method = "lm", se = FALSE)
-plotly::ggplotly()
-  
-ggplot(data = binary2015, aes(x = year, y = goal1)) +
-  geom_smooth(data = filter(binary2015, year > 2015), method = "lm", se = FALSE)+
-  geom_smooth(data = filter(binary2015, year>=2010 & year <= 2015), aes(col="red"), method = "lm", se = FALSE)
-
-ggplot(data = binary2015, aes(x = year, y = goal2)) +
-  geom_smooth(data = filter(binary2015, year > 2015), method = "lm", se = FALSE)+
-  geom_smooth(data = filter(binary2015, year>=2010 & year <= 2015), aes(col="red"), method = "lm", se = FALSE)
-
-ggplot(data = binary2015, aes(x = year, y = goal3)) +
-  geom_smooth(data = filter(binary2015, year > 2015), method = "lm", se = FALSE)+
-  geom_smooth(data = filter(binary2015, year>=2010 & year <= 2015), aes(col="red"), method = "lm", se = FALSE)
-
-ggplot(data = binary2015, aes(x = year, y = goal4)) +
-  geom_smooth(data = filter(binary2015, year > 2015), method = "lm", se = FALSE)+
-  geom_smooth(data = filter(binary2015, year>=2010 & year <= 2015), aes(col="red"), method = "lm", se = FALSE)
-
-ggplot(data = binary2015, aes(x = year, y = goal5)) +
-  geom_smooth(data = filter(binary2015, year > 2015), method = "lm", se = FALSE)+
-  geom_smooth(data = filter(binary2015, year>=2010 & year <= 2015), aes(col="red"), method = "lm", se = FALSE)
-
-ggplot(data = binary2015, aes(x = year, y = goal6)) +
-  geom_smooth(data = filter(binary2015, year > 2015), method = "lm", se = FALSE)+
-  geom_smooth(data = filter(binary2015, year>=2010 & year <= 2015), aes(col="red"), method = "lm", se = FALSE)+
-  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 5))
-
-ggplot(data = binary2015, aes(x = year, y = goal7)) +
-  geom_smooth(data = filter(binary2015, year > 2015), method = "lm", se = FALSE)+
-  geom_smooth(data = filter(binary2015, year>=2010 & year <= 2015), aes(col="red"), method = "lm", se = FALSE)
-
-ggplot(data = binary2015, aes(x = year, y = goal8)) +
-  geom_smooth(data = filter(binary2015, year > 2015), method = "lm", se = FALSE)+
-  geom_smooth(data = filter(binary2015, year>=2010 & year <= 2015), aes(col="red"), method = "lm", se = FALSE)
+         yaxis = list(title = "SDG achievement score", range = c(30, 85)),
+         shapes = list(
+           list(
+             type = 'line',
+             x0 = 2015,
+             x1 = 2015,
+             y0 = 0,
+             y1 = 1,
+             yref = 'paper',
+             line = list(color = 'grey', width = 2, dash = 'dot')
+           )
+         ),
+         updatemenus = list(
+           list(
+             buttons = list(
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(overallscore ~ year, data = data_after_2015)),
+                   ~fitted(lm(overallscore ~ year, data = data_before_2016))
+                 )),
+                 label = "Overall score",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal1 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal1 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 1",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal2 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal2 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 2",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal3 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal3 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 3",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal4 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal4 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 4",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal5 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal5 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 5",
+                 method = "restyle"
+               ), 
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal6 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal6 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 6",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal7 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal7 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 7",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal8 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal8 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 8",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal9 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal9 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 9",
+                 method = "restyle"
+               ), 
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal10 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal10 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 10",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal11 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal11 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 11",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal12 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal12 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 12",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal13 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal13 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 13",
+                 method = "restyle"
+               ), 
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal15 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal15 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 15",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal16 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal16 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 16",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal17 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal17 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 17",
+                 method = "restyle"
+               )
+             )
+           )
+         )
+  )
+graph1

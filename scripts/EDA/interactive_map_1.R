@@ -54,3 +54,36 @@ server <- function(input, output, session) {
 
 # Run the Shiny app
 shinyApp(ui, server)
+
+# Set up slider steps
+slider_steps <- lapply(unique(data0$year), function(year) {
+  selected_data <- data0 %>% filter(year == year) # Subset data for the selected year
+  list(
+    args = list(
+      "z", list(selected_data$overallscore),
+      "locations", list(selected_data$iso_a3),
+      "text", list(~paste("Country: ", selected_data$name, "<br>SDG score: ", selected_data$overallscore)),
+      "visible", list(data0$year == year)
+    ),
+    label = as.character(year),
+    method = "restyle"
+  )
+})
+
+# Set up slider
+graphx <- plot_ly(
+  layout(
+    sliders = list(
+      list(
+        active = 2022,
+        steps = slider_steps
+      )
+    )
+  ),
+  type = "choropleth",
+  colors = c("darkred", "orange", "yellow", "darkgreen"),
+  colorbar = list(title = "SDG score"),
+  hoverinfo = "text"
+)
+# Display the plot
+graphx
