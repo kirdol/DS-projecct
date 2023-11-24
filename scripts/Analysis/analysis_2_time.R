@@ -1,13 +1,22 @@
 ### Question 2 analysis ###
 data_question2 <- read.csv(here("scripts","data","data_question24.csv"))
 
-# Create a new column (binary variable) with value 1 if the year is after 2015 and zero otherwise. 
+data_question2 <- data_question2 %>% select(-X)
+
 binary2015 <- data_question2 %>% 
+  group_by(code) %>%
+  mutate(across(5:21, ~ . - lag(.), .names = "diff_{.col}"))
+
+# Create a new column (binary variable) with value 1 if the year is after 2015 and zero otherwise. 
+binary2015 <- binary2015 %>% 
   mutate(after2015 = ifelse(year > 2015, 1, 0)) %>%
   filter(as.numeric(year)>=2009)
 
+# histogram of difference in scores between years
+plot_ly(binary2015, x = ~diff_goal1, type = "histogram")
+
 # Simple linear regression of the overall score on the variables "after2015"
-reg2.1 <- lm(overallscore ~ after2015, data=binary2015)
+reg2.1 <- lm(diff_overallscore ~ after2015, data=binary2015)
 
 summary(reg2.1)
 
@@ -24,18 +33,18 @@ library(plm)
 panel_data <- pdata.frame(binary2015, index = c("country", "year"))
 
 # Run the difference-in-differences model to take into account the general evolution over the years
-reg2.2 <- plm(overallscore ~ after2015 + year + after2015:year, 
+reg2.2 <- plm(diff_overallscore ~ after2015 + year + after2015:year, 
                  data = panel_data,
                  model = "within")
 summary(reg2.2)
 huxreg(reg2.2)
 
 # taking into account the years in a multiple regression
-reg2.3 <- lm(overallscore ~ after2015 + as.factor(year), data=binary2015)
+reg2.3 <- lm(diff_overallscore ~ after2015 + as.factor(year), data=binary2015)
 summary(reg2.3)
 
 # controlling for the region
-reg2.4 <- lm(overallscore ~ after2015 + as.factor(region), data=binary2015)
+reg2.4 <- lm(diff_overallscore ~ after2015 + as.factor(region), data=binary2015)
 summary(reg2.4)
 
 stargazer(reg2.1, reg2.2, reg2.3, reg2.4, 

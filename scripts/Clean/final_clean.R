@@ -19,14 +19,38 @@ data_question3_3 <- all_Merge %>% filter(year<=2016) %>% select(c(code, year, co
 
 ##### Which countries have many missing observations over the different variables of the different subsets?
 
-#### Question1 
-vis_dat(data_question1, warn_large_data=FALSE) + scale_fill_brewer(palette="Paired")
+#### Question1
+data_question1 <- data_question1 %>% select(-X)
+ 
+variable_names <- names(data_question1)
+missing_percentages <- sapply(data_question1, function(col) mean(is.na(col)) * 100)
 
-missing_plot(data_question1)
+missing_data_summary <- data.frame(
+  Variable = variable_names,
+  Missing_Percentage = missing_percentages
+)
 
-see_missing1_1 <- data_question1 %>%
+missing_data_summary <- missing_data_summary %>%
+  mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))
+
+ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Percentage), y = Missing_Percentage, fill = Missing_Percentage)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = ifelse(Missing_Percentage > 1, sprintf("%.1f%%", Missing_Percentage), ""),
+                y = Missing_Percentage),
+            position = position_stack(vjust = 1),  # Adjust vertical position
+            color = "white",  # Text color
+            size = 3,          # Text size
+            hjust = 1.05) +
+  labs(title = "Percentage of Missing Values by Variable",
+       x = "Variable",
+       y = "Missing Percentage") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 1)) +
+  coord_flip()
+
+ see_missing1_1 <- data_question1 %>%
   group_by(code) %>%
-  summarise(across(-c(year, country, continent, region, population, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17),  # Exclude columns "goal1" and "goal10"
+  summarise(across(-c(year, country, continent, region, population, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17),  
                    ~ sum(is.na(.))) %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 50))
@@ -497,6 +521,32 @@ see_missing24 <- data_question24 %>%
 #### Question 3
 
 # Disasters
+variable_names <- names(data_question3_1)
+missing_percentages <- sapply(data_question3_1, function(col) mean(is.na(col)) * 100)
+
+missing_data_summary <- data.frame(
+  Variable = variable_names,
+  Missing_Percentage = missing_percentages
+)
+
+missing_data_summary <- missing_data_summary %>%
+  mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))
+
+ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Percentage), y = Missing_Percentage, fill = Missing_Percentage)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = ifelse(Missing_Percentage > 1, sprintf("%.1f%%", Missing_Percentage), ""),
+                y = Missing_Percentage),
+            position = position_stack(vjust = 1),  # Adjust vertical position
+            color = "white",  # Text color
+            size = 3,          # Text size
+            hjust = 1.05) +
+  labs(title = "Percentage of Missing Values by Variable",
+       x = "Variable",
+       y = "Missing Percentage") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 1)) +
+  coord_flip()
+
 see_missing3_1 <- data_question3_1 %>%
   group_by(code) %>%
   summarise(across(-c(goal1, goal10),  # Exclude columns "goal1" and "goal10"
@@ -506,7 +556,7 @@ see_missing3_1 <- data_question3_1 %>%
 # Many missing, what do we do?
 
 # Replace the missing values by zero
-data_question3_1[is.na(data_question3_1)] <- 0
+data_question3_1[is.na(data_question3_2)] <- 0
 
 # COVID
 see_missing3_2 <- data_question3_2 %>%
