@@ -13,7 +13,35 @@ binary2015 <- binary2015 %>%
   filter(as.numeric(year)>=2009)
 
 # histogram of difference in scores between years
-plot_ly(binary2015, x = ~diff_goal1, type = "histogram")
+
+unique_years <- unique(binary2015$year)
+plot_ly() %>%
+  add_trace(
+    type = "histogram", 
+    data = binary2015, 
+    x = ~diff_overallscore
+  ) %>%
+  layout(
+    title = "Distribution of SDG evolution",
+    xaxis = list(title = "Year difference SDG score", range = c(-3,3)),
+    yaxis = list(title = "Frequency", range = c(0,40)),
+    sliders = list(
+      list(
+        active = 0,
+        currentvalue = list(prefix = "Year: "),
+        steps = lapply(seq_along(unique_years), function(i) {
+          year <- unique_years[i]
+          list(
+            label = as.character(year),
+            method = "restyle",
+            args = list(
+              list(x = list(binary2015$diff_overallscore[binary2015$year == year]))
+            )
+          )
+        })
+      )
+    )
+  )
 
 # Simple linear regression of the overall score on the variables "after2015"
 reg2.1 <- lm(diff_overallscore ~ after2015, data=binary2015)
