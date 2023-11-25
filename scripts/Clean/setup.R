@@ -32,7 +32,10 @@ packages <- c(
   "FactoMineR",
   "factoextra",
   "dplyr",
-  "visdat"
+  "visdat",
+  "huxtable",
+  "plm",
+  "plotly"
 )
 
 for (pkg in packages) {

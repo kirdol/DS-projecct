@@ -592,11 +592,11 @@ filtered_data_GDP <- filtered_data_GDP %>%
 Evol_Missing_GDP <- ggplot(data = filtered_data_GDP) +
   geom_point(aes(x = year, y = GDPpercapita, 
                  color = cut(PercentageMissing,
-                             breaks = c(0, 0.1, 0.2, 0.3, 1),
-                             labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
+                             breaks = c(0, 0.1, 0.2, 1),
+                             labels = c("0-10%", "10-20%", "30-100%")))) +
   labs(title = "Evolution of GDP per capita over time", x = "Year", y = "GDP per capita") +
-  scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
-                     labels = c("0-10%", "10-20%", "20-30%", "30-100%")) +
+  scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "30-100%" = "black"),
+                     labels = c("0-10%", "10-20%", "30-100%")) +
   guides(color = guide_legend(title = "% missings")) +
   facet_wrap(~ code, nrow = 4)
 
@@ -632,7 +632,7 @@ print(table(MilitaryExpenditurePercentGDP1$NaMil1))
 
 We plot the evolution of MilitaryExpenditurePercentGDP along the years for each country containing missing values and distinguish the percentage of missing values with colors.
 
-```{r, echo = TRUE, message = TRUE, warning = FALSE, out.width="100%"}
+```{r, echo = TRUE, message = TRUE, warning = FALSE, out.width="100%", fig.height=20}
 filtered_data_Mil1 <- MilitaryExpenditurePercentGDP %>%
   filter(code %in% MilitaryExpenditurePercentGDP1$code) # countries with NAs
 
@@ -650,7 +650,7 @@ Evol_Missing_Mil1 <- ggplot(data = filtered_data_Mil1) +
   scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
                      labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
-  facet_wrap(~ code, nrow = 5) +
+  facet_wrap(~ code, nrow = 8) +
   theme(strip.text = element_text(size = 6)) +
   scale_x_continuous(breaks = NULL) +
   scale_y_continuous(breaks = NULL)
@@ -1279,12 +1279,27 @@ datatable(all_Merge, options = list(pageLength = 10, class = "hover", searchHigh
 
 ### Treatment of missing values
 
-We load our final database and subset it according to the data that we will need in order to answer the different questions. This will help us dealing with the missing values.
+We load our final database and we vizualize the missing values.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%"}
 all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
 
+# Create a dataframe with the goals without NAs summarize in one column to simplify the visualization
+goal_vars <- all_Merge %>%
+  select(starts_with("goal")) %>%
+  filter_all(all_vars(!is.na(.))) %>%
+  colnames()
+to_plot_missing <- all_Merge %>%
+  mutate(Goals_without_NAs = rowSums(!is.na(select(., all_of(goal_vars))))) %>%
+  select(-c(goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal11, goal12, goal13, goal15, goal16, goal17))
+
+vis_dat(to_plot_missing, warn_large_data = FALSE) + scale_fill_brewer(palette = "Paired") +
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 8)
+  )
 ```
+
+We subset our database according to the data that we will need in order to answer the different questions. This will help us dealing with the missing values. 
 
 For question 1, we only keep the years until 2020, because most of the explanatory variables that we want to use (those coming from the human freedom index) only have values until 2020.
 
@@ -1316,12 +1331,46 @@ data_question3_3 <- all_Merge %>% filter(year<=2016) %>% select(c(code, year, co
 
 #### Data for question 1
 
+We begin by visualizing the missing values. To have a less messy graph we group all the goals wihtout NAs into one single variable. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=12}
+data_question1 <- data_question1 %>% select(-X)
+
+# Create a dataframe with the goals without NAs summarize in one column to simplify the visualization
+variable_names <- names(data_question1)
+missing_percentages <- sapply(data_question1, function(col) mean(is.na(col)) * 100)
+
+missing_data_summary <- data.frame(
+  Variable = variable_names,
+  Missing_Percentage = missing_percentages
+)
+
+missing_data_summary <- missing_data_summary %>%
+  mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))
+
+ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Percentage), y = Missing_Percentage, fill = Missing_Percentage)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = ifelse(Missing_Percentage > 1, sprintf("%.1f%%", Missing_Percentage), ""),
+                y = Missing_Percentage),
+            position = position_stack(vjust = 1),  # Adjust vertical position
+            color = "white",  # Text color
+            size = 3,          # Text size
+            hjust = 1.05) +
+  labs(title = "Percentage of Missing Values by Variable",
+       x = "Variable",
+       y = "Missing Percentage") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 1)) +
+  coord_flip()
+
+```
+
 We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We decide to remove the countries that have more than 50 missing values.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 see_missing1_1 <- data_question1 %>%
   group_by(code) %>%
-  summarise(across(-c(X, year, country, continent, region, population, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17), 
+  summarise(across(-c(year, country, continent, region, population, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17), 
                    ~ sum(is.na(.))) %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 50))
@@ -1344,7 +1393,7 @@ Now, looking at the remaining countries that have missing values and there numbe
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 see_missing1_2 <- data_question1 %>%
   group_by(code) %>%
-  summarise(across(-c(X, year, country, continent, region, population, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17),
+  summarise(across(-c(year, country, continent, region, population, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17),
                    ~ sum(is.na(.))) %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 0))
@@ -1455,7 +1504,7 @@ question1_missing_Internet <- data_question1 %>%
   filter(code %in% question1_missing_Internet$code)
 
 Evol_Missing_Internet <- ggplot(data = question1_missing_Internet) +
-  geom_point(aes(x = year, y = internet_usage, 
+  geom_line(aes(x = year, y = internet_usage, 
                  color = cut(PercentageMissing,
                              breaks = c(0, 0.1, 0.2, 0.3, 1),
                              labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
@@ -1506,15 +1555,12 @@ list_country_deleted <- c(list_country_deleted, "BLZ")
 Only KGZ and SRB have missing values, we plot the values over time and fill in the missing values by the year before, since there are only one and two missing values.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-Evol_Missing_ef_gov <- data_question1 %>% group_by(code) %>% filter(code=="KGZ")
-ggplot(Evol_Missing_ef_gov, aes(x = year, y = ef_government)) +
+data_question1 %>%
+  filter(code %in% c("KGZ", "SRB")) %>%
+  ggplot(aes(x = year, y = ef_government)) +
   geom_point() +
-  labs(title = "Evolution of economic freedom: government over time in KGZ", x = "Years", y = "ef_gov")
-
-Evol_Missing_ef_gov <- data_question1 %>% group_by(code) %>% filter(code=="SRB")
-ggplot(Evol_Missing_ef_gov, aes(x = year, y = ef_government)) +
-  geom_point() +
-  labs(title = "Evolution of economic freedom: government over time in SRB", x = "Years", y = "ef_gov")
+  facet_grid(code ~ .) +
+  labs(title = "Evolution of economic freedom: government over time", x = "Years", y = "ef_gov")
 
 data_question1 <- data_question1 %>%
   mutate(ef_government = ifelse(code == "KGZ" & year == 2000 & is.na(ef_government), ef_government[which(code == "KGZ" & year == 2001)], ef_government))
@@ -1546,11 +1592,11 @@ question1_missing_ef_money <- data_question1 %>%
   filter(code %in% question1_missing_ef_money$code)
 
 Evol_Missing_ef_money <- ggplot(data = question1_missing_ef_money) +
-  geom_point(aes(x = year, y = ef_money, 
+  geom_line(aes(x = year, y = ef_money, 
                  color = cut(PercentageMissing,
                              breaks = c(0, 0.1, 0.2, 0.3, 1),
                              labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
-  labs(title = "Evolution of economiv freedom: money over time", x = "Years from 2000 to 2022", y = "ef_money") +
+  labs(title = "Evolution of economic freedom: money over time", x = "Years from 2000 to 2022", y = "ef_money") +
   scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
                      labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
@@ -1631,7 +1677,7 @@ We look at the evolution of the variable over time. For the countries where this
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%", out.height="100%"}
 Evol_Missing_ef_trade <- ggplot(data = question1_missing_ef_trade) +
-  geom_point(aes(x = year, y = ef_trade, 
+  geom_line(aes(x = year, y = ef_trade, 
                  color = cut(PercentageMissing,
                              breaks = c(0, 0.1, 0.2, 0.3, 1),
                              labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
@@ -1740,7 +1786,7 @@ for (i in list_code) {
 
 Then, we look at the distribution of the variable per region. Seeing that all are skewed distributions, we decide to replace the missing values using the median by region.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%", out.height="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 question1_missing_ef_regulation <- data_question1 %>%
   group_by(code) %>%
   mutate(PercentageMissing = mean(is.na(ef_regulation))) %>% # Column % NAs
@@ -1753,7 +1799,7 @@ Freq_Missing_ef_regulation <- ggplot(data = question1_missing_ef_regulation) +
                      fill = cut(PercentageMissing,
                                 breaks = c(0, 0.1, 0.2, 0.3, 1),
                                 labels = c("0-10%", "10-20%", "20-30%", "30-100%"))),
-                 bins = 100) +
+                 bins = 30) +
   labs(title = "Distribution of economic freedom: regulation", x = "ef_regulation", y = "Frequency") +
   scale_fill_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%"="red","30-100%" = "black"), labels = c("0-10%", "10-20%", "20-30%","30-100%")) +
   guides(fill = guide_legend(title = "% missings")) +
@@ -1835,6 +1881,37 @@ see_missing24 <- data_question24 %>%
 We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Since there are no other missing values, we stop here.
 
 **Disasters**
+
+We begin by visualizing the missing values. 
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%"}
+variable_names <- names(data_question3_1)
+missing_percentages <- sapply(data_question3_1, function(col) mean(is.na(col)) * 100)
+
+missing_data_summary <- data.frame(
+  Variable = variable_names,
+  Missing_Percentage = missing_percentages
+)
+
+missing_data_summary <- missing_data_summary %>%
+  mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))
+
+ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Percentage), y = Missing_Percentage, fill = Missing_Percentage)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = ifelse(Missing_Percentage > 1, sprintf("%.1f%%", Missing_Percentage), ""),
+                y = Missing_Percentage),
+            position = position_stack(vjust = 1),  # Adjust vertical position
+            color = "white",  # Text color
+            size = 3,          # Text size
+            hjust = 1.05) +
+  labs(title = "Percentage of Missing Values by Variable",
+       x = "Variable",
+       y = "Missing Percentage") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 1)) +
+  coord_flip()
+
+```
 
 We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We find out that there are many missing values and here are the first few lines identifying them by country.
 

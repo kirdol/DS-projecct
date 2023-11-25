@@ -73,6 +73,61 @@ ggplot(data = data4) +
     )
   )
 
+p <- ggplot(data = data4) +
+  geom_line(mapping = aes(x = year, y = mean_value, color = goal), size = 0.7) +
+  geom_point(mapping = aes(x = year, y = mean_value, color = goal), size = 1) +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Evolution of the mean SDG achievement scores across the world",
+       y = "Mean SDG Scores",
+       x = "Year"
+  ) +
+  guides(
+    color = guide_legend(
+      ncol = 2,
+      title.position = "top",
+      title.hjust = 0.5
+    )
+  )
+
+# Convert ggplot object to plotly
+p <- plot_ly(
+  ggplotly(p),
+  source = "plotly-slider"
+) %>%
+  layout(
+    sliders = list(
+      list(
+        currentvalue = list(
+          prefix = "Selected Year Range: ",
+          visible = TRUE,
+          xanchor = "right",
+          font = list(color = "#888", size = 12)
+        ),
+        steps = list(
+          list(
+            args = list("visible", c(TRUE, TRUE, TRUE)),
+            label = "All",
+            method = "restyle"
+          ),
+          list(
+            args = list("visible", c(FALSE, TRUE, FALSE)),
+            label = "2000-2010",
+            method = "restyle"
+          ),
+          list(
+            args = list("visible", c(FALSE, FALSE, TRUE)),
+            label = "2011-2020",
+            method = "restyle"
+          )
+        )
+      )
+    )
+  )
+
+# Print the plotly object
+print(p)
+
 ggplot(data = data4) +
   geom_line(mapping = aes(x = year, y = mean_value), size = 0.7) +
   scale_color_manual(values = color_palette) +

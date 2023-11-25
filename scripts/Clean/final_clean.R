@@ -1,6 +1,18 @@
 # Import merged database
 all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
-vis_dat(all_Merge, warn_large_data=FALSE) + scale_fill_brewer(palette="Paired")
+
+goal_vars <- all_Merge %>%
+  select(starts_with("goal")) %>%
+  filter_all(all_vars(!is.na(.))) %>%
+  colnames()
+
+# Create a new column "Goals without NAs" in the data frame
+to_plot_missing <- all_Merge %>%
+  mutate(Goals_without_NAs = rowSums(!is.na(select(., all_of(goal_vars))))) %>%
+  select(-c(goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal11, goal12, goal13, goal15, goal16, goal17))
+
+# Now, you can use the `vis_dat` function with the updated data frame
+vis_dat(to_plot_missing, warn_large_data = FALSE) + scale_fill_brewer(palette = "Paired")
 
 # subset of data
 # for question 1: factors (only until 2020 because no information for freedom index after)
