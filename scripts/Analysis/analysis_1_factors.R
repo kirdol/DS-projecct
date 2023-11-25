@@ -2,16 +2,17 @@
 
 data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
 
-# Check first the influence of our overall variables (except sdg goals) over our sdg goals 
+##### Check first the influence of our overall variables over our sdg goals #####
 
-RegTry1 <- lm(goal1~unemployment.rate,data = data_question1)
-RegTry2 <- lm(goal2~unemployment.rate,data = data_question1)
-stargazer(RegTry1, RegTry2,  
-          title="Impact of unemployment over goal 1",
-          type='html',
-          digits=3)
+# retake correlations EDA, then select only correlations related to goals
 
-huxreg(RegTry1,RegTry2)
+Correlation_overall <- data_question1 %>% 
+  select(population:ef_regulation)
+
+cor_matrix <- cor(Correlation_overall, use = "everything")
+print(cor_matrix[2:18,])
+
+# regressions of every variable on each goals
 
 reg_goal1_all <- lm(goal1 ~ goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = data_question1)
 reg_goal2_all <- lm(goal2 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = data_question1)
@@ -67,6 +68,16 @@ huxreg(reg_goal1_all,
        reg_goal16_all,
        reg_goal17_all)
 
+anova(reg_goal1_all)
+vif(reg_goal1_all)
+vif(reg_goal2_all) #we have big multicollinearity problems between goal 1 & numerous variables. In addition, vif of goal2 over goal1 is low, compared to vif goal1 over goal2.
+
+# try to reduce dimensionality of linear model: AIC criteria, backward selection
+
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal1_all, scope=list(lower=nullmod, upper=reg_goal1_all), direction="backward") #vif(selmod) -> still high vif
+summary(selmod)
+
 #what about with overallscore
 
 reg_goal_overall <- lm(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = data_question1)
@@ -76,10 +87,10 @@ stargazer(reg_goal_overall,
           digits=3)
 
 huxreg(reg_goal_overall)
-#careful, regressions with different variables will lead to different correlations for the same test variables over the same Y --> then should I include the influnence of goals between them? 
-#find a way to regress all our variables and only display interesting/pertinent informations in the regression tableau
+
+# find a way to regress all our variables and only display interesting/pertinent informations in the regression tableau
 # do not forget to conduct VIF for covariance problems/ other controlling methods
-
-# then check the influence of sdg goals over other goals 
-
+# could check the correlations with overallscore first, then investigate per goal interesting correlations with specific variables.
+# check the evolution of correlations through years
+# check the evolution of correlations by country
 
