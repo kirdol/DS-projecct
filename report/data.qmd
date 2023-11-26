@@ -1035,7 +1035,7 @@ Evol_Missing_Mil1 <- ggplot(data = filtered_data_Mil1) +
                      labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
   facet_wrap(~ code, nrow = 6) +
-  theme(strip.text = element_text(size = 8)) +
+  theme(strip.text = element_text(size = 6)) +
   scale_x_continuous(breaks = NULL) +
   scale_y_continuous(breaks = NULL)
 
@@ -1090,8 +1090,8 @@ Evol_Missing_Mil2 <- ggplot(data = filtered_data_Mil2) +
   scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
                      labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
-  facet_wrap(~ code, nrow = 5) +
-  theme(strip.text = element_text(size = 7)) +
+  facet_wrap(~ code, nrow = 7) +
+  theme(strip.text = element_text(size = 6)) +
   scale_x_continuous(breaks = NULL) +
   scale_y_continuous(breaks = NULL)
 
@@ -1681,7 +1681,9 @@ to_plot_missing <- all_Merge %>%
 
 vis_dat(to_plot_missing, warn_large_data = FALSE) + scale_fill_brewer(palette = "Paired") +
   theme(
-    axis.text.x = element_text(angle = 90, size = 6)
+    axis.text.x = element_text(angle = 90, size = 6),
+    legend.text = element_text(size = 8),  # Adjust the size of legend text
+    legend.title = element_text(size = 10) 
   )
 ```
 
@@ -1744,7 +1746,10 @@ ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Perce
        x = "Variable",
        y = "Missing Percentage") +
   theme_minimal() +
-  theme(axis.text.y = element_text(hjust = 1)) +
+  theme(axis.text.y = element_text(hjust = 1, size=6 ),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10)) +
+  labs(fill = "% NAs") +
   coord_flip()
 
 ```
@@ -1942,8 +1947,8 @@ Only KGZ and SRB have missing values, we plot the values over time and fill in t
 data_question1 %>%
   filter(code %in% c("KGZ", "SRB")) %>%
   ggplot(aes(x = year, y = ef_government)) +
-  geom_point() +
-  facet_wrap(~ code, nrow=1) +
+  geom_point(color = "green") +
+  facet_wrap(~ code, nrow = 1) +
   labs(title = "Evolution of economic freedom: government over time", x = "Years", y = "ef_gov")
 
 data_question1 <- data_question1 %>%
@@ -2017,7 +2022,7 @@ Freq_Missing_ef_money <- ggplot(data = question1_missing_ef_money) +
   labs(title = "Distribution of economic freedom: money", x = "ef_money", y = "Frequency") +
   scale_fill_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%"="red","30-100%" = "black"), labels = c("0-10%", "10-20%", "20-30%","30-100%")) +
   guides(fill = guide_legend(title = "% missings")) +
-  facet_wrap(~ region, nrow = 3)
+  facet_wrap(~ region, nrow = 2)
 
 print(Freq_Missing_ef_money)
 
@@ -2103,7 +2108,7 @@ Freq_Missing_ef_trade <- ggplot(data = question1_missing_ef_trade) +
   labs(title = "Distribution of economic freedom: trade", x = "ef_trade", y = "Frequency") +
   scale_fill_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%"="red","30-100%" = "black"), labels = c("0-10%", "10-20%", "20-30%","30-100%")) +
   guides(fill = guide_legend(title = "% missings")) +
-  facet_wrap(~ region, nrow = 3)
+  facet_wrap(~ region, nrow = 2)
 
 print(Freq_Missing_ef_trade)
 
@@ -2147,7 +2152,7 @@ question1_missing_ef_regulation <- data_question1 %>%
   filter(code %in% question1_missing_ef_regulation$code)
 
 Evol_Missing_ef_regulation <- ggplot(data = question1_missing_ef_regulation) +
-  geom_point(aes(x = year, y = ef_regulation, 
+  geom_line(aes(x = year, y = ef_regulation, 
                  color = cut(PercentageMissing,
                              breaks = c(0, 0.1, 0.2, 0.3, 1),
                              labels = c("0-10%", "10-20%", "20-30%", "30-100%")))) +
@@ -2155,7 +2160,8 @@ Evol_Missing_ef_regulation <- ggplot(data = question1_missing_ef_regulation) +
   scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
                      labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
-  facet_wrap(~ code, nrow = 4)
+  scale_x_continuous(breaks = NULL)+
+  facet_wrap(~ code, nrow = 2)
 
 print(Evol_Missing_ef_regulation)
 
@@ -2170,7 +2176,7 @@ for (i in list_code) {
 
 Then, we look at the distribution of the variable per region. Seeing that all are skewed distributions, we decide to replace the missing values using the median by region.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%"}
 question1_missing_ef_regulation <- data_question1 %>%
   group_by(code) %>%
   mutate(PercentageMissing = mean(is.na(ef_regulation))) %>% # Column % NAs
@@ -2187,7 +2193,7 @@ Freq_Missing_ef_regulation <- ggplot(data = question1_missing_ef_regulation) +
   labs(title = "Distribution of economic freedom: regulation", x = "ef_regulation", y = "Frequency") +
   scale_fill_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%"="red","30-100%" = "black"), labels = c("0-10%", "10-20%", "20-30%","30-100%")) +
   guides(fill = guide_legend(title = "% missings")) +
-  facet_wrap(~ region, nrow = 3)
+  facet_wrap(~ region, nrow = 1)
 
 print(Freq_Missing_ef_regulation)
 

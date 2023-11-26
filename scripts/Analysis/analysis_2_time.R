@@ -171,12 +171,10 @@ stargazer(reg2.2.12, reg2.2.13, reg2.2.15, reg2.2.16, reg2.2.17,
 
 
 # controlling for the region
-reg2.3 <- plm(diff_overallscore ~ after2015 + year + after2015:year + region, 
-              data = panel_data,
-              model = "within")
+reg2.3 <- lm(diff_overallscore ~ after2015 + as.factor(year) + region, data=binary2015)
 summary(reg2.3)
 
-##### Graphs to show the jump (or not) in 2015
+##### Graphs to show the jump (or not) in 2015 #####
 
 # Filter data
 data_after_2015 <- filter(binary2015, as.numeric(year) >= 2015)
