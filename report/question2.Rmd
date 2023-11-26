@@ -477,9 +477,9 @@ reg2.2.17 <- plm::plm(diff_goal17 ~ after2015 + year + after2015:year,
                 model = "within")
 
 # Create a list of your regression models
-models_list1 <- list("Overall score"=reg2.2, "Goal 1"=reg2.2.1, "Goal 2"=reg2.2.2, "Goal 3"= reg2.2.3, "Goal 4"=reg2.2.4, "Goal 5"=reg2.2.5, "Goal 6"= reg2.2.6, "Goal 7"=reg2.2.7, "Goal 8"=reg2.2.8, "Goal 9"=reg2.2.9, "Goal 10"=reg2.2.10, "Goal 11" = reg2.2.11,"Goal 12"=reg2.2.12, "Goal 13"=reg2.2.13, "Goal 15" =reg2.2.15, "Goal 16"=reg2.2.16, "Goal 17"=reg2.2.17)
+models_list2 <- list("Overall score"=reg2.2, "Goal 1"=reg2.2.1, "Goal 2"=reg2.2.2, "Goal 3"= reg2.2.3, "Goal 4"=reg2.2.4, "Goal 5"=reg2.2.5, "Goal 6"= reg2.2.6, "Goal 7"=reg2.2.7, "Goal 8"=reg2.2.8, "Goal 9"=reg2.2.9, "Goal 10"=reg2.2.10, "Goal 11" = reg2.2.11,"Goal 12"=reg2.2.12, "Goal 13"=reg2.2.13, "Goal 15" =reg2.2.15, "Goal 16"=reg2.2.16, "Goal 17"=reg2.2.17)
 
-huxreg(models_list[1:9])
-huxreg(models_list[10:17])
+huxreg(models_list2[1:9])
+huxreg(models_list2[10:17])
 
 ```
