@@ -1,11 +1,11 @@
 ### Question 2 analysis ###
 data_question2 <- read.csv(here("scripts","data","data_question24.csv"))
-
 data_question2 <- data_question2 %>% select(-X)
 
 binary2015 <- data_question2 %>% 
   group_by(code) %>%
-  mutate(across(5:21, ~ . - lag(.), .names = "diff_{.col}"))
+  mutate(across(5:21, ~ . - dplyr::lag(.), .names = "diff_{.col}")) %>%
+  ungroup()
 
 # Create a new column (binary variable) with value 1 if the year is after 2015 and zero otherwise. 
 binary2015 <- binary2015 %>% 
@@ -13,13 +13,14 @@ binary2015 <- binary2015 %>%
   filter(as.numeric(year)>=2009)
 
 # histogram of difference in scores between years
-
 unique_years <- unique(binary2015$year)
+library(viridis)
 plot_ly() %>%
   add_trace(
     type = "histogram", 
     data = binary2015, 
-    x = ~diff_overallscore
+    x = ~diff_overallscore,
+    color=~diff_overallscore
   ) %>%
   layout(
     title = "Distribution of SDG evolution",
@@ -43,18 +44,45 @@ plot_ly() %>%
     )
   )
 
-# Simple linear regression of the overall score on the variables "after2015"
+# Simple linear regression of the overall score on the difference in SDG scores variables "after2015"
 reg2.1 <- lm(diff_overallscore ~ after2015, data=binary2015)
+reg2.1.1 <- lm(diff_goal1 ~ after2015, data=binary2015)
+reg2.1.2 <- lm(diff_goal2 ~ after2015, data=binary2015)
+reg2.1.3 <- lm(diff_goal3 ~ after2015, data=binary2015)
+reg2.1.4 <- lm(diff_goal4 ~ after2015, data=binary2015)
+reg2.1.5 <- lm(diff_goal5 ~ after2015, data=binary2015)
+reg2.1.6 <- lm(diff_goal6 ~ after2015, data=binary2015)
+reg2.1.7 <- lm(diff_goal7 ~ after2015, data=binary2015)
+reg2.1.8 <- lm(diff_goal8 ~ after2015, data=binary2015)
+reg2.1.9 <- lm(diff_goal9 ~ after2015, data=binary2015)
+reg2.1.10 <- lm(diff_goal10 ~ after2015, data=binary2015)
+reg2.1.11 <- lm(diff_goal11 ~ after2015, data=binary2015)
+reg2.1.12 <- lm(diff_goal12 ~ after2015, data=binary2015)
+reg2.1.13 <- lm(diff_goal13 ~ after2015, data=binary2015)
+reg2.1.15 <- lm(diff_goal15 ~ after2015, data=binary2015)
+reg2.1.16 <- lm(diff_goal16 ~ after2015, data=binary2015)
+reg2.1.17 <- lm(diff_goal17 ~ after2015, data=binary2015)
 
-summary(reg2.1)
+stargazer(reg2.1, reg2.1.1, reg2.1.2, reg2.1.3, reg2.1.4, reg2.1.5,
+          title="Impact of the 2015 adoption of SDG by the UN (Goals 1-5)",
+          type='html',
+          column.labels=c("Overall score", "Goal 1", "Goal2", "Goal 3", "Goal 4","Goal 5"),
+          digits=3)
+
+stargazer(reg2.1.6, reg2.1.7, reg2.1.8, reg2.1.9, reg2.1.10, reg2.1.11,
+          title = "Impact of the 2015 adoption of SDG by the UN (Goals 6-11)",
+          type = 'html',
+          column.labels = c("Goal 6", "Goal 7", "Goal 8", "Goal 9", "Goal 10", "Goal 11"),
+          digits = 3)
+
+stargazer(reg2.1.12, reg2.1.13, reg2.1.15, reg2.1.16, reg2.1.17,
+          title = "Impact of the 2015 adoption of SDG by the UN (Goals 12-17)",
+          type = 'html',
+          column.labels = c("Goal 12", "Goal 13", "Goal 15", "Goal 16", "Goal 17"),
+          digits = 3)
 
 library(huxtable)
-huxreg(reg2.1)
-
-stargazer(reg2.1, 
-          title="Impact of the 2015 adoption of SDG by the UN",
-          type='html',
-          digits=3)
+huxreg(reg2.1, reg2.1.1, reg2.1.2)
 
 library(plm)
 # Create a panel data object
@@ -64,16 +92,90 @@ panel_data <- pdata.frame(binary2015, index = c("country", "year"))
 reg2.2 <- plm(diff_overallscore ~ after2015 + year + after2015:year, 
                  data = panel_data,
                  model = "within")
-summary(reg2.2)
-huxreg(reg2.2)
+reg2.2.1 <- plm(diff_goal1 ~ after2015 + year + after2015:year, 
+              data = panel_data,
+              model = "within")
+reg2.2.2 <- plm(diff_goal2 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.3 <- plm(diff_goal3 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.4 <- plm(diff_goal4 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.5 <- plm(diff_goal5 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.6 <- plm(diff_goal6 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.7 <- plm(diff_goal7 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.8 <- plm(diff_goal8 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.9 <- plm(diff_goal9 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.10 <- plm(diff_goal10 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.11 <- plm(diff_goal11 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.12 <- plm(diff_goal12 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.13 <- plm(diff_goal13 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.15 <- plm(diff_goal15 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.16 <- plm(diff_goal16 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.17 <- plm(diff_goal17 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
 
-# taking into account the years in a multiple regression
-reg2.3 <- lm(diff_overallscore ~ after2015 + as.factor(year), data=binary2015)
-summary(reg2.3)
+stargazer(reg2.2, reg2.2.1, reg2.2.2, reg2.2.3, reg2.2.4, reg2.2.5,
+          title="Impact of the 2015 adoption of SDG by the UN (Goals 1-5)",
+          type='html',
+          column.labels=c("Overall score", "Goal 1", "Goal2", "Goal 3", "Goal 4","Goal 5"),
+          digits=3,
+          omit = "coef",
+          dep.var.labels.include = FALSE,
+          model.numbers = FALSE
+          
+)
+
+stargazer(reg2.2.6, reg2.2.7, reg2.2.8, reg2.2.9, reg2.2.10, reg2.2.11,
+          title = "Impact of the 2015 adoption of SDG by the UN (Goals 6-11)",
+          type = 'html',
+          column.labels = c("Goal 6", "Goal 7", "Goal 8", "Goal 9", "Goal 10", "Goal 11"),
+          digits = 3,
+          omit = "coef",
+          dep.var.labels.include = FALSE,
+          model.numbers = FALSE)
+
+stargazer(reg2.2.12, reg2.2.13, reg2.2.15, reg2.2.16, reg2.2.17,
+          title = "Impact of the 2015 adoption of SDG by the UN (Goals 12-17)",
+          type = 'html',
+          column.labels = c("Goal 12", "Goal 13", "Goal 15", "Goal 16", "Goal 17"),
+          digits = 3,
+          omit = "coef",
+          dep.var.labels.include = FALSE,
+          model.numbers = FALSE)
+
 
 # controlling for the region
-reg2.4 <- lm(diff_overallscore ~ after2015 + as.factor(region), data=binary2015)
-summary(reg2.4)
+reg2.3 <- plm(diff_overallscore ~ after2015 + year + after2015:year + region, 
+              data = panel_data,
+              model = "within")
+summary(reg2.3)
 
 stargazer(reg2.1, reg2.2, reg2.3, reg2.4, 
           title="Impact of the 2015 adoption of SDG by the UN",
@@ -94,7 +196,7 @@ data_before_2016 <- filter(binary2015, as.numeric(year) <= 2015)
 graph1 <- plot_ly() %>%
   add_trace(data = data_after_2015, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_after_2015)), type = 'scatter', mode = 'lines', line = list(color = 'blue'), name = "After 2015") %>%
   add_trace(data = data_before_2016, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_before_2016)), type = 'scatter', mode = 'lines', line = list(color = 'red'), name = "Before 2015") %>%
-  layout(title = "Different patterns across SDGs before and after 2015",
+  plotly::layout(title = "Different patterns across SDGs before and after 2015",
          xaxis = list(title = "Year"),
          yaxis = list(title = "SDG achievement score", range = c(30, 85)),
          shapes = list(

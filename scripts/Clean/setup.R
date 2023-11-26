@@ -35,7 +35,8 @@ packages <- c(
   "visdat",
   "huxtable",
   "plm",
-  "plotly"
+  "plotly",
+  "stargazer"
 )
 
 for (pkg in packages) {
