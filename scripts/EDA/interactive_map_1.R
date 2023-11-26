@@ -55,35 +55,49 @@ server <- function(input, output, session) {
 # Run the Shiny app
 shinyApp(ui, server)
 
-# Set up slider steps
-slider_steps <- lapply(unique(data0$year), function(year) {
-  selected_data <- data0 %>% filter(year == year) # Subset data for the selected year
-  list(
-    args = list(
-      "z", list(selected_data$overallscore),
-      "locations", list(selected_data$iso_a3),
-      "text", list(~paste("Country: ", selected_data$name, "<br>SDG score: ", selected_data$overallscore)),
-      "visible", list(data0$year == year)
-    ),
-    label = as.character(year),
-    method = "restyle"
-  )
-})
+library(here)
+library(sf)
+library(rnaturalearth)
+library(shiny)
+library(plotly)
+library(shinytest)
 
-# Set up slider
-graphx <- plot_ly(
+# Sample data loading (replace with your actual data loading)
+data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"), sep=",")
+
+# Load world map data
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Merge data with the world map data
+data0 <- merge(world, data_question2, by.x = "iso_a3", by.y = "code", all.x = TRUE)
+
+unique_years <- unique(data0$year)
+
+plot_ly(
+  type = "choropleth",
+  z = ~data0$overallscore,
+  locations = ~data0$iso_a3,
+  text = ~paste("Country: ", data0$name, "<br>Overall Score: ", data0$overallscore),
+  colors = c("darkred", "orange", "yellow", "darkgreen"),
+  colorbar = list(title = "Overall Score"),
+  hoverinfo = "text"
+) %>%
   layout(
+    title = "SDG overall score evolution",
     sliders = list(
       list(
-        active = 2022,
-        steps = slider_steps
+        active = 0,
+        currentvalue = list(prefix = "Year: "),
+        steps = lapply(seq_along(unique_years), function(i) {
+          year <- unique_years[i]
+          list(
+            label = as.character(year),
+            method = "restyle",
+            args = list(
+              list(z = list(data0$overallscore[data0$year == year]))
+            )
+          )
+        })
       )
     )
-  ),
-  type = "choropleth",
-  colors = c("darkred", "orange", "yellow", "darkgreen"),
-  colorbar = list(title = "SDG score"),
-  hoverinfo = "text"
-)
-# Display the plot
-graphx
+  )
