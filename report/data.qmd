@@ -632,7 +632,7 @@ print(table(MilitaryExpenditurePercentGDP1$NaMil1))
 
 We plot the evolution of MilitaryExpenditurePercentGDP along the years for each country containing missing values and distinguish the percentage of missing values with colors.
 
-```{r, echo = TRUE, message = TRUE, warning = FALSE, out.width="100%", fig.height=20}
+```{r, echo = TRUE, message = TRUE, warning = FALSE, out.width="100%"}
 filtered_data_Mil1 <- MilitaryExpenditurePercentGDP %>%
   filter(code %in% MilitaryExpenditurePercentGDP1$code) # countries with NAs
 
@@ -650,8 +650,8 @@ Evol_Missing_Mil1 <- ggplot(data = filtered_data_Mil1) +
   scale_color_manual(values = c("0-10%" = "blue", "10-20%" = "green", "20-30%" = "red", "30-100%" = "black"),
                      labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
-  facet_wrap(~ code, nrow = 8) +
-  theme(strip.text = element_text(size = 6)) +
+  facet_wrap(~ code, nrow = 6) +
+  theme(strip.text = element_text(size = 8)) +
   scale_x_continuous(breaks = NULL) +
   scale_y_continuous(breaks = NULL)
 
@@ -707,7 +707,7 @@ Evol_Missing_Mil2 <- ggplot(data = filtered_data_Mil2) +
                      labels = c("0-10%", "10-20%", "20-30%", "50-100%")) +
   guides(color = guide_legend(title = "% missings")) +
   facet_wrap(~ code, nrow = 5) +
-  theme(strip.text = element_text(size = 6)) +
+  theme(strip.text = element_text(size = 7)) +
   scale_x_continuous(breaks = NULL) +
   scale_y_continuous(breaks = NULL)
 
@@ -1281,8 +1281,10 @@ datatable(all_Merge, options = list(pageLength = 10, class = "hover", searchHigh
 
 We load our final database and we vizualize the missing values.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%", fig.height=10}
 all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
+
+all_Merge <- all_Merge %>% select(-c(X))
 
 # Create a dataframe with the goals without NAs summarize in one column to simplify the visualization
 goal_vars <- all_Merge %>%
@@ -1295,7 +1297,7 @@ to_plot_missing <- all_Merge %>%
 
 vis_dat(to_plot_missing, warn_large_data = FALSE) + scale_fill_brewer(palette = "Paired") +
   theme(
-    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 8)
+    axis.text.x = element_text(angle = 90, size = 6)
   )
 ```
 
@@ -1333,9 +1335,7 @@ data_question3_3 <- all_Merge %>% filter(year<=2016) %>% select(c(code, year, co
 
 We begin by visualizing the missing values. To have a less messy graph we group all the goals wihtout NAs into one single variable. 
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=12}
-data_question1 <- data_question1 %>% select(-X)
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%"}
 # Create a dataframe with the goals without NAs summarize in one column to simplify the visualization
 variable_names <- names(data_question1)
 missing_percentages <- sapply(data_question1, function(col) mean(is.na(col)) * 100)
@@ -1354,7 +1354,7 @@ ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Perce
                 y = Missing_Percentage),
             position = position_stack(vjust = 1),  # Adjust vertical position
             color = "white",  # Text color
-            size = 3,          # Text size
+            size = 2,          # Text size
             hjust = 1.05) +
   labs(title = "Percentage of Missing Values by Variable",
        x = "Variable",
@@ -1559,7 +1559,7 @@ data_question1 %>%
   filter(code %in% c("KGZ", "SRB")) %>%
   ggplot(aes(x = year, y = ef_government)) +
   geom_point() +
-  facet_grid(code ~ .) +
+  facet_wrap(~ code, nrow=1) +
   labs(title = "Evolution of economic freedom: government over time", x = "Years", y = "ef_gov")
 
 data_question1 <- data_question1 %>%

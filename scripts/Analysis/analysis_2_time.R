@@ -12,6 +12,7 @@ binary2015 <- binary2015 %>%
   mutate(after2015 = ifelse(year > 2015, 1, 0)) %>%
   filter(as.numeric(year)>=2009)
 
+###### Distribution of score difference #####
 # histogram of difference in scores between years
 unique_years <- unique(binary2015$year)
 library(viridis)
@@ -43,6 +44,8 @@ plot_ly() %>%
       )
     )
   )
+
+##### Regressions #####
 
 # Simple linear regression of the overall score on the difference in SDG scores variables "after2015"
 reg2.1 <- lm(diff_overallscore ~ after2015, data=binary2015)
@@ -81,10 +84,6 @@ stargazer(reg2.1.12, reg2.1.13, reg2.1.15, reg2.1.16, reg2.1.17,
           column.labels = c("Goal 12", "Goal 13", "Goal 15", "Goal 16", "Goal 17"),
           digits = 3)
 
-library(huxtable)
-huxreg(reg2.1, reg2.1.1, reg2.1.2)
-
-library(plm)
 # Create a panel data object
 panel_data <- pdata.frame(binary2015, index = c("country", "year"))
 
@@ -177,23 +176,13 @@ reg2.3 <- plm(diff_overallscore ~ after2015 + year + after2015:year + region,
               model = "within")
 summary(reg2.3)
 
-stargazer(reg2.1, reg2.2, reg2.3, reg2.4, 
-          title="Impact of the 2015 adoption of SDG by the UN",
-          type='html',
-          column.labels=c("Simple", "DiD", "+ years", "+ regions"),
-          digits=3)
-
-huxreg(reg2.1, reg2.2, reg2.3, reg2.4)
-
-
-# Graphs to show the jump (or not) in 2015
-library(plotly)
+##### Graphs to show the jump (or not) in 2015
 
 # Filter data
 data_after_2015 <- filter(binary2015, as.numeric(year) >= 2015)
 data_before_2016 <- filter(binary2015, as.numeric(year) <= 2015)
 
-graph1 <- plot_ly() %>%
+plot_ly() %>%
   add_trace(data = data_after_2015, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_after_2015)), type = 'scatter', mode = 'lines', line = list(color = 'blue'), name = "After 2015") %>%
   add_trace(data = data_before_2016, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_before_2016)), type = 'scatter', mode = 'lines', line = list(color = 'red'), name = "Before 2015") %>%
   plotly::layout(title = "Different patterns across SDGs before and after 2015",
@@ -353,4 +342,3 @@ graph1 <- plot_ly() %>%
            )
          )
   )
-graph1
