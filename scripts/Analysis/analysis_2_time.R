@@ -169,7 +169,6 @@ stargazer(reg2.2.12, reg2.2.13, reg2.2.15, reg2.2.16, reg2.2.17,
           dep.var.labels.include = FALSE,
           model.numbers = FALSE)
 
-
 # controlling for the region
 reg2.3 <- lm(diff_overallscore ~ after2015 + as.factor(year) + region, data=binary2015)
 summary(reg2.3)
