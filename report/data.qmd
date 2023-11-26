@@ -45,6 +45,7 @@ During the wrangling process: we add data to our table (D1_1_SDG) based on diffe
 ### D1_1_SDG {.unnumbered}
 
 Our first database used is our main one. It concerns the SDG. Find below a table that summarize the variables present:
+
 ```{r}
 D1_1_SDG_table_info <- data.frame(
   Column1 = c("code",
@@ -79,10 +80,12 @@ colnames(D1_1_SDG_table_info) <- c("Variable Name",
 
 D1_1_SDG_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observation" = 2)) %>%
+  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
+
 ### D2_2_Unemployment_rate {.unnumbered}
+
 ```{r}
 D2_2_Unemployment_rate_table_info <- data.frame(
   Column1 = c("code",
@@ -109,10 +112,12 @@ colnames(D2_2_Unemployment_rate_table_info) <- c("Variable Name",
 
 D2_2_Unemployment_rate_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observation" = 2)) %>%
+  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
+
 ### D3_0_GDP_per_capita {.unnumbered}
+
 ```{r}
 D3_0_GDP_per_capita_table_info <- data.frame(
   Column1 = c("code",
@@ -139,10 +144,12 @@ colnames(D3_0_GDP_per_capita_table_info) <- c("Variable Name",
 
 D3_0_GDP_per_capita_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observation" = 2)) %>%
+  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
+
 ### D3_1_Military_expenditure_percent_GDP {.unnumbered}
+
 ```{r}
 D3_1_Military_expenditure_percent_GDP_table_info <- data.frame(
   Column1 = c("code",
@@ -169,10 +176,12 @@ colnames(D3_1_Military_expenditure_percent_GDP_table_info) <- c("Variable Name",
 
 D3_1_Military_expenditure_percent_GDP_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observation" = 2)) %>%
+  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
+
 ### D4_0_Internet_usage {.unnumbered}
+
 ```{r}
 D4_0_Internet_usage_table_info <- data.frame(
   Column1 = c("code",
@@ -199,10 +208,12 @@ colnames(D4_0_Internet_usage_table_info) <- c("Variable Name",
 
 D4_0_Internet_usage_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observation" = 2)) %>%
+  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
+
 ### D5_0_Human_freedom_index {.unnumbered}
+
 ```{r}
 D5_0_Human_freedom_index_table_info <- data.frame(
   Column1 = c("code",
@@ -277,10 +288,12 @@ colnames(D5_0_Human_freedom_index_table_info) <- c("Variable Name",
 
 D5_0_Human_freedom_index_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observation" = 2)) %>%
+  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
+
 ### D6_0_Disaters {.unnumbered}
+
 ```{r}
 D6_0_Disaters_table_info <- data.frame(
   Column1 = c("code",
@@ -331,7 +344,95 @@ colnames(D6_0_Disaters_table_info) <- c("Variable Name",
 
 D6_0_Disaters_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observation" = 2)) %>%
+  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+### D7_0_COVID {.unnumbered}
+
+```{r}
+D7_0_COVID_table_info <- data.frame(
+  Column1 = c("code",
+              "country",
+              "year",
+              "deaths_per_million",
+              "cases_per_million",
+              "stringency"),
+  Column2 = c("Country code (ISO)", 
+              "Country name",
+              "Year of the observation (2000-2022)",
+              "Number of people dead due to COVID",
+              "Number of COVID cases",
+              "Government Response Stringency Index: composite measure based on 9 response indicators including school closures, workplace closures, and trave"),
+  Colums3 = c("",
+              "",
+              "",
+              "349966 observations of 67 variables",
+              "",
+              ""),
+  Column4 = c("",
+              "",
+              "",
+              "501 observations (only between 2020-2022, before no COVID) of 6 variables",
+              "",
+              ""))
+
+colnames(D7_0_COVID_table_info) <- c("Variable Name",
+                                   "Explanation",
+                                   "before cleaning",
+                                   "after cleaning")
+
+D7_0_COVID_table_info %>%
+  kable(format = "html", escape = FALSE) %>%
+  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+### D8_0_Conflicts {.unnumbered}
+
+```{r}
+D8_0_Conflicts_table_info <- data.frame(
+  Column1 = c("code",
+              "country",
+              "year",
+              "ongoing",
+              "sum_deaths",
+              "pop_affected",
+              "area_affected",
+              "maxintensity"),
+  Column2 = c("Country code (ISO)", 
+              "Country name",
+              "Year of the observation (2000-2022)",
+              "Variable coded 1 for more than 25 deaths in intrastate conflict and 0 otherwise according to UCDP/PRIO Armed Conflict Dataset 17.1.",
+              "Best estimate of deaths in all categories of violence (non-state, one-sided and state-based) recorded by the Uppsala Conflict Data Program in the country based on the UCDP GED dataset (unpublished 2016 data). The location of these events is used for estimating the extent of violence.",
+              "Share of population affected by violence in percentage (0 to 100) measured as described above based on population data from CIESIN, the PRIO-GRID structure as well as UCDP GED.",
+              "Area affected by conflict",
+              "Two different intensity levels are coded: minor armed conflicts (1) and wars (2), Takes the max intensity of conflict in the country so that it is coded 2 if there is at least one war (>=1000 deaths in intrastate conflict) during the year. Data from UCDP/PRIO Armed Conflict Dataset 17.1."),
+  Colums3 = c("",
+              "",
+              "",
+              "5016 observations of 18 variables",
+              "",
+              "",
+              "",
+              ""),
+  Column4 = c("",
+              "",
+              "",
+              "2782 observations of 8 variables",
+              "",
+              "",
+              "",
+              ""))
+
+colnames(D8_0_Conflicts_table_info) <- c("Variable Name",
+                                   "Explanation",
+                                   "before cleaning",
+                                   "after cleaning")
+
+D8_0_Conflicts_table_info %>%
+  kable(format = "html", escape = FALSE) %>%
+  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
