@@ -6,51 +6,334 @@ source(here::here("scripts/Clean/setup.R"))
 
 ## Sources
 
-We are collecting our Data from the sustainability development report (SDG), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn't find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next question.
+We are collecting our Data from the sustainability development report (SDG), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn't find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next section. With the help of the `kableExtra` package we present below the list of our sources and the links to each one:
 
-+-------------------------------------------+--------------------------------------------+
-| Name of the Table                         | Source                                     |
-+===========================================+============================================+
-| D1_1_SDG                                  | https://dashboards.sdgindex.org/\          |
-|                                           | downloads                                  |
-+-------------------------------------------+--------------------------------------------+
-| D2_2_Unemployment_rate                    | https://www.ilo.org/\                      |
-|                                           | shinyapps/bulkexplorer3/\                  |
-|                                           | ?lang=en&segment=indicator\                |
-|                                           | &id=UNE_2EAP_SEX_AGE_RT_A                  |
-+-------------------------------------------+--------------------------------------------+
-| D3_0_GDP_per_capita                       | https://data.worldbank.org/\               |
-|                                           | indicator/NY.GDP.PCAP.CD                   |
-+-------------------------------------------+--------------------------------------------+
-| D3_1_Military_expenditure_percent_GDP     | https://data.worldbank.org/\               |
-|                                           | indicator/MS.MIL.XPND.GD.ZS                |
-+-------------------------------------------+--------------------------------------------+
-| D3_2_Military_expenditure_percent_gov_exp | https://data.worldbank.org/\               |
-|                                           | indicator/MS.MIL.XPND.ZS                   |
-+-------------------------------------------+--------------------------------------------+
-| D4_0_Internet_usage                       | https://ourworldindata.org/\               |
-|                                           | grapher/share-of-individuals-\             |
-|                                           | using-the-internet                         |
-+-------------------------------------------+--------------------------------------------+
-| D5_0_Human_freedom_index                  | https://www.cato.org/\                     |
-|                                           | human-freedom-index/2022                   |
-+-------------------------------------------+--------------------------------------------+
-| D6_0_Disaters                             | https://www.kaggle.com/\                   |
-|                                           | datasets/brsdincer/all-natural-\           |
-|                                           | disasters-19002021-eosdis                  |
-+-------------------------------------------+--------------------------------------------+
-| D7_0_COVID                                | https://github.com/\                       |
-|                                           | owid/covid-19-data/tree/master/public/data |
-+-------------------------------------------+--------------------------------------------+
-| D8_0_Conflicts                            | https://datacatalog.worldbank.org/\        |
-|                                           | search/dataset/0041070/\                   |
-|                                           | Global-Spread-of-Conflict-by-\             |
-|                                           | Country-and-Population                     |
-+-------------------------------------------+--------------------------------------------+
+```{r}
+source_info <- data.frame(
+  Column1 = c("D1_1_SDG",
+              "D2_2_Unemployment_rate",
+              "D3_0_GDP_per_capita",
+              "D3_1_Military_expenditure_percent_GDP",
+              "D3_2_Military_expenditure_percent_gov_exp",
+              "D4_0_Internet_usage", "D5_0_Human_freedom_index",
+              "D6_0_Disaters",
+              "D7_0_COVID",
+              "D8_0_Conflicts"),
+  Column2 = c('<a href="https://dashboards.sdgindex.org/">dashboards.sdgindex.org</a>',
+              '<a href="https://www.ilo.org/shinyapps/bulkexplorer3/?lang=en&segment=indicator&id=UNE_2EAP_SEX_AGE_RT_A">ilo.org</a>',
+              '<a href="https://data.worldbank.org/indicator/NY.GDP.PCAP.CD">data.worldbank.org</a>',
+              '<a href="https://data.worldbank.org/indicator/MS.MIL.XPND.GD.ZS">data.worldbank.org</a>',
+              '<a href="https://data.worldbank.org/indicator/MS.MIL.XPND.ZS">data.worldbank.org</a>',
+              '<a href="https://ourworldindata.org/grapher/share-of-individuals-using-the-internet">ourworldindata.org</a>',
+              '<a href="https://www.cato.org/human-freedom-index/2022">cato.org</a>',
+              '<a href="https://www.kaggle.com/datasets/brsdincer/all-natural-disasters-19002021-eosdis">kaggle.com</a>',
+              '<a href="https://github.com/owid/covid-19-data/tree/master/public/data">github.com</a>',
+              '<a href="https://datacatalog.worldbank.org/search/dataset/0041070/Global-Spread-of-Conflict-by-Country-and-Population">datacatalog.worldbank.org</a>')
+)
+
+colnames(source_info) <- c("Name of the Table", "Source")
+
+source_info %>%
+  kable("html", escape = FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
 
 ## Description
 
-During the wrangling process: we add data to our table (D1_1_SDG) based on different other datasets and match them based on the country, the country code, and the year. The table below shows all our 9 databases that we merge to have our final table for the analysis, as well as each variable of interest that we keep.
+During the wrangling process: we add data to our table (D1_1_SDG) based on different other datasets and match them based on the country, the country code, and the year. The tables below show all the variables present in our 9 databases that we then merge to have our final table for the analysis, as well as each variable of interest that we keep.
+
+### D1_1_SDG {.unnumbered}
+
+Our first database used is our main one. It concerns the SDG. Find below a table that summarize the variables present:
+```{r}
+D1_1_SDG_table_info <- data.frame(
+  Column1 = c("code",
+              "country",
+              "year",
+              "overallscore",
+              "goal1:goal17",
+              "population"),
+  Column2 = c("Country code (ISO)", 
+              "Country name",
+              "Year of the observation (2000-2022)",
+              "Overall score on all 17 SDGs (the score are % of achievement of the goals determined by the UN based on several indicators)",
+              "Score on each SDG except SDG 14 (16 variables)",
+              "Population of the country"),
+  Colums3 = c("",
+              "",
+              "",
+              "4140 observations of 120 variables",
+              "",
+              ""),
+  Column4 = c("",
+              "",
+              "",
+              "3818 observations of 21 variables",
+              "",
+              ""))
+
+colnames(D1_1_SDG_table_info) <- c("Variable Name",
+                                   "Explanation",
+                                   "before cleaning",
+                                   "after cleaning")
+
+D1_1_SDG_table_info %>%
+  kable(format = "html", escape = FALSE) %>%
+  add_header_above(c(" " = 2, "Number of observation" = 2)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+### D2_2_Unemployment_rate {.unnumbered}
+```{r}
+D2_2_Unemployment_rate_table_info <- data.frame(
+  Column1 = c("code",
+              "country",
+              "year",
+              "unemployment.rate"),
+  Column2 = c("Country code (ISO)", 
+              "Country name",
+              "Year of the observation (2000-2022)",
+              "Unemployment rate (% of the population 15 years old and older)"),
+  Colums3 = c("",
+              "",
+              "",
+              "82800 observations of 8 variables"),
+  Column4 = c("",
+              "",
+              "",
+              "571 observations of 5 variables"))
+
+colnames(D2_2_Unemployment_rate_table_info) <- c("Variable Name",
+                                   "Explanation",
+                                   "before cleaning",
+                                   "after cleaning")
+
+D2_2_Unemployment_rate_table_info %>%
+  kable(format = "html", escape = FALSE) %>%
+  add_header_above(c(" " = 2, "Number of observation" = 2)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+### D3_0_GDP_per_capita {.unnumbered}
+```{r}
+D3_0_GDP_per_capita_table_info <- data.frame(
+  Column1 = c("code",
+              "country",
+              "year",
+              "GDPpercapita"),
+  Column2 = c("Country code (ISO)", 
+              "Country name",
+              "Year of the observation (2000-2022)",
+              "GDP per capita"),
+  Colums3 = c("",
+              "",
+              "",
+              "266 observations of 68 variables"),
+  Column4 = c("",
+              "",
+              "",
+              "3818 observations of 4 variables"))
+
+colnames(D3_0_GDP_per_capita_table_info) <- c("Variable Name",
+                                   "Explanation",
+                                   "before cleaning",
+                                   "after cleaning")
+
+D3_0_GDP_per_capita_table_info %>%
+  kable(format = "html", escape = FALSE) %>%
+  add_header_above(c(" " = 2, "Number of observation" = 2)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+### D3_1_Military_expenditure_percent_GDP {.unnumbered}
+```{r}
+D3_1_Military_expenditure_percent_GDP_table_info <- data.frame(
+  Column1 = c("code",
+              "country",
+              "year",
+              "MilitaryExpenditurePercentGDP"),
+  Column2 = c("Country code (ISO)", 
+              "Country name",
+              "Year of the observation (2000-2022)",
+              "Military expenditures in percentage of GDP"),
+  Colums3 = c("",
+              "",
+              "",
+              "266 observations of 68 variables"),
+  Column4 = c("",
+              "",
+              "",
+              "3818 observations of 4 variables"))
+
+colnames(D3_1_Military_expenditure_percent_GDP_table_info) <- c("Variable Name",
+                                   "Explanation",
+                                   "before cleaning",
+                                   "after cleaning")
+
+D3_1_Military_expenditure_percent_GDP_table_info %>%
+  kable(format = "html", escape = FALSE) %>%
+  add_header_above(c(" " = 2, "Number of observation" = 2)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+### D4_0_Internet_usage {.unnumbered}
+```{r}
+D4_0_Internet_usage_table_info <- data.frame(
+  Column1 = c("code",
+              "country",
+              "year",
+              "internet.usage"),
+  Column2 = c("Country code (ISO)", 
+              "Country name",
+              "Year of the observation (2000-2022)",
+              "Internet usage (% of the population)"),
+  Colums3 = c("",
+              "",
+              "",
+              "6570 observations of 4 variables"),
+  Column4 = c("",
+              "",
+              "",
+              "3433 observations of 4 variables"))
+
+colnames(D4_0_Internet_usage_table_info) <- c("Variable Name",
+                                   "Explanation",
+                                   "before cleaning",
+                                   "after cleaning")
+
+D4_0_Internet_usage_table_info %>%
+  kable(format = "html", escape = FALSE) %>%
+  add_header_above(c(" " = 2, "Number of observation" = 2)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+### D5_0_Human_freedom_index {.unnumbered}
+```{r}
+D5_0_Human_freedom_index_table_info <- data.frame(
+  Column1 = c("code",
+              "country",
+              "year",
+              "region",
+              "pf_law",
+              "pf_security",
+              "pf_movement",
+              "pf_religion",
+              "pf_assembly",
+              "pf_expression",
+              "pf_identity",
+              "ef_gouvernment",
+              "ef_legal",
+              "ef_money",
+              "ef_trade",
+              "ef_regulation"),
+  Column2 = c("Country code (ISO)", 
+              "Country name",
+              "Year of the observation (2000-2022)",
+              "Part of the world, group of countries (e.g. Eastern Europe, Dub-Saharan Africa, South Asia, etc.)",
+              "Rule of law, mean score of: Procedural justice, Civil, justice, Criminal justice, Rule of law (V-Dem)",
+              "Security and safety, mean score of: Homicide, Disappearances conflicts, terrorism",
+              "Freedom of movement (V-Dem), Freedom of movement (CLD)",
+              "Freedom of religion, Religious organization, repression",
+              "Civil society entry and exit, Freedom of assembly, Freedom to form/run political parties, Civil society repression",
+              "Direct attacks on the press, Media and expression (V-Dem), Media and expression (Freedom House), Media and expression (BTI), Media and expression (CLD)",
+              "Same-sex relationships, Divorce, Inheritance rights, Female genital mutilation",
+              "Government consumption, Transfers and subsidies, Government investment, Top marginal tax rate, State ownership of assets",
+              "Judicial independence, Impartial courts, Protection of property rights, Military interference Integrity of the legal system Legal enforcementof contracts, Regulatory costs, Reliability of police",
+              "Money growth, Standard deviation of inflation, Inflation: Most recent year, Freedom to own foreign currency",
+              "Tariffs, Regulatory trade barriers, Black-market exchange rates, Movement of capital and people",
+              "Credit market regulations, Labor market regulations, Business regulations"),
+  Colums3 = c("",
+              "",
+              "",
+              "3465 observations of 141 variables",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""),
+  Column4 = c("",
+              "",
+              "",
+              "3339 observations of 18 variables",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""))
+
+colnames(D5_0_Human_freedom_index_table_info) <- c("Variable Name",
+                                   "Explanation",
+                                   "before cleaning",
+                                   "after cleaning")
+
+D5_0_Human_freedom_index_table_info %>%
+  kable(format = "html", escape = FALSE) %>%
+  add_header_above(c(" " = 2, "Number of observation" = 2)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+### D6_0_Disaters {.unnumbered}
+```{r}
+D6_0_Disaters_table_info <- data.frame(
+  Column1 = c("code",
+              "country",
+              "year",
+              "continent",
+              "total_deaths",
+              "no_injured",
+              "no_affected",
+              "no_homeless",
+              "total_affected",
+              "total_damages"),
+  Column2 = c("Country code (ISO)", 
+              "Country name",
+              "Year of the observation (2000-2022)",
+              "Continents touched by the disasters such as floods, ouragan",
+              "Number of deaths caused by disasters",
+              "Number of injured caused by disasters",
+              "Number of affected caused by disasters",
+              "Number of homeless caused by disasters",
+              "Total number of affected caused by disasters",
+              "Total of infrastructure damages"),
+  Colums3 = c("",
+              "",
+              "",
+              "14644 observations of 47 variables",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""),
+  Column4 = c("",
+              "",
+              "",
+              "2435 observations of 10 variables",
+              "",
+              "",
+              "",
+              "",
+              "",
+              ""))
+
+colnames(D6_0_Disaters_table_info) <- c("Variable Name",
+                                   "Explanation",
+                                   "before cleaning",
+                                   "after cleaning")
+
+D6_0_Disaters_table_info %>%
+  kable(format = "html", escape = FALSE) %>%
+  add_header_above(c(" " = 2, "Number of observation" = 2)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
 
 +-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
 | **Table\                | **Variable\          | **Explanation**                                                                                                                                                                                                                                                                                   | **\# obs before cleaning**          | **\# obs\                                                                 |
@@ -1303,7 +1586,7 @@ vis_dat(to_plot_missing, warn_large_data = FALSE) + scale_fill_brewer(palette = 
   )
 ```
 
-We subset our database according to the data that we will need in order to answer the different questions. This will help us dealing with the missing values. 
+We subset our database according to the data that we will need in order to answer the different questions. This will help us dealing with the missing values.
 
 For question 1, we only keep the years until 2020, because most of the explanatory variables that we want to use (those coming from the human freedom index) only have values until 2020.
 
@@ -1335,7 +1618,7 @@ data_question3_3 <- all_Merge %>% filter(year<=2016) %>% select(c(code, year, co
 
 #### Data for question 1
 
-We begin by visualizing the missing values. To have a less messy graph we group all the goals wihtout NAs into one single variable. 
+We begin by visualizing the missing values. To have a less messy graph we group all the goals wihtout NAs into one single variable.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%"}
 # Create a dataframe with the goals without NAs summarize in one column to simplify the visualization
@@ -1888,7 +2171,7 @@ We create a column with the number of missing values by country over all the var
 
 **Disasters**
 
-We begin by visualizing the missing values. 
+We begin by visualizing the missing values.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%"}
 variable_names <- names(data_question3_1)
