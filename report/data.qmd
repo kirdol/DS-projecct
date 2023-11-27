@@ -1470,15 +1470,17 @@ list_country_deleted <- c(unique(see_missing1_1$code))
 
 ```
 
-Here is the dataframe that allows us to see the countries that have missing values, how many and for which variables, when there are more than 50 in total.
+Here is the graph that allows us to visualize the countries that have missing values, how many and for which variables, when there are more than 50 NAs in total.
 
-```{r, echo = FALSE, message = TRUE, warning = FALSE}
-kable(see_missing1_1)
-ggplot(see_missing1_1, aes(x = num_missing, y = code)) +
-    geom_bar(stat = "identity") +
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%"}
+ggplot(see_missing1_1, aes(x = num_missing , y = reorder(code, num_missing), fill = num_missing)) +
+    geom_bar(stat = "identity") + 
+    scale_fill_gradient(low = "lightgreen", high = "darkgreen") +
     theme_minimal() +
-    labs(title = "Missing Values per Country", x = "Number of Missing Values", y = "Country")
-
+  theme(axis.text.y = element_text(hjust = 1, size=8 ),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10)) +
+    labs(title = "Number of missing values per country containing at least 50 NAs", x = "Number of Missing Values", y = "Countries")
 ```
 
 Now, looking at the remaining countries that have missing values and there number accross all variables, we decide to remove MilitaryExpenditurePercentGovExp, because it has too many missing values and it contains similar information to MilitaryExpenditurePercentGDP.
@@ -1495,11 +1497,17 @@ data_question1 <- data_question1 %>% select(-MiliratyExpenditurePercentGovExp)
 
 ```
 
-Here is the dataframe that allows us to see the countries that have missing values, how many and for which variables, after remoying the countries with more than 50.
+Here is the ggplot that helps us to visualize the countries that have missing values after removing the countries with more than 50 NAs.
 
-```{r, echo = FALSE, message = TRUE, warning = FALSE}
-kable(see_missing1_2)
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%"}
+ggplot(see_missing1_2, aes(x = num_missing , y = reorder(code, num_missing), fill = num_missing)) +
+    geom_bar(stat = "identity", width = 0.5) + 
+    scale_fill_gradient(low = "lightgreen", high = "darkgreen") +
+    theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 1, size= 6 ),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10)) +
+        labs(title = "Number of missing values per country", x = "Number of Missing Values", y = "Countries")
 ```
 
 ##### **GDP per capita**
@@ -1925,7 +1933,19 @@ Now, we notice that there were only missing values for goals 1 and 10. As we did
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 na_count <- sapply(data_question1, function(x) sum(is.na(x)))
-kable(na_count)
+na_count_df <- data.frame(variable = names(na_count), num_missing = na_count)
+na_count_df_filtered <- subset(na_count_df, num_missing > 0)
+ggplot(na_count_df_filtered, aes(x= num_missing,y=variable, fill = num_missing)) +
+    geom_bar(aes(fill = num_missing), stat = "identity", width = 0.8, fill = 'lightblue') +
+    geom_text(aes(label = num_missing), vjust = 0.5,hjust = 1.1, position = position_dodge(width = 0.9)) +
+    theme_minimal() +
+    theme(axis.text.y = element_text(hjust = 1, size=10 ), 
+          legend.text = element_text(size = 8),
+          legend.title = element_text(size = 10)) +
+    labs(title = "Number of remaining missing values per variable ",
+         x = "Number of NAs",
+         y = "Variables")
+
 # goal1
 question1_missing_goal1 <- data_question1 %>%
   group_by(code) %>%
