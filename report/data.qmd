@@ -1798,7 +1798,7 @@ kable(see_missing1_2)
 
 ```
 
-**GDP per capita**
+##### **GDP per capita**
 
 Only Venezuela has missing values that we can not fill, so we delete the country.
 
@@ -1814,7 +1814,7 @@ list_country_deleted <- c(list_country_deleted, "VEN")
 
 ```
 
-**Military expenditure in % of GDP**
+##### **Military expenditure in % of GDP**
 
 To begin with, we delete the countries with more than 30% missing values.
 
@@ -1872,7 +1872,7 @@ data_question1 <- data_question1 %>%
 
 ```
 
-**Internet usage**
+##### **Internet usage**
 
 There are only low percentage of missing values.
 
@@ -1919,7 +1919,7 @@ list_country_deleted <- c(list_country_deleted, "CIV")
 
 ```
 
-**Human freedom index**
+##### **Human freedom index**
 
 First, we remove hf_score, pf_score and ef_score, because there are many missing values and since these variables summarize the other ones, deleting the will not make us loose information.
 
@@ -1928,7 +1928,7 @@ data_question1 <- data_question1 %>% select(-c(hf_score, pf_score, ef_score))
 
 ```
 
-**Human freedom index**
+###### ***Personal freedom: law***
 
 The variable pf_law has (many) NAs, but only for one country: BLZ, so we decide to remove it.
 
@@ -1939,7 +1939,7 @@ list_country_deleted <- c(list_country_deleted, "BLZ")
 
 ```
 
-***Economic freedom: government***
+###### ***Economic freedom: government***
 
 Only KGZ and SRB have missing values, we plot the values over time and fill in the missing values by the year before, since there are only one and two missing values.
 
@@ -1960,7 +1960,7 @@ data_question1 <- data_question1 %>%
 
 ```
 
-***Economic freedom: money***
+###### ***Economic freedom: money***
 
 18 countries have missing values, but the percentage of missing values is always below 25%.
 
@@ -2045,7 +2045,7 @@ data_question1 <- data_question1 %>%
 
 ```
 
-***Economic freedom: trade***
+###### ***Economic freedom: trade***
 
 19 countries have missing values, but the percentage of missing values is always below 25%.
 
@@ -2131,7 +2131,7 @@ data_question1 <- data_question1 %>%
 
 ```
 
-***Economic freedom: regulation***
+###### ***Economic freedom: regulation***
 
 12 countries have missing values, but the percentage of missing values is always below 25%.
 
