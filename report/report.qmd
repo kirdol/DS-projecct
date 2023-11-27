@@ -12,5 +12,6 @@ format:
     code-tools: true
     theme: flatly
 ---
-```{r child = c('intro.qmd', 'data.qmd', 'eda.qmd', 'analysis.qmd', 'concl.qmd')}
+
+```{r child = c('intro.qmd', 'data.qmd', 'eda.qmd', 'question4.qmd', 'analysis.qmd', 'concl.qmd')}
 ```

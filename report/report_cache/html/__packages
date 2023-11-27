@@ -31,3 +31,7 @@ kableExtra
 DT
 FactoMineR
 factoextra
+visdat
+huxtable
+plm
+plotly

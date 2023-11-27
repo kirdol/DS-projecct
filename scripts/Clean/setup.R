@@ -35,7 +35,8 @@ packages <- c(
   "visdat",
   "huxtable",
   "plm",
-  "plotly"
+  "plotly",
+  "stargazer"
 )
 
 for (pkg in packages) {
@@ -69,10 +70,11 @@ knitr::opts_chunk$set(
   # cache = TRUE,
   fig.retina = 0.8, # figures are either vectors or 300 dpi diagrams
   dpi = 300,
-  out.width = "70%",
+  # out.width = "70%",
+  out.width = "100%",
   fig.align = "center",
   fig.width = 6,
-  fig.asp = 0.618,
+  # fig.asp = 0.618,
   fig.show = "hold",
   message = FALSE,
   echo = FALSE
