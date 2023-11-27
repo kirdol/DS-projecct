@@ -1474,7 +1474,7 @@ Here is the graph that allows us to visualize the countries that have missing va
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%"}
 
-ggplot(see_missing1_1, aes(x = num_missing, y = code, fill = num_missing)) +
+ggplot(see_missing1_1, aes(x = num_missing , y = reorder(code, num_missing), fill = num_missing)) +
     geom_bar(stat = "identity") + 
     scale_fill_gradient(low = "lightgreen", high = "darkgreen") +
     theme_minimal() +
@@ -1499,10 +1499,17 @@ data_question1 <- data_question1 %>% select(-MiliratyExpenditurePercentGovExp)
 
 ```
 
-Here is the dataframe that allows us to see the countries that have missing values, how many and for which variables, after remoying the countries with more than 50.
+Here is the dataframe that allows us to see the countries that have missing values, how many and for which variables, after removing the countries with more than 50.
 
-```{r, echo = FALSE, message = TRUE, warning = FALSE}
-kable(see_missing1_2)
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%"}
+ggplot(see_missing1_2, aes(x = num_missing , y = reorder(code, num_missing), fill = num_missing)) +
+    geom_bar(stat = "identity") + 
+    scale_fill_gradient(low = "lightgreen", high = "darkgreen") +
+    theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 1, size=8 ),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10)) +
+    labs(title = "Number of missing values per country containing at least 50 NAs", x = "Number of Missing Values", y = "Countries")
 
 ```
 
