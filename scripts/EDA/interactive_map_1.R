@@ -14,6 +14,8 @@ world <- ne_countries(scale = "medium", returnclass = "sf")
 # Merge data with the world map data
 data0 <- merge(world, data_question2, by.x = "iso_a3", by.y = "code", all.x = TRUE)
 
+# Test 1
+
 # Define UI logic
 ui <- function(request) {
   fluidPage(
@@ -55,8 +57,10 @@ server <- function(input, output, session) {
 }
 
 # Run the Shiny app
-shinyApp(ui, server)
+mapApp <- shinyApp(ui, server)
+shinylive::export("mapApp", "report")
 
+# Test 2
 # Sample data loading (replace with your actual data loading)
 data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"), sep=",")
 
