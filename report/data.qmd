@@ -59,28 +59,13 @@ D1_1_SDG_table_info <- data.frame(
               "Year of the observation (2000-2022)",
               "Overall score on all 17 SDGs (the score are % of achievement of the goals determined by the UN based on several indicators)",
               "Score on each SDG except SDG 14 (16 variables)",
-              "Population of the country"),
-  Colums3 = c("",
-              "",
-              "",
-              "4140 observations of 120 variables",
-              "",
-              ""),
-  Column4 = c("",
-              "",
-              "",
-              "3818 observations of 21 variables",
-              "",
-              ""))
+              "Population of the country"))
 
 colnames(D1_1_SDG_table_info) <- c("Variable Name",
-                                   "Explanation",
-                                   "before cleaning",
-                                   "after cleaning")
+                                   "Explanation")
 
 D1_1_SDG_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
@@ -95,24 +80,13 @@ D2_2_Unemployment_rate_table_info <- data.frame(
   Column2 = c("Country code (ISO)", 
               "Country name",
               "Year of the observation (2000-2022)",
-              "Unemployment rate (% of the population 15 years old and older)"),
-  Colums3 = c("",
-              "",
-              "",
-              "82800 observations of 8 variables"),
-  Column4 = c("",
-              "",
-              "",
-              "571 observations of 5 variables"))
+              "Unemployment rate (% of the population 15 years old and older)"))
 
 colnames(D2_2_Unemployment_rate_table_info) <- c("Variable Name",
-                                   "Explanation",
-                                   "before cleaning",
-                                   "after cleaning")
+                                   "Explanation")
 
 D2_2_Unemployment_rate_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
@@ -127,24 +101,13 @@ D3_0_GDP_per_capita_table_info <- data.frame(
   Column2 = c("Country code (ISO)", 
               "Country name",
               "Year of the observation (2000-2022)",
-              "GDP per capita"),
-  Colums3 = c("",
-              "",
-              "",
-              "266 observations of 68 variables"),
-  Column4 = c("",
-              "",
-              "",
-              "3818 observations of 4 variables"))
+              "GDP per capita"))
 
 colnames(D3_0_GDP_per_capita_table_info) <- c("Variable Name",
-                                   "Explanation",
-                                   "before cleaning",
-                                   "after cleaning")
+                                   "Explanation")
 
 D3_0_GDP_per_capita_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
@@ -159,24 +122,13 @@ D3_1_Military_expenditure_percent_GDP_table_info <- data.frame(
   Column2 = c("Country code (ISO)", 
               "Country name",
               "Year of the observation (2000-2022)",
-              "Military expenditures in percentage of GDP"),
-  Colums3 = c("",
-              "",
-              "",
-              "266 observations of 68 variables"),
-  Column4 = c("",
-              "",
-              "",
-              "3818 observations of 4 variables"))
+              "Military expenditures in percentage of GDP"))
 
 colnames(D3_1_Military_expenditure_percent_GDP_table_info) <- c("Variable Name",
-                                   "Explanation",
-                                   "before cleaning",
-                                   "after cleaning")
+                                   "Explanation")
 
 D3_1_Military_expenditure_percent_GDP_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
@@ -191,24 +143,13 @@ D4_0_Internet_usage_table_info <- data.frame(
   Column2 = c("Country code (ISO)", 
               "Country name",
               "Year of the observation (2000-2022)",
-              "Internet usage (% of the population)"),
-  Colums3 = c("",
-              "",
-              "",
-              "6570 observations of 4 variables"),
-  Column4 = c("",
-              "",
-              "",
-              "3433 observations of 4 variables"))
+              "Internet usage (% of the population)"))
 
 colnames(D4_0_Internet_usage_table_info) <- c("Variable Name",
-                                   "Explanation",
-                                   "before cleaning",
-                                   "after cleaning")
+                                   "Explanation")
 
 D4_0_Internet_usage_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
@@ -247,48 +188,13 @@ D5_0_Human_freedom_index_table_info <- data.frame(
               "Judicial independence, Impartial courts, Protection of property rights, Military interference Integrity of the legal system Legal enforcementof contracts, Regulatory costs, Reliability of police",
               "Money growth, Standard deviation of inflation, Inflation: Most recent year, Freedom to own foreign currency",
               "Tariffs, Regulatory trade barriers, Black-market exchange rates, Movement of capital and people",
-              "Credit market regulations, Labor market regulations, Business regulations"),
-  Colums3 = c("",
-              "",
-              "",
-              "3465 observations of 141 variables",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              ""),
-  Column4 = c("",
-              "",
-              "",
-              "3339 observations of 18 variables",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              ""))
+              "Credit market regulations, Labor market regulations, Business regulations"))
 
 colnames(D5_0_Human_freedom_index_table_info) <- c("Variable Name",
-                                   "Explanation",
-                                   "before cleaning",
-                                   "after cleaning")
+                                   "Explanation")
 
 D5_0_Human_freedom_index_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
@@ -315,36 +221,13 @@ D6_0_Disaters_table_info <- data.frame(
               "Number of affected caused by disasters",
               "Number of homeless caused by disasters",
               "Total number of affected caused by disasters",
-              "Total of infrastructure damages"),
-  Colums3 = c("",
-              "",
-              "",
-              "14644 observations of 47 variables",
-              "",
-              "",
-              "",
-              "",
-              "",
-              ""),
-  Column4 = c("",
-              "",
-              "",
-              "2435 observations of 10 variables",
-              "",
-              "",
-              "",
-              "",
-              "",
-              ""))
+              "Total of infrastructure damages"))
 
 colnames(D6_0_Disaters_table_info) <- c("Variable Name",
-                                   "Explanation",
-                                   "before cleaning",
-                                   "after cleaning")
+                                   "Explanation")
 
 D6_0_Disaters_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
@@ -363,28 +246,13 @@ D7_0_COVID_table_info <- data.frame(
               "Year of the observation (2000-2022)",
               "Number of people dead due to COVID",
               "Number of COVID cases",
-              "Government Response Stringency Index: composite measure based on 9 response indicators including school closures, workplace closures, and trave"),
-  Colums3 = c("",
-              "",
-              "",
-              "349966 observations of 67 variables",
-              "",
-              ""),
-  Column4 = c("",
-              "",
-              "",
-              "501 observations (only between 2020-2022, before no COVID) of 6 variables",
-              "",
-              ""))
+              "Government Response Stringency Index: composite measure based on 9 response indicators including school closures, workplace closures, and trave"))
 
 colnames(D7_0_COVID_table_info) <- c("Variable Name",
-                                   "Explanation",
-                                   "before cleaning",
-                                   "after cleaning")
+                                   "Explanation")
 
 D7_0_COVID_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
@@ -407,193 +275,15 @@ D8_0_Conflicts_table_info <- data.frame(
               "Best estimate of deaths in all categories of violence (non-state, one-sided and state-based) recorded by the Uppsala Conflict Data Program in the country based on the UCDP GED dataset (unpublished 2016 data). The location of these events is used for estimating the extent of violence.",
               "Share of population affected by violence in percentage (0 to 100) measured as described above based on population data from CIESIN, the PRIO-GRID structure as well as UCDP GED.",
               "Area affected by conflict",
-              "Two different intensity levels are coded: minor armed conflicts (1) and wars (2), Takes the max intensity of conflict in the country so that it is coded 2 if there is at least one war (>=1000 deaths in intrastate conflict) during the year. Data from UCDP/PRIO Armed Conflict Dataset 17.1."),
-  Colums3 = c("",
-              "",
-              "",
-              "5016 observations of 18 variables",
-              "",
-              "",
-              "",
-              ""),
-  Column4 = c("",
-              "",
-              "",
-              "2782 observations of 8 variables",
-              "",
-              "",
-              "",
-              ""))
+              "Two different intensity levels are coded: minor armed conflicts (1) and wars (2), Takes the max intensity of conflict in the country so that it is coded 2 if there is at least one war (>=1000 deaths in intrastate conflict) during the year. Data from UCDP/PRIO Armed Conflict Dataset 17.1."))
 
 colnames(D8_0_Conflicts_table_info) <- c("Variable Name",
-                                   "Explanation",
-                                   "before cleaning",
-                                   "after cleaning")
+                                   "Explanation")
 
 D8_0_Conflicts_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  add_header_above(c(" " = 2, "Number of observations" = 2)) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
-
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-| **Table\                | **Variable\          | **Explanation**                                                                                                                                                                                                                                                                                   | **\# obs before cleaning**          | **\# obs\                                                                 |
-| Name**                  | Name**               |                                                                                                                                                                                                                                                                                                   |                                     | after cleaning**                                                          |
-+=========================+======================+===================================================================================================================================================================================================================================================================================================+=====================================+===========================================================================+
-| In all database         | code                 | Country code (ISO)                                                                                                                                                                                                                                                                                |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | country              | Name of the country                                                                                                                                                                                                                                                                               |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | year                 | Year of the observation (2000-2022)                                                                                                                                                                                                                                                               |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-| D1_1\_\                 | overallscore         | Overall score on all 17 SDGs (the score are % of achievement of the goals determined by the UN based on several indicators)                                                                                                                                                                       | 4140 observations of 120 variables  | 3818 observations of 21 variables                                         |
-| SDG                     |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | goal1:goal17         | Score on each SDG except SDG 14 (16 variables)                                                                                                                                                                                                                                                    |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | population           | Number of people living in the country                                                                                                                                                                                                                                                            |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-| D2_2\_\                 | unemployment.rate    | Unemployment rate (% of the population 15 years old and older)                                                                                                                                                                                                                                    | 82800 observations of 8 variables   | 571 observations of 5 variables                                           |
-| Unemployment_rate       |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-| D3_0\_\                 | GDPpercapita         | GDP per capita                                                                                                                                                                                                                                                                                    | 266 observations of 68 variables    | 3818 observations of 4 variables                                          |
-| GDP_per_capita          |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-| D3_1\_\                 | MilitaryExpenditure\ | Military expenditures in percentage of GDP                                                                                                                                                                                                                                                        | 266 observations of 68 variables    | 3818 observations of 4 variables                                          |
-| Military_expenditure\_\ | PercentGDP           |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-| percent_GDP             |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-| D4_0\_\                 | internet.usage       | Internet usage (% of the population)                                                                                                                                                                                                                                                              | 6570 observations of 4 variables    | 3433 observations of 4 variables                                          |
-| Internet_usage          |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-| D5_0\_\                 | region               | Part of the world, group of countries (e.g. Eastern Europe, Dub-Saharan Africa, South Asia, etc.)                                                                                                                                                                                                 | 3465 observations of 141 variables  | 3339 observations of 18 variables                                         |
-| Human_freedom_index     |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | pf_law               | Rule of law, mean score of:                                                                                                                                                                                                                                                                       |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | -   Procedural justice                                                                                                                                                                                                                                                                            |                                     |                                                                           |
-|                         |                      | -   Civil justice                                                                                                                                                                                                                                                                                 |                                     |                                                                           |
-|                         |                      | -   Criminal justice                                                                                                                                                                                                                                                                              |                                     |                                                                           |
-|                         |                      | -   Rule of law (V-Dem)                                                                                                                                                                                                                                                                           |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | pf_security          | Security and safety, mean score of:                                                                                                                                                                                                                                                               |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | -   Homicide                                                                                                                                                                                                                                                                                      |                                     |                                                                           |
-|                         |                      | -   Disappearances conflicts,                                                                                                                                                                                                                                                                     |                                     |                                                                           |
-|                         |                      | -   terrorism                                                                                                                                                                                                                                                                                     |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | pf_movement          | Freedom of movement (V-Dem)                                                                                                                                                                                                                                                                       |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Freedom of movement (CLD)                                                                                                                                                                                                                                                                         |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | pf_religion          | Freedom of religion                                                                                                                                                                                                                                                                               |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Religious organizatio repression                                                                                                                                                                                                                                                                  |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | pf_assembly          | Civil society entry and exit                                                                                                                                                                                                                                                                      |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Freedom of assembly                                                                                                                                                                                                                                                                               |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Freedom to form/run political parties                                                                                                                                                                                                                                                             |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Civil society repression                                                                                                                                                                                                                                                                          |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | pf_expression        | Direct attacks on the press                                                                                                                                                                                                                                                                       |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Media and expression (V-Dem)                                                                                                                                                                                                                                                                      |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Media and expression (Freedom House)                                                                                                                                                                                                                                                              |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Media and expression (BTI)                                                                                                                                                                                                                                                                        |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Media and expression (CLD)                                                                                                                                                                                                                                                                        |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | pf_identity          | Same-sex relationships                                                                                                                                                                                                                                                                            |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Divorce                                                                                                                                                                                                                                                                                           |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Inheritance rights                                                                                                                                                                                                                                                                                |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Female genital mutilation                                                                                                                                                                                                                                                                         |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | ef_government        | Government consumption                                                                                                                                                                                                                                                                            |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Transfers and subsidies                                                                                                                                                                                                                                                                           |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Government investment                                                                                                                                                                                                                                                                             |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Top marginal tax rate                                                                                                                                                                                                                                                                             |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | State ownership of assets                                                                                                                                                                                                                                                                         |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | ef_legal             | Judicial independence                                                                                                                                                                                                                                                                             |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Impartial courts                                                                                                                                                                                                                                                                                  |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Protection of property rights                                                                                                                                                                                                                                                                     |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Military interference Integrity of the legal system Legal enforcementof contracts                                                                                                                                                                                                                 |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Regulatory costs                                                                                                                                                                                                                                                                                  |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Reliability of police                                                                                                                                                                                                                                                                             |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | ef_money             | Money growth                                                                                                                                                                                                                                                                                      |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Standard deviation of inflation                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Inflation: Most recent year                                                                                                                                                                                                                                                                       |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Freedom to own foreign currency                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | ef_trade             | Tariffs                                                                                                                                                                                                                                                                                           |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Regulatory trade barriers                                                                                                                                                                                                                                                                         |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Black-market exchange rates                                                                                                                                                                                                                                                                       |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Movement of capital and people                                                                                                                                                                                                                                                                    |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | ef_regulation        | Credit market regulations                                                                                                                                                                                                                                                                         |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Labor market regulations                                                                                                                                                                                                                                                                          |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      | Business regulations                                                                                                                                                                                                                                                                              |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-| D6_0\_\                 | continent            | Continents touched by the disasters such as floods, ouragan                                                                                                                                                                                                                                       | 14644 observations of 47 variables  | 2435 observations                                                         |
-| Disaters                |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-|                         |                      |                                                                                                                                                                                                                                                                                                   |                                     | of 10 variables                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | total_deaths         | Number of total deaths caused by the disasters                                                                                                                                                                                                                                                    |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | no_injured           | Number of injured people                                                                                                                                                                                                                                                                          |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | no_affected          | Number of affected people                                                                                                                                                                                                                                                                         |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | no_homeless          | Number of people that lost their home and are now homeless                                                                                                                                                                                                                                        |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | total_affected       | Sum of people affected (sum of the variables: no_injured, no-affected, no_homeless)                                                                                                                                                                                                               |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | total_damages        | Total of infrastructure damages                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-| D7_0\_\                 | deaths_per_million   | Number of people dead due to COVID                                                                                                                                                                                                                                                                | 349966 observations of 67 variables | 501 observations (only between 2020-2022, before no COVID) of 6 variables |
-| COVID                   |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | cases_per_million    | Number of COVID cases                                                                                                                                                                                                                                                                             |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | stringency           | Government Response Stringency Index: composite measure based on 9 response indicators including school closures, workplace closures, and trave                                                                                                                                                   |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-| D8_0\_\                 | ongoing              | Variable coded 1 for more than 25 deaths in intrastate conflict and 0 otherwise according to UCDP/PRIO Armed Conflict Dataset 17.1.                                                                                                                                                               | 5016 observations of 18 variables   | 2782 observations of 8 variables                                          |
-| Conflicts               |                      |                                                                                                                                                                                                                                                                                                   |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | sum_deaths           | Best estimate of deaths in all categories of violence (non-state, one-sided and state-based) recorded by the Uppsala Conflict Data Program in the country based on the UCDP GED dataset (unpublished 2016 data). The location of these events is used for estimating the extent of violence.      |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | pop_affected         | Share of population affected by violence in percentage (0 to 100) measured as described above based on population data from CIESIN, the PRIO-GRID structure as well as UCDP GED.                                                                                                                  |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | area_affected        | Area affected by conflict                                                                                                                                                                                                                                                                         |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
-|                         | maxintensity         | Two different intensity levels are coded: minor armed conflicts (1) and wars (2), Takes the max intensity of conflict in the country so that it is coded 2 if there is at least one war (\>=1000 deaths in intrastate conflict) during the year. Data from UCDP/PRIO Armed Conflict Dataset 17.1. |                                     |                                                                           |
-+-------------------------+----------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------------------------------+---------------------------------------------------------------------------+
 
 ## Wrangling/cleaning
 
@@ -777,8 +467,9 @@ D1_0_SDG <- D1_0_SDG |> complete(code, year)
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 datatable(D1_0_SDG, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
+For this first dataset, we went from 4'140 observations for 120 variables to 3818 observationsfor 21 varibles.
 
-As said, this is now our main dataset. All subsequent datasets will be merged with this dataset. Therefore, for all the following datasets, we want to make sure that we only keep data for the same countries and years as in this dataset. We have a total of `r length(list_country)` countries and the years range from 2000 to 2022.
+As said, this is now our main dataset. All subsequent datasets will be merged with this dataset. Therefore, for all the following datasets, we will make sure that we only keep data for the same countries and years as in this dataset. We have a total of `r length(list_country)` countries and the years range from 2000 to 2022.
 
 ### Dataset on Unemployment rate
 
@@ -810,7 +501,7 @@ D2_1_Unemployment_rate <- read.csv(here("scripts","data","UnemploymentRate.csv")
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 datatable(D2_1_Unemployment_rate, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
-
+For this dataset, we went from 82'800 observations for 8 variables to 3812 observations for 5 varibles.
 ### Dataset on GDP military Expenditures
 
 We have three different databases which contain information on each countries over the years. Each year represent one variable. We want to extract three variables for our analysis: GDP per capita, military expenditures in percentage of the GDP and military expenditures in percentage of government expenditures.
@@ -1130,6 +821,7 @@ D3_3_Miliraty_Expenditure_Percent_Gov_Exp <- MiliratyExpenditurePercentGovExp
 datatable(D3_1_GDP_per_capita, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 
 ```
+For this dataset, we went from ??? observations for 68 variables to 3818 observations for 4 varibles.
 
 **Here are the first few lines of the cleaned dataset of military expenditures in percentage of GDP:**
 
@@ -1137,6 +829,7 @@ datatable(D3_1_GDP_per_capita, options = list(pageLength = 10, class = "hover", 
 datatable(D3_2_Military_Expenditure_Percent_GDP, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 
 ```
+For this dataset, we went from ??? observations for 68 variables to 3818 observations for 4 varibles.
 
 **Here are the first few lines of the cleaned dataset of military expenditures in percentage of government expenditures:**
 
@@ -1167,6 +860,7 @@ D4_0_Internet_usage <- read.csv(here("scripts", "data", "InternetUsage.csv")) %>
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 datatable(D4_0_Internet_usage, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
+For this dataset, we went from 6'570 observations for 4 variables to 3433 observations for 4 varibles.
 
 ### Dataset on human freedom index
 
@@ -1310,6 +1004,7 @@ We conclude here that 13 countries were concerned by our selection of 50% and mo
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 datatable(D5_0_Human_freedom_index, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
+For this dataset, we went from 3'465 observations for 141 variables to `lengh(D5_0_Human_freedom_index$code)` observations for 4 varibles.
 
 ### Dataset on Disasters
 
