@@ -59,7 +59,7 @@ print(correlations_by_region)
 
 
 
-
+##Correlations disasters###
 
 # Subset data for South and East Asia from Q3.1 dataset
 south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
@@ -103,7 +103,7 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
 ##3. Correlation Analysis COVID###
 
 # Filter COVID-19 data for the relevant time period
-covid_filtered <- Q3.2
+covid_filtered <- Q3.2[Q3.2$year >= as.Date("2018-12-12"), ]
 
 # Select relevant columns for correlation analysis
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
@@ -119,6 +119,8 @@ cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 
 # Create the heatmap
+library(ggplot2)
+
 ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white",
@@ -141,15 +143,18 @@ print(correlation_matrix_Covid)
 
 ##3. Correlation Analysis Conflicts###
 
+
+Q3.3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
+
+
 # Filter data for specific regions (sum_deaths)
-selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia")
-conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
+conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia"), ]
 
 # Select relevant columns for the correlation analysis
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "sum_deaths")
 
 # Subset data with relevant columns for correlation analysis
-subset_data <- conflicts_selected[, relevant_columns]
+subset_data <- conflicts_filtered[, relevant_columns]
 
 # Compute correlation matrix for "sum_deaths" with the rest of the variables
 correlation_matrix_Conflicts_Deaths <- cor(subset_data, subset_data[, c("sum_deaths")])
@@ -159,6 +164,8 @@ cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 
 # Create the heatmap
+library(ggplot2)
+
 ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white",
@@ -175,24 +182,25 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
        title = 'Correlation between Conflicts deaths and the SDG goals')
 
 
+print(correlation_matrix_Conflicts_Deaths)
 
 
 
 
 
 
-# Filter data for specific regions (pop_affected)
-selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe","Caucasus and Central Asia")
-conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
+# Filter data for specific regions (pop_affected) and (sum_deaths), as the regions most touched by the sum_deaths are the same regions that have also the must affected population.
+
+conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe", "Caucasus and Central Asia"), ]
 
 # Select relevant columns for the correlation analysis
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected")
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected", "sum_deaths")
 
 # Subset data with relevant columns for correlation analysis
-subset_data <- conflicts_selected[, relevant_columns]
+subset_data <- conflicts_filtered[, relevant_columns]
 
 # Compute correlation matrix for "pop_affected" with the rest of the variables
-correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected")], use = "complete.obs")
+correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected", "sum_deaths")])
 
 # Melt the correlation matrix for ggplot2
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
@@ -225,6 +233,46 @@ Lin_Reg_Disaster <- lm(goal1 ~ total_affected, data = Q3.1)
 # Summary of the regression model
 summary(Lin_Reg_Disaster)
 
+
+
+
+### We asked ourselves if the fact that we do not see any correlations is because the consequences of this disasters arrive later on, so we could remake the same correlations with 1 year of gap.
+
+##Correlations disasters###
+
+# Subset data for South and East Asia from Q3.1 dataset
+south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
+
+# Select relevant columns for correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "no_homeless")
+
+# Subset the data
+subset_data <- south_east_asia_data[, relevant_columns]
+
+# Compute correlation matrix for total_affected, no_homeless with the rest of the variables
+correlation_matrix_subset <- cor(subset_data[, c("total_affected", "no_homeless")], subset_data)
+
+# Melt the correlation matrix for ggplot2
+cor_melted <- reshape2::melt(correlation_matrix_subset)
+names(cor_melted) <- c("Variable2", "Variable1", "Correlation")
+
+# Create the heatmap
+library(ggplot2)
+
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+         axis.text.y = element_text(vjust = 1, size = 8, hjust = 2),
+         plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
+                                   vjust = 2.5, lineheight = 1.5)
+  ) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between the climate disasters and the SDG goals in South and East Asia')
 
 
 
