@@ -1,7 +1,7 @@
 # Data
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
-source(here::here("scripts/Clean/setup.R"))
+source(here::here("scripts","Clean","setup.R"))
 ```
 
 ## Sources
@@ -128,6 +128,27 @@ colnames(D3_1_Military_expenditure_percent_GDP_table_info) <- c("Variable Name",
                                    "Explanation")
 
 D3_1_Military_expenditure_percent_GDP_table_info %>%
+  kable(format = "html", escape = FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+### D3_2_Military_expenditure_percent_gov_exp {.unnumbered}
+
+```{r}
+D3_2_Military_expenditure_percent_gov_exp <- data.frame(
+  Column1 = c("code",
+              "country",
+              "year",
+              "MilitaryExpenditurePercentGovExp"),
+  Column2 = c("Country code (ISO)", 
+              "Country name",
+              "Year of the observation (2000-2022)",
+              "Military expenditures in percentage of government expenditures"))
+
+colnames(D3_2_Military_expenditure_percent_gov_exp) <- c("Variable Name",
+                                   "Explanation")
+
+D3_2_Military_expenditure_percent_gov_exp %>%
   kable(format = "html", escape = FALSE) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
@@ -296,8 +317,7 @@ This is our main dataset, that we clean in order to keep the columns containing 
 We begin by importing the data and transforming it into a dataframe. We rename the columns and transform the scores into numeric variables.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-D1_0_SDG <- read.csv(here("scripts","data","SDG.csv"), sep = ";")
-D1_0_SDG <- as.data.frame(D1_0_SDG)
+D1_0_SDG <- as.data.frame(read.csv(here("scripts","data","SDG.csv"), sep = ";"))
 
 D1_0_SDG <- D1_0_SDG[,1:22]
 
@@ -342,14 +362,12 @@ print(SDG0, n = 180)
 
 D1_0_SDG <- D1_0_SDG %>%
   filter(!str_detect(code, "^_"))
-
 ```
 
 Now there is no more missing values in the variable population and we see that we have information on 166 countries.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 (country_number <- length(unique(D1_0_SDG$country)))
-
 ```
 
 We see that there are only NAs in 3 SDG scores: 1, 10 and 14 and that when there are NAs for a country, it is on all years or none. We decide to run ore investigations of those 3 SDG scores to decide if we keep them or not for the analysis.
@@ -467,8 +485,12 @@ D1_0_SDG <- D1_0_SDG |> complete(code, year)
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 datatable(D1_0_SDG, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
+<<<<<<< Updated upstream
 
 For this first dataset, we went from 4'140 observations for 120 variables to 3818 observationsfor 21 varibles.
+=======
+For this first dataset, we went from 4'140 observations for 120 variables to `r nrow(D1_0_SDG)` observations for `r ncol(D1_0_SDG)` variables.
+>>>>>>> Stashed changes
 
 As said, this is now our main dataset. All subsequent datasets will be merged with this dataset. Therefore, for all the following datasets, we will make sure that we only keep data for the same countries and years as in this dataset. We have a total of `r length(list_country)` countries and the years range from 2000 to 2022.
 
@@ -500,10 +522,30 @@ D2_1_Unemployment_rate <- read.csv(here("scripts","data","UnemploymentRate.csv")
 **Here are the first few lines of the cleaned dataset on Unemployment rate:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D2_1_Unemployment_rate, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+datatable(D2_1_Unemployment_rate, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = 3,
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return (parseFloat(data) * 100).toFixed(2) + '%';",
+                     "  }",
+                     "  return data;",
+                     "}")))),
+          rownames = FALSE)
 ```
+<<<<<<< Updated upstream
 
 For this dataset, we went from 82'800 observations for 8 variables to 3812 observations for 5 varibles. \### Dataset on GDP military Expenditures
+=======
+For this dataset, we went from 82'800 observations for 8 variables to `r nrow(D2_1_Unemployment_rate)` observations for `r ncol(D2_1_Unemployment_rate)` variables.
+
+### Dataset on GDP military Expenditures
+>>>>>>> Stashed changes
 
 We have three different databases which contain information on each countries over the years. Each year represent one variable. We want to extract three variables for our analysis: GDP per capita, military expenditures in percentage of the GDP and military expenditures in percentage of government expenditures.
 
@@ -819,27 +861,75 @@ D3_3_Miliraty_Expenditure_Percent_Gov_Exp <- MiliratyExpenditurePercentGovExp
 **Here are the first few lines of the cleaned dataset of GDP per capita:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D3_1_GDP_per_capita, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
-
+datatable(D3_1_GDP_per_capita, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = 3, 
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return parseFloat(data).toFixed(2);",
+                     "  }",
+                     "  return data;",
+                     "}")))),
+          rownames = FALSE)
 ```
+<<<<<<< Updated upstream
 
 For this dataset, we went from ??? observations for 68 variables to 3818 observations for 4 varibles.
+=======
+For this dataset, we went from ??? observations for 68 variables to `r nrow(D3_1_GDP_per_capita)` observations for `r ncol(D3_1_GDP_per_capita)` variables.
+>>>>>>> Stashed changes
 
 **Here are the first few lines of the cleaned dataset of military expenditures in percentage of GDP:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D3_2_Military_Expenditure_Percent_GDP, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
-
+datatable(D3_2_Military_Expenditure_Percent_GDP, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = 3,
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return parseFloat(data).toFixed(2) + '%';",
+                     "  }",
+                     "  return data;",
+                     "}")))),
+          rownames = FALSE)
 ```
+<<<<<<< Updated upstream
 
 For this dataset, we went from ??? observations for 68 variables to 3818 observations for 4 varibles.
+=======
+For this dataset, we went from ??? observations for 68 variables to `r nrow(D3_2_Military_Expenditure_Percent_GDP)` observations for `r ncol(D3_2_Military_Expenditure_Percent_GDP)` variables.
+>>>>>>> Stashed changes
 
 **Here are the first few lines of the cleaned dataset of military expenditures in percentage of government expenditures:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D3_3_Miliraty_Expenditure_Percent_Gov_Exp, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
-
+datatable(D3_3_Miliraty_Expenditure_Percent_Gov_Exp, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = 3,
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return parseFloat(data).toFixed(2) + '%';",
+                     "  }",
+                     "  return data;",
+                     "}")))), 
+          rownames = FALSE)
 ```
+For this dataset, we went from ??? observations for 68 variables to `r nrow(D3_3_Miliraty_Expenditure_Percent_Gov_Exp)` observations for `r ncol(D3_3_Miliraty_Expenditure_Percent_Gov_Exp)` variables.
 
 ### Dataset on internet usage
 
@@ -855,16 +945,36 @@ D4_0_Internet_usage <- read.csv(here("scripts", "data", "InternetUsage.csv")) %>
     internet_usage = Individuals.using.the.Internet....of.population.
   ) %>%
   mutate(internet_usage = internet_usage / 100) %>%
-  filter(code %in% list_country)
+  filter(code %in% list_country) %>%
+  select(code, country, year, internet_usage) %>%
+  arrange(code, year)
 ```
 
 **Here are the first few lines of the cleaned dataset of internet usage:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D4_0_Internet_usage, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+datatable(D4_0_Internet_usage, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = 3,
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return (parseFloat(data) * 100).toFixed(2) + '%';",
+                     "  }",
+                     "  return data;",
+                     "}")))),
+          rownames = FALSE)
 ```
+<<<<<<< Updated upstream
 
 For this dataset, we went from 6'570 observations for 4 variables to 3433 observations for 4 varibles.
+=======
+For this dataset, we went from 6'570 observations for 4 variables to `r nrow(D4_0_Internet_usage)` observations for `r ncol(D4_0_Internet_usage)` variables.
+>>>>>>> Stashed changes
 
 ### Dataset on human freedom index
 
@@ -1006,19 +1116,35 @@ We conclude here that 13 countries were concerned by our selection of 50% and mo
 **Here are the first few lines of the partialy cleaned dataset on Human Freedom Index scores:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D5_0_Human_freedom_index, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+datatable(D5_0_Human_freedom_index, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = 3:17, 
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return parseFloat(data).toFixed(2);",
+                     "  }",
+                     "  return data;",
+                     "}")))), 
+          rownames = FALSE)
 ```
+<<<<<<< Updated upstream
 
 For this dataset, we went from 3'465 observations for 141 variables to `lengh(D5_0_Human_freedom_index$code)` observations for 4 varibles.
+=======
+For this dataset, we went from 3'465 observations for 141 variables to `r nrow(D5_0_Human_freedom_index)` observations for `r ncol(D5_0_Human_freedom_index)` variables.
+>>>>>>> Stashed changes
 
 ### Dataset on Disasters
 
 For this dataset concerning the Disasters we imported the data from Kaggle as we couldn't find the original dataset that is private coming from the EOSDIS SYSTEM, an interactive interface for browsing full-resolution, global, daily satellite images from NASA. Once we made sure that our file called "Disasters" was convert into a data frame, we selected some specific columns that we where interested in.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-Disasters <- read.csv(here("scripts","data","Disasters.csv"))
-
-Disasters <- as.data.frame(Disasters)
+Disasters <- as.data.frame(read.csv(here("scripts","data","Disasters.csv")))
 
 Disasters <- Disasters %>%
   select(Year, Country, ISO, Location, Continent, Disaster.Subgroup, Disaster.Type, Total.Deaths, No.Injured, No.Affected, No.Homeless, Total.Affected, Total.Damages...000.US..)
@@ -1149,27 +1275,23 @@ Now that all the variables of interest are aggregated by year, we remove all the
 COVID <- COVID %>%
   group_by(location, date) %>%
   distinct(date, .keep_all = TRUE) %>%
-  ungroup()
-
-COVID <- COVID %>% select(-c(new_cases_per_million, new_deaths_per_million, stringency_index))
-
-colnames(COVID) <- c("code", "country", "year", "cases_per_million", "deaths_per_million", "stringency")
-
+  ungroup() %>%
+  select(-c(new_cases_per_million, new_deaths_per_million, stringency_index)) %>%
+  rename(code = location, 
+         country = date, 
+         year = year, 
+         cases_per_million = cases_per_million, 
+         deaths_per_million = deaths_per_million, 
+         stringency = stringency)
 ```
 
 We remove the years that exceed 2022, we make sure that the country codes are all iso codes with 3 letters (we observe that sometimes they are preceded by "OWID\_") and we standardize the country codes.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-COVID <- COVID[COVID$year <= 2022, ]
-
-COVID$code <- gsub("OWID_", "", COVID$code)
-
-COVID$code <- countrycode(
-  sourcevar = COVID$code,
-  origin = "iso3c",
-  destination = "iso3c"
-)
-
+COVID <- COVID %>%
+  filter(year <= 2022) %>%
+  mutate(code = gsub("OWID_", "", code),
+         code = countrycode(sourcevar = code, origin = "iso3c", destination = "iso3c"))
 ```
 
 We remove the observations of countries that aren't in our main dataset on SDGs and find that all the 166 countries that we have in the main SDG dataset are also in this one.
@@ -1177,7 +1299,6 @@ We remove the observations of countries that aren't in our main dataset on SDGs 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 COVID <- COVID %>% filter(code %in% list_country)
 length(unique(COVID$code))
-
 ```
 
 We perform a second round of missing values investigation and find out that there are no missing values except for the stringency, where there are 4.19%. Either all values are missing for one country, or 50% are missing, so these 7 countries won't be included when analyzing the effect of stringency on the SDG scores.
@@ -1194,13 +1315,30 @@ COVID4 <- COVID %>%
 print(COVID4, n = 300)
 
 D7_0_COVID <- COVID
-
 ```
 
 **Here are the first few lines of the cleaned dataset on COVID19:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D7_0_COVID, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+datatable(D7_0_COVID, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = 3:5, 
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return parseFloat(data).toFixed(2);",
+                     "  }",
+                     "  return data;",
+                     "}"
+                   )
+              )
+            )
+          ), 
+          rownames = FALSE)
 ```
 
 ### Dataset on Conflicts
@@ -1208,9 +1346,7 @@ datatable(D7_0_COVID, options = list(pageLength = 10, class = "hover", searchHig
 For our conflicts dataset, we imported the data from "The World Banck" data catalog. Once we made sure that our file called "Disasters" was convert into a data frame, we selected some specific columns that we where interested in.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-Conflicts <- read.csv(here("scripts","data","Conflicts.csv"))
-
-Conflicts <- as.data.frame(Conflicts)
+Conflicts <- as.data.frame(read.csv(here("scripts","data","Conflicts.csv")))
 
 Conflicts <- Conflicts %>%
   select(year, country, ongoing, gwsum_bestdeaths, pop_affected, peaceyearshigh, area_affected, maxintensity, maxcumulativeintensity)
@@ -1274,7 +1410,25 @@ list_country_conflicts <- c(unique(conflicts$code))
 **Here are the first few lines of the cleaned dataset on Conflicts:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D8_0_Conflicts, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+datatable(D8_0_Conflicts, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = 5:6, 
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return parseFloat(data).toFixed(2) + '%';",
+                     "  }",
+                     "  return data;",
+                     "}"
+                   )
+              )
+            )
+          ), 
+          rownames = FALSE)
 ```
 
 ### Merge data
@@ -1311,7 +1465,6 @@ D8_0_Conflicts$country <- NULL
 all_Merge <- merge_123456_7 |> left_join(D8_0_Conflicts, join_by(code, year)) 
 
 all_Merge <- all_Merge %>% filter(!code %in% missing)
-
 ```
 
 ### Cleaning of the final database

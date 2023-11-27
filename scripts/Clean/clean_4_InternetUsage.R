@@ -1,4 +1,4 @@
-# Load and transform the dataset in one pipeline
+# Load and transform the dataset
 D4_0_Internet_usage <- read.csv(here("scripts", "data", "InternetUsage.csv")) %>%
   filter(Year >= 2000, Year <= 2022) %>%
   rename(
@@ -8,7 +8,6 @@ D4_0_Internet_usage <- read.csv(here("scripts", "data", "InternetUsage.csv")) %>
     internet_usage = Individuals.using.the.Internet....of.population.
   ) %>%
   mutate(internet_usage = internet_usage / 100) %>%
-  filter(code %in% list_country)
-
-# Output the number of unique country codes
-length(unique(D4_0_Internet_usage$code))
+  filter(code %in% list_country) %>%
+  select(code, country, year, internet_usage) %>%
+  arrange(code, year)
