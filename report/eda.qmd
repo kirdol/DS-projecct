@@ -54,12 +54,30 @@ boxplot(Correlation_overall[23:34],
         main = "Merged Human Freedom Index scores boxplot", # Title of the boxplot
         ylab = "Score")     # Y-axis label
 
-# for the remaining variables
-par(mfrow=c(2,3))
-for (i in 19:22){
-  boxplot(Correlation_overall[,i], main=names(Correlation_overall[i]), type="l")
-}
-par(mfrow=c(1,1))
+ggplot(Correlation_overall, aes(x= factor(1), y= GDPpercapita)) + 
+  geom_violin(trim=FALSE, fill="orange")+
+  labs(title="Violin plot of GDP per capita",x="GDP per capita", y = "Distribution")+
+  geom_boxplot(width=0.1, outlier.size = 1)+
+  scale_y_continuous(labels = scales::label_number()) +  # Format y-axis labels
+  theme_classic()
+ggplot(Correlation_overall, aes(x= factor(1), y= unemployment.rate)) + 
+  geom_violin(trim=FALSE, fill="orange")+
+  labs(title="Violin plot of unemployment rate",x="Unemployment rate", y = "Distribution")+
+  geom_boxplot(width=0.1, outlier.size = 1)+
+  scale_y_continuous(labels = scales::label_number()) +  # Format y-axis labels
+  theme_classic()
+ggplot(Correlation_overall, aes(x= factor(1), y= MilitaryExpenditurePercentGDP)) + 
+  geom_violin(trim=FALSE, fill="orange")+
+  labs(title="Violin plot of military expenditure by percentage of GDP",x="Military Expenditure", y = "Distribution")+
+  geom_boxplot(width=0.1, outlier.size = 1)+
+  scale_y_continuous(labels = scales::label_number()) +  # Format y-axis labels
+  theme_classic()
+ggplot(Correlation_overall, aes(x= factor(1), y= internet_usage)) + 
+  geom_violin(trim=FALSE, fill="orange")+
+  labs(title="Violin plot of internet_usage",x="internet_usage", y = "Distribution")+
+  geom_boxplot(width=0.1, outlier.size = 1)+
+  scale_y_continuous(labels = scales::label_number()) +  # Format y-axis labels
+  theme_classic()
 ```
 
 We now look at the variables in a summary table to have a more precise view of the numbers.
