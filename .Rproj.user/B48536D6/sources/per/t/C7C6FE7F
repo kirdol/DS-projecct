@@ -1,0 +1,26 @@
+{
+    "id": "C7C6FE7F",
+    "path": "~/Documents/GitHub/DS-project/scripts/Clean/final_clean.R",
+    "project_path": "scripts/Clean/final_clean.R",
+    "type": "r_source",
+    "hash": "779893208",
+    "contents": "",
+    "dirty": false,
+    "created": 1701094624065.0,
+    "source_on_save": false,
+    "relative_order": 14,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "150,16",
+        "scrollLine": "527"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1701097348,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1701097348,
+    "read_only": false,
+    "read_only_alternatives": []
+}
