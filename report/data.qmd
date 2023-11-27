@@ -1275,21 +1275,18 @@ Now that all the variables of interest are aggregated by year, we remove all the
 COVID <- COVID %>%
   group_by(location, date) %>%
   distinct(date, .keep_all = TRUE) %>%
-  ungroup() %>%
-  select(-c(new_cases_per_million, new_deaths_per_million, stringency_index)) %>%
-  rename(code = location, 
-         country = date, 
-         year = year, 
-         cases_per_million = cases_per_million, 
-         deaths_per_million = deaths_per_million, 
-         stringency = stringency)
+  ungroup()
+
+COVID <- COVID %>% select(-c(new_cases_per_million, new_deaths_per_million, stringency_index))
+
+colnames(COVID) <- c("code", "country", "year", "cases_per_million", "deaths_per_million", "stringency")
 ```
 
 We remove the years that exceed 2022, we make sure that the country codes are all iso codes with 3 letters (we observe that sometimes they are preceded by "OWID\_") and we standardize the country codes.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 COVID <- COVID %>%
-  filter(year <= 2022) %>%
+  filter(as.integer(year) <= 2022) %>%
   mutate(code = gsub("OWID_", "", code),
          code = countrycode(sourcevar = code, origin = "iso3c", destination = "iso3c"))
 ```
