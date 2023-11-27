@@ -33,6 +33,9 @@ data_question3_3 <- all_Merge %>% filter(year<=2016) %>% select(c(code, year, co
 
 #### Question1
 data_question1 <- data_question1 %>% select(-X)
+
+library(UpSetR)
+gg_miss_upset(data_question1)
  
 variable_names <- names(data_question1)
 missing_percentages <- sapply(data_question1, function(col) mean(is.na(col)) * 100)
