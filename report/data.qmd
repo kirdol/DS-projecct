@@ -467,6 +467,7 @@ D1_0_SDG <- D1_0_SDG |> complete(code, year)
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 datatable(D1_0_SDG, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
+
 For this first dataset, we went from 4'140 observations for 120 variables to 3818 observationsfor 21 varibles.
 
 As said, this is now our main dataset. All subsequent datasets will be merged with this dataset. Therefore, for all the following datasets, we will make sure that we only keep data for the same countries and years as in this dataset. We have a total of `r length(list_country)` countries and the years range from 2000 to 2022.
@@ -501,8 +502,8 @@ D2_1_Unemployment_rate <- read.csv(here("scripts","data","UnemploymentRate.csv")
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 datatable(D2_1_Unemployment_rate, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
-For this dataset, we went from 82'800 observations for 8 variables to 3812 observations for 5 varibles.
-### Dataset on GDP military Expenditures
+
+For this dataset, we went from 82'800 observations for 8 variables to 3812 observations for 5 varibles. \### Dataset on GDP military Expenditures
 
 We have three different databases which contain information on each countries over the years. Each year represent one variable. We want to extract three variables for our analysis: GDP per capita, military expenditures in percentage of the GDP and military expenditures in percentage of government expenditures.
 
@@ -821,6 +822,7 @@ D3_3_Miliraty_Expenditure_Percent_Gov_Exp <- MiliratyExpenditurePercentGovExp
 datatable(D3_1_GDP_per_capita, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 
 ```
+
 For this dataset, we went from ??? observations for 68 variables to 3818 observations for 4 varibles.
 
 **Here are the first few lines of the cleaned dataset of military expenditures in percentage of GDP:**
@@ -829,6 +831,7 @@ For this dataset, we went from ??? observations for 68 variables to 3818 observa
 datatable(D3_2_Military_Expenditure_Percent_GDP, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 
 ```
+
 For this dataset, we went from ??? observations for 68 variables to 3818 observations for 4 varibles.
 
 **Here are the first few lines of the cleaned dataset of military expenditures in percentage of government expenditures:**
@@ -860,6 +863,7 @@ D4_0_Internet_usage <- read.csv(here("scripts", "data", "InternetUsage.csv")) %>
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 datatable(D4_0_Internet_usage, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
+
 For this dataset, we went from 6'570 observations for 4 variables to 3433 observations for 4 varibles.
 
 ### Dataset on human freedom index
@@ -1004,6 +1008,7 @@ We conclude here that 13 countries were concerned by our selection of 50% and mo
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 datatable(D5_0_Human_freedom_index, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
+
 For this dataset, we went from 3'465 observations for 141 variables to `lengh(D5_0_Human_freedom_index$code)` observations for 4 varibles.
 
 ### Dataset on Disasters
@@ -1469,6 +1474,10 @@ Here is the dataframe that allows us to see the countries that have missing valu
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 kable(see_missing1_1)
+ggplot(see_missing1_1, aes(x = num_missing, y = code)) +
+    geom_bar(stat = "identity") +
+    theme_minimal() +
+    labs(title = "Missing Values per Country", x = "Number of Missing Values", y = "Country")
 
 ```
 
