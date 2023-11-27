@@ -249,17 +249,25 @@ relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goa
 # Subset the data
 subset_data <- south_east_asia_data[, relevant_columns]
 
-# Compute correlation matrix for total_affected, no_homeless with the rest of the variables
-correlation_matrix_subset <- cor(subset_data[, c("total_affected", "no_homeless")], subset_data)
+# Create lagged variables with a one-year gap for disaster-related columns
+lagged_subset_data <- subset_data %>%
+  mutate(
+    lagged_total_affected = lag(total_affected, default = NA),
+    lagged_no_homeless = lag(no_homeless, default = NA)
+  )
+
+
+# Compute correlation matrix for lagged disaster-related variables with the rest of the variables
+correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_total_affected", "lagged_no_homeless")], subset_data)
 
 # Melt the correlation matrix for ggplot2
-cor_melted <- reshape2::melt(correlation_matrix_subset)
-names(cor_melted) <- c("Variable2", "Variable1", "Correlation")
+cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
+names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
 
 # Create the heatmap
 library(ggplot2)
 
-ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+ggplot(data = cor_melted_lagged, aes(Variable1, Variable2, fill = Correlation)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white",
                        midpoint = 0, limit = c(-1, 1), space = "Lab",
@@ -268,11 +276,11 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
   theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
          axis.text.y = element_text(vjust = 1, size = 8, hjust = 2),
          plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
-                                   vjust = 2.5, lineheight = 1.5)
+                                   vjust = 6, lineheight = 1.5)
   ) +
   coord_fixed() +
   labs(x = '', y = '',
        title = 'Correlation between the climate disasters and the SDG goals in South and East Asia')
 
 
-
+##----> still nothing :(
