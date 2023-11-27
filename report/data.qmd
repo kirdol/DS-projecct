@@ -1499,17 +1499,17 @@ data_question1 <- data_question1 %>% select(-MiliratyExpenditurePercentGovExp)
 
 ```
 
-Here is the dataframe that allows us to see the countries that have missing values, how many and for which variables, after removing the countries with more than 50.
+Here is the ggplot that helps us to visualize the countries that have missing values after removing the countries with more than 50 NAs.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%"}
 ggplot(see_missing1_2, aes(x = num_missing , y = reorder(code, num_missing), fill = num_missing)) +
-    geom_bar(stat = "identity") + 
+    geom_bar(stat = "identity", width = 0.5) + 
     scale_fill_gradient(low = "lightgreen", high = "darkgreen") +
     theme_minimal() +
-  theme(axis.text.y = element_text(hjust = 1, size=8 ),
+  theme(axis.text.y = element_text(hjust = 1, size= 6 ),
         legend.text = element_text(size = 8),
         legend.title = element_text(size = 10)) +
-    labs(title = "Number of missing values per country containing at least 50 NAs", x = "Number of Missing Values", y = "Countries")
+    labs(title = "Number of missing values per country", x = "Number of Missing Values", y = "Countries")
 
 ```
 
