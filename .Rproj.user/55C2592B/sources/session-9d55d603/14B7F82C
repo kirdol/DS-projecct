@@ -1,0 +1,26 @@
+{
+    "id": "14B7F82C",
+    "path": "~/Documents/GitHub/DS-projecct/scripts/EDA/EDA_1_factors.R",
+    "project_path": "scripts/EDA/EDA_1_factors.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1700903747565.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "17,38",
+        "scrollLine": "3"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1700422649,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1700422649,
+    "read_only": false,
+    "read_only_alternatives": []
+}
