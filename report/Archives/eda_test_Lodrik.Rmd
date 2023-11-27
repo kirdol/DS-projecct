@@ -1,0 +1,637 @@
+# Exploratory data analysis
+
+```{r setup, echo = FALSE, message = FALSE, warning=FALSE, cache = TRUE}
+source(here::here("scripts/Clean/setup.R"))
+source(here::here("scripts/EDA/EDA_4_SDG.R"))
+```
+
+## General exploration
+
+We display the distribution of the different SDG achievement scores, using boxplots to have an overview of the median, the range with most of the observations and the outliers.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
+data_question24 <- read.csv(here("scripts", "data", "data_question24.csv"))
+data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"))
+data_question3_1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
+data_question3_2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+data_question3_3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
+Q3.1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
+Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+Q3.3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
+data <- read.csv(here("scripts", "data", "all_Merge.csv"))
+
+Correlation_overall <- data_question1 %>% 
+      select(population:ef_regulation)
+
+#### boxplots ####
+
+#for goals
+#dev.off()
+boxplot(Correlation_overall[2:18], 
+        las = 2,            # Makes the axis labels perpendicular to the axis
+        par(mar = c(5, 4, 4, 2) + 0.1),  # Adjusts the margins to fit all labels
+        cex.axis = 0.7,      # Reduces the size of the axis labels
+        cex.lab = 1,       # Reduces the size of the x and y labels
+        notch = TRUE,       # Specifies whether to add notches or not
+        main = "Merged goals boxplot", # Title of the boxplot
+        xlab = "Goals",  # X-axis label
+        ylab = "Score")     # Y-axis label
+```
+
+We see different schemes among the different goals. Indeed some are quite homogeneous with a small spread of values (e.g. overall score, goals 2 and 8) while others have a large spread of values (e.g. goals 1 and 10). Goals 1, 3, 4, 7, 9, 10 and 13 have values across all possible percentages. Goals 2, 5, 8, 13 and 17 have extreme values situated outside the 95% confidence interval. It is interesting to see that goal 8 (decent work and economic growth) is the one with smaller spread of values, whereas goal 1 (no poverty) have the higher distance between the first and the third quartile. Goal 2 (no hunger) has a tight spread of values, but with the greater amount of outliers in the smaller values, meaning hunger is similar across most countries, but when it differs it is in very bad manner.
+
+We now display boxplpots for the different variables of the human freedom index, and then also for our other independent variables.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+#for Human Freedom Index scores 
+boxplot(Correlation_overall[23:34], 
+        las = 2,            # Makes the axis labels perpendicular to the axis
+        par(mar = c(7, 5, 2, 1)),  # Adjusts the margins to fit all labels
+        cex.axis = 0.7,      # Reduces the size of the axis labels
+        cex.lab = 1,       # Reduces the size of the x and y labels
+        notch = TRUE,       # Specifies whether to add notches or not
+        main = "Merged Human Freedom Index scores boxplot", # Title of the boxplot
+        ylab = "Score")     # Y-axis label
+
+# for the remaining variables
+par(mfrow=c(2,3))
+for (i in 19:22){
+  boxplot(Correlation_overall[,i], main=names(Correlation_overall[i]), type="l")
+}
+par(mfrow=c(1,1))
+```
+
+We now look at the variables in a summary table to have a more precise view of the numbers.
+
+```{r, echo = FALSE, message = FALSE, warning=FALSE, cache = TRUE}
+table1 <- summary(data_question24)
+kable(table1)
+```
+
+## Focus on the influence of the factors over the SDG scores
+
+After importing our our cleaned data, we looked first at the correlations between our numerical variables.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+#### Correlations between variables ####
+
+Correlation_overall <- data_question1 %>% 
+      select(population:ef_regulation)
+cor_matrix <- cor(Correlation_overall, use = "everything")
+kable(cor_matrix)
+```
+
+By doing so, we obtain a lot of positive and negative correlations. To help us to better understand and having a overall vision of the situation, we used the following heatmap.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+#### Heatmap ####
+
+cor_melted <- melt(cor_matrix)
+
+ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
+```
+
+In the correlation matrix heatmap, we can notice that many goals from 1 to 11 are actually positively correlated together. On another hand, the goals 12 and 13 are have negative relationships with the majority of our variables, except between themself, whereas they are strongely correlated. In addition, we can notice another strongly correlation between personal freedom variables (pf) related to the scores given by the Human Freedom Index on movement, religion, assembly and expression.
+
+In order to have an overview of the relationship between our independent variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+#### Pearson's correlation coeff ####
+
+panel.hist <- function(x, ...){ 
+  usr <- par("usr"); on.exit(par(usr)) 
+  par(usr = c(usr[1:2], 0, 1.5) ) 
+  h <- hist(x, plot = FALSE) 
+  breaks <- h$breaks; nB <- length(breaks) 
+  y <- h$counts; y <- y/max(y) 
+  rect(breaks[-nB], 0, breaks[-1], y, col = "lightgreen", ...)
+}
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){ 
+  usr <- par("usr"); on.exit(par(usr)) 
+  par(usr = c(0, 1, 0, 1)) 
+  r <- (cor(x, y)) 
+  txt <- format(c(r, 0.123456789), digits = digits)[1] 
+  txt <- paste0(prefix, txt) 
+  if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt) 
+  text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+
+# Independent variables 
+pairs(data_question1[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of various variables")
+```
+
+The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%", out.height="100%"}
+pairs(data_question1[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly", "pf_expression", "pf_identity")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of personal freedom variables")
+```
+
+The overall SDG achievement score is highly correlated with "personal freedom: law" (p=.69) and "personal freedom: identity" (p=.62). The other dimensions of personal freedom do not seem to have important influence. Regarding the distribution of the personal freedom variables, we notice that except for law, all have right-skewed distributions meaning that most of the countries have high scores.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%", out.height="100%"}
+pairs(data_question1[,c("overallscore", "ef_government", "ef_legal", "ef_money", "ef_trade", "ef_regulation")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of economic freedom variables")
+```
+
+The overall SDG achievement score is highly correlated with "economical freedom: legal" (p=.77), "economical trade: legal" (p=.67) and "economical freedom: money" (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+#### PCA ####
+
+# for goals
+myPCA_g <- PCA(data_question1[,9:20])
+summary(myPCA_g)
+myPCA_g$eig
+```
+
+Concerning the SDG goals, we conclude that most of our variables are going along the 1st component, except the goals 10 and 15 that are rather uncorrelated with the dimension 1. In addition, as seen before, the goals 12 and 13 are negatively correlated to the other goals. With a eigenvalue bigger than 1 for the first two components, we conclude that there are only 2 dimensions to take into account, according to the Kaiser-Guttman's rule. Nevertheless, they are explaining less than 80% of cumulated variance.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+#for HFI scores
+myPCA_s <- PCA(data_question1[,30:41])
+summary(myPCA_s)
+myPCA_s$eig
+```
+
+Now concerning the Human Freedom Index scores, most of the variables are positively correlated to the dimension 1, slightly less for the PF religion and security, and finaly the EF government variable is uncorrelated to the dimension 1. With a eigenvalue bigger than 1 for the three first components, we conclude that there are 3 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+#### Kmean clustering ####
+
+data1_scaled <- scale(Correlation_overall)
+row.names(data1_scaled) <- data_question1[,1]
+fviz_nbclust(data1_scaled, kmeans, method="wss")
+kmean <- kmeans(data1_scaled, 7, nstart = 25)
+print(kmean)
+fviz_cluster(kmean, data=data1_scaled, repel=TRUE, depth =NULL, ellipse.type = "norm")
+```
+
+Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough.
+
+## **Focus on the evolution of SDG scores over time**
+
+First, we look at the evolution of SDG achievement overall score over time for the whole world, by continent and by region.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+data1 <- data_question2 %>% group_by(year) %>%
+  mutate(mean_overall_score_by_year=mean(overallscore))
+
+ggplot(data1) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year), color="blue", lwd=1) +
+  scale_y_continuous(limits = c(0, 100))  +
+  labs(title = "Evolution of the mean overall SDG achievement score across the world",
+       y = "Mean Overall SDG Score",
+       x = "Year"
+       )
+
+```
+
+The general evolution of SDG scores around the world is increasing over the years.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+data2 <- data_question2 %>% group_by(year, continent) %>%
+  mutate(mean_overall_score_by_year=mean(overallscore))
+
+ggplot(data2) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=1) +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Evolution of the mean overall SDG achievement score by continent",
+       y = "Mean Overall SDG Score",
+       x = "Year"
+       )
+
+```
+
+Looking at the continents, we see that Europe is above the others, while Africa is below, but in general, all have increasing overall scores.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+data3 <- data_question2 %>% group_by(year, region) %>%
+  mutate(mean_overall_score_by_year=mean(overallscore))
+
+ggplot(data3) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=region), lwd=1) +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Evolution of the mean overall SDG achievement score by region",
+       y = "Mean Overall SDG Score",
+       x = "Year"
+       )
+```
+
+This view that groups the countries by region gives us precision about the previous information. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below.
+
+Second, we look at the evolution of SDG achievement scores(16) over time for the whole world, by continent and by region.
+
+```{r, echo = TRUE, message = FALSE, cache = TRUE, warning = FALSE, out.height="100%", out.width="100%"}
+data4 <- data_question2 %>%
+  group_by(year) %>%
+  summarise(across(starts_with("goal"), mean, na.rm=TRUE)) %>%
+  pivot_longer(cols = starts_with("goal"), names_to = "goal", values_to = "mean_value")
+
+color_palette <- c("red", "blue", "green", "orange", "purple", "pink", "brown", "gray", "cyan", "magenta", "yellow", "darkgreen", "darkblue", "darkred", "darkorange", "darkcyan")
+
+ggplot(data = data4) +
+  geom_line(mapping = aes(x = year, y = mean_value, color = goal), size = 0.7) +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Evolution of the mean SDG achievement scores across the world",
+       y = "Mean SDG Scores",
+       x = "Year"
+       ) +
+  guides(
+    color = guide_legend(
+      ncol = 2,        # Number of columns
+      title.position = "top",  # Position of the legend title
+      title.hjust = 0.5        # Horizontal justification of the legend title
+    )
+  )
+```
+
+Here, by looking at the SDGs individually, we notice that all SDGs except from goal 9 (industry innovation and infrastructure) are close to one another in terms of level and growth. Goal 9 starts far below the others in 2000 and growths faster until almost exceeding 50%.
+
+```{r, echo = TRUE, message = FALSE, cache = TRUE, warning=FALSE, out.height="100%", out.width="100%"}
+ggplot(data = data4) +
+  geom_line(mapping = aes(x = year, y = mean_value), size = 0.7) +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Evolution of the mean SDG achievement scores across the world",
+       y = "Mean SDG Scores",
+       x = "Year"
+       ) +
+  facet_wrap(~ goal, nrow = 4)
+```
+
+In contrast to the aspect discussed in the precedent graph, this graph shows us the same information in a different way and it pops out that some goals did not increase their scores much in the last two decades, for example goal 13 (climate action) and goal 12 (responsible consumption and production).
+
+```{r, echo = TRUE, message = FALSE, cache = TRUE, warning=FALSE, out.height="100%", out.width="100%"}
+data5 <- data_question2 %>%
+  group_by(year, continent) %>%
+  summarise(across(starts_with("goal"), mean, na.rm=TRUE)) %>%
+  pivot_longer(cols = starts_with("goal"), names_to = "goal", values_to = "mean_value")
+
+color_palette <- c("red", "blue", "green", "orange", "purple", "pink", "brown", "gray", "cyan", "magenta", "yellow", "darkgreen", "darkblue", "black", "darkorange", "darkcyan")
+
+ggplot(data = data5) +
+  geom_line(mapping = aes(x = year, y = mean_value, color=continent), size = 0.7) +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Evolution of the mean SDG achievement scores by continent",
+       y = "Mean SDG Scores",
+       x = "Years from 2000 to 2022"
+       ) +
+  facet_wrap(~ goal, nrow = 4)+
+  scale_x_continuous(breaks = NULL)
+```
+
+Now, comparing the SDG scores by continent, we observe that most of the time, Europe is at the top of the graph and Africa at the bottom, exept for goals 12 and 13 that are linked to ecology. Some other information stand out:
+
+-   Americas are far behind the other parts of the world regarding goal 10: reduced inequalities.
+
+-   Africa is far behind the other continents (even if becoming better) for goals 1, 3, 4 and 7.
+
+-   Goal 9 (industry, innovation and infrastructure) show exponential growth for almost all continents.
+
+Third we create an interactive map of the world to be able to navigate from year 2000 to 2022, seeing the level of achievement of the SDGs (overall score) for each country. To open it in your browser, use this R file: interactive_map_1. Here is only a non-interactive world map of the overall SDGs achievement scores, not taking into account the evolution over the years.
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+library(rnaturalearth)
+library(tidyverse)
+library(sf)
+# Load world map data
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Merge data with the world map data
+data0 <- merge(world, data_question2, by.x = "iso_a3", by.y = "code", all.x = TRUE)
+
+data0 %>%
+  sf::st_transform(crs = "+proj=robin") %>%
+  ggplot() +
+  geom_sf(color = "lightgrey") +
+  geom_sf(aes(fill = overallscore), color = NA) +
+  scale_fill_gradientn(
+    colors = c("darkred", "orange", "yellow", "darkgreen"),
+    values = scales::rescale(c(0, 0.25, 0.5, 1)),
+    name = "Overall Score",
+    na.value = NA
+  ) +
+  labs(title = "Mean overall SDG achievement score by country")+
+  coord_sf(datum = NA) +
+  theme_minimal()
+```
+
+## Focus on the influence of events over the SDG scores
+
+In order to have an overview of the relationship between the different events variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_million", "stringency")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of COVID variables")
+
+```
+
+The different variables used to materialize the impact of COVID19 do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that COVID19 had a specific influence on some SDGs, for instance "good health and well-being" or "decent work and economic growth".
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of conflicts variables")
+
+```
+
+The different variables used to materialize the impact of conflicts do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that conflicts have a specific influence on some SDGs.
+
+To explore our data on events such as disasters, covid-19 and conflicts we have to first see which countries are the most touched by these. To do so, we made time-series analysis on this three events each time depending on different variables.
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+# Converted 'year' column to date format
+Q3.1$year <- as.Date(as.character(Q3.1$year), format = "%Y")
+Q3.2$year <- as.Date(as.character(Q3.2$year), format = "%Y")
+Q3.3$year <- as.Date(as.character(Q3.3$year), format = "%Y")
+```
+
+These is our time-analysis concerning the COVID-19 cases per million by region between end 2018 and 2022.
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+covid_filtered <- Q3.2[Q3.2$year >= as.Date("2018-12-12"), ]
+
+ggplot(data = covid_filtered, aes(x = year, y = cases_per_million, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.8, size = 0.5) + 
+  labs(title = "Trend of COVID-19 Cases per Million Over Time",
+       x = "Year", y = "Cases per Million") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 4))
+```
+
+These is our time-analysis concerning the COVID-19 deaths per million per region between end 2018 and 2022
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+ggplot(data = covid_filtered, aes(x = year, y = deaths_per_million, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.8, size = 0.5) + 
+  labs(title = "Trend of COVID-19 Deaths per Million Over Time", x = "Year", y = "Deaths per Million") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 4))
+```
+
+These is our time-analysis concerning the COVID-19 stringency per region between end 2018 and 2022
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+ggplot(data = covid_filtered, aes(x = year, y = stringency, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
+  labs(title = "Trend of COVID-19 Stringency Over Time", x = "Year", y = "Stringency") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 4))
+```
+
+These is our time-analysis concerning climatic disasters with total affected per region
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+Q3.1[is.na(Q3.1)] <- 0
+ggplot(data = Q3.1, aes(x = year, y = total_affected, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
+  labs(title = "Trend of Total Affected from Climatic Disasters Over Time", x = "Year", y = "Total Affected") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 4))
+```
+
+These is our time-analysis concerning conflicts deaths per region between 2000 and 2016
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+conflicts_filtered <- Q3.3[Q3.3$year >= as.Date("2000-01-01") & Q3.3$year <= as.Date("2016-12-31"), ]
+
+ggplot(data = conflicts_filtered, aes(x = year, y = sum_deaths, group = region, color = region)) +
+  geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.5) +  # Using loess smoothing method
+  labs(title = "Trend of Deaths by Conflicts Over Time", x = "Year", y = "Sum Deaths") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 4))
+```
+
+We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, then less America & the Caribbean and Eastern Europe
+
+These is our time-analysis concerning conflicts affected population per region between 2000 and 2016
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region, color = region)) +
+  geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.5) +  # Using loess smoothing method
+  labs(title = "Trend of Population Affected by Conflicts Over Time", x = "Year", y = "pop_affected") +
+  facet_wrap(~ region, nrow = 2) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 4))
+```
+
+We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, America & the Caribbean, Eastern Europe ans sometimes Caucasus and Central Asia
+
+Now that we could visualize which regions are the most impacted by these three events we can do correlations analysis per region to see if this events have indeed an impact on the evolution of SDG goals.
+
+Here we want to analyse the correlation between the climate disasters and the SDG goals in South and East Asia.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+Q3.1[is.na(Q3.1)] <- 0
+
+south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
+
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "no_homeless")
+
+correlation_matrix_disaster_Asia <- cor(south_east_asia_data[, relevant_columns], use = "complete.obs")
+
+kable(correlation_matrix_disaster_Asia)
+
+cor_melted <- as.data.frame(as.table(correlation_matrix_disaster_Asia))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between the climate disasters and the SDG goals in South and East Asia')
+
+```
+
+We conclude that climate disasters do not really have a big impact on SDG goals.
+
+Here we want to analyse the correlation between the Covid-19 and the SDG goals only during Covid time.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+covid_filtered <- Q3.2[Q3.2$year >= as.Date("2019-01-01"), ]
+
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
+# Subset data with relevant columns for correlation analysis
+relevant_data <- covid_filtered[, relevant_columns]
+
+correlation_matrix_Covid <- cor(relevant_data, use = "complete.obs")
+
+kable(correlation_matrix_Covid)
+
+cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between COVID and the SDG goals')
+```
+
+Same conclusion, really weird.
+
+Here we want to analyse the correlation between conflicts deaths and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Eastern Europe regions.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+
+# Filter data for specific regions
+selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe")
+conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
+
+# Select relevant columns for the correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "sum_deaths")
+
+# Compute correlation matrix for the selected regions
+correlation_matrix_Conflicts_Deaths <- cor(conflicts_selected[, relevant_columns], use = "complete.obs")
+
+# View the correlation matrix
+kable(correlation_matrix_Conflicts_Deaths)
+
+# Melt the correlation matrix for ggplot2
+cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+# Create the heatmap
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between Conflicts deaths and the SDG goals')
+```
+
+Finally, we want to analyse the correlation between conflicts affected population and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean, Eastern Europe regions and Caucasus and Central Asia.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+
+# Filter data for specific regions (pop_affected)
+selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe","Caucasus and Central Asia")
+conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
+
+# Select relevant columns for the correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected")
+
+# Compute correlation matrix for the selected regions
+correlation_matrix_Conflicts_Pop_Affected <- cor(conflicts_selected[, relevant_columns], use = "complete.obs")
+
+# View the correlation matrix
+kable(correlation_matrix_Conflicts_Pop_Affected)
+
+# Melt the correlation matrix for ggplot2
+cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Affected))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+# Create the heatmap
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between Conflicts Affected Population and the SDG goals')
+```
+
+## Focus on relationship between SDGs
+
+**How are the different SDGs linked? (We want to see if some SDGs are linked in the fact that a high score on one implies a high score on the other, and thus if we can make groups of SDGs that are comparable in that way).**
+
+Let's explore how the different SDG are correlated together by creating a heatmap of the correlation between our variables. We also added a small script to check whether the correlations are significantly different from 0. First, let's select the SDGs scores.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+sdg_scores <- Q4[, c('goal1', 'goal2', 'goal3', 'goal4', 'goal5', 'goal6',
+                     'goal7', 'goal8', 'goal9', 'goal10', 'goal11', 'goal12',
+                     'goal13', 'goal15', 'goal16', 'goal17')]
+```
+
+We then, initialize the matrices and calculate the correlation, and p-values of each combination of SDGs scores
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+cor_matrix <- matrix(nrow = ncol(sdg_scores), ncol = ncol(sdg_scores))
+p_matrix <- matrix(nrow = ncol(sdg_scores), ncol = ncol(sdg_scores))
+rownames(cor_matrix) <- colnames(sdg_scores)
+rownames(p_matrix) <- colnames(sdg_scores)
+colnames(cor_matrix) <- colnames(sdg_scores)
+colnames(p_matrix) <- colnames(sdg_scores)
+
+# Calculate correlation and p-values
+for (i in 1:ncol(sdg_scores)) {
+  for (j in 1:ncol(sdg_scores)) {
+    test_result <- cor.test(sdg_scores[, i], sdg_scores[, j])
+    cor_matrix[i, j] <- test_result$estimate
+    p_matrix[i, j] <- test_result$p.value}}
+```
+
+We then reshape our data to be able to use the package ggplot2 to create our heatmap.
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.width="100%"}
+melted_cor_matrix <-
+  melt(cor_matrix)
+melted_p_matrix <-
+  melt(matrix(as.vector(p_matrix), nrow = ncol(sdg_scores)))
+
+plot_data <- # Combine the datasets
+  cbind(melted_cor_matrix, p_value = melted_p_matrix$value)
+
+ggplot(plot_data, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = sprintf("%.2f", value), color = p_value < 0.05),
+            vjust = 1) +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1,1), space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  scale_color_manual(values = c("black", "yellow")) + # black when significant, yellow if not
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(angle = 45, hjust = 1),
+        legend.position = "none") +
+  labs(x = 'SDG Goals', y = 'SDG Goals',
+       title = 'Correlation Matrix with Significance Indicator')
+```
+
+Note that as said previously, we assessed the correlations to ascertain if they substantially deviated from zero, setting the significance level at an alpha of 5%. To aid in visualization, we marked any correlations that did not meet this level of significance with a yellow highlight in our graphical representation. The absence of yellow markings on our plot suggests that all Sustainable Development Goal (SDG) scores demonstrate a statistically significant correlation.
+
+We can have a look at the shape of the corelation between the SDGs with the plot function.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+plot(sdg_scores)
+```

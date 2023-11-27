@@ -35,7 +35,7 @@ data_question3_3 <- all_Merge %>% filter(year<=2016) %>% select(c(code, year, co
 data_question1 <- data_question1 %>% select(-X)
 
 library(UpSetR)
-gg_miss_upset(data_question1)
+naniar::gg_miss_upset(data_question1, nsets=16, nintersects=21)
  
 variable_names <- names(data_question1)
 missing_percentages <- sapply(data_question1, function(col) mean(is.na(col)) * 100)
@@ -63,12 +63,13 @@ ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Perce
   theme(axis.text.y = element_text(hjust = 1)) +
   coord_flip()
 
- see_missing1_1 <- data_question1 %>%
+see_missing1_1 <- data_question1 %>%
   group_by(code) %>%
   summarise(across(-c(year, country, continent, region, population, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17),  
                    ~ sum(is.na(.))) %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 50))
+ 
 # Remove countries where num_missing >= 50 ??
 data_question1 <- data_question1 %>% filter(!code %in% see_missing1_1$code)
 
