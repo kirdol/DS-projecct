@@ -1,0 +1,14 @@
+na_count <- sapply(data_question1, function(x) sum(is.na(x)))
+na_count_df <- data.frame(variable = names(na_count), num_missing = na_count)
+na_count_df_filtered <- subset(na_count_df, num_missing > 0)
+
+ggplot(na_count_df_filtered, aes(x= num_missing,y=variable, fill = num_missing)) +
+  geom_bar(stat = "identity", width = 0.8, fill = 'lightblue') +
+  geom_text(aes(label = num_missing), vjust = -0.3, position = position_dodge(width = 0.9)) +
+  theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 1, size=10 ), 
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10)) +
+  labs(title = "Number of remaining missing values per variable ",
+       x = "Number of NAs",
+       y = "Variables")

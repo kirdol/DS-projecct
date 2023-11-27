@@ -1,0 +1,4 @@
+[2,"\n"]
+[1,"\u001B[31m\n\nprocessing file: intro.qmd\n\u001B[39m\r  |                                                          \r  |                                                    |   0%\r  |                                                          \r  |.................                                   |  33%                  \r  |                                                          \r  |...................................                 |  67% [unnamed-chunk-1]"]
+[1,"\u001B[31m\nQuitting from lines 4-5 [unnamed-chunk-1] (intro.qmd)\n\u001B[39m"]
+[1,"\u001B[31mError in `contrib.url()`:\n! trying to use CRAN without setting a mirror\nBacktrace:\n 1. global install_if_missing(i)\n 2. utils::install.packages(package)\n 3. utils::contrib.url(repos, \"source\")\n\u001B[39m\r                                                                                                            \n\u001B[31mExecution halted\n\u001B[39m"]
