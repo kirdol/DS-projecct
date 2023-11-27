@@ -1,0 +1,32 @@
+{
+    "id": "674CE2E2",
+    "path": "~/Documents/GitHub/DS-project/report/data.qmd",
+    "project_path": "report/data.qmd",
+    "type": "quarto_markdown",
+    "hash": "1933228959",
+    "contents": "",
+    "dirty": false,
+    "created": 1701030190448.0,
+    "source_on_save": false,
+    "relative_order": 9,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "rmdVisualMode": "false",
+        "rmdVisualWrapConfigured": "true",
+        "docOutlineVisible": "1",
+        "cursorPosition": "1281,104",
+        "scrollLine": "1263",
+        "rmdVisualModeLocation": "79511:53539",
+        "rmdVisualCollapsedChunks": "",
+        "docOutlineSize": "143"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1701097696,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1701097696672,
+    "read_only": false,
+    "read_only_alternatives": []
+}
