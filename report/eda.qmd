@@ -216,11 +216,13 @@ Now concerning the Human Freedom Index scores, most of the variables are positiv
 #### Kmean clustering ####
 
 data1_scaled <- scale(Correlation_overall)
-row.names(data1_scaled) <- data_question1[,1]
+rownames(data1_scaled) <- seq_along(row.names(data1_scaled))
 fviz_nbclust(data1_scaled, kmeans, method="wss")
 kmean <- kmeans(data1_scaled, 7, nstart = 25)
 print(kmean)
-fviz_cluster(kmean, data=data1_scaled, repel=TRUE, depth =NULL, ellipse.type = "norm")
+fviz_cluster(kmean, data=data1_scaled, repel=FALSE, depth =NULL, ellipse.type = "norm", labelsize = 0, pointsize = 0.5)
+
+### NOW CLUSTERING BY COUNTRY? AND TAKE MEAN OF EVERY VARIABLE ON EVERY CONCERNED YEAR?
 ```
 
 Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough.
