@@ -187,10 +187,12 @@ The overall SDG achievement score is highly correlated with "economical freedom:
 #### PCA ####
 
 # for goals
-myPCA_g <- PCA(data_question1[,9:20])
+myPCA_g <- PCA(data_question1[,9:20], graph = FALSE)
 plot(myPCA_g$ind$coord[, 1], myPCA_g$ind$coord[, 2], xlab = "PC1", ylab = "PC2", main = "PCA Plot SDG Goals", pch = 19, col = "blue", cex = 0.5) + 
   abline(h = 0, col = "red", lty = 2) + 
   abline(v = 0, col = "red", lty = 2)
+plot.PCA(myPCA_g, choix = "var")
+
 summary(myPCA_g)
 myPCA_g$eig
 ```
@@ -199,10 +201,11 @@ Concerning the SDG goals, we conclude that most of our variables are going along
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 #for HFI scores
-myPCA_s <- PCA(data_question1[,30:40])
+myPCA_s <- PCA(data_question1[,30:40], graph = FALSE)
 plot(myPCA_s$ind$coord[, 1], myPCA_s$ind$coord[, 2], xlab = "PC1", ylab = "PC2", main = "PCA Plot HFI Scores", pch = 19, col = "blue", cex = 0.5) + 
   abline(h = 0, col = "red", lty = 2) + 
   abline(v = 0, col = "red", lty = 2)
+plot.PCA(myPCA_s, choix = "var")
 summary(myPCA_s)
 myPCA_s$eig
 ```
