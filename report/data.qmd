@@ -500,7 +500,21 @@ D2_1_Unemployment_rate <- read.csv(here("scripts","data","UnemploymentRate.csv")
 **Here are the first few lines of the cleaned dataset on Unemployment rate:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D2_1_Unemployment_rate, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+datatable(D2_1_Unemployment_rate, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = 3,
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return (parseFloat(data) * 100).toFixed(2) + '%';",
+                     "  }",
+                     "  return data;",
+                     "}")))),
+          rownames = FALSE)
 ```
 
 For this dataset, we went from 82'800 observations for 8 variables to 3812 observations for 5 varibles. \### Dataset on GDP military Expenditures
@@ -819,8 +833,21 @@ D3_3_Miliraty_Expenditure_Percent_Gov_Exp <- MiliratyExpenditurePercentGovExp
 **Here are the first few lines of the cleaned dataset of GDP per capita:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D3_1_GDP_per_capita, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
-
+datatable(D3_1_GDP_per_capita, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = 3,
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return parseFloat(data).toFixed(2)",
+                     "  }",
+                     "  return data;",
+                     "}")))),
+          rownames = FALSE)
 ```
 
 For this dataset, we went from ??? observations for 68 variables to 3818 observations for 4 varibles.
@@ -828,8 +855,21 @@ For this dataset, we went from ??? observations for 68 variables to 3818 observa
 **Here are the first few lines of the cleaned dataset of military expenditures in percentage of GDP:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D3_2_Military_Expenditure_Percent_GDP, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
-
+datatable(D3_2_Military_Expenditure_Percent_GDP, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = 3,
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return parseFloat(data).toFixed(2) + '%';",
+                     "  }",
+                     "  return data;",
+                     "}")))),
+          rownames = FALSE)
 ```
 
 For this dataset, we went from ??? observations for 68 variables to 3818 observations for 4 varibles.
@@ -838,7 +878,21 @@ For this dataset, we went from ??? observations for 68 variables to 3818 observa
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 datatable(D3_3_Miliraty_Expenditure_Percent_Gov_Exp, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
-
+datatable(D3_3_Miliraty_Expenditure_Percent_Gov_Exp, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = 3,
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return parseFloat(data).toFixed(2) + '%';",
+                     "  }",
+                     "  return data;",
+                     "}")))),
+          rownames = FALSE)
 ```
 
 ### Dataset on internet usage
@@ -855,13 +909,28 @@ D4_0_Internet_usage <- read.csv(here("scripts", "data", "InternetUsage.csv")) %>
     internet_usage = Individuals.using.the.Internet....of.population.
   ) %>%
   mutate(internet_usage = internet_usage / 100) %>%
-  filter(code %in% list_country)
+  filter(code %in% list_country) %>%
+  select(code, country, year, internet_usage)
 ```
 
 **Here are the first few lines of the cleaned dataset of internet usage:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D4_0_Internet_usage, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+datatable(D4_0_Internet_usage, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = 3,
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return (parseFloat(data) * 100).toFixed(2) + '%';",
+                     "  }",
+                     "  return data;",
+                     "}")))),
+          rownames = FALSE)
 ```
 
 For this dataset, we went from 6'570 observations for 4 variables to 3433 observations for 4 varibles.
@@ -1006,7 +1075,21 @@ We conclude here that 13 countries were concerned by our selection of 50% and mo
 **Here are the first few lines of the partialy cleaned dataset on Human Freedom Index scores:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D5_0_Human_freedom_index, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+datatable(D5_0_Human_freedom_index, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = 3:17,
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return parseFloat(data).toFixed(2)",
+                     "  }",
+                     "  return data;",
+                     "}")))),
+          rownames = FALSE)
 ```
 
 For this dataset, we went from 3'465 observations for 141 variables to `lengh(D5_0_Human_freedom_index$code)` observations for 4 varibles.
@@ -1200,7 +1283,21 @@ D7_0_COVID <- COVID
 **Here are the first few lines of the cleaned dataset on COVID19:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D7_0_COVID, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+datatable(D7_0_COVID, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = c("cases_per_million", "deaths_per_million", "stringency"),
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return parseFloat(data).toFixed(2)",
+                     "  }",
+                     "  return data;",
+                     "}")))),
+          rownames = FALSE)
 ```
 
 ### Dataset on Conflicts
@@ -1274,7 +1371,21 @@ list_country_conflicts <- c(unique(conflicts$code))
 **Here are the first few lines of the cleaned dataset on Conflicts:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D8_0_Conflicts, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
+datatable(D8_0_Conflicts, 
+          options = list(
+            pageLength = 10, 
+            class = "hover", 
+            searchHighlight = TRUE,
+            columnDefs = list(
+              list(targets = c("pop_affected", "area_affected"),
+                   render = JS(
+                     "function(data, type, row, meta){",
+                     "  if(type === 'display'){",
+                     "    return parseFloat(data).toFixed(2) + '%';",
+                     "  }",
+                     "  return data;",
+                     "}")))),
+          rownames = FALSE)
 ```
 
 ### Merge data
@@ -1356,7 +1467,6 @@ write.csv(all_Merge, file = here("scripts","data","all_Merge.csv"))
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 datatable(all_Merge, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
-
 ```
 
 **Final structure of our merged database:** each country of the 166 countries from D1_1_SDG are observed each year from 2000 to 2022, thus each row has a key composed of (code, year) that uniquely identifies an observation. The other columns are the variables listed above. Due to some countries having a lot of missing information we will have to eliminate some of them, but we will still have more than 2000 rows in our database.
