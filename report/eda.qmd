@@ -37,6 +37,18 @@ boxplot(Correlation_overall[2:18],
         main = "Merged goals boxplot", # Title of the boxplot
         xlab = "Goals",  # X-axis label
         ylab = "Score")     # Y-axis label
+
+Correlation_goals <- melt(Correlation_overall[,2:18])
+ggplot(Correlation_goals, aes(x= variable, y= value)) + 
+  geom_violin(trim=FALSE, fill="orange")+
+  labs(title="Merged goals violin boxplot",x="Goals", y = "Distribution")+
+  geom_boxplot(width=0.1, outlier.size = 1)+
+  scale_y_continuous(labels = scales::label_number()) + #limits = c(0, 100)
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+#### WHY GOING BELOW 0 TO > 100 ?? SCORES ONLY FROM 0 TO 100
+
 ```
 
 We see different schemes among the different goals. Indeed some are quite homogeneous with a small spread of values (e.g. overall score, goals 2 and 8) while others have a large spread of values (e.g. goals 1 and 10). Goals 1, 3, 4, 7, 9, 10 and 13 have values across all possible percentages. Goals 2, 5, 8, 13 and 17 have extreme values situated outside the 95% confidence interval. It is interesting to see that goal 8 (decent work and economic growth) is the one with smaller spread of values, whereas goal 1 (no poverty) have the higher distance between the first and the third quartile. Goal 2 (no hunger) has a tight spread of values, but with the greater amount of outliers in the smaller values, meaning hunger is similar across most countries, but when it differs it is in very bad manner.
@@ -53,6 +65,15 @@ boxplot(Correlation_overall[23:34],
         notch = TRUE,       # Specifies whether to add notches or not
         main = "Merged Human Freedom Index scores boxplot", # Title of the boxplot
         ylab = "Score")     # Y-axis label
+
+Correlation_HFI <- melt(Correlation_overall[,23:34])
+ggplot(Correlation_HFI, aes(x= variable, y= value)) + 
+  geom_violin(trim=FALSE, fill="orange")+
+  labs(title="Merged Human Freedom Index scores violin boxplot",x="Variables", y = "Score")+
+  geom_boxplot(width=0.1, outlier.size = 1)+
+  scale_y_continuous(labels = scales::label_number()) + #limits = c(0, 100)
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 ggplot(Correlation_overall, aes(x= factor(1), y= GDPpercapita)) + 
   geom_violin(trim=FALSE, fill="orange")+
@@ -167,6 +188,9 @@ The overall SDG achievement score is highly correlated with "economical freedom:
 
 # for goals
 myPCA_g <- PCA(data_question1[,9:20])
+plot(myPCA_g$ind$coord[, 1], myPCA_g$ind$coord[, 2], xlab = "PC1", ylab = "PC2", main = "PCA Plot SDG Goals", pch = 19, col = "blue", cex = 0.5) + 
+  abline(h = 0, col = "red", lty = 2) + 
+  abline(v = 0, col = "red", lty = 2)
 summary(myPCA_g)
 myPCA_g$eig
 ```
@@ -176,6 +200,9 @@ Concerning the SDG goals, we conclude that most of our variables are going along
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 #for HFI scores
 myPCA_s <- PCA(data_question1[,30:40])
+plot(myPCA_s$ind$coord[, 1], myPCA_s$ind$coord[, 2], xlab = "PC1", ylab = "PC2", main = "PCA Plot HFI Scores", pch = 19, col = "blue", cex = 0.5) + 
+  abline(h = 0, col = "red", lty = 2) + 
+  abline(v = 0, col = "red", lty = 2)
 summary(myPCA_s)
 myPCA_s$eig
 ```
