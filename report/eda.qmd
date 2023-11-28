@@ -75,30 +75,31 @@ ggplot(Correlation_HFI, aes(x= variable, y= value)) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
-ggplot(Correlation_overall, aes(x= factor(1), y= GDPpercapita)) + 
+v1 <- ggplot(Correlation_overall, aes(x= factor(1), y= GDPpercapita)) + 
   geom_violin(trim=FALSE, fill="orange")+
   labs(title="Violin plot of GDP per capita",x="GDP per capita", y = "Distribution")+
   geom_boxplot(width=0.1, outlier.size = 1)+
   scale_y_continuous(labels = scales::label_number()) +  # Format y-axis labels
   theme_classic()
-ggplot(Correlation_overall, aes(x= factor(1), y= unemployment.rate)) + 
+v2 <- ggplot(Correlation_overall, aes(x= factor(1), y= unemployment.rate)) + 
   geom_violin(trim=FALSE, fill="orange")+
   labs(title="Violin plot of unemployment rate",x="Unemployment rate", y = "Distribution")+
   geom_boxplot(width=0.1, outlier.size = 1)+
   scale_y_continuous(labels = scales::label_number()) +  # Format y-axis labels
   theme_classic()
-ggplot(Correlation_overall, aes(x= factor(1), y= MilitaryExpenditurePercentGDP)) + 
+v3 <- ggplot(Correlation_overall, aes(x= factor(1), y= MilitaryExpenditurePercentGDP)) + 
   geom_violin(trim=FALSE, fill="orange")+
   labs(title="Violin plot of military expenditure by percentage of GDP",x="Military Expenditure", y = "Distribution")+
   geom_boxplot(width=0.1, outlier.size = 1)+
   scale_y_continuous(labels = scales::label_number()) +  # Format y-axis labels
   theme_classic()
-ggplot(Correlation_overall, aes(x= factor(1), y= internet_usage)) + 
+v4 <- ggplot(Correlation_overall, aes(x= factor(1), y= internet_usage)) + 
   geom_violin(trim=FALSE, fill="orange")+
   labs(title="Violin plot of internet_usage",x="internet_usage", y = "Distribution")+
   geom_boxplot(width=0.1, outlier.size = 1)+
   scale_y_continuous(labels = scales::label_number()) +  # Format y-axis labels
   theme_classic()
+grid.arrange(v1,v2,v3,v4, ncol = 2, nrow = 2)
 ```
 
 We now look at the variables in a summary table to have a more precise view of the numbers.
@@ -115,22 +116,15 @@ After importing our our cleaned data, we looked first at the correlations betwee
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### Correlations between variables ####
 
-# sdg_scores2 <- data_question1[, c('goal1', 'goal2', 'goal3', 'goal4', 'goal5', 'goal6',
-#                      'goal7', 'goal8', 'goal9', 'goal10', 'goal11', 'goal12',
-#                      'goal13', 'goal15', 'goal16', 'goal17')]
+sdg_scores2 <- data_question1[, c('goal1', 'goal2', 'goal3', 'goal4', 'goal5', 'goal6',
+                      'goal7', 'goal8', 'goal9', 'goal10', 'goal11', 'goal12',
+                      'goal13', 'goal15', 'goal16', 'goal17')]
 
 Correlation_overall <- data_question1 %>% 
       select(population:ef_regulation)
 cor_matrix <- cor(Correlation_overall, use = "everything")
-# corr_matrix <- matrix(nrow = ncol(sdg_scores2), ncol = ncol(sdg_scores2))
-# p_matrix <- matrix(nrow = ncol(sdg_scores2), ncol = ncol(sdg_scores2))
-# for (i in 1:ncol(sdg_scores2)) {
-#   for (j in 1:ncol(sdg_scores2)) {
-#     test_result <- cor.test(sdg_scores2[, i], sdg_scores2[, j])
-#     cor_matrix[i, j] <- test_result$estimate
-#     p_matrix[i, j] <- test_result$p.value}}
-#       
-kable(cor_matrix)
+
+datatable(cor_matrix, options = list(pageLength = 5, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
 
 By doing so, we obtain a lot of positive and negative correlations. To help us to better understand and having a overall vision of the situation, we used the following heatmap.
@@ -142,40 +136,74 @@ cor_melted <- melt(cor_matrix)
 
 ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   geom_tile() +
-  geom_text(aes(label = sprintf("%.2f", value), color = p_value < 0.05),
-            vjust = 1) +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
                        midpoint = 0, limit = c(-1, 1), space = "Lab", 
                        name="Pearson\nCorrelation") +
-  scale_color_manual(values = c("black", "yellow")) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
         axis.text.y = element_text(size = 8)) +
   coord_fixed() +
   labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
 
-# melted_cor_matrix_Q1 <-
-#   melt(corr_matrix)
-# melted_p_matrix_Q1 <-
-#   melt(matrix(as.vector(p_matrix), nrow = ncol(sdg_scores2)))
-# 
-# plot_data2 <- # Combine the datasets
-#   cbind(melted_cor_matrix_Q1, p_value = melted_p_matrix_Q1$value)
-# 
-# ggplot(plot_data2, aes(Var1, Var2, fill = value)) +
-#   geom_tile() +
-#   geom_text(aes(label = sprintf("%.2f", value), color = p_value < 0.05),
-#             vjust = 1) +
-#   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-#                        midpoint = 0, limit = c(-1,1), space = "Lab", 
-#                        name="Pearson\nCorrelation") +
-#   scale_color_manual(values = c("black", "yellow")) + # black when significant, yellow if not
-#   theme_minimal() +
-#   theme(axis.text.x = element_text(angle = 45, hjust = 1),
-#         axis.text.y = element_text(angle = 45, hjust = 1),
-#         legend.position = "none") +
-#   labs(x = 'SDG Goals', y = 'SDG Goals',
-#        title = 'Correlation Matrix with Significance Indicator')
+corr_matrix <- cor(data_question1[7:40])
+p_matrix2 <- matrix(nrow = ncol(data_question1[7:40]), ncol = ncol(data_question1[7:40]))
+for (i in 1:ncol(data_question1[7:40])) {
+  for (j in 1:ncol(data_question1[7:40])) {
+    test_result <- cor.test(data_question1[7:40][, i], data_question1[7:40][, j])
+    p_matrix2[i, j] <- test_result$p.value
+  }
+}
+
+corr_matrix[which(p_matrix2 > 0.05)] <- NA
+melted_corr_matrix_goals <- melt(corr_matrix[2:18,2:18])
+
+ggplot(melted_corr_matrix_goals, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = ifelse(!is.na(value), sprintf("%.2f", value), '')),
+            color = "black", size = 3) +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Pearson\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(angle = 45, hjust = 1)) +
+  labs(x = 'Goals', y = 'Goals',
+       title = 'Correlations Heatmap between goals')
+
+melted_corr_matrix_GVar <- melt(corr_matrix[19:34,2:18])
+
+ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = ifelse(!is.na(value), sprintf("%.2f", value), '')),
+            color = "black", size = 3) +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Pearson\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(angle = 45, hjust = 1)) +
+  labs(x = 'Goals', y = 'Goals',
+       title = 'Correlations Heatmap between goals')
+
+melted_corr_matrix_Var <- melt(corr_matrix[19:34,19:34])
+
+ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = ifelse(!is.na(value), sprintf("%.2f", value), '')),
+            color = "black", size = 3) +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Pearson\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(angle = 45, hjust = 1)) +
+  labs(x = 'Goals', y = 'Goals',
+       title = 'Correlations Heatmap between goals')
+
+# grid.arrange(HMgoals, HMgoalvar,HMvar, ncol = 1, nrow = 3)
+
+#do 3 different heatmaps : goals on goals, goals on other variables except goals, variables on variables (except goals)
+
 ```
 
 In the correlation matrix heatmap, we can notice that many goals from 1 to 11 are actually positively correlated together. On another hand, the goals 12 and 13 are have negative relationships with the majority of our variables, except between themself, whereas they are strongely correlated. In addition, we can notice another strongly correlation between personal freedom variables (pf) related to the scores given by the Human Freedom Index on movement, religion, assembly and expression.
