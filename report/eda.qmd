@@ -183,14 +183,14 @@ ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.text.y = element_text(angle = 45, hjust = 1)) +
   labs(x = 'Goals', y = 'Goals',
-       title = 'Correlations Heatmap between goals')
+       title = 'Correlations Heatmap between goals and our other variables')
 
 melted_corr_matrix_Var <- melt(corr_matrix[19:34,19:34])
 
 ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   geom_text(aes(label = ifelse(!is.na(value), sprintf("%.2f", value), '')),
-            color = "black", size = 1.5) +
+            color = "black", size = 1.7) +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white",
                        midpoint = 0, limit = c(-1, 1), space = "Lab",
                        name = "Pearson\nCorrelation") +
@@ -198,7 +198,7 @@ ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.text.y = element_text(angle = 45, hjust = 1)) +
   labs(x = 'Goals', y = 'Goals',
-       title = 'Correlations Heatmap between goals')
+       title = 'Correlations Heatmap between other variables than SDG goals')
 
 # grid.arrange(HMgoals, HMgoalvar,HMvar, ncol = 1, nrow = 3)
 
@@ -253,11 +253,11 @@ The overall SDG achievement score is highly correlated with "economical freedom:
 #### PCA ####
 
 # for goals
-myPCA_g <- PCA(data_question1[,9:20], graph = FALSE)
+myPCA_g <- PCA(data_question1[,9:24], graph = FALSE)
 plot(myPCA_g$ind$coord[, 1], myPCA_g$ind$coord[, 2], xlab = "PC1", ylab = "PC2", main = "PCA Plot SDG Goals", pch = 19, col = "blue", cex = 0.5) + 
   abline(h = 0, col = "red", lty = 2) + 
   abline(v = 0, col = "red", lty = 2)
-plot.PCA(myPCA_g, choix = "var")
+plot.PCA(myPCA_g, choix = "var", pch = 10, cex = 0.6)
 
 summary(myPCA_g)
 myPCA_g$eig
@@ -267,11 +267,11 @@ Concerning the SDG goals, we conclude that most of our variables are going along
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 #for HFI scores
-myPCA_s <- PCA(data_question1[,30:40], graph = FALSE)
+myPCA_s <- PCA(data_question1[,29:40], graph = FALSE)
 plot(myPCA_s$ind$coord[, 1], myPCA_s$ind$coord[, 2], xlab = "PC1", ylab = "PC2", main = "PCA Plot HFI Scores", pch = 19, col = "blue", cex = 0.5) + 
   abline(h = 0, col = "red", lty = 2) + 
   abline(v = 0, col = "red", lty = 2)
-plot.PCA(myPCA_s, choix = "var")
+plot.PCA(myPCA_s, choix = "var",cex = 0.5)
 summary(myPCA_s)
 myPCA_s$eig
 ```
