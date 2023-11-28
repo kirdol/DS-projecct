@@ -40,9 +40,9 @@ boxplot(Correlation_overall[2:18],
 
 Correlation_goals <- melt(Correlation_overall[,2:18])
 ggplot(Correlation_goals, aes(x= variable, y= value)) + 
-  geom_violin(trim=FALSE, fill="orange")+
-  labs(title="Merged goals violin boxplot",x="Goals", y = "Distribution")+
-  geom_boxplot(width=0.1, outlier.size = 1)+
+  geom_violin(trim=FALSE, fill="orange") +
+  labs(title="Merged goals violin boxplot",x="Goals", y = "Distribution") +
+  geom_boxplot(width=0.1, outlier.size = 1) +
   scale_y_continuous(labels = scales::label_number()) + #limits = c(0, 100)
   theme_classic() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
@@ -160,7 +160,7 @@ melted_corr_matrix_goals <- melt(corr_matrix[2:18,2:18])
 ggplot(melted_corr_matrix_goals, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   geom_text(aes(label = ifelse(!is.na(value), sprintf("%.2f", value), '')),
-            color = "black", size = 3) +
+            color = "black", size = 2) +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white",
                        midpoint = 0, limit = c(-1, 1), space = "Lab",
                        name = "Pearson\nCorrelation") +
@@ -175,7 +175,7 @@ melted_corr_matrix_GVar <- melt(corr_matrix[19:34,2:18])
 ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   geom_text(aes(label = ifelse(!is.na(value), sprintf("%.2f", value), '')),
-            color = "black", size = 3) +
+            color = "black", size = 2) +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white",
                        midpoint = 0, limit = c(-1, 1), space = "Lab",
                        name = "Pearson\nCorrelation") +
@@ -190,7 +190,7 @@ melted_corr_matrix_Var <- melt(corr_matrix[19:34,19:34])
 ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   geom_text(aes(label = ifelse(!is.na(value), sprintf("%.2f", value), '')),
-            color = "black", size = 3) +
+            color = "black", size = 1.5) +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white",
                        midpoint = 0, limit = c(-1, 1), space = "Lab",
                        name = "Pearson\nCorrelation") +
