@@ -115,9 +115,21 @@ After importing our our cleaned data, we looked first at the correlations betwee
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### Correlations between variables ####
 
+# sdg_scores2 <- data_question1[, c('goal1', 'goal2', 'goal3', 'goal4', 'goal5', 'goal6',
+#                      'goal7', 'goal8', 'goal9', 'goal10', 'goal11', 'goal12',
+#                      'goal13', 'goal15', 'goal16', 'goal17')]
+
 Correlation_overall <- data_question1 %>% 
       select(population:ef_regulation)
 cor_matrix <- cor(Correlation_overall, use = "everything")
+# corr_matrix <- matrix(nrow = ncol(sdg_scores2), ncol = ncol(sdg_scores2))
+# p_matrix <- matrix(nrow = ncol(sdg_scores2), ncol = ncol(sdg_scores2))
+# for (i in 1:ncol(sdg_scores2)) {
+#   for (j in 1:ncol(sdg_scores2)) {
+#     test_result <- cor.test(sdg_scores2[, i], sdg_scores2[, j])
+#     cor_matrix[i, j] <- test_result$estimate
+#     p_matrix[i, j] <- test_result$p.value}}
+#       
 kable(cor_matrix)
 ```
 
@@ -130,14 +142,40 @@ cor_melted <- melt(cor_matrix)
 
 ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   geom_tile() +
+  geom_text(aes(label = sprintf("%.2f", value), color = p_value < 0.05),
+            vjust = 1) +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
                        midpoint = 0, limit = c(-1, 1), space = "Lab", 
                        name="Pearson\nCorrelation") +
+  scale_color_manual(values = c("black", "yellow")) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
         axis.text.y = element_text(size = 8)) +
   coord_fixed() +
   labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
+
+# melted_cor_matrix_Q1 <-
+#   melt(corr_matrix)
+# melted_p_matrix_Q1 <-
+#   melt(matrix(as.vector(p_matrix), nrow = ncol(sdg_scores2)))
+# 
+# plot_data2 <- # Combine the datasets
+#   cbind(melted_cor_matrix_Q1, p_value = melted_p_matrix_Q1$value)
+# 
+# ggplot(plot_data2, aes(Var1, Var2, fill = value)) +
+#   geom_tile() +
+#   geom_text(aes(label = sprintf("%.2f", value), color = p_value < 0.05),
+#             vjust = 1) +
+#   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+#                        midpoint = 0, limit = c(-1,1), space = "Lab", 
+#                        name="Pearson\nCorrelation") +
+#   scale_color_manual(values = c("black", "yellow")) + # black when significant, yellow if not
+#   theme_minimal() +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1),
+#         axis.text.y = element_text(angle = 45, hjust = 1),
+#         legend.position = "none") +
+#   labs(x = 'SDG Goals', y = 'SDG Goals',
+#        title = 'Correlation Matrix with Significance Indicator')
 ```
 
 In the correlation matrix heatmap, we can notice that many goals from 1 to 11 are actually positively correlated together. On another hand, the goals 12 and 13 are have negative relationships with the majority of our variables, except between themself, whereas they are strongely correlated. In addition, we can notice another strongly correlation between personal freedom variables (pf) related to the scores given by the Human Freedom Index on movement, religion, assembly and expression.
