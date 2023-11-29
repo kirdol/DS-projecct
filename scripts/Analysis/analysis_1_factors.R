@@ -12,9 +12,6 @@ Correlation_overall <- data_question1 %>%
 cor_matrix <- cor(Correlation_overall, use = "everything")
 print(cor_matrix[2:18,])
 
-cor_matrix1 <- cor_matrix %>%
-  select(cor_matrix[,2:17])
-
 cor_melted <- melt(cor_matrix[2:18,])
 
 ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
