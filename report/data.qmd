@@ -877,7 +877,6 @@ For this dataset, we went from ??? observations for 68 variables to 3818 observa
 **Here are the first few lines of the cleaned dataset of military expenditures in percentage of government expenditures:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
-datatable(D3_3_Miliraty_Expenditure_Percent_Gov_Exp, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 datatable(D3_3_Miliraty_Expenditure_Percent_Gov_Exp, 
           options = list(
             pageLength = 10, 
