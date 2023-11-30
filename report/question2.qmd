@@ -76,8 +76,8 @@ data4 <- data_question2 %>%
 color_palette <- c("red", "blue", "green", "orange", "purple", "pink", "lightblue", "gray", "cyan", "magenta", "yellow", "darkgreen", "darkblue", "darkred", "darkgrey", "darkcyan")
 
 ggplot(data = data4) +
-  geom_line(mapping = aes(x = year, y = mean_value, color = goal), size = 0.4) +
-  geom_point(mapping = aes(x = year, y = mean_value, color = goal), size = 0.7) +
+  geom_line(mapping = aes(x = year, y = mean_value, color = goal), size = 0.7) +
+  geom_point(mapping = aes(x = year, y = mean_value, color = goal), size = 1) +
   scale_color_manual(values = color_palette) +
   scale_y_continuous(limits = c(0, 100)) +
   labs(title = "Evolution of the mean SDG achievement scores across the world",
@@ -97,8 +97,8 @@ Here, by looking at the SDGs individually, we notice that all SDGs except from g
 
 ```{r, echo = TRUE, message = FALSE, cache = TRUE, warning=FALSE, out.height="100%", out.width="100%"}
 ggplot(data = data4) +
-  geom_line(mapping = aes(x = year, y = mean_value, color=goal), size = 0.8) +
-  geom_point(mapping = aes(x = year, y = mean_value, color=goal), size = 1.5) +
+  geom_line(mapping = aes(x = year, y = mean_value, color=goal), size = 0.4) +
+  geom_point(mapping = aes(x = year, y = mean_value, color=goal), size = 0.7) +
   scale_color_manual(values = color_palette) +
   scale_y_continuous(limits = c(0, 100)) +
   labs(title = "Evolution of the mean SDG achievement scores across the world",
@@ -246,7 +246,7 @@ for (year in unique_years) {
     scale_fill_manual(values = region_colors) +  # Use the specified colors
     labs(title = paste(year), x = NULL, y = NULL) +
     theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1), legend.position = "none", plot.title = element_text(size = 10)) + 
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size= 6), legend.position = "none", plot.title = element_text(size = 10)) + 
     scale_y_continuous(limits = c(0, 3))
   
   plots[[as.character(year)]] <- plot
@@ -293,7 +293,7 @@ for (year in unique_years) {
     scale_fill_manual(values = region_colors) +  # Use the specified colors
     labs(title = paste(year), x = NULL, y = NULL) +
     theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1), legend.position = "none", plot.title = element_text(size = 10)) + 
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size=6), legend.position = "none", plot.title = element_text(size = 10)) + 
     scale_y_continuous(limits = c(-3,0))
   
   plots[[as.character(year)]] <- plot
