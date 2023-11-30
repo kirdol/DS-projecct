@@ -20,13 +20,13 @@ plot_ly() %>%
   add_trace(
     type = "histogram", 
     data = binary2015, 
-    x = ~diff_overallscore,
-    color=~diff_overallscore
+    x = ~diff_overallscore[year == 2009],
+    marker = list(color = "lightgreen")
   ) %>%
   layout(
     title = "Distribution of SDG evolution",
-    xaxis = list(title = "Year difference SDG score", range = c(-3,3)),
-    yaxis = list(title = "Frequency", range = c(0,40)),
+    xaxis = list(title = "Year difference SDG score", range = c(-3, 3)),
+    yaxis = list(title = "Frequency", range = c(0, 40)),
     sliders = list(
       list(
         active = 0,
@@ -43,6 +43,107 @@ plot_ly() %>%
         })
       )
     )
+  )
+
+top_n_values <- 5
+
+plots <- lapply(seq_along(unique_years), function(i) {
+  year <- unique_years[i]
+  top_countries <- binary2015[binary2015$year == year, ] %>%
+    arrange(desc(diff_overallscore)) %>%
+    head(n = top_n_values)
+  
+  # Define a consistent color mapping for regions
+  custom_colors <- c("#4E79A7", "#F28E2C", "#E15759", "#76B7B2", "#59A14F", "#EDC948", "#FF9DA7","#B07AA1", "#9C755F", "#BAB0AC")
+  region_colors <- setNames(custom_colors, unique(binary2015$region))
+  
+  plot_ly() %>%
+    add_trace(
+      type = "bar", 
+      x = ~top_countries$code,
+      y = ~top_countries$diff_overallscore,
+      color = ~top_countries$region,
+      colors = region_colors,
+      text=paste(top_countries$country),
+      showlegend = TRUE  # Disable individual legend for each subplot
+    ) %>%
+    layout(
+      title = paste("Top ", top_n_values, " SDG Score evolution"),
+      yaxis = list(title = "Year difference SDG score", range = c(0, 3)),
+      annotations = list(
+        x = 0.5,
+        y = 0.95,
+        text = year,
+        showarrow = FALSE,
+        xref = "paper",
+        yref = "paper",
+        yanchor = "middle",
+        font = list(size = 14)
+      )
+    )
+})
+
+new <- plot_ly() %>%
+    add_trace(
+      type = "bar", 
+      x = ~binary2015$code,
+      y = ~binary2015$diff_overallscore,
+      color = ~binary2015$region,
+      colors = c("#4E79A7", "#F28E2C", "#E15759", "#76B7B2", "#59A14F", "#EDC948", "#FF9DA7","#B07AA1", "#9C755F", "#BAB0AC"),
+      showlegend = TRUE)
+
+plots <- c(new, plots)
+
+subplot(
+  plots,
+  nrows = 4,
+  shareY = TRUE,
+  titleY=TRUE
+) %>%
+  layout(
+    legend = list(x = 0.5, y = -0.15, xanchor = "center", yanchor = "middle", orientation = "h"),
+    showlegend = TRUE  # Enable the common legend
+  )
+
+plots <- lapply(seq_along(unique_years), function(i) {
+  year <- unique_years[i]
+  top_countries <- binary2015[binary2015$year == year, ] %>%
+    arrange(diff_overallscore) %>%
+    head(n = top_n_values)
+  
+  plot_ly() %>%
+    add_trace(
+      type = "bar", 
+      x = ~top_countries$country,
+      y = ~top_countries$diff_overallscore,
+      color = ~top_countries$region,
+      colors = "viridis",
+      showlegend = ifelse(i==2, TRUE, FALSE)
+    ) %>%
+    layout(
+      title = paste("Top ", top_n_values, " SDG Score evolution"),
+      yaxis = list(title = "Year difference SDG score", range = c(-3,0)),
+      annotations = list(
+        x = 0.5,
+        y = 0.8,
+        text = year,
+        showarrow = FALSE,
+        xref = "paper",
+        yref = "paper",
+        yanchor = "middle",
+        font = list(size = 14)
+      )
+    )
+})
+
+# Arrange the plots in a grid with shared y-axes and adjusted spacing
+subplot(
+  plots,
+  nrows = 4
+) %>%
+  layout(
+    legend = list(x = 0.5, y = -0.15, xanchor = "center", yanchor = "middle", orientation = "h"),
+    showlegend = TRUE  # Enable the common legend
   )
 
 ##### Regressions #####

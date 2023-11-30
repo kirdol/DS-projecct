@@ -391,6 +391,97 @@ plotly::plot_ly() %>%
   )
 ```
 
+Top 10 countries in term of amelioration each year
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+top_n_values <- 10
+
+plots <- lapply(seq_along(unique_years), function(i) {
+  year <- unique_years[i]
+  top_countries <- binary2015[binary2015$year == year, ] %>%
+    arrange(desc(diff_overallscore)) %>%
+    head(n = top_n_values)
+  
+  plot_ly() %>%
+    add_trace(
+      type = "bar", 
+      x = ~top_countries$country,
+      y = ~top_countries$diff_overallscore,
+      color = ~top_countries$region,
+      colors = "viridis",
+      showlegend = ifelse(i==1, TRUE, FALSE)  # Disable individual legend for each subplot
+    ) %>%
+    layout(
+      title = paste("Top ", top_n_values, " SDG Score evolution"),
+      yaxis = list(title = "Year difference SDG score", range = c(0, 3)),
+      annotations = list(
+        x = 0.5,
+        y = 1.1,
+        text = year,
+        showarrow = FALSE,
+        xref = "paper",
+        yref = "paper",
+        yanchor = "middle",
+        font = list(size = 14)
+      ),
+       margin = list(b = 100)
+    )
+})
+
+subplot(
+  plots,
+  nrows = 4
+) %>%
+  layout(
+    legend = list(x = 0.5, y = -0.15, xanchor = "center", yanchor = "middle", orientation = "h"),
+    showlegend = TRUE  # Enable the common legend
+  )
+```
+
+Worse 10 countries in term of amelioration each year
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+plots <- lapply(seq_along(unique_years), function(i) {
+  year <- unique_years[i]
+  top_countries <- binary2015[binary2015$year == year, ] %>%
+    arrange(diff_overallscore) %>%
+    head(n = top_n_values)
+  
+  plot_ly() %>%
+    add_trace(
+      type = "bar", 
+      x = ~top_countries$country,
+      y = ~top_countries$diff_overallscore,
+      color = ~top_countries$region,
+      colors = "viridis",
+      showlegend = ifelse(i==1, TRUE, FALSE)
+    ) %>%
+    layout(
+      title = paste("Top ", top_n_values, " SDG Score evolution"),
+      yaxis = list(title = "Year difference SDG score", range = c(-3,0)),
+      annotations = list(
+        x = 0.5,
+        y = 1.1,
+        text = year,
+        showarrow = FALSE,
+        xref = "paper",
+        yref = "paper",
+        yanchor = "middle",
+        font = list(size = 14)
+      )
+    )
+})
+
+subplot(
+  plots,
+  nrows = 4
+) %>%
+  layout(
+    legend = list(x = 0.5, y = -0.15, xanchor = "center", yanchor = "middle", orientation = "h"),
+    showlegend = TRUE  # Enable the common legend
+  )
+```
+
 Simple OLS regression on the difference between years of SDG scores: 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%", results='asis'}
