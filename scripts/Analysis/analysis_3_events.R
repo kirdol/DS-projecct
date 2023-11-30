@@ -476,7 +476,7 @@ names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 
 # Shiny UI code
 ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap - COVID and SDG goals"),
+  titlePanel("Interactive Correlation Heatmap - Conflicts and SDG goals"),
   sidebarLayout(
     sidebarPanel(
       sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1)
@@ -489,14 +489,14 @@ ui <- fluidPage(
 
 # Shiny server code
 server <- function(input, output) {
-  # Create a reactive expression for selected COVID data based on the chosen year
+  # Create a reactive expression for selected Conflict data based on the chosen year
   selected_conflicts_data <- reactive({
     filtered_data <- conflicts_filtered[conflicts_filtered$year == input$year, ]
     subset_data <- filtered_data[, relevant_columns]
     return(subset_data)
   })
   
-  # Render the plotly heatmap based on the reactive selected_covid_data
+  # Render the plotly heatmap based on the reactive selected_conflicts_data
   output$heatmap <- renderPlotly({
     correlation_matrix_Conflicts_Pop_Aff <- cor(selected_conflicts_data(), selected_conflicts_data()[, c("pop_affected", "sum_deaths")])
     cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
@@ -507,9 +507,11 @@ server <- function(input, output) {
                  zmin = -1, zmax = 1)
     
     p <- p %>% layout(
-      title = "Correlation between Conflicts Affected Population and the SDG goals",
+      title = "Correlation between Conflicts Affected Population, Deaths and the SDG goals",
       xaxis = list(title = ""),
-      yaxis = list(title = "")
+      yaxis = list(title = ""),
+      hoverlabel = list(bgcolor = "white", font = list(size = 12)),
+      hovermode = "closest"
     )
     
     return(p)
