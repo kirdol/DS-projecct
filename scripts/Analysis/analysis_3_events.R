@@ -103,7 +103,7 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
 ##3. Correlation Analysis COVID###
 
 # Filter COVID-19 data for the relevant time period
-covid_filtered <- Q3.2[Q3.2$year >= as.Date("2018-12-12"), ]
+covid_filtered <- Q3.2[Q3.2$year >= as.Date("2018-12-31"), ]
 
 # Select relevant columns for correlation analysis
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
@@ -224,14 +224,6 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
 
 
 
-###4. Regressions
-
-#Disasters total affected, but which goal? 
-# Perform linear regression
-Lin_Reg_Disaster <- lm(goal1 ~ total_affected, data = Q3.1)
-
-# Summary of the regression model
-summary(Lin_Reg_Disaster)
 
 
 
@@ -280,7 +272,268 @@ ggplot(data = cor_melted_lagged, aes(Variable1, Variable2, fill = Correlation)) 
   ) +
   coord_fixed() +
   labs(x = '', y = '',
-       title = 'Correlation between the climate disasters and the SDG goals in South and East Asia')
+       title = 'Correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap')
+
+
+
+
+
+#Now I tried to do the same but with an interactive heat map
+
+# Load necessary libraries
+library(shiny)
+library(plotly)
+
+# Subset data for South and East Asia from Q3.1 dataset
+south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
+
+# Select relevant columns for correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "no_homeless")
+
+# Subset the data
+subset_data <- south_east_asia_data[, relevant_columns]
+
+# Create lagged variables with a one-year gap for disaster-related columns
+lagged_subset_data <- subset_data %>%
+  mutate(
+    lagged_total_affected = lag(total_affected, default = NA),
+    lagged_no_homeless = lag(no_homeless, default = NA)
+  )
+
+
+# Compute correlation matrix for lagged disaster-related variables with the rest of the variables
+correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_total_affected", "lagged_no_homeless")], subset_data)
+
+# Melt the correlation matrix for ggplot2
+cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
+names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
+
+# UI code for creating the interactive heatmap
+ui <- fluidPage(
+  titlePanel("Interactive Correlation Heatmap"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("year", "Select Year", min = 2000, max = 2023, value = 2022, step = 1)
+    ),
+    mainPanel(
+      plotlyOutput("heatmap")
+    )
+  )
+)
+
+# Server code for the interactive heatmap
+server <- function(input, output) {
+  # Create a reactive expression for selecting data based on the chosen year
+  selected_data <- reactive({
+    # Filter your dataset based on the selected year
+    # Assuming your dataset has a column named "year" indicating the year of the data
+    filtered_data <- south_east_asia_data[south_east_asia_data$year == input$year, ]
+    # Select relevant columns for correlation analysis
+    subset_data <- filtered_data[, relevant_columns]
+    # Create lagged variables with a one-year gap for disaster-related columns
+    lagged_subset_data <- subset_data %>%
+      mutate(
+        lagged_total_affected = lag(total_affected, default = NA),
+        lagged_no_homeless = lag(no_homeless, default = NA)
+      )
+    
+    # Compute correlation matrix for lagged disaster-related variables with the rest of the variables
+    correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_total_affected", "lagged_no_homeless")], subset_data)
+    
+    # Melt the correlation matrix for plotly
+    cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
+    names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
+    
+    return(cor_melted_lagged)
+  })
+  
+  
+  # Render the plotly heatmap based on the reactive selected_data
+  output$heatmap <- renderPlotly({
+    # Use plotly to create an interactive heatmap
+    # Replace the following code with your code for generating the heatmap using plotly
+    # Ensure it uses 'selected_data()' to reflect the chosen year's correlations
+    p <- plot_ly(data = selected_data(), x = ~Variable1, y = ~Variable2, z = ~Correlation, 
+                 type = "heatmap", colorscale = list(c(0, "blue"), c(0.5, "white"), c(1, "red")),
+                 zmin = -1, zmax = 1)  # Define the range of correlation values (-1 to 1)
+    
+    # Customize the layout, axis labels, and other aspects of the plot as needed
+    p <- p %>% layout(
+      title = "Interactive Correlation Heatmap",
+      xaxis = list(title = ""),
+      yaxis = list(title = "")
+      # Add more layout customizations as required
+    )
+    
+    # Return the plotly object
+    return(p)
+  })
+}
+
+# Run the Shiny app
+shinyApp(ui = ui, server = server)
+
+## In the provided code, when you select a particular year (let's say 2023 or "year 23" as an example), the lagged variables created using the lag() function represent the values from the previous year, which would be 2022 ("year 22" in this case).
+
+##So, if you are looking at the data for the year 2023, the lagged variables (lagged_total_affected and lagged_no_homeless) will contain the values from the year 2022. The code uses the lag() function to shift the values by one position, effectively taking the values from the immediate preceding year to create the lagged variables.
+
+##Therefore, if you select a specific year (e.g., 2023) in the app, the analysis will show correlations between the SDG indicators for the selected year (e.g., 2023) and the disaster-related variables (total_affected and no_homeless) from the previous year (e.g., 2022).
 
 
 ##----> still nothing :(
+
+
+
+
+### # 3. Correlation Analysis COVID
+# Load necessary libraries
+library(shiny)
+library(plotly)
+
+Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+
+covid_filtered <- Q3.2[Q3.2$year >= as.Date("2018-12-31"), ]
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
+subset_data <- covid_filtered[, relevant_columns]
+
+# Compute correlation matrix for "stringency", "cases_per_million", "deaths_per_million" with the rest of the variables
+correlation_matrix_Covid <- cor(subset_data, subset_data[, c("stringency", "cases_per_million", "deaths_per_million")])
+
+# Melt the correlation matrix for plotly
+cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+# Shiny UI code
+ui <- fluidPage(
+  titlePanel("Interactive Correlation Heatmap - COVID and SDG goals"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("year", "Select Year", min = 2019, max = 2023, value = 2022, step = 1)
+    ),
+    mainPanel(
+      plotlyOutput("heatmap")
+    )
+  )
+)
+
+# Shiny server code
+server <- function(input, output) {
+  # Create a reactive expression for selected COVID data based on the chosen year
+  selected_covid_data <- reactive({
+    filtered_data <- covid_filtered[covid_filtered$year == input$year, ]
+    subset_data <- filtered_data[, relevant_columns]
+    return(subset_data)
+  })
+  
+  # Render the plotly heatmap based on the reactive selected_covid_data
+  output$heatmap <- renderPlotly({
+    correlation_matrix_Covid <- cor(selected_covid_data(), selected_covid_data()[, c("stringency", "cases_per_million", "deaths_per_million")])
+    cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
+    names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+    
+    p <- plot_ly(data = cor_melted, x = ~Variable1, y = ~Variable2, z = ~Correlation,
+                 type = "heatmap", colorscale = list(c(0, "blue"), c(0.5, "white"), c(1, "red")),
+                 zmin = -1, zmax = 1)
+    
+    p <- p %>% layout(
+      title = "Correlation between COVID and the SDG goals",
+      xaxis = list(title = ""),
+      yaxis = list(title = "")
+    )
+    
+    return(p)
+  })
+}
+
+# Run the Shiny app
+shinyApp(ui = ui, server = server)
+
+
+
+
+###Conflict correlation
+
+# Load necessary libraries
+library(shiny)
+library(plotly)
+
+# Filter data for specific regions (pop_affected) and (sum_deaths), as the regions most touched by the sum_deaths are the same regions that have also the must affected population.
+conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe", "Caucasus and Central Asia"), ]
+
+# Select relevant columns for the correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected", "sum_deaths")
+
+# Subset data with relevant columns for correlation analysis
+subset_data <- conflicts_filtered[, relevant_columns]
+
+# Compute correlation matrix for "pop_affected" with the rest of the variables
+correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected", "sum_deaths")])
+
+# Melt the correlation matrix for ggplot2
+cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+
+# Shiny UI code
+ui <- fluidPage(
+  titlePanel("Interactive Correlation Heatmap - COVID and SDG goals"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1)
+    ),
+    mainPanel(
+      plotlyOutput("heatmap")
+    )
+  )
+)
+
+# Shiny server code
+server <- function(input, output) {
+  # Create a reactive expression for selected COVID data based on the chosen year
+  selected_conflicts_data <- reactive({
+    filtered_data <- conflicts_filtered[conflicts_filtered$year == input$year, ]
+    subset_data <- filtered_data[, relevant_columns]
+    return(subset_data)
+  })
+  
+  # Render the plotly heatmap based on the reactive selected_covid_data
+  output$heatmap <- renderPlotly({
+    correlation_matrix_Conflicts_Pop_Aff <- cor(selected_conflicts_data(), selected_conflicts_data()[, c("pop_affected", "sum_deaths")])
+    cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
+    names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+    
+    p <- plot_ly(data = cor_melted, x = ~Variable1, y = ~Variable2, z = ~Correlation,
+                 type = "heatmap", colorscale = list(c(0, "blue"), c(0.5, "white"), c(1, "red")),
+                 zmin = -1, zmax = 1)
+    
+    p <- p %>% layout(
+      title = "Correlation between Conflicts Affected Population and the SDG goals",
+      xaxis = list(title = ""),
+      yaxis = list(title = "")
+    )
+    
+    return(p)
+  })
+}
+
+# Run the Shiny app
+shinyApp(ui = ui, server = server)
+
+
+
+
+###4. Regressions
+
+#Disasters total affected, but which goal? 
+# Perform linear regression
+Lin_Reg_Disaster <- lm(goal1 ~ total_affected, data = Q3.1)
+
+# Summary of the regression model
+summary(Lin_Reg_Disaster)
+
+
+
+
+
+
+#regression sur difference de scors que sur scors? (Delia) 
