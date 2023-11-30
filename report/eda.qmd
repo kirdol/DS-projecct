@@ -61,11 +61,12 @@ medians_AF$color <- ifelse(medians_AF$median_value > 75, "lightblue",
 data_Q1_Africa_long <- data_Q1_Africa_long %>%
   left_join(medians_AF, by = "variable")
 
+bandwidth_nrd_AF <- bw.nrd(data_Q1_Africa_long$value)
 ggplot(data_Q1_Africa_long, aes(x = variable, y = value, fill = color)) + 
-  geom_violin(trim = FALSE, bw = 10) +
+  geom_violin(trim = FALSE, bw = bandwidth_nrd_AF) +  
   scale_fill_identity() +
   labs(title = "Africa SDG goals boxplot", x = "Goals", y = "Score") +
-  geom_boxplot(width = 0.3, outlier.size = 1) +
+  geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +
   scale_y_continuous(labels = scales::label_number()) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
@@ -83,11 +84,12 @@ medians_EU$color <- ifelse(medians_EU$median_value > 75, "lightblue",
 data_Q1_Europe_long <- data_Q1_Europe_long %>%
   left_join(medians_EU, by = "variable")
 
+bandwidth_nrd_EU <- bw.nrd(data_Q1_Europe_long$value)
 ggplot(data_Q1_Europe_long, aes(x = variable, y = value, fill = color)) + 
-  geom_violin(trim = FALSE, bw = 10) +
+  geom_violin(trim = FALSE, bw = bandwidth_nrd_EU) +
   scale_fill_identity() +
   labs(title = "European SDG goals boxplot", x = "Goals", y = "Score") +
-  geom_boxplot(width = 0.3, outlier.size = 1) +
+  geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +
   scale_y_continuous(labels = scales::label_number()) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
@@ -105,11 +107,12 @@ medians_AS$color <- ifelse(medians_AS$median_value > 75, "lightblue",
 data_Q1_Asia_long <- data_Q1_Asia_long %>%
   left_join(medians_AS, by = "variable")
 
+bandwidth_nrd_AS <- bw.nrd(data_Q1_Asia_long$value)
 ggplot(data_Q1_Asia_long, aes(x = variable, y = value, fill = color)) + 
-  geom_violin(trim = FALSE, bw = 10) +
+  geom_violin(trim = FALSE, bw = bandwidth_nrd_AS) +
   scale_fill_identity() +
   labs(title = "Asian SDG goals boxplot", x = "Goals", y = "Score") +
-  geom_boxplot(width = 0.3, outlier.size = 1) +
+  geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +
   scale_y_continuous(labels = scales::label_number()) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
@@ -127,11 +130,12 @@ medians_AM$color <- ifelse(medians_AM$median_value > 75, "lightblue",
 data_Q1_Americas_long <- data_Q1_Americas_long %>%
   left_join(medians_AM, by = "variable")
 
+bandwidth_nrd_AM <- bw.nrd(data_Q1_Americas_long$value)
 ggplot(data_Q1_Americas_long, aes(x = variable, y = value, fill = color)) + 
-  geom_violin(trim = FALSE, bw = 10) +
+  geom_violin(trim = FALSE, bw = bandwidth_nrd_AM) +
   scale_fill_identity() +
   labs(title = "American SDG goals boxplot", x = "Goals", y = "Score") +
-  geom_boxplot(width = 0.3, outlier.size = 1) +
+  geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +
   scale_y_continuous(labels = scales::label_number()) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
@@ -149,11 +153,12 @@ medians_OC$color <- ifelse(medians_OC$median_value > 75, "lightblue",
 data_Q1_Oceania_long <- data_Q1_Oceania_long %>%
   left_join(medians_OC, by = "variable")
 
+bandwidth_nrd_OC <- bw.nrd(data_Q1_Oceania_long$value)
 ggplot(data_Q1_Oceania_long, aes(x = variable, y = value, fill = color)) + 
-  geom_violin(trim = FALSE, bw = 10) +
+  geom_violin(trim = FALSE, bw = bandwidth_nrd_OC) +
   scale_fill_identity() +
   labs(title = "Oceanian SDG goals boxplot", x = "Goals", y = "Score") +
-  geom_boxplot(width = 0.3, outlier.size = 1) +
+  geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +
   scale_y_continuous(labels = scales::label_number()) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
@@ -177,6 +182,32 @@ We now display boxplpots for the different variables of the human freedom index,
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 #for Human Freedom Index scores 
+
+
+#Oceania
+
+data_Q1_Oceania_HFI_long <- melt(data_Q1_Oceania[,29:40])
+
+medians_HFI_OC <- data_Q1_Oceania_HFI_long %>%
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+
+medians_HFI_OC$color <- ifelse(medians_HFI_OC$median_value > 7.5, "lightblue", 
+                        ifelse(medians_HFI_OC$median_value < 2.5, "red", 'orange'))
+
+data_Q1_Oceania_HFI_long <- data_Q1_Oceania_HFI_long %>%
+  left_join(medians_HFI_OC, by = "variable")
+
+bandwidth_nrd_HFI_OC <- bw.nrd(data_Q1_Oceania_HFI_long$value)
+ggplot(data_Q1_Oceania_HFI_long, aes(x = variable, y = value, fill = color)) + 
+  geom_violin(trim = FALSE, bw = bandwidth_nrd_HFI_OC) +
+  scale_fill_identity() +
+  labs(title = "Oceanian HFI Scores boxplot", x = "Human Freedom Index goals", y = "Score") +
+  geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +
+  scale_y_continuous(labels = scales::label_number()) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
 boxplot(Correlation_overall[23:34], 
         las = 2,            # Makes the axis labels perpendicular to the axis
         par(mar = c(7, 5, 2, 1)),  # Adjusts the margins to fit all labels
@@ -185,6 +216,9 @@ boxplot(Correlation_overall[23:34],
         notch = TRUE,       # Specifies whether to add notches or not
         main = "Merged Human Freedom Index scores boxplot", # Title of the boxplot
         ylab = "Score")     # Y-axis label
+
+
+
 
 Correlation_HFI <- melt(Correlation_overall[,23:34])
 ggplot(Correlation_HFI, aes(x= variable, y= value)) + 

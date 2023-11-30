@@ -9,6 +9,56 @@ source(here::here("scripts/Clean/setup.R"))
 ### Focus on relationship between SDGs
 **How are the different SDGs linked? (We want to see if some SDGs are linked in the fact that a high score on one implies a high score on the other, and thus if we can make groups of SDGs that are comparable in that way).**
 
+In our EDA on the focus on the influence of the factors over the SDG scores, we had made a correlation matrix heatmap that took into account every variable of our dataset. Here, we tried to zoom on certain parts of the heatmap. We have decided to add on our graphs the correlations between variables when our pvalue was significant (alpha = 0.05). The grey zones are concerning our non-significant pvalues. 
+
+Let's see first the correlation matrix heatmap regarding our SDG goals and all our variables different than our SDG goals.
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+corr_matrix <- cor(data_question1[7:40])
+p_matrix2 <- matrix(nrow = ncol(data_question1[7:40]), ncol = ncol(data_question1[7:40]))
+for (i in 1:ncol(data_question1[7:40])) {
+  for (j in 1:ncol(data_question1[7:40])) {
+    test_result <- cor.test(data_question1[7:40][, i], data_question1[7:40][, j])
+    p_matrix2[i, j] <- test_result$p.value
+  }
+}
+
+corr_matrix[which(p_matrix2 > 0.05)] <- NA
+melted_corr_matrix_GVar <- melt(corr_matrix[19:34,2:18])
+ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = ifelse(!is.na(value), sprintf("%.2f", value), '')),
+            color = "black", size = 2) +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Pearson\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(angle = 45, hjust = 1)) +
+  labs(x = 'Goals', y = 'Goals',
+       title = 'Correlations Heatmap between goals and our other variables')
+```
+As we can see, our SDG goals 12 & 13 (responsible consumption & production and climate action) are negatively correlated with most of our variables, as is the economic freedom government variable to our SDG goals. In that sens, we could understand it as  having a higher Human Freedom Index Score would influence more negatively the SDG scores of these two goals, i.e. the more people in a country can access and afford civil justice, the more it impact negatively the score of goals of .......
+
+Nevertheless, they between them, they are correlated. In addition, some variables such as internet_usage, pf_law or ef_legal are strongely correlated with most of our SDG goals. This is mostly due to the large scope englobed in these variables. That makes them influence various sectors of our economies and thus, our SDG goals. 
+
+Now let's zoom on the correlations between all our variables except our SDG goals: 
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+melted_corr_matrix_Var <- melt(corr_matrix[19:34,19:34])
+ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = ifelse(!is.na(value), sprintf("%.2f", value), '')),
+            color = "black", size = 1.7) +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Pearson\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(angle = 45, hjust = 1)) +
+  labs(x = 'Goals', y = 'Goals',
+       title = 'Correlations Heatmap between other variables than SDG goals')
+```
+
+
 Let's explore how the different SDG are correlated together by creating a heatmap of the correlation between our variables. We added a script to check whether the correlations are significantly different from 0. First, let's select the SDGs scores.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
