@@ -3,7 +3,7 @@ source(here::here("scripts/Clean/setup.R"))
 ```
 
 # Focus on the evolution of SDG scores over time
-*How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
+** How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"))
