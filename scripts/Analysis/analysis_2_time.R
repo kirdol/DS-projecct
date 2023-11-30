@@ -47,103 +47,361 @@ plot_ly() %>%
 
 top_n_values <- 5
 
-plots <- lapply(seq_along(unique_years), function(i) {
-  year <- unique_years[i]
+# Test with ggpot2
+custom_colors <- c("blue", "darkblue", "cyan", "green", "darkgreen", "lightgreen", "lightblue","turquoise", "lightgrey", "darkgrey")
+library(patchwork)
+
+# Get unique regions in the dataset
+unique_regions <- unique(binary2015$region)
+
+# Create a color dictionary mapping each region to a specific color
+region_colors <- setNames(custom_colors[1:length(unique_regions)], unique_regions)
+
+# Create a common legend manually
+legend_data <- data.frame(region = unique_regions)
+legend_plot <- ggplot(legend_data, aes(x = region, fill = region)) +
+  geom_bar(position = position_stack(reverse = TRUE)) +
+  scale_fill_manual(values = region_colors) +  # Use the specified colors
+  theme_void() +
+  theme(
+    legend.position = "none",
+    axis.text.y = element_text(angle = 0, hjust = 1)  # Adjust hjust to place text on the right
+  ) +
+  coord_flip()
+
+plots <- list()
+
+for (year in unique_years) {
   top_countries <- binary2015[binary2015$year == year, ] %>%
-    arrange(desc(diff_overallscore)) %>%
+    arrange(desc(year), desc(diff_overallscore)) %>%
     head(n = top_n_values)
   
-  # Define a consistent color mapping for regions
-  custom_colors <- c("#4E79A7", "#F28E2C", "#E15759", "#76B7B2", "#59A14F", "#EDC948", "#FF9DA7","#B07AA1", "#9C755F", "#BAB0AC")
-  region_colors <- setNames(custom_colors, unique(binary2015$region))
+  plot <- ggplot(data = top_countries, mapping = aes(x = country, y = diff_overallscore, fill = region)) +
+    geom_bar(stat = "identity") +
+    scale_fill_manual(values = region_colors) +  # Use the specified colors
+    labs(title = paste("Year", year), x = NULL, y = NULL) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1), legend.position = "none") + 
+    scale_y_continuous(limits = c(0, 3))
   
-  plot_ly() %>%
-    add_trace(
-      type = "bar", 
-      x = ~top_countries$code,
-      y = ~top_countries$diff_overallscore,
-      color = ~top_countries$region,
-      colors = region_colors,
-      text=paste(top_countries$country),
-      showlegend = TRUE  # Disable individual legend for each subplot
-    ) %>%
-    layout(
-      title = paste("Top ", top_n_values, " SDG Score evolution"),
-      yaxis = list(title = "Year difference SDG score", range = c(0, 3)),
-      annotations = list(
-        x = 0.5,
-        y = 0.95,
-        text = year,
-        showarrow = FALSE,
-        xref = "paper",
-        yref = "paper",
-        yanchor = "middle",
-        font = list(size = 14)
+  plots[[as.character(year)]] <- plot
+}
+
+# Arrange the plots in a 4x4 grid using patchwork
+wrap_plots(plots, ncol = 5)
+legend_plot
+
+# Best improvements
+data_long <- binary2015 %>%
+  pivot_longer(cols = c(starts_with("diff_goal"), "diff_overallscore"),
+               names_to = "goal", values_to = "improvement") %>%
+  group_by(goal) %>%
+  top_n(20, wt = improvement) %>%
+  ungroup()
+
+plot_ly() %>%
+  add_trace(
+    type = "bar",
+    data = data_long,
+    x = ~country[after2015 == 1 & goal == "diff_overallscore"],
+    y = ~improvement[after2015 == 1 & goal == "diff_overallscore"],
+    legendgroup = "after 2015",
+    name = "after 2015",
+    marker = list(color = "blue", size = 10),
+    showlegend = TRUE
+  ) %>%
+  add_trace(
+    type = "bar",
+    x = ~country[after2015 == 0 & goal == "diff_overallscore"],
+    y = ~improvement[after2015 == 0 & goal == "diff_overallscore"],
+    legendgroup = "before 2015",
+    name = "before 2015",
+    marker = list(color = "red", size = 10),
+    showlegend = TRUE
+  ) %>%
+  layout(
+    title = paste("Top ", top_n_values, " SDG Score evolution"),
+    yaxis = list(title = "Year difference SDG score", range = c(0, 50)),
+    xaxis = list(title = "Countries", categoryorder = "total ascending"),
+    barmode = "stack",
+    updatemenus = list(
+      list(
+        buttons = list(
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_overallscore"],
+                  ~improvement[after2015 == 0 & goal == "diff_overallscore"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_overallscore"],
+                  ~country[after2015 == 0 & goal == "diff_overallscore"]
+                )
+              )
+            ),
+            label = "Overall score",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal1"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal1"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal1"],
+                  ~country[after2015 == 0 & goal == "diff_goal1"]
+                )
+              )
+            ),
+            label = "Goal 1",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal2"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal2"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal2"],
+                  ~country[after2015 == 0 & goal == "diff_goal2"]
+                )
+              )
+            ),
+            label = "Goal 2",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal3"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal3"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal3"],
+                  ~country[after2015 == 0 & goal == "diff_goal3"]
+                )
+              )
+            ),
+            label = "Goal 3",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal4"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal4"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal4"],
+                  ~country[after2015 == 0 & goal == "diff_goal4"]
+                )
+              )
+            ),
+            label = "Goal 4",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal5"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal5"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal5"],
+                  ~country[after2015 == 0 & goal == "diff_goal5"]
+                )
+              )
+            ),
+            label = "Goal 5",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal6"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal6"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal6"],
+                  ~country[after2015 == 0 & goal == "diff_goal6"]
+                )
+              )
+            ),
+            label = "Goal 6",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal7"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal7"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal7"],
+                  ~country[after2015 == 0 & goal == "diff_goal7"]
+                )
+              )
+            ),
+            label = "Goal 7",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal8"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal8"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal8"],
+                  ~country[after2015 == 0 & goal == "diff_goal8"]
+                )
+              )
+            ),
+            label = "Goal 8",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal9"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal9"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal9"],
+                  ~country[after2015 == 0 & goal == "diff_goal9"]
+                )
+              )
+            ),
+            label = "Goal 9",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal10"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal10"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal10"],
+                  ~country[after2015 == 0 & goal == "diff_goal10"]
+                )
+              )
+            ),
+            label = "Goal 10",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal11"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal11"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal11"],
+                  ~country[after2015 == 0 & goal == "diff_goal11"]
+                )
+              )
+            ),
+            label = "Goal 11",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal12"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal12"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal12"],
+                  ~country[after2015 == 0 & goal == "diff_goal12"]
+                )
+              )
+            ),
+            label = "Goal 12",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal13"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal13"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal13"],
+                  ~country[after2015 == 0 & goal == "diff_goal13"]
+                )
+              )
+            ),
+            label = "Goal 13",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal15"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal15"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal15"],
+                  ~country[after2015 == 0 & goal == "diff_goal15"]
+                )
+              )
+            ),
+            label = "Goal 15",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal16"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal16"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal16"],
+                  ~country[after2015 == 0 & goal == "diff_goal16"]
+                )
+              )
+            ),
+            label = "Goal 16",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal17"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal17"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal17"],
+                  ~country[after2015 == 0 & goal == "diff_goal17"]
+                )
+              )
+            ),
+            label = "Goal 17",
+            method = "restyle"
+          )
+        )
       )
     )
-})
-
-new <- plot_ly() %>%
-    add_trace(
-      type = "bar", 
-      x = ~binary2015$code,
-      y = ~binary2015$diff_overallscore,
-      color = ~binary2015$region,
-      colors = c("#4E79A7", "#F28E2C", "#E15759", "#76B7B2", "#59A14F", "#EDC948", "#FF9DA7","#B07AA1", "#9C755F", "#BAB0AC"),
-      showlegend = TRUE)
-
-plots <- c(new, plots)
-
-subplot(
-  plots,
-  nrows = 4,
-  shareY = TRUE,
-  titleY=TRUE
-) %>%
-  layout(
-    legend = list(x = 0.5, y = -0.15, xanchor = "center", yanchor = "middle", orientation = "h"),
-    showlegend = TRUE  # Enable the common legend
-  )
-
-plots <- lapply(seq_along(unique_years), function(i) {
-  year <- unique_years[i]
-  top_countries <- binary2015[binary2015$year == year, ] %>%
-    arrange(diff_overallscore) %>%
-    head(n = top_n_values)
-  
-  plot_ly() %>%
-    add_trace(
-      type = "bar", 
-      x = ~top_countries$country,
-      y = ~top_countries$diff_overallscore,
-      color = ~top_countries$region,
-      colors = "viridis",
-      showlegend = ifelse(i==2, TRUE, FALSE)
-    ) %>%
-    layout(
-      title = paste("Top ", top_n_values, " SDG Score evolution"),
-      yaxis = list(title = "Year difference SDG score", range = c(-3,0)),
-      annotations = list(
-        x = 0.5,
-        y = 0.8,
-        text = year,
-        showarrow = FALSE,
-        xref = "paper",
-        yref = "paper",
-        yanchor = "middle",
-        font = list(size = 14)
-      )
-    )
-})
-
-# Arrange the plots in a grid with shared y-axes and adjusted spacing
-subplot(
-  plots,
-  nrows = 4
-) %>%
-  layout(
-    legend = list(x = 0.5, y = -0.15, xanchor = "center", yanchor = "middle", orientation = "h"),
-    showlegend = TRUE  # Enable the common legend
   )
 
 ##### Regressions #####
