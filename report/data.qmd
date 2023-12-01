@@ -320,19 +320,23 @@ D1_0_SDG <- makenumSDG(D1_0_SDG)
 We continue by inspecting the missing values.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-# variable_names <- colnames(D1_0_SDG)
-# 
-# prop_missing_data <- data.frame(variable = variable_names, prop_missing = propmissing)
-# 
-# library(ggplot2)
-# 
-# ggplot(prop_missing_data, aes(x = variable, y = prop_missing)) +
-#   geom_bar(stat = "identity", fill = "skyblue", color = "black") +
-#   labs(title = "Proportion of Missing Values by Variable",
-#        x = "Variable",
-#        y = "Proportion of Missing Values") +
-#   theme_minimal()+
-#   coord_flip()
+propmissing <- numeric(length(D1_0_SDG))
+
+for (i in 1:length(D1_0_SDG)){
+  proportion <- mean(is.na(D1_0_SDG[[i]]))
+  propmissing[i] <- proportion
+}
+variable_names <- colnames(D1_0_SDG)
+ 
+prop_missing_data <- data.frame(variable = variable_names, prop_missing = propmissing)
+
+ggplot(prop_missing_data, aes(x = variable, y = prop_missing)) +
+   geom_bar(stat = "identity", fill = "skyblue", color = "black") +
+   labs(title = "Proportion of Missing Values by Variable",
+        x = "Variable",
+        y = "Proportion of Missing Values") +
+   theme_minimal()+
+   coord_flip()
 
 ```
 
@@ -1228,31 +1232,15 @@ We perform a first round of investigation of the missing values before aggregati
 
 We aggregate the observations of all days of a year in one observation per country using the mean.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="75%", out.height="75%"}
 COVID1 <- COVID %>%
-  group_by(iso_code) %>%
-  summarize(NaCOVID = round(mean(is.na(new_cases_per_million)),3)) %>%
-  filter(NaCOVID != 0)
-
-print(table(COVID1$NaCOVID))
-
-COVID2 <- COVID %>%
   group_by(iso_code) %>%
   summarize(NaDeaths = round(mean(is.na(new_deaths_per_million)),3),
             NaCases = round(mean(is.na(stringency_index)), 3),
-            NaStringency = round(mean(is.na(stringency_index)), 3)) %>%
-  filter(NaDeaths != 0 | NaCases != 0 | NaStringency !=0)%>%
-  pivot_longer(cols = starts_with("Na"), names_to = "Variable", values_to = "NaValue") %>%
-  ungroup()
-
-print(table(COVID2$NaCOVID))
-
-COVID3 <- COVID %>%
-  group_by(iso_code) %>%
-  summarize(NaCOVID = round(mean(is.na(stringency_index)), 3)) %>%
-  filter(NaCOVID != 0)
-
-print(table(COVID3$NaCOVID))
+            NaStringency = round(mean(is.na(stringency_index)), 3),
+            year=date) %>%
+  pivot_longer(cols = starts_with("Na"), names_to = "Variable", values_to = "NaValue")%>%
+  filter(NaValue!=0)
 
 issue_list <- c("ERI", "GUM", "PRI", "VIR")
 is.element(issue_list, list_country)
@@ -1269,15 +1257,11 @@ COVID <- COVID %>%
 ###
 
 # Create a bubble plot
-bubble_plot <- plot_ly(COVID2, x=~Variable, y=~NaValue,
-                       text = ~location, color = ~Variable,
-                       size = ~5*NaValue,
-                       colors = c("red", "green", "blue"),
-                       type = "scatter",
-                       marker = list(opacity = 0.5))
-
-# Show the plot
-bubble_plot
+plot_ly(COVID1, x=~Variable, y=~NaValue,
+        text = ~location, color = ~year,
+        colors = c("red", "green", "blue"),
+        type = "scatter",
+        marker = list(color="blue", opacity=0.1, size = 10))
 ```
 
 Now that all the variables of interest are aggregated by year, we remove all the variables that we don't need and rename all the remaining variables to match the main dataset.
