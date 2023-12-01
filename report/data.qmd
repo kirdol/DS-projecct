@@ -342,7 +342,7 @@ ggplot(prop_missing_data, aes(x = variable, y = prop_missing)) +
 
 Seeing that population has a lot of NAs, we investigate and find out that it is normal to have missing values, because some of the observations are not countries but regions, so we can drop these observations.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="55%"}
 SDG0 <- D1_0_SDG |> 
   group_by(code) |> 
   select(population) |> 
@@ -371,7 +371,7 @@ Now there is no more missing values in the variable population and we see that w
 
 We see that there are only NAs in 3 SDG scores: 1, 10 and 14 and that when there are NAs for a country, it is on all years or none. We decide to run ore investigations of those 3 SDG scores to decide if we keep them or not for the analysis.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="75%"}
 SDG1 <- D1_0_SDG |> 
   group_by(code) |> 
   select(contains("goal")) |> 
@@ -682,12 +682,11 @@ mean(is.na(GDPpercapita$GDPpercapita))
 
 For GDPpercapita, only two countries (SOM and SSD) have a lot of missing values and in total 11 countries countries have missing values.
 
-```{r, echo = TRUE, message = TRUE, warning = FALSE}
+```{r, echo = TRUE, message = TRUE, warning = FALSE, out.width="75%"}
 GDPpercapita1 <- GDPpercapita %>%
   group_by(code) %>%
   summarize(NaGDP = mean(is.na(GDPpercapita))) %>%
   filter(NaGDP != 0)
-print(GDPpercapita1, n = 180)
 
 ggplot(GDPpercapita1, aes(x = reorder(code, NaGDP), y = NaGDP, fill = code)) +
   geom_bar(stat = "identity", fill="#FFEDCC", color="black") +
@@ -753,7 +752,7 @@ ggplot(MilitaryExpenditurePercentGDP1, aes(x = reorder(code, NaMil1), y = NaMil1
        x = "Code",
        y = "Proportion of Missing Values") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
 
 ```
 
@@ -815,7 +814,7 @@ ggplot(MiliratyExpenditurePercentGovExp1, aes(x = reorder(code, NaMil2), y = NaM
        x = "Code",
        y = "Proportion of Missing Values") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size=8)) 
 
 ```
 
@@ -1236,9 +1235,8 @@ We aggregate the observations of all days of a year in one observation per count
 COVID1 <- COVID %>%
   group_by(iso_code) %>%
   summarize(NaDeaths = round(mean(is.na(new_deaths_per_million)),3),
-            NaCases = round(mean(is.na(stringency_index)), 3),
-            NaStringency = round(mean(is.na(stringency_index)), 3),
-            year=date) %>%
+            NaCases = round(mean(is.na(new_cases_per_million)), 3),
+            NaStringency = round(mean(is.na(stringency_index)), 3)) %>%
   pivot_longer(cols = starts_with("Na"), names_to = "Variable", values_to = "NaValue")%>%
   filter(NaValue!=0)
 
@@ -1258,8 +1256,6 @@ COVID <- COVID %>%
 
 # Create a bubble plot
 plot_ly(COVID1, x=~Variable, y=~NaValue,
-        text = ~location, color = ~year,
-        colors = c("red", "green", "blue"),
         type = "scatter",
         marker = list(color="blue", opacity=0.1, size = 10))
 ```
@@ -1303,7 +1299,7 @@ length(unique(COVID$code))
 
 We perform a second round of missing values investigation and find out that there are no missing values except for the stringency, where there are 4.19%. Either all values are missing for one country, or 50% are missing, so these 7 countries won't be included when analyzing the effect of stringency on the SDG scores.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="75%", out.height="55%"}
 mean(is.na(COVID$cases_per_million))
 mean(is.na(COVID$deaths_per_million))
 mean(is.na(COVID$stringency))
@@ -1312,7 +1308,14 @@ COVID4 <- COVID %>%
   group_by(code) %>%
   summarize(NaCOVID = mean(is.na(stringency))) %>%
   filter(NaCOVID != 0)
-print(COVID4, n = 300)
+
+ggplot(COVID4, aes(x = reorder(code, NaCOVID), y = NaCOVID)) +
+  geom_bar(stat = "identity", fill = "lightgreen", color = "black") +
+  labs(title = "Proportion of Missing Values in 'stringency' by 'code'",
+       x = "Code",
+       y = "Proportion of Missing Values") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 D7_0_COVID <- COVID
 
@@ -1513,7 +1516,7 @@ datatable(all_Merge, options = list(pageLength = 10, class = "hover", searchHigh
 
 We load our final database and we vizualize the missing values.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%", fig.height=10}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%", out.height="75%"}
 all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
 
 all_Merge <- all_Merge %>% select(-c(X))
