@@ -320,19 +320,19 @@ D1_0_SDG <- makenumSDG(D1_0_SDG)
 We continue by inspecting the missing values.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-variable_names <- colnames(D1_0_SDG)
-
-prop_missing_data <- data.frame(variable = variable_names, prop_missing = propmissing)
-
-library(ggplot2)
-
-ggplot(prop_missing_data, aes(x = variable, y = prop_missing)) +
-  geom_bar(stat = "identity", fill = "skyblue", color = "black") +
-  labs(title = "Proportion of Missing Values by Variable",
-       x = "Variable",
-       y = "Proportion of Missing Values") +
-  theme_minimal()+
-  coord_flip()
+# variable_names <- colnames(D1_0_SDG)
+# 
+# prop_missing_data <- data.frame(variable = variable_names, prop_missing = propmissing)
+# 
+# library(ggplot2)
+# 
+# ggplot(prop_missing_data, aes(x = variable, y = prop_missing)) +
+#   geom_bar(stat = "identity", fill = "skyblue", color = "black") +
+#   labs(title = "Proportion of Missing Values by Variable",
+#        x = "Variable",
+#        y = "Proportion of Missing Values") +
+#   theme_minimal()+
+#   coord_flip()
 
 ```
 
