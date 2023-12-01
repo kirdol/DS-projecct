@@ -214,10 +214,8 @@ boxplot(Correlation_overall[23:34],
         cex.axis = 0.7,      # Reduces the size of the axis labels
         cex.lab = 1,       # Reduces the size of the x and y labels
         notch = TRUE,       # Specifies whether to add notches or not
-        main = "Merged Human Freedom Index scores boxplot", # Title of the boxplot
+        main = "Merged Human Freedom Index scores boxplot", 
         ylab = "Score")     # Y-axis label
-
-
 
 
 Correlation_HFI <- melt(Correlation_overall[,23:34])
@@ -313,62 +311,7 @@ ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   coord_fixed() +
   labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
 
-corr_matrix <- cor(data_question1[7:40])
-p_matrix2 <- matrix(nrow = ncol(data_question1[7:40]), ncol = ncol(data_question1[7:40]))
-for (i in 1:ncol(data_question1[7:40])) {
-  for (j in 1:ncol(data_question1[7:40])) {
-    test_result <- cor.test(data_question1[7:40][, i], data_question1[7:40][, j])
-    p_matrix2[i, j] <- test_result$p.value
-  }
-}
 
-corr_matrix[which(p_matrix2 > 0.05)] <- NA
-melted_corr_matrix_goals <- melt(corr_matrix[2:18,2:18])
-
-ggplot(melted_corr_matrix_goals, aes(Var1, Var2, fill = value)) +
-  geom_tile() +
-  geom_text(aes(label = ifelse(!is.na(value), sprintf("%.2f", value), '')),
-            color = "black", size = 2) +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
-                       midpoint = 0, limit = c(-1, 1), space = "Lab",
-                       name = "Pearson\nCorrelation") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.y = element_text(angle = 45, hjust = 1)) +
-  labs(x = 'Goals', y = 'Goals',
-       title = 'Correlations Heatmap between goals')
-
-melted_corr_matrix_GVar <- melt(corr_matrix[19:34,2:18])
-
-ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
-  geom_tile() +
-  geom_text(aes(label = ifelse(!is.na(value), sprintf("%.2f", value), '')),
-            color = "black", size = 2) +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
-                       midpoint = 0, limit = c(-1, 1), space = "Lab",
-                       name = "Pearson\nCorrelation") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.y = element_text(angle = 45, hjust = 1)) +
-  labs(x = 'Goals', y = 'Goals',
-       title = 'Correlations Heatmap between goals and our other variables')
-
-melted_corr_matrix_Var <- melt(corr_matrix[19:34,19:34])
-
-ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
-  geom_tile() +
-  geom_text(aes(label = ifelse(!is.na(value), sprintf("%.2f", value), '')),
-            color = "black", size = 1.7) +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
-                       midpoint = 0, limit = c(-1, 1), space = "Lab",
-                       name = "Pearson\nCorrelation") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.y = element_text(angle = 45, hjust = 1)) +
-  labs(x = 'Goals', y = 'Goals',
-       title = 'Correlations Heatmap between other variables than SDG goals')
-
-# grid.arrange(HMgoals, HMgoalvar,HMvar, ncol = 1, nrow = 3)
 
 #do 3 different heatmaps : goals on goals, goals on other variables except goals, variables on variables (except goals)
 
