@@ -1218,7 +1218,7 @@ COVID$date <- as.integer(year(COVID$date))
 
 ```
 
-We perform a first round of investigation of the missing values before aggregating the values by year. We begin with the variables "cases per million" and "deaths per million": seeing that for each country, we have either only missing values, either a very low percentage of missing values (\~1%), we can compute the sum over each year and ignore the missing values without altering the data. Indeed, where al the values are missing, the computation will return a NA. We then look at the "stringency" variable and we have 3 scenarios:
+We perform a first round of investigation of the missing values before aggregating the values by year. We begin with the variables "cases per million" and "deaths per million": seeing that for each country, we have either only missing values, either a very low percentage of missing values (\~1%), we can compute the sum over each year and ignore the missing values without altering the data. Indeed, where all the values are missing, the computation will return a NA. We then look at the "stringency" variable and we have 3 scenarios:
 
 1.  \~20% missings: we ignore missing values when computing the mean to have an idea of stringency each year (because we compute the mean stringency over the year, if some days are missing, it is not a problem, it can not evoluate that fast).
 
@@ -1238,8 +1238,12 @@ print(table(COVID1$NaCOVID))
 
 COVID2 <- COVID %>%
   group_by(iso_code) %>%
-  summarize(NaCOVID = round(mean(is.na(new_deaths_per_million)),3)) %>%
-  filter(NaCOVID != 0)
+  summarize(NaDeaths = round(mean(is.na(new_deaths_per_million)),3),
+            NaCases = round(mean(is.na(stringency_index)), 3),
+            NaStringency = round(mean(is.na(stringency_index)), 3)) %>%
+  filter(NaDeaths != 0 | NaCases != 0 | NaStringency !=0)%>%
+  pivot_longer(cols = starts_with("Na"), names_to = "Variable", values_to = "NaValue") %>%
+  ungroup()
 
 print(table(COVID2$NaCOVID))
 
@@ -1262,6 +1266,18 @@ COVID <- COVID %>%
   )%>%
   ungroup()
 
+###
+
+# Create a bubble plot
+bubble_plot <- plot_ly(COVID2, x=~Variable, y=~NaValue,
+                       text = ~location, color = ~Variable,
+                       size = ~5*NaValue,
+                       colors = c("red", "green", "blue"),
+                       type = "scatter",
+                       marker = list(opacity = 0.5))
+
+# Show the plot
+bubble_plot
 ```
 
 Now that all the variables of interest are aggregated by year, we remove all the variables that we don't need and rename all the remaining variables to match the main dataset.

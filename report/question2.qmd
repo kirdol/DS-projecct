@@ -193,7 +193,7 @@ plot_ly() %>%
     type = "histogram", 
     data = binary2015, 
     x = ~diff_overallscore[year == 2009],
-    marker = list(color = "lightgreen")
+    marker = list(color = "lightgreen", line = list(color = "black", width = 1))
   ) %>%
   layout(
     title = "Distribution of SDG evolution",
