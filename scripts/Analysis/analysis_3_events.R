@@ -280,6 +280,8 @@ ggplot(data = cor_melted_lagged, aes(Variable1, Variable2, fill = Correlation)) 
 
 #Now I tried to do the same but with an interactive heat map
 
+#***So here's an interactive map of the correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap
+
 # Load necessary libraries
 library(shiny)
 library(plotly)
@@ -300,7 +302,6 @@ lagged_subset_data <- subset_data %>%
     lagged_no_homeless = lag(no_homeless, default = NA)
   )
 
-
 # Compute correlation matrix for lagged disaster-related variables with the rest of the variables
 correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_total_affected", "lagged_no_homeless")], subset_data)
 
@@ -310,15 +311,9 @@ names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
 
 # UI code for creating the interactive heatmap
 ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap"),
-  sidebarLayout(
-    sidebarPanel(
-      sliderInput("year", "Select Year", min = 2000, max = 2023, value = 2022, step = 1)
-    ),
-    mainPanel(
-      plotlyOutput("heatmap")
-    )
-  )
+  titlePanel("Interactive Correlation Heatmap between the climate disasters and the SDG goals in South and East Asia with 1 year gap"),
+  plotlyOutput("heatmap"),
+  sliderInput("year", "Select Year", min = 2000, max = 2021, value = 2012, step = 1)
 )
 
 # Server code for the interactive heatmap
@@ -326,7 +321,6 @@ server <- function(input, output) {
   # Create a reactive expression for selecting data based on the chosen year
   selected_data <- reactive({
     # Filter your dataset based on the selected year
-    # Assuming your dataset has a column named "year" indicating the year of the data
     filtered_data <- south_east_asia_data[south_east_asia_data$year == input$year, ]
     # Select relevant columns for correlation analysis
     subset_data <- filtered_data[, relevant_columns]
@@ -350,21 +344,30 @@ server <- function(input, output) {
   
   # Render the plotly heatmap based on the reactive selected_data
   output$heatmap <- renderPlotly({
-    # Use plotly to create an interactive heatmap
-    # Replace the following code with your code for generating the heatmap using plotly
-    # Ensure it uses 'selected_data()' to reflect the chosen year's correlations
+    # plotly creates an interactive heatmap
+    #'selected_data()' reflects the chosen year's correlations
     p <- plot_ly(data = selected_data(), x = ~Variable1, y = ~Variable2, z = ~Correlation, 
-                 type = "heatmap", colorscale = list(c(0, "blue"), c(0.5, "white"), c(1, "red")),
-                 zmin = -1, zmax = 1)  # Define the range of correlation values (-1 to 1)
+                 type = "heatmap", colorscale = list(c(-1, "blue"), c(0, "white"), c(1, "red")),
+                 zmin = -1, zmax = 1)
     
     # Customize the layout, axis labels, and other aspects of the plot as needed
     p <- p %>% layout(
-      title = "Interactive Correlation Heatmap",
+      title = "",
       xaxis = list(title = ""),
-      yaxis = list(title = "")
-      # Add more layout customizations as required
+      yaxis = list(title = ""),
+      coloraxis = list(
+        colorbar = list(
+          title = "Correlation",  # Title for the color bar
+          tickvals = c(-1, 0, 1),  # Define tick values for the color bar
+          ticktext = c("-1", "0", "1"),  # Define corresponding text for tick values
+          len = 5,  # Length of the color bar
+          thickness = 20,  # Thickness of the color bar
+          x = 0,  # Position of the color bar on x-axis (0 = left side)
+          xanchor = "left",  # Anchor the color bar to the left
+          ticks = "outside"  # Show color bar ticks outside the color bar
+        )
+      )
     )
-    
     # Return the plotly object
     return(p)
   })
@@ -392,7 +395,8 @@ library(plotly)
 
 Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
 
-covid_filtered <- Q3.2[Q3.2$year >= as.Date("2018-12-31"), ]
+#covid_filtered <- Q3.2[Q3.2$year >= as.Date("2018-12-31"), ]
+covid_filtered <- Q3.2
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
 subset_data <- covid_filtered[, relevant_columns]
 
@@ -405,20 +409,14 @@ names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 
 # Shiny UI code
 ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap - COVID and SDG goals"),
-  sidebarLayout(
-    sidebarPanel(
-      sliderInput("year", "Select Year", min = 2019, max = 2023, value = 2022, step = 1)
-    ),
-    mainPanel(
-      plotlyOutput("heatmap")
-    )
-  )
+  titlePanel("Interactive Correlation Heatmap between COVID and the SDG goal with one year gap"),
+  plotlyOutput("heatmap"),
+  sliderInput("year", "Select Year", min = 2019, max = 2023, value = 2020, step = 1)
 )
 
 # Shiny server code
 server <- function(input, output) {
-  # Create a reactive expression for selected COVID data based on the chosen year
+  # Reactive expression for selected COVID data based on the chosen year
   selected_covid_data <- reactive({
     filtered_data <- covid_filtered[covid_filtered$year == input$year, ]
     subset_data <- filtered_data[, relevant_columns]
@@ -436,11 +434,23 @@ server <- function(input, output) {
                  zmin = -1, zmax = 1)
     
     p <- p %>% layout(
-      title = "Correlation between COVID and the SDG goals",
+      title = "",
       xaxis = list(title = ""),
-      yaxis = list(title = "")
+      yaxis = list(title = ""),
+      coloraxis = list(
+        colorbar = list(
+          title = "Correlation",  # Title for the color bar
+          tickvals = c(-1, 0, 1),  # Define tick values for the color bar
+          ticktext = c("-1", "0", "1"),  # Define corresponding text for tick values
+          len = 5,  # Length of the color bar
+          thickness = 20,  # Thickness of the color bar
+          x = 0,  # Position of the color bar on x-axis (0 = left side)
+          xanchor = "left",  # Anchor the color bar to the left
+          ticks = "outside"  # Show color bar ticks outside the color bar
+        )
+      )
     )
-    
+    # Return the plotly object
     return(p)
   })
 }
@@ -451,7 +461,7 @@ shinyApp(ui = ui, server = server)
 
 
 
-###Conflict correlation
+###Conflict correlation for disaster with interactive heatmap with one year gap
 
 # Load necessary libraries
 library(shiny)
@@ -473,23 +483,17 @@ correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_af
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 
-
+#selected regions:Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe", "Caucasus and Central Asia"
 # Shiny UI code
 ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap - Conflicts and SDG goals"),
-  sidebarLayout(
-    sidebarPanel(
-      sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1)
-    ),
-    mainPanel(
-      plotlyOutput("heatmap")
-    )
-  )
+  titlePanel("Interactive Correlation Heatmap between Conflicts in selected regions and the SDG goal with one year gap"),
+  plotlyOutput("heatmap"),
+  sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1)
 )
 
 # Shiny server code
 server <- function(input, output) {
-  # Create a reactive expression for selected Conflict data based on the chosen year
+  # Reactive expression for selected Conflict data based on the chosen year
   selected_conflicts_data <- reactive({
     filtered_data <- conflicts_filtered[conflicts_filtered$year == input$year, ]
     subset_data <- filtered_data[, relevant_columns]
@@ -503,17 +507,27 @@ server <- function(input, output) {
     names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
     
     p <- plot_ly(data = cor_melted, x = ~Variable1, y = ~Variable2, z = ~Correlation,
-                 type = "heatmap", colorscale = list(c(0, "blue"), c(0.5, "white"), c(1, "red")),
+                 type = "heatmap", colorscale = list(c(-1, "blue"), c(0, "white"), c(1, "red")),
                  zmin = -1, zmax = 1)
     
     p <- p %>% layout(
-      title = "Correlation between Conflicts Affected Population, Deaths and the SDG goals",
+      title = "",
       xaxis = list(title = ""),
       yaxis = list(title = ""),
-      hoverlabel = list(bgcolor = "white", font = list(size = 12)),
-      hovermode = "closest"
+      coloraxis = list(
+        colorbar = list(
+          title = "Correlation",  # Title for the color bar
+          tickvals = c(-1, 0, 1),  # Define tick values for the color bar
+          ticktext = c("-1", "0", "1"),  # Define corresponding text for tick values
+          len = 5,  # Length of the color bar
+          thickness = 20,  # Thickness of the color bar
+          x = 0,  # Position of the color bar on x-axis (0 = left side)
+          xanchor = "left",  # Anchor the color bar to the left
+          ticks = "outside"  # Show color bar ticks outside the color bar
+        )
+      )
     )
-    
+    # Return the plotly object
     return(p)
   })
 }
