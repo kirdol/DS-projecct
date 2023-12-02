@@ -139,7 +139,6 @@ reg_goal17_all_new <- lm(goal17 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 
 
 ```
 The problem is that even by getting rid of the previous variables, there still might be multicollinearity. Therefore, we need to analyse the vif for each regression and adapt the model in consequence. 
-
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 #first one example
 

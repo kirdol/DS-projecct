@@ -88,14 +88,9 @@ ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
 
 #avant reg -> essayer de retirer multicolinearité en enlevant les variables trop dépendantes
 
-# covariance_matrix <- cov(data_question1[, 7:40])
-# formatted_cov_matrix <- format(covariance_matrix, scientific = FALSE)
-# threshold <- 0.8 * max(covariance_matrix)
-# high_cov_pairs <- which(covariance_matrix >= threshold, arr.ind = TRUE)
 correlation_overall_matrix <- cor(Correlation_overall, use = "everything")
 high_cor_pairs <- which(abs(correlation_overall_matrix) >= 0.8, arr.ind = TRUE)
 
-# Displaying the results
 for (i in 1:nrow(high_cor_pairs)) {
   row <- high_cor_pairs[i, "row"]
   col <- high_cor_pairs[i, "col"]
@@ -127,8 +122,6 @@ correlation_pairs <- list(
 # Flatten the list and count the frequency of each variable
 flattened_list <- unlist(correlation_pairs)
 frequency_count <- table(flattened_list)
-
-# Determine which variables to remove
 variables_to_remove <- c()
 
 for (pair in correlation_pairs) {
@@ -142,7 +135,6 @@ for (pair in correlation_pairs) {
     variables_to_remove <- c(variables_to_remove, pair[1])
   }
 }
-
 variables_to_remove <- unique(variables_to_remove)
 variables_to_remove <- sort(variables_to_remove)
 
@@ -247,25 +239,8 @@ sg4 <- stargazer(reg_goal13_all,
 # writeLines(merged_html, "merged_tables.html")
 # print(merged_html)
 
-huxreg(reg_goal1_all,
-       reg_goal2_all,
-       reg_goal3_all,
-       reg_goal4_all,
-       reg_goal5_all,
-       reg_goal6_all,
-       reg_goal7_all,
-       reg_goal8_all,
-       reg_goal9_all,
-       reg_goal10_all,
-       reg_goal11_all,
-       reg_goal12_all,
-       reg_goal13_all,
-       reg_goal15_all,
-       reg_goal16_all,
-       reg_goal17_all)
 
-anova(reg_goal1_all)
-vif(reg_goal1_all)
+vif(reg_goal1_all_new)
 vif(reg_goal2_all_new) #we have big multicollinearity problems between goal 1 & numerous variables. In addition, vif of goal2 over goal1 is low, compared to vif goal1 over goal2.
 
 # try to reduce dimensionality of linear model: AIC criteria, backward selection
@@ -275,14 +250,12 @@ selmod_original <- step(reg_goal1_all, scope=list(lower=nullmod, upper=reg_goal1
 summary(selmod_original)
 vif(selmod_original) #only high vif for pf_law -> get rid of it? 
 
-
 #for reg1
 nullmod <- lm(goal1 ~ 1, data = data_question1)
 selmod <- step(reg_goal1_all_new, scope=list(lower=nullmod, upper=reg_goal1_all_new), direction="backward") #vif(selmod) -> still high vif
 summary(selmod)
 vif(selmod) #only high vif for pf_law -> get rid of it? 
 reg_goal1_all_new <- lm(goal1 ~ goal2 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-
 
 #for reg2
 nullmod <- lm(goal1 ~ 1, data = data_question1)
@@ -291,7 +264,7 @@ summary(selmod)
 vif(selmod) 
 
 
-#what about with overallscore
+#####what about with overallscore#####
 
 reg_goal_overall <- lm(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = data_question1)
 stargazer(reg_goal_overall,
@@ -304,11 +277,7 @@ caption(huxtable) <- "Regressing our Overall SDG Score over our variables"
 print(huxtable)
 
 # find a way to regress all our variables and only display interesting/pertinent informations in the regression tableau
-# do not forget to conduct VIF for covariance problems/ other controlling methods
 # could check the correlations with overallscore first, then investigate per goal interesting correlations with specific variables.
-
-# check the evolution of correlations through years
-
 
 #### check the evolution of correlations by region ####
 
