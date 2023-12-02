@@ -42,7 +42,7 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
   if(missing(cex.cor)) cex.cor <- 2/strwidth(txt)
   text(0.5, 0.5, txt, cex = cex.cor * r)
 }
-pairs(data_question1[,10:25], upper.panel=panel.cor, diag.panel=panel.hist)
+pairs(data_question1[,9:24], upper.panel=panel.cor, diag.panel=panel.hist)
 
 #too many goals for making this in once
 

@@ -37,7 +37,8 @@ packages <- c(
   "plm",
   "plotly",
   "stargazer",
-  "patchwork"
+  "patchwork",
+  "e1071"
 )
 
 for (pkg in packages) {

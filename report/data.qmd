@@ -6,7 +6,7 @@ source(here::here("scripts/Clean/setup.R"))
 
 ## Sources
 
-We are collecting our Data from the sustainability development report (SDG), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn't find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next section. With the help of the `kableExtra` package we present below the list of our sources and the links to each one:
+We are collecting our Data from the sustainability development report (SDG), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn't find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next section. Utilizing the kableExtra package, we provide a comprehensive list and corresponding links to our sources, as outlined below:
 
 ```{r}
 source_info <- data.frame(
@@ -40,11 +40,11 @@ source_info %>%
 
 ## Description
 
-During the wrangling process: we add data to our table (D1_1_SDG) based on different other datasets and match them based on the country, the country code, and the year. The tables below show all the variables present in our 9 databases that we then merge to have our final table for the analysis, as well as each variable of interest that we keep.
+During the wrangling process, we added data to our table (D1_1_SDG) from different other datasets and match them based on the country code, and the year. The tables below show all the variables present in our 9 databases. We will then merge them to have our final table for the analysis.
 
 ### D1_1_SDG {.unnumbered}
 
-Our first database used is our main one. It concerns the SDG. Find below a table that summarize the variables present:
+Our primary database focuses on the Sustainable Development Goals (SDG). Below is a table summarizing the key variables included:
 
 ```{r}
 D1_1_SDG_table_info <- data.frame(
@@ -287,13 +287,13 @@ D8_0_Conflicts_table_info %>%
 
 ## Wrangling/cleaning
 
-To accommodate the large scale of the datasets we intended to utilize, we decided to pre-clean each of our datasets before merging them. This allowed us to simplify the process of cleaning our final dataset afterwards.
+To accommodate the large scale of the datasets, we pre-cleaned each one prior to merging. This streamlined the process, simplifying the cleaning of the final, combined dataset.
 
 ### Dataset on SDG
 
 This is our main dataset, that we clean in order to keep the columns containing the following information: country name, country code, year, population, overall score and the SDGs scores.
 
-We begin by importing the data and transforming it into a dataframe. We rename the columns and transform the scores into numeric variables.
+We start by importing the data and converting it into a DataFrame. Next, we rename the columns and convert the scores into numeric variables.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 D1_0_SDG <- read.csv(here("scripts","data","SDG.csv"), sep = ";")
@@ -317,7 +317,7 @@ D1_0_SDG <- makenumSDG(D1_0_SDG)
 
 ```
 
-We continue by inspecting the missing values.
+We proceed by examining the missing values.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 propmissing <- numeric(length(D1_0_SDG))
@@ -340,7 +340,7 @@ ggplot(prop_missing_data, aes(x = variable, y = prop_missing)) +
 
 ```
 
-Seeing that population has a lot of NAs, we investigate and find out that it is normal to have missing values, because some of the observations are not countries but regions, so we can drop these observations.
+Observing that the 'population' column contains numerous NAs, we investigate and discover that missing values are common, as some observations represent regions, not countries. Therefore, we can safely exclude these observations.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="55%"}
 SDG0 <- D1_0_SDG |> 
@@ -362,14 +362,9 @@ D1_0_SDG <- D1_0_SDG %>%
 
 ```
 
-Now there is no more missing values in the variable population and we see that we have information on 166 countries.
+Now, there are no missing values in the 'population' variable, and we observe that it contains information on `length(unique(D1_0_SDG$country))` countries.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-(country_number <- length(unique(D1_0_SDG$country)))
-
-```
-
-We see that there are only NAs in 3 SDG scores: 1, 10 and 14 and that when there are NAs for a country, it is on all years or none. We decide to run ore investigations of those 3 SDG scores to decide if we keep them or not for the analysis.
+We notice that NAs are present in only three SDG scores: 1, 10, and 14. Additionally, when a country has NAs, they occur across all years or not at all. Consequently, we decide to conduct further investigations on these three SDG scores to determine whether to include them in our analysis.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="75%"}
 SDG1 <- D1_0_SDG |> 
@@ -412,7 +407,7 @@ ggplot(result_df, aes(x = reorder(Goal, Count_NA), y = Count_NA)) +
 
 ```
 
-For goal 1, there are only 9.04% missing values in 15 different countries. Goal 1 being "end poverty", we decide to keep it and only remove the countries with no information for the analysis.
+For goal 1, there are only 9.04% missing values in 15 different countries. Goal 1 being "End poverty", we decide to keep it and only remove the countries with no information for the analysis.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 SDG2 <- D1_0_SDG |> 
@@ -420,7 +415,7 @@ SDG2 <- D1_0_SDG |>
   select(contains("goal")) |> 
   summarize(Na1 = mean(is.na(goal1))) |>
   filter(Na1 != 0)
-
+country_number <- length(unique(D1_0_SDG$country))
 length(unique(SDG2$code))/country_number
 
 ```
@@ -453,7 +448,7 @@ D1_0_SDG <- D1_0_SDG %>% select(-goal14)
 
 ```
 
-We will be working with different datasets and merge them based on the country code and the year. To make sure the match will work well, we verify that the country names are encoded in UTF-8 format, then we standardize the name of the countries (we needed to make a custom matrch for Turkey) and the country codes using the countrycode library. In addition, we create a list of all the country codes contained in the main database in order to filter the other databases. Finally, we complete the database to make sure all the combinations of "country, year" are in the database. The number of rows isn't changed.
+We will work with various datasets and merge them using the country code and year as key identifiers. To ensure accurate matching, we first verify that country names are encoded in UTF-8 format. Then, we standardize the names of the countries (requiring a custom match for Turkey) and the country codes, utilizing the countrycode library. Additionally, we compile a list of all country codes from the main database to filter the other datasets. Lastly, we complete the database to include all possible "country, year" combinations, ensuring the total number of rows remains unchanged.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 D1_0_SDG$country <- stri_encode(D1_0_SDG$country, to = "UTF-8")
@@ -479,7 +474,7 @@ D1_0_SDG_country_list <- D1_0_SDG_country_list %>%
 
 ```
 
-Finally, we complete database to make sure there are not couples of (year, code) missing.
+Finally, we complete the database to ensure there are no missing pairs of (year, code).
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 D1_0_SDG <- D1_0_SDG |> complete(code, year)
@@ -491,7 +486,7 @@ D1_0_SDG <- D1_0_SDG |> complete(code, year)
 datatable(D1_0_SDG, options = list(pageLength = 10, class = "hover", searchHighlight = TRUE), rownames = FALSE)
 ```
 
-For this first dataset, we went from 4'140 observations for 120 variables to 3818 observationsfor 21 varibles.
+For this first dataset, we reduced the size from 4,140 observations across 120 variables to 3,818 observations for 21 variables.
 
 As said, this is now our main dataset. All subsequent datasets will be merged with this dataset. Therefore, for all the following datasets, we will make sure that we only keep data for the same countries and years as in this dataset. We have a total of `r length(list_country)` countries and the years range from 2000 to 2022.
 
@@ -540,7 +535,9 @@ datatable(D2_1_Unemployment_rate,
           rownames = FALSE)
 ```
 
-For this dataset, we went from 82'800 observations for 8 variables to 3812 observations for 5 varibles. \### Dataset on GDP military Expenditures
+For this first dataset, we reduced the size from 82'800 observations across 8 variables to 3812 observations for 5 variables.
+
+### Dataset on GDP military Expenditures
 
 We have three different databases which contain information on each countries over the years. Each year represent one variable. We want to extract three variables for our analysis: GDP per capita, military expenditures in percentage of the GDP and military expenditures in percentage of government expenditures.
 
@@ -974,7 +971,7 @@ datatable(D4_0_Internet_usage,
           rownames = FALSE)
 ```
 
-For this dataset, we went from 6'570 observations for 4 variables to 3433 observations for 4 varibles.
+For this first dataset, we reduced the size from 6'570 observations across 4 variables to 3433 observations for 4 variables.
 
 ### Dataset on human freedom index
 
@@ -1133,7 +1130,7 @@ datatable(D5_0_Human_freedom_index,
           rownames = FALSE)
 ```
 
-For this dataset, we went from 3'465 observations for 141 variables to `lengh(D5_0_Human_freedom_index$code)` observations for 4 varibles.
+For this first dataset, we reduced the size from 3'465 observations across 141 variables to `lengh(D5_0_Human_freedom_index$code)` observations for 4 variables.
 
 ### Dataset on Disasters
 
@@ -1223,11 +1220,11 @@ COVID$date <- as.integer(year(COVID$date))
 
 We perform a first round of investigation of the missing values before aggregating the values by year. We begin with the variables "cases per million" and "deaths per million": seeing that for each country, we have either only missing values, either a very low percentage of missing values (\~1%), we can compute the sum over each year and ignore the missing values without altering the data. Indeed, where all the values are missing, the computation will return a NA. We then look at the "stringency" variable and we have 3 scenarios:
 
-1.  \~20% missings: we ignore missing values when computing the mean to have an idea of stringency each year (because we compute the mean stringency over the year, if some days are missing, it is not a problem, it can not evoluate that fast).
+1.  **\~20% missings:** we ignore missing values when computing the mean to have an idea of stringency each year (because we compute the mean stringency over the year, if some days are missing, it is not a problem, it can not evoluate that fast).
 
-2.  all are missing : we can ignore the missing values when computing the mean, because it will still return a missing value
+2.  **all are missing:** we can ignore the missing values when computing the mean, because it will still return a missing value
 
-3.  almost all are missing: here the mean doesn't make sense -\> we will replace the values by NAs to be coherent. The countries with this issues are: ERI, GUM, PRI and VIR. We verify if they are in our main dataset and since none of these countries are, we can ignore the issue, the lines will be remove later anyway.
+3.  **almost all are missing:** here the mean doesn't make sense -\> we will replace the values by NAs to be coherent. The countries with this issues are: ERI, GUM, PRI and VIR. We verify if they are in our main dataset and since none of these countries are, we can ignore the issue, the lines will be remove later anyway.
 
 We aggregate the observations of all days of a year in one observation per country using the mean.
 
@@ -2138,7 +2135,6 @@ see_missing24 <- data_question24 %>%
   summarise(across(everything(), ~ sum(is.na(.))) %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 0))
-
 ```
 
 #### Data for question 3

@@ -274,9 +274,34 @@ sdg_scores2 <- data_question1[, c('goal1', 'goal2', 'goal3', 'goal4', 'goal5', '
 
 Correlation_overall <- data_question1 %>% 
       select(population:ef_regulation)
-cor_matrix <- cor(Correlation_overall, use = "everything")
 
-datatable(cor_matrix, 
+#before computing Pearson -> logarithmic transformation may be required for some variables with high skewness
+
+# Calculating skewness for each variable
+
+Correlation_overall_skew <- Correlation_overall
+Correlation_overall_sqrt <- Correlation_overall
+
+skewness_values <- sapply(Correlation_overall_skew, e1071::skewness)
+
+# Identifying highly skewed variables
+highly_skewed_vars <- names(skewness_values[abs(skewness_values) > 1])
+highly_skewed_vars_sqrt <- names(skewness_values[abs(skewness_values) > 1])
+# Applying logarithmic transformation
+Correlation_overall_skew[highly_skewed_vars] <- lapply(Correlation_overall_skew[highly_skewed_vars], function(x) log1p(x))
+#applying squart root transformation
+Correlation_overall_sqrt[highly_skewed_vars_sqrt] <- lapply(Correlation_overall_sqrt[highly_skewed_vars_sqrt], function(x) sqrt(x))
+
+new_skewness_values <- sapply(Correlation_overall_skew[highly_skewed_vars], e1071::skewness)
+new_skewness_values_sqrt <- sapply(Correlation_overall_sqrt[highly_skewed_vars_sqrt], e1071::skewness)
+
+#après transformation, il reste toujours beaucoup de variables avec un high skewness values print(new_skewness_values), print(new_skewness_values_sqrt)
+
+cor_matrix_log <- cor(Correlation_overall_skew, use = "everything")
+cor_matrix_sqrt <- cor(Correlation_overall_sqrt, use = "everything")
+cor_matrix_sper <- cor(Correlation_overall, method = "spearman", use = "everything")
+
+datatable(cor_matrix_log, 
           options = list(
             pageLength = 10, 
             class = "hover", 
@@ -298,13 +323,45 @@ By doing so, we obtain a lot of positive and negative correlations. To help us t
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 #### Heatmap ####
 
-cor_melted <- melt(cor_matrix)
+#with log transformation
+
+cor_melted_log <- melt(cor_matrix_log)
+
+ggplot(data = cor_melted_log, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
+
+#with square root transformation
+
+cor_melted_sqrt <- melt(cor_matrix_sqrt)
+
+ggplot(data = cor_melted_sqrt, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
+                       name="Pearson\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
+
+#with Spearman
+
+cor_melted <- melt(cor_matrix_sper)
 
 ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
                        midpoint = 0, limit = c(-1, 1), space = "Lab", 
-                       name="Pearson\nCorrelation") +
+                       name="Spearman\nCorrelation") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
         axis.text.y = element_text(size = 8)) +
@@ -343,19 +400,29 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
 }
 
 # Independent variables 
-pairs(data_question1[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of various variables")
+#with log transformation
+pairs(Correlation_overall_skew[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of various variables")
+#with square root transformation
+pairs(Correlation_overall_sqrt[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of various variables")
 ```
 
 The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%", out.height="100%"}
-pairs(data_question1[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly", "pf_expression", "pf_identity")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of personal freedom variables")
+#with log transformation
+pairs(Correlation_overall_skew[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly", "pf_expression", "pf_identity")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of personal freedom variables")
+
+#with square root transformation
+pairs(Correlation_overall_sqrt[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly", "pf_expression", "pf_identity")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of personal freedom variables")
 ```
 
 The overall SDG achievement score is highly correlated with "personal freedom: law" (p=.69) and "personal freedom: identity" (p=.62). The other dimensions of personal freedom do not seem to have important influence. Regarding the distribution of the personal freedom variables, we notice that except for law, all have right-skewed distributions meaning that most of the countries have high scores.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%", out.height="100%"}
-pairs(data_question1[,c("overallscore", "ef_government", "ef_legal", "ef_money", "ef_trade", "ef_regulation")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of economic freedom variables")
+#with log transformation
+pairs(Correlation_overall_skew[,c("overallscore", "ef_government", "ef_legal", "ef_money", "ef_trade", "ef_regulation")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of economic freedom variables")
+#with square root transformation
+pairs(Correlation_overall_sqrt[,c("overallscore", "ef_government", "ef_legal", "ef_money", "ef_trade", "ef_regulation")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of economic freedom variables")
 ```
 
 The overall SDG achievement score is highly correlated with "economical freedom: legal" (p=.77), "economical trade: legal" (p=.67) and "economical freedom: money" (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom.
