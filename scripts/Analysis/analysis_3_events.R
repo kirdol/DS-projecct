@@ -551,5 +551,411 @@ summary(Lin_Reg_Disaster)
 
 
 
+Q3.1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
+Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+Q3.3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
+
+Q3.1[is.na(Q3.1)] <- 0
+print(Q3.1)
+
+
+##_____
+# Subset data for South and East Asia from Q3.1 dataset
+south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
+
+# Select relevant columns for correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "no_homeless")
+
+# Subset the data
+subset_data <- south_east_asia_data[, relevant_columns]
+
+# Define the specific goal columns you want to include in regression
+goal_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16")
+
+
+# Loop through each goal column and perform regressions
+for (goal_col in relevant_columns) { 
+  # Formula for regression against total_affected and no_homeless
+  formula_affected <- as.formula(paste(goal_col, "~ total_affected"))
+  formula_homeless <- as.formula(paste(goal_col, "~ no_homeless"))
+  
+  # Perform linear regression for total_affected
+  lm_total_affected <- lm(formula_affected, data = subset_data)
+  
+  # Perform linear regression for no_homeless
+  lm_no_homeless <- lm(formula_homeless, data = subset_data)
+  
+  # Print regression summaries
+  cat("Regression Summary for", goal_col, "vs Total Affected:\n")
+  print(summary(lm_total_affected))
+  cat("\n")
+  
+  cat("Regression Summary for", goal_col, "vs No Homeless:\n")
+  print(summary(lm_no_homeless))
+  cat("\n")
+}
+
+
+# Sample goals
+goals <- c("Goal 1", "Goal 2", "Goal 3", "Goal 4")
+
+# UI part of the Shiny app
+ui <- fluidPage(
+  titlePanel("Goal Tracker"),
+  sidebarLayout(
+    sidebarPanel(
+      h4("Goals"),
+      checkboxGroupInput("goal_checkboxes", "Select Goals", choices = goals)
+    ),
+    mainPanel(
+      h4("Selected Goals"),
+      verbatimTextOutput("selected_goals")
+    )
+  )
+)
+
+# Server part of the Shiny app
+server <- function(input, output) {
+  output$selected_goals <- renderPrint({
+    selected <- input$goal_checkboxes
+    if (is.null(selected) || length(selected) == 0) {
+      return("No goals selected.")
+    } else {
+      paste("Selected goals:", paste(selected, collapse = ", "))
+    }
+  })
+}
+
+# Run the Shiny app
+shinyApp(ui = ui, server = server)
+
+
+
+
+library(shiny)
+library(dplyr)
+library(ggplot2)
+library(scales)
+
+
+# Subset data for South and East Asia from Q3.1 dataset
+south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
+
+# Select relevant columns for correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "no_homeless")
+
+# Subset the data
+subset_data <- south_east_asia_data[, relevant_columns]
+
+# Define the specific goal columns you want to include in regression
+goal_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16")
+
+
+# UI for Shiny app
+ui <- fluidPage(
+  titlePanel("SDG Regression Analysis"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("sdg", "Select SDG Goal:",
+                  choices = goal_columns,
+                  selected = goal_columns[1]),
+      width = 3
+    ),
+    mainPanel(
+      width = 9,
+      plotOutput("regression_plot_affected"),
+      plotOutput("regression_plot_homeless")
+    )
+  )
+)
+
+# Server logic
+server <- function(input, output) {
+  # Function to generate regression plots
+  generate_regression_plot <- function(selected_goal) {
+    # Formula for regression against total_affected and no_homeless
+    formula_affected <- as.formula(paste(selected_goal, "~ total_affected"))
+    formula_homeless <- as.formula(paste(selected_goal, "~ no_homeless"))
+    
+    # Perform linear regression for total_affected
+    lm_total_affected <- lm(formula_affected, data = subset_data)
+    
+    # Plotting regression results
+    plot_total_affected <- ggplot(subset_data, aes(x = total_affected, y = !!as.name(selected_goal))) +
+      geom_point() +
+      geom_smooth(method = "lm", se = FALSE) +
+      labs(title = paste("Regression plot for", selected_goal, "vs Total Affected"),
+           x = "Total Affected", y = selected_goal) +
+      scale_x_continuous(labels = comma_format())  # Format x-axis labels for total_affected
+    
+    plot_no_homeless <- ggplot(subset_data, aes(x = no_homeless, y = !!as.name(selected_goal))) +
+      geom_point() +
+      geom_smooth(method = "lm", se = FALSE) +
+      labs(title = paste("Regression plot for", selected_goal, "vs No Homeless"),
+           x = "No Homeless", y = selected_goal) +
+      scale_x_continuous(labels = comma_format())  # Format x-axis labels for no_homeless
+    
+    
+    list(plot_total_affected, plot_no_homeless)
+  }
+  
+  # Render regression plots based on selected SDG goal
+  output$regression_plot_affected <- renderPlot({
+    selected_goal <- input$sdg
+    regression_plots <- generate_regression_plot(selected_goal)
+    print(regression_plots[[1]])  # Display plot for total_affected vs selected_goal
+  })
+  
+  output$regression_plot_homeless <- renderPlot({
+    selected_goal <- input$sdg
+    regression_plots <- generate_regression_plot(selected_goal)
+    print(regression_plots[[2]])  # Display plot for no_homeless vs selected_goal
+  })
+}
+
+# Run the application
+shinyApp(ui, server)
+
+#Model 1: Regression of goal1 vs Total Affected:
+# The coefficient for the predictor variable "total_affected" is -3.41e-08 with a standard error of 4.19e-08. This indicates a very small negative relationship between the predictor and the outcome "goal1." However, the p-value (0.42) is larger than the typical significance level of 0.05, suggesting that the relationship between "total_affected" and "goal1" is not statistically significant.
+
+#Model 2: Regression of goal1 vs No Homeless:
+#The coefficient for the predictor variable "no_homeless" is -3.82e-06 with a standard error of 3.71e-06. This indicates a small negative relationship between the predictor and the outcome "goal1." However, similarly, the p-value (0.3) is larger than 0.05, suggesting that the relationship between "no_homeless" and "goal1" is not statistically significant.
+
+#For "goal2," the variable "total_affected" shows a slight positive association that is almost statistically significant.
+#The variable "no_homeless" does not appear to have a statistically significant impact on "goal2."
+
+#For "goal3," "total_affected" does not have a statistically significant impact, and it seems to be an irrelevant predictor as per this model.
+#On the other hand, "no_homeless" shows a statistically significant negative relationship with "goal3," although the effect size is small. This means that the presence of homeless people might have a small negative impact on achieving "goal3."
+#However, considering the low R-squared values in both models, there might be other unaccounted factors that better explain the variation in "goal3."
+
+#For "goal4" and "goal5," both "total_affected" and "no_homeless" variables do not show statistically significant relationships in their respective models. The explanatory power of these predictors is quite weak for both goals.
+
+#For "goal6," both "total_affected" and "no_homeless" show statistically significant relationships, albeit with small effect sizes.
+#For "goal7," neither "total_affected" nor "no_homeless" appear to have statistically significant relationships, and their contribution to explaining the variability in "goal7" is extremely weak based on the regression models.
+
+#For "goal8" and "goal9," neither "total_affected" nor "no_homeless" seem to have statistically significant relationships based on the regression models. Their contributions to explaining the variability in these goals are extremely weak or negligible given the high p-values and low R-squared values in both cases.
+
+#For "goal10," "Total Affected" shows a significant negative relationship, while "No Homeless" doesn't significantly explain the variation in "goal10."
+#For "goal11," both "Total Affected" and "No Homeless" have significant negative relationships, indicating their impact on "goal11."
+#for "goal12," both "Total Affected" and "No Homeless" are significantly positively associated. However, for "goal13," "No Homeless" shows a marginal association, while "Total Affected" doesn't significantly explain the variability.
+
+#for "goal15," neither "Total Affected" nor "No Homeless" significantly explains the variability. However, for "goal16," both "Total Affected" and "No Homeless" are significantly negatively associated.
+
+
+
+#___________________________
+#Covid regressions
+
+library(shiny)
+library(ggplot2)
+library(scales)
+
+# Read the data
+Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+covid_filtered <- Q3.2
+
+# Select relevant columns for correlation analysis
+relevant_columns <- c(
+  "goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8",
+  "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16",
+  "stringency", "cases_per_million", "deaths_per_million"
+)
+subset_data <- covid_filtered[, relevant_columns]
+
+# Define the specific goal columns you want to include in regression
+goal_columns <- c(
+  "goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8",
+  "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16"
+)
+
+# UI for Shiny app
+ui <- fluidPage(
+  titlePanel("SDG - COVID Regression Analysis"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("sdg", "Select SDG Goal:",
+                  choices = goal_columns,
+                  selected = goal_columns[1]),
+      width = 3
+    ),
+    mainPanel(
+      width = 9,
+      plotOutput("regression_plot_stringency"),
+      plotOutput("regression_plot_cases"),
+      plotOutput("regression_plot_deaths")
+    )
+  )
+)
+
+# Server logic
+server <- function(input, output) {
+  # Function to generate regression plots
+  generate_regression_plot <- function(selected_goal) {
+    # Formulas for regression against COVID-19 variables
+    formula_stringency <- as.formula(paste(selected_goal, "~ stringency"))
+    formula_cases <- as.formula(paste(selected_goal, "~ cases_per_million"))
+    formula_deaths <- as.formula(paste(selected_goal, "~ deaths_per_million"))
+    
+    # Perform linear regression for stringency
+    lm_stringency <- lm(formula_stringency, data = subset_data)
+    lm_cases <- lm(formula_cases, data = subset_data)
+    lm_deaths <- lm(formula_deaths, data = subset_data)
+    
+    # Plotting regression results
+    plot_stringency <- ggplot(subset_data, aes(x = stringency, y = !!as.name(selected_goal))) +
+      geom_point() +
+      geom_smooth(method = "lm", se = FALSE) +
+      labs(title = paste("Regression plot for", selected_goal, "vs Stringency"),
+           x = "Stringency", y = selected_goal) +
+      scale_x_continuous(labels = comma_format())  # Format x-axis labels for stringency
+    
+    plot_cases <- ggplot(subset_data, aes(x = cases_per_million, y = !!as.name(selected_goal))) +
+      geom_point() +
+      geom_smooth(method = "lm", se = FALSE) +
+      labs(title = paste("Regression plot for", selected_goal, "vs Cases per Million"),
+           x = "Cases per Million", y = selected_goal) +
+      scale_x_continuous(labels = comma_format())  # Format x-axis labels for cases_per_million
+    
+    plot_deaths <- ggplot(subset_data, aes(x = deaths_per_million, y = !!as.name(selected_goal))) +
+      geom_point() +
+      geom_smooth(method = "lm", se = FALSE) +
+      labs(title = paste("Regression plot for", selected_goal, "vs Deaths per Million"),
+           x = "Deaths per Million", y = selected_goal) +
+      scale_x_continuous(labels = comma_format())  # Format x-axis labels for deaths_per_million
+    
+    list(plot_stringency, plot_cases, plot_deaths)
+  }
+  
+  # Render regression plots based on selected SDG goal
+  output$regression_plot_stringency <- renderPlot({
+    selected_goal <- input$sdg
+    regression_plots <- generate_regression_plot(selected_goal)
+    print(regression_plots[[1]])  # Display plot for stringency vs selected_goal
+  })
+  
+  output$regression_plot_cases <- renderPlot({
+    selected_goal <- input$sdg
+    regression_plots <- generate_regression_plot(selected_goal)
+    print(regression_plots[[2]])  # Display plot for cases_per_million vs selected_goal
+  })
+  
+  output$regression_plot_deaths <- renderPlot({
+    selected_goal <- input$sdg
+    regression_plots <- generate_regression_plot(selected_goal)
+    print(regression_plots[[3]])  # Display plot for deaths_per_million vs selected_goal
+  })
+}
+
+# Run the application
+shinyApp(ui, server)
+
+
+#___________________
+#Conflicts regression 
+
+
+library(shiny)
+library(ggplot2)
+library(scales)
+
+# Filter data for specific regions (pop_affected) and (sum_deaths)
+conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe", "Caucasus and Central Asia"), ]
+
+# Select relevant columns for the correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected", "sum_deaths")
+
+# Subset data with relevant columns for correlation analysis
+subset_data <- conflicts_filtered[, relevant_columns]
+
+# Define the specific goal columns you want to include in regression
+goal_columns <- c(
+  "goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8",
+  "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16"
+)
+
+# UI for Shiny app
+ui <- fluidPage(
+  titlePanel("SDG - Conflicts Regression Analysis"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("sdg", "Select SDG Goal:",
+                  choices = goal_columns,
+                  selected = goal_columns[1]),
+      width = 3
+    ),
+    mainPanel(
+      width = 9,
+      plotOutput("regression_plot_pop_affected"),
+      plotOutput("regression_plot_sum_deaths")
+    )
+  )
+)
+
+# Server logic
+server <- function(input, output) {
+  # Function to generate regression plots
+  generate_regression_plot <- function(selected_goal) {
+    # Formulas for regression against conflict variables
+    formula_pop_affected <- as.formula(paste(selected_goal, "~ pop_affected"))
+    formula_sum_deaths <- as.formula(paste(selected_goal, "~ sum_deaths"))
+    
+    # Perform linear regression for pop_affected and sum_deaths
+    lm_pop_affected <- lm(formula_pop_affected, data = subset_data)
+    lm_sum_deaths <- lm(formula_sum_deaths, data = subset_data)
+    
+    # Plotting regression results
+    plot_pop_affected <- ggplot(subset_data, aes(x = pop_affected, y = !!as.name(selected_goal))) +
+      geom_point() +
+      geom_smooth(method = "lm", se = FALSE) +
+      labs(title = paste("Regression plot for", selected_goal, "vs Population Affected"),
+           x = "Population Affected", y = selected_goal) +
+      scale_x_continuous(labels = comma_format())  # Format x-axis labels for pop_affected
+    
+    plot_sum_deaths <- ggplot(subset_data, aes(x = sum_deaths, y = !!as.name(selected_goal))) +
+      geom_point() +
+      geom_smooth(method = "lm", se = FALSE) +
+      labs(title = paste("Regression plot for", selected_goal, "vs Sum of Deaths"),
+           x = "Sum of Deaths", y = selected_goal) +
+      scale_x_continuous(labels = comma_format())  # Format x-axis labels for sum_deaths
+    
+    list(plot_pop_affected, plot_sum_deaths)
+  }
+  
+  # Render regression plots based on selected SDG goal
+  output$regression_plot_pop_affected <- renderPlot({
+    selected_goal <- input$sdg
+    regression_plots <- generate_regression_plot(selected_goal)
+    print(regression_plots[[1]])  # Display plot for pop_affected vs selected_goal
+  })
+  
+  output$regression_plot_sum_deaths <- renderPlot({
+    selected_goal <- input$sdg
+    regression_plots <- generate_regression_plot(selected_goal)
+    print(regression_plots[[2]])  # Display plot for sum_deaths vs selected_goal
+  })
+}
+
+# Run the application
+shinyApp(ui, server)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #regression sur difference de scors que sur scors? (Delia) 
