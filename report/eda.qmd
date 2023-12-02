@@ -281,7 +281,8 @@ Correlation_overall <- data_question1 %>%
 
 Correlation_overall_skew <- Correlation_overall
 Correlation_overall_sqrt <- Correlation_overall
-skewness_values <- sapply(Correlation_overall_skew, skewness)
+
+skewness_values <- sapply(Correlation_overall_skew, e1071::skewness)
 
 # Identifying highly skewed variables
 highly_skewed_vars <- names(skewness_values[abs(skewness_values) > 1])
@@ -291,15 +292,16 @@ Correlation_overall_skew[highly_skewed_vars] <- lapply(Correlation_overall_skew[
 #applying squart root transformation
 Correlation_overall_sqrt[highly_skewed_vars_sqrt] <- lapply(Correlation_overall_sqrt[highly_skewed_vars_sqrt], function(x) sqrt(x))
 
-new_skewness_values <- sapply(Correlation_overall_skew[highly_skewed_vars], skewness)
-new_skewness_values_sqrt <- sapply(Correlation_overall_sqrt[highly_skewed_vars_sqrt], skewness)
+new_skewness_values <- sapply(Correlation_overall_skew[highly_skewed_vars], e1071::skewness)
+new_skewness_values_sqrt <- sapply(Correlation_overall_sqrt[highly_skewed_vars_sqrt], e1071::skewness)
 
 #après transformation, il reste toujours beaucoup de variables avec un high skewness values print(new_skewness_values), print(new_skewness_values_sqrt)
 
-cor_matrix <- cor(Correlation_overall_skew, use = "everything")
+cor_matrix_log <- cor(Correlation_overall_skew, use = "everything")
 cor_matrix_sqrt <- cor(Correlation_overall_sqrt, use = "everything")
+cor_matrix_sper <- cor(Correlation_overall, method = "spearman", use = "everything")
 
-datatable(cor_matrix, 
+datatable(cor_matrix_log, 
           options = list(
             pageLength = 10, 
             class = "hover", 
@@ -323,9 +325,9 @@ By doing so, we obtain a lot of positive and negative correlations. To help us t
 
 #with log transformation
 
-cor_melted <- melt(cor_matrix)
+cor_melted_log <- melt(cor_matrix_log)
 
-ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
+ggplot(data = cor_melted_log, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
                        midpoint = 0, limit = c(-1, 1), space = "Lab", 
@@ -345,6 +347,21 @@ ggplot(data = cor_melted_sqrt, aes(Var1, Var2, fill = value)) +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
                        midpoint = 0, limit = c(-1, 1), space = "Lab", 
                        name="Pearson\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
+
+#with Spearman
+
+cor_melted <- melt(cor_matrix_sper)
+
+ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
+                       name="Spearman\nCorrelation") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
         axis.text.y = element_text(size = 8)) +
