@@ -12,6 +12,7 @@ source(here::here("scripts/Clean/setup.R"))
 In our EDA on the focus on the influence of the factors over the SDG scores, we had made a correlation matrix heatmap that took into account every variable of our dataset. Here, we tried to zoom on certain parts of the heatmap. We have decided to add on our graphs the correlations between variables when our pvalue was significant (alpha = 0.05). The grey zones are concerning our non-significant pvalues. 
 
 Let's see first the correlation matrix heatmap regarding our SDG goals and all our variables different than our SDG goals.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 corr_matrix <- cor(data_question1[7:40])
 p_matrix2 <- matrix(nrow = ncol(data_question1[7:40]), ncol = ncol(data_question1[7:40]))
