@@ -66,7 +66,8 @@ colnames(D1_1_SDG_table_info) <- c("Variable Name",
 
 D1_1_SDG_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  column_spec(1, width = "35%")
 ```
 
 ### D2_2_Unemployment_rate {.unnumbered}
@@ -87,7 +88,8 @@ colnames(D2_2_Unemployment_rate_table_info) <- c("Variable Name",
 
 D2_2_Unemployment_rate_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  column_spec(1, width = "35%")
 ```
 
 ### D3_0_GDP_per_capita {.unnumbered}
@@ -108,7 +110,8 @@ colnames(D3_0_GDP_per_capita_table_info) <- c("Variable Name",
 
 D3_0_GDP_per_capita_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  column_spec(1, width = "35%")
 ```
 
 ### D3_1_Military_expenditure_percent_GDP {.unnumbered}
@@ -129,7 +132,8 @@ colnames(D3_1_Military_expenditure_percent_GDP_table_info) <- c("Variable Name",
 
 D3_1_Military_expenditure_percent_GDP_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  column_spec(1, width = "35%")
 ```
 
 ### D4_0_Internet_usage {.unnumbered}
@@ -150,7 +154,8 @@ colnames(D4_0_Internet_usage_table_info) <- c("Variable Name",
 
 D4_0_Internet_usage_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  column_spec(1, width = "35%")
 ```
 
 ### D5_0_Human_freedom_index {.unnumbered}
@@ -195,7 +200,8 @@ colnames(D5_0_Human_freedom_index_table_info) <- c("Variable Name",
 
 D5_0_Human_freedom_index_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  column_spec(1, width = "35%")
 ```
 
 ### D6_0_Disaters {.unnumbered}
@@ -228,7 +234,8 @@ colnames(D6_0_Disaters_table_info) <- c("Variable Name",
 
 D6_0_Disaters_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  column_spec(1, width = "35%")
 ```
 
 ### D7_0_COVID {.unnumbered}
@@ -253,7 +260,8 @@ colnames(D7_0_COVID_table_info) <- c("Variable Name",
 
 D7_0_COVID_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  column_spec(1, width = "35%")
 ```
 
 ### D8_0_Conflicts {.unnumbered}
@@ -282,7 +290,8 @@ colnames(D8_0_Conflicts_table_info) <- c("Variable Name",
 
 D8_0_Conflicts_table_info %>%
   kable(format = "html", escape = FALSE) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  column_spec(1, width = "35%")
 ```
 
 ## Wrangling/cleaning
@@ -362,7 +371,7 @@ D1_0_SDG <- D1_0_SDG %>%
 
 ```
 
-Now, there are no missing values in the 'population' variable, and we observe that it contains information on `length(unique(D1_0_SDG$country))` countries.
+Now, there are no missing values in the 'population' variable, and we observe that it contains information on `r length(unique(D1_0_SDG$country))` countries.
 
 We notice that NAs are present in only three SDG scores: 1, 10, and 14. Additionally, when a country has NAs, they occur across all years or not at all. Consequently, we decide to conduct further investigations on these three SDG scores to determine whether to include them in our analysis.
 
@@ -448,7 +457,7 @@ D1_0_SDG <- D1_0_SDG %>% select(-goal14)
 
 ```
 
-We will work with various datasets and merge them using the country code and year as key identifiers. To ensure accurate matching, we first verify that country names are encoded in UTF-8 format. Then, we standardize the names of the countries (requiring a custom match for Turkey) and the country codes, utilizing the countrycode library. Additionally, we compile a list of all country codes from the main database to filter the other datasets. Lastly, we complete the database to include all possible "country, year" combinations, ensuring the total number of rows remains unchanged.
+We will work with various datasets and merge them using the country code and year as key identifiers. To ensure accurate matching, we first verify that country names are encoded in UTF-8 format. Then, we standardize the names of the countries (requiring a custom match for Turkey) and the country codes, utilizing the `countrycode` library. Additionally, we compile a list of all country codes from the main database to filter the other datasets. Lastly, we complete the database to include all possible "country, year" combinations, ensuring the total number of rows remains unchanged.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 D1_0_SDG$country <- stri_encode(D1_0_SDG$country, to = "UTF-8")
@@ -535,7 +544,7 @@ datatable(D2_1_Unemployment_rate,
           rownames = FALSE)
 ```
 
-For this first dataset, we reduced the size from 82'800 observations across 8 variables to 3812 observations for 5 variables.
+For this first dataset, we reduced the size from 82,800 observations across 8 variables to 3,812 observations for 5 variables.
 
 ### Dataset on GDP military Expenditures
 
@@ -971,7 +980,7 @@ datatable(D4_0_Internet_usage,
           rownames = FALSE)
 ```
 
-For this first dataset, we reduced the size from 6'570 observations across 4 variables to 3433 observations for 4 variables.
+For this first dataset, we reduced the size from 6,570 observations across 4 variables to 3,433 observations for 4 variables.
 
 ### Dataset on human freedom index
 
@@ -1130,18 +1139,14 @@ datatable(D5_0_Human_freedom_index,
           rownames = FALSE)
 ```
 
-For this first dataset, we reduced the size from 3'465 observations across 141 variables to `lengh(D5_0_Human_freedom_index$code)` observations for 4 variables.
+For this first dataset, we reduced the size from 3'465 observations across 141 variables to `r nrow(D5_0_Human_freedom_index)` observations for 4 variables.
 
 ### Dataset on Disasters
 
 For this dataset concerning the Disasters we imported the data from Kaggle as we couldn't find the original dataset that is private coming from the EOSDIS SYSTEM, an interactive interface for browsing full-resolution, global, daily satellite images from NASA. Once we made sure that our file called "Disasters" was convert into a data frame, we selected some specific columns that we where interested in.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-Disasters <- read.csv(here("scripts","data","Disasters.csv"))
-
-Disasters <- as.data.frame(Disasters)
-
-Disasters <- Disasters %>%
+Disasters <- as.data.frame(read.csv(here("scripts", "data", "Disasters.csv"))) %>%
   select(Year, Country, ISO, Location, Continent, Disaster.Subgroup, Disaster.Type, Total.Deaths, No.Injured, No.Affected, No.Homeless, Total.Affected, Total.Damages...000.US..)
 ```
 
@@ -1210,12 +1215,9 @@ datatable(D6_0_Disasters, options = list(pageLength = 10, class = "hover", searc
 This dataset contains information on the COVID19 pandemic between 2020 and 2022. The observation are by year, month, day. After importing the database, we transform the date in format YYYY-MM-DD in order to only keep the year.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-COVID <- read.csv(here("scripts","data","COVID.csv"))
-
-COVID <- COVID[,c("iso_code", "location", "date", "new_cases_per_million", "new_deaths_per_million", "stringency_index")]
-
-COVID$date <- as.integer(year(COVID$date))
-
+COVID <- read.csv(here("scripts", "data", "COVID.csv")) %>%
+  select(iso_code, location, date, new_cases_per_million, new_deaths_per_million, stringency_index) %>%
+  mutate(date = as.integer(year(date)))
 ```
 
 We perform a first round of investigation of the missing values before aggregating the values by year. We begin with the variables "cases per million" and "deaths per million": seeing that for each country, we have either only missing values, either a very low percentage of missing values (\~1%), we can compute the sum over each year and ignore the missing values without altering the data. Indeed, where all the values are missing, the computation will return a NA. We then look at the "stringency" variable and we have 3 scenarios:
@@ -1343,12 +1345,10 @@ datatable(D7_0_COVID,
 For our conflicts dataset, we imported the data from "The World Banck" data catalog. Once we made sure that our file called "Disasters" was convert into a data frame, we selected some specific columns that we where interested in.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-Conflicts <- read.csv(here("scripts","data","Conflicts.csv"))
-
-Conflicts <- as.data.frame(Conflicts)
-
-Conflicts <- Conflicts %>%
-  select(year, country, ongoing, gwsum_bestdeaths, pop_affected, peaceyearshigh, area_affected, maxintensity, maxcumulativeintensity)
+Conflicts <- read.csv(here("scripts", "data", "Conflicts.csv")) %>%
+  as.data.frame() %>%
+  select(year, country, ongoing, gwsum_bestdeaths, pop_affected, 
+         peaceyearshigh, area_affected, maxintensity, maxcumulativeintensity)
 ```
 
 Our file showed all the Conflicts and consequences per country over the years (between 2000-2016). We couldn't find a better and more complete dataset, As we consider conflicts as events, we will only take into account results between 2000 and 2016. Then we rearranged our data, changing the data types of all the columns and their names in order to match our other datasets. We grouped the data by " year", "country", re-selected some variables and summarize the data.
@@ -1540,14 +1540,17 @@ We subset our database according to the data that we will need in order to answe
 For question 1, we only keep the years until 2020, because most of the explanatory variables that we want to use (those coming from the human freedom index) only have values until 2020.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-data_question1 <- all_Merge %>% filter(year<=2020) %>% select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages, cases_per_million, deaths_per_million, stringency, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
+data_question1 <- all_Merge %>%
+  filter(year<=2020) %>%
+  select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages, cases_per_million, deaths_per_million, stringency, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
 
 ```
 
 For question 2 and 4, we use the main data from the SDG database.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-data_question24 <- all_Merge %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17))
+data_question24 <- all_Merge %>%
+  select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17))
 
 ```
 
@@ -1555,13 +1558,18 @@ For question 3, we create 3 distinct databases according to the different type o
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 # Disasters
-data_question3_1 <- all_Merge %>% filter(year<=2021) %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages))
+data_question3_1 <- all_Merge %>%
+  filter(year<=2021) %>%
+  select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages))
 
 # COVID
-data_question3_2 <- all_Merge %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, cases_per_million, deaths_per_million, stringency))
+data_question3_2 <- all_Merge %>%
+  select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, cases_per_million, deaths_per_million, stringency))
 
 # Conflicts 
-data_question3_3 <- all_Merge %>% filter(year<=2016) %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
+data_question3_3 <- all_Merge %>%
+  filter(year<=2016) %>%
+  select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
 
 ```
 
@@ -1784,7 +1792,8 @@ list_country_deleted <- c(list_country_deleted, "CIV")
 First, we remove hf_score, pf_score and ef_score, because there are many missing values and since these variables summarize the other ones, deleting the will not make us loose information.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-data_question1 <- data_question1 %>% select(-c(hf_score, pf_score, ef_score))
+data_question1 <- data_question1 %>% 
+  select(-c(hf_score, pf_score, ef_score))
 
 ```
 
@@ -1793,7 +1802,8 @@ data_question1 <- data_question1 %>% select(-c(hf_score, pf_score, ef_score))
 The variable pf_law has (many) NAs, but only for one country: BLZ, so we decide to remove it.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-data_question1 <- data_question1 %>% filter(code!="BLZ")
+data_question1 <- data_question1 %>%
+  filter(code!="BLZ")
 
 list_country_deleted <- c(list_country_deleted, "BLZ") 
 
@@ -1829,7 +1839,6 @@ question1_missing_ef_money <- data_question1 %>%
   group_by(code) %>%
   summarize(Na_ef_money = mean(is.na(ef_money)))%>%
   filter(Na_ef_money != 0)
-
 ```
 
 We look at the evolution of the variable over time. For the countries where this evolution is linear, we fill in the missing values using linear interpolation.

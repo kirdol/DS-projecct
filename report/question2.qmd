@@ -44,7 +44,6 @@ ggplot(data2) +
        y = "Mean Overall SDG Score",
        x = "Year"
        )
-
 ```
 
 Looking at the continents, we see that Europe is above the others, while Africa is below, but in general, all have increasing overall scores.

@@ -708,7 +708,7 @@ ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region
   guides(color = guide_legend(ncol = 1))
 ```
 
-We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, America & the Caribbean, Eastern Europe ans sometimes Caucasus and Central Asia
+We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, America & the Caribbean, Eastern Europe and sometimes Caucasus and Central Asia
 
 Now that we could visualize which regions are the most impacted by these three events we can do correlations analysis per region to see if this events have indeed an impact on the evolution of SDG goals.
 
