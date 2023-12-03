@@ -117,7 +117,7 @@ print(variables_to_remove)
 ```
 Therefore, we will not take into account the variables "ef_legal"     "goal11"       "goal12"       "goal16"       "goal3"        "goal4"        "goal7"        "goal9"        "overallscore" "pf_assembly" in our regressions, for multicollinearity purpose. 
 
-Now, let's compute the regressions without these variables and compute the vif again. 
+Now, let's compute the regressions without these variables. 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 reg_goal1_all_new <- lm(goal1 ~ goal2 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
 reg_goal2_all_new <- lm(goal2 ~ goal1 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
@@ -153,7 +153,13 @@ reg_goal1_all_new <- lm(goal1 ~ goal2 + goal5 + goal6 + goal8 + goal10 + goal13 
 
 
 ```
-
+stargazer reg 1
+```{r results='asis'}
+sg1 <- stargazer(reg_goal1_all_new,
+          title="Impact of variables over SDG goals1",
+          type='html',
+          digits=3)
+```
 Let's explore how the different SDG are correlated together by creating a heatmap of the correlation between our variables. We added a script to check whether the correlations are significantly different from 0. First, let's select the SDGs scores.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
