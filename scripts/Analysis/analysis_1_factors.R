@@ -1,7 +1,7 @@
 #### Question 1 ####
 
 data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
-library(car)
+
 ##### Check first the influence of our overall variables over our sdg goals #####
 
 # retake correlations EDA, then select only correlations related to goals
@@ -166,22 +166,22 @@ reg_goal17_all <- lm(goal17 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + go
 
 #when I get rid of variables highly correlated : 
 
-reg_goal1_all_new <- lm(goal1 ~ goal2 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+reg_goal1_all_new <- lm(goal1 ~ goal2 + goal5 + goal6 +  goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
 reg_goal2_all_new <- lm(goal2 ~ goal1 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
 reg_goal3_all_new <- lm(goal3 ~ goal1 + goal2 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
 reg_goal4_all_new <- lm(goal4 ~ goal1 + goal2 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
 reg_goal5_all_new <- lm(goal5 ~ goal1 + goal2 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
 reg_goal6_all_new <- lm(goal6 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
 reg_goal7_all_new <- lm(goal7 ~ goal1 + goal2 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal8_all_new <- lm(goal8 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal9_all_new <- lm(goal9 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal10_all_new <- lm(goal10 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal11_all_new <- lm(goal11 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal12_all_new <- lm(goal12 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal10 + goal11 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal13_all_new <- lm(goal13 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal10 + goal11 + goal12 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal15_all_new <- lm(goal15 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal10 + goal11 + goal12 + goal13 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal16_all_new <- lm(goal16 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal10 + goal11 + goal12 + goal13 + goal15 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal17_all_new <- lm(goal17 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+reg_goal8_all_new <- lm(goal8 ~ goal1 + goal2 + goal5 + goal6  + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+reg_goal9_all_new <- lm(goal9 ~ goal1 + goal2 + goal5 + goal6  + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+reg_goal10_all_new <- lm(goal10 ~ goal1 + goal2 + goal5 + goal6 + goal8 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+reg_goal11_all_new <- lm(goal11 ~ goal1 + goal2 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+reg_goal12_all_new <- lm(goal12 ~ goal1 + goal2 + goal5 + goal6  + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+reg_goal13_all_new <- lm(goal13 ~ goal1 + goal2 + goal5 + goal6  + goal8 + goal10  + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+reg_goal15_all_new <- lm(goal15 ~ goal1 + goal2 + goal5 + goal6  + goal8 + goal10  + goal13 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+reg_goal16_all_new <- lm(goal16 ~ goal1 + goal2 + goal5 + goal6  + goal8 + goal10  + goal13 + goal15 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+reg_goal17_all_new <- lm(goal17 ~ goal1 + goal2 + goal5 + goal6  + goal8 + goal10 + goal13 + goal15  + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
 
 #Ajouter variable population? 
 #Voir histogram 2D HFI/SDG Scores
@@ -244,29 +244,136 @@ vif(reg_goal1_all_new)
 vif(reg_goal2_all_new) #we have big multicollinearity problems between goal 1 & numerous variables. In addition, vif of goal2 over goal1 is low, compared to vif goal1 over goal2.
 
 # try to reduce dimensionality of linear model: AIC criteria, backward selection
-#reg1 sans enlever de variables 
-nullmod <- lm(goal1 ~ 1, data = data_question1)
-selmod_original <- step(reg_goal1_all, scope=list(lower=nullmod, upper=reg_goal1_all), direction="backward") #vif(selmod) -> still high vif
-summary(selmod_original)
-vif(selmod_original) #only high vif for pf_law -> get rid of it? 
 
 #for reg1
 nullmod <- lm(goal1 ~ 1, data = data_question1)
 selmod <- step(reg_goal1_all_new, scope=list(lower=nullmod, upper=reg_goal1_all_new), direction="backward") #vif(selmod) -> still high vif
 summary(selmod)
 vif(selmod) #only high vif for pf_law -> get rid of it? 
-reg_goal1_all_new <- lm(goal1 ~ goal2 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-
+reg_goal1_all_new <- lm(goal1 ~ goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + 
+                          unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + 
+                          internet_usage + pf_movement + pf_religion + ef_government + 
+                          ef_money + ef_trade + ef_regulation, data = data_question1)
+selmod <- step(reg_goal1_all_new, scope=list(lower=nullmod, upper=reg_goal1_all_new), direction="backward") #vif(selmod) -> still high vif
+vif(selmod)
+reg_goal1_all_new <- lm(goal1 ~ goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + 
+                          unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + 
+                          internet_usage + pf_movement + pf_religion + ef_government + 
+                          ef_money + ef_trade + ef_regulation, data = data_question1)
 #for reg2
 nullmod <- lm(goal1 ~ 1, data = data_question1)
 selmod <- step(reg_goal2_all_new, scope=list(lower=nullmod, upper=reg_goal2_all_new), direction="backward") #vif(selmod) -> still high vif
-summary(selmod)
 vif(selmod) 
+reg_goal2_all_new <- lm(goal2 ~ goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + 
+                          unemployment.rate + MilitaryExpenditurePercentGDP + internet_usage + 
+                          pf_law + pf_security + pf_movement + pf_identity + ef_money + 
+                          ef_trade + ef_regulation + population, data = data_question1)
+#reg5
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal5_all_new, scope=list(lower=nullmod, upper=reg_goal5_all_new), direction="backward") #vif(selmod) -> still high vif
+vif(selmod) #goal6 pf_law
+reg_goal5_all_new <- lm(goal5 ~ goal1 + goal2 + goal10 + goal13 + goal15 + goal17 + 
+                          unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + 
+                          internet_usage + pf_law + pf_security + pf_movement + pf_religion + 
+                          pf_expression + pf_identity + ef_government + ef_money + 
+                          ef_trade + ef_regulation, data = data_question1)
+selmod <- step(reg_goal5_all_new, scope=list(lower=nullmod, upper=reg_goal5_all_new), direction="backward") #vif(selmod) -> still high vif
+vif(selmod) #pf_law
+reg_goal5_all_new <- lm(goal5 ~ goal1 + goal2 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + 
+                          GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + 
+                          pf_security + pf_movement + pf_religion + pf_identity + 
+                          ef_government + ef_money + ef_trade + ef_regulation, data = data_question1)
+selmod <- step(reg_goal5_all_new, scope=list(lower=nullmod, upper=reg_goal5_all_new), direction="backward") #vif(selmod) -> still high vif
+vif(selmod) 
+reg_goal5_all_new <- lm(goal5 ~ goal1 + goal2 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + 
+                          GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + 
+                          pf_security + pf_movement + pf_religion + pf_identity + ef_government + 
+                          ef_money + ef_regulation, data = data_question1)
+#reg6
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal6_all_new, scope=list(lower=nullmod, upper=reg_goal6_all_new), direction="backward") #vif(selmod) -> still high vif
+vif(selmod) 
+reg_goal6_all_new <- lm(goal6 ~ goal1 + goal2 + goal5 + goal8 + unemployment.rate + GDPpercapita + 
+                          MilitaryExpenditurePercentGDP + internet_usage + pf_security + 
+                          pf_movement + pf_religion + pf_expression + pf_identity + 
+                          ef_government + ef_money + population, data = data_question1)
 
+#reg8
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal8_all_new, scope=list(lower=nullmod, upper=reg_goal8_all_new), direction="backward") #vif(selmod) -> still high vif
+vif(selmod) #goal6
+reg_goal8_all_new <- lm(goal8 ~ goal1 + goal2 + goal13 + goal15 + unemployment.rate + 
+                          internet_usage + pf_law + pf_security + pf_movement + pf_religion + 
+                          pf_expression + pf_identity + ef_government + ef_trade + 
+                          population, data = data_question1)
+
+#reg10
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal10_all_new, scope=list(lower=nullmod, upper=reg_goal10_all_new), direction="backward") #vif(selmod) -> still high vif
+vif(selmod) #goal6
+reg_goal10_all_new <- lm(goal10 ~ goal1 + goal2 + goal5 + goal8 + goal13 + goal15 + 
+                           goal17 + unemployment.rate + GDPpercapita + internet_usage + 
+                           pf_law + pf_security + pf_movement + pf_religion + pf_expression + 
+                           ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+selmod <- step(reg_goal10_all_new, scope=list(lower=nullmod, upper=reg_goal10_all_new), direction="backward") #vif(selmod) -> still high vif
+vif(selmod) #pf_law
+reg_goal10_all_new <- lm(goal10 ~ goal1 + goal2 + goal5 + goal8 + goal13 + goal15 + goal17 + 
+                           unemployment.rate + GDPpercapita + internet_usage + 
+                           pf_security + pf_movement + pf_religion + pf_expression + 
+                           ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+
+#reg13
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal13_all_new, scope=list(lower=nullmod, upper=reg_goal13_all_new), direction="backward") #vif(selmod) -> still high vif
+vif(selmod) 
+reg_goal13_all_new <- lm(goal13 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal17 + unemployment.rate + 
+                           GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + 
+                           pf_law + pf_religion + ef_government + ef_regulation, data = data_question1)
+
+#reg15
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal15_all_new, scope=list(lower=nullmod, upper=reg_goal15_all_new), direction="backward") #vif(selmod) -> still high vif
+vif(selmod) 
+reg_goal15_all_new <- lm(goal15 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal17 + unemployment.rate + 
+                           GDPpercapita + internet_usage + pf_law + pf_security + pf_religion + 
+                           pf_expression + pf_identity + ef_government + population, data = data_question1)
+
+#reg16
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal16_all_new, scope=list(lower=nullmod, upper=reg_goal16_all_new), direction="backward") #vif(selmod) -> still high vif
+vif(selmod) #goal16 ~ goal1 + goal2 + goal5 + goal6 + goal8 + goal10 + goal13 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_regulation + population
+#get rid of goal6
+reg_goal16_all_new <- lm(goal16 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal13 + 
+                           unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + 
+                           internet_usage + pf_law + pf_security + pf_movement + pf_religion + 
+                           pf_expression + pf_identity + ef_government + ef_money + 
+                           ef_regulation + population, data = data_question1)
+selmod <- step(reg_goal16_all_new, scope=list(lower=nullmod, upper=reg_goal16_all_new), direction="backward") #vif(selmod) -> still high vif
+vif(selmod)#pf_law
+reg_goal16_all_new <- lm(goal16 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal13 + unemployment.rate + 
+  GDPpercapita + MilitaryExpenditurePercentGDP + pf_security + 
+  pf_movement + pf_religion + pf_expression + pf_identity + 
+  ef_government + ef_money + ef_regulation + population, data = data_question1)
+selmod <- step(reg_goal16_all_new, scope=list(lower=nullmod, upper=reg_goal16_all_new), direction="backward") #vif(selmod) -> still high vif
+vif(selmod) #pf_law
+reg_goal16_all_new <- lm(goal16 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal13 + unemployment.rate + 
+                           GDPpercapita + MilitaryExpenditurePercentGDP + pf_security + 
+                           pf_movement + pf_religion + pf_expression + pf_identity + 
+                           ef_government + ef_money + ef_regulation + population, data = data_question1)
+
+#reg17
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal17_all_new, scope=list(lower=nullmod, upper=reg_goal17_all_new), direction="backward") #vif(selmod) -> still high vif
+vif(selmod) #goal17 ~ goal1 + goal2 + goal5 + goal10 + goal13 + goal15 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population
+#get rid of pf_law
+reg_goal17_all_new <- lm(goal17 ~ goal1 + goal2 + goal5 + goal10 + goal13 + goal15 + unemployment.rate + 
+                           GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_security + pf_movement + pf_religion + pf_expression + 
+                           pf_identity + ef_government + ef_money + ef_trade + ef_regulation + 
+                           population, data=data_question1)
 
 #####what about with overallscore#####
 
-reg_goal_overall <- lm(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = data_question1)
+reg_goal_overall <- lm(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation, data = data_question1)
 stargazer(reg_goal_overall,
           title="Impact of unemployment over goals",
           type='html',
