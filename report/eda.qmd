@@ -476,14 +476,31 @@ Due to the large number of data, the visualization of the clusters using the kme
 In order to have an overview of the relationship between the different events variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_million", "stringency")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of COVID variables")
+lower.panel <- function(x, y, ...){
+  points(x, y, pch = 20, col = "black", cex = 0.2)
+}
 
+pairs(data_question3_1[,c("overallscore", "total_affected", "total_deaths")], upper.panel=panel.cor, diag.panel=panel.hist, lower.panel = lower.panel,main="Correlation table and distribution of Disaster variables")
+```
+
+The different variables used to materialize the impact of climate disasters do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that such disasters have a specific influence on some SDGs.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+lower.panel <- function(x, y, ...){
+  points(x, y, pch = 20, col = "black", cex = 0.2)
+}
+
+pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_million", "stringency")], upper.panel=panel.cor, diag.panel=panel.hist, lower.panel = lower.panel,main="Correlation table and distribution of COVID variables")
 ```
 
 The different variables used to materialize the impact of COVID19 do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that COVID19 had a specific influence on some SDGs, for instance "good health and well-being" or "decent work and economic growth".
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of conflicts variables")
+lower.panel <- function(x, y, ...){
+  points(x, y, pch = 20, col = "black", cex = 0.5)
+}
+
+pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")], upper.panel=panel.cor, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of conflicts variables")
 
 ```
 
