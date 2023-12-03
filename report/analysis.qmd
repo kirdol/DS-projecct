@@ -140,26 +140,172 @@ reg_goal17_all_new <- lm(goal17 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 
 ```
 The problem is that even by getting rid of the previous variables, there still might be multicollinearity. Therefore, we need to analyse the vif for each regression and adapt the model in consequence. 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-#first one example
-
+#for reg1
 nullmod <- lm(goal1 ~ 1, data = data_question1)
 selmod <- step(reg_goal1_all_new, scope=list(lower=nullmod, upper=reg_goal1_all_new), direction="backward") 
-vif(selmod) #only vif > 5 for pf_law -> get rid of it
+summary(selmod)
+vif(selmod) #pf_law -> get rid of it
+reg_goal1_all_new <- lm(goal1 ~ goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + 
+                          unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + 
+                          internet_usage + pf_movement + pf_religion + ef_government + 
+                          ef_money + ef_trade + ef_regulation, data = data_question1)
+selmod <- step(reg_goal1_all_new, scope=list(lower=nullmod, upper=reg_goal1_all_new), direction="backward") 
+vif(selmod)
+reg_goal1_all_new <- lm(goal1 ~ goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + 
+                          unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + 
+                          internet_usage + pf_movement + pf_religion + ef_government + 
+                          ef_money + ef_trade + ef_regulation, data = data_question1)
+#for reg2
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal2_all_new, scope=list(lower=nullmod, upper=reg_goal2_all_new), direction="backward") 
+vif(selmod) 
+reg_goal2_all_new <- lm(goal2 ~ goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + 
+                          unemployment.rate + MilitaryExpenditurePercentGDP + internet_usage + 
+                          pf_law + pf_security + pf_movement + pf_identity + ef_money + 
+                          ef_trade + ef_regulation + population, data = data_question1)
+#reg5
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal5_all_new, scope=list(lower=nullmod, upper=reg_goal5_all_new), direction="backward") 
+vif(selmod) #goal6
+reg_goal5_all_new <- lm(goal5 ~ goal1 + goal2 + goal10 + goal13 + goal15 + goal17 + 
+                          unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + 
+                          internet_usage + pf_law + pf_security + pf_movement + pf_religion + 
+                          pf_expression + pf_identity + ef_government + ef_money + 
+                          ef_trade + ef_regulation, data = data_question1)
+selmod <- step(reg_goal5_all_new, scope=list(lower=nullmod, upper=reg_goal5_all_new), direction="backward") 
+vif(selmod) #pf_law
+reg_goal5_all_new <- lm(goal5 ~ goal1 + goal2 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + 
+                          GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + 
+                          pf_security + pf_movement + pf_religion + pf_identity + 
+                          ef_government + ef_money + ef_trade + ef_regulation, data = data_question1)
+selmod <- step(reg_goal5_all_new, scope=list(lower=nullmod, upper=reg_goal5_all_new), direction="backward") 
+vif(selmod) 
+reg_goal5_all_new <- lm(goal5 ~ goal1 + goal2 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + 
+                          GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + 
+                          pf_security + pf_movement + pf_religion + pf_identity + ef_government + 
+                          ef_money + ef_regulation, data = data_question1)
+#reg6
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal6_all_new, scope=list(lower=nullmod, upper=reg_goal6_all_new), direction="backward") 
+vif(selmod) 
+reg_goal6_all_new <- lm(goal6 ~ goal1 + goal2 + goal5 + goal8 + unemployment.rate + GDPpercapita + 
+                          MilitaryExpenditurePercentGDP + internet_usage + pf_security + 
+                          pf_movement + pf_religion + pf_expression + pf_identity + 
+                          ef_government + ef_money + population, data = data_question1)
 
-#new model for goal1
-reg_goal1_all_new <- lm(goal1 ~ goal2 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+#reg8
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal8_all_new, scope=list(lower=nullmod, upper=reg_goal8_all_new), direction="backward") 
+vif(selmod) #goal6
+reg_goal8_all_new <- lm(goal8 ~ goal1 + goal2 + goal13 + goal15 + unemployment.rate + 
+                          internet_usage + pf_law + pf_security + pf_movement + pf_religion + 
+                          pf_expression + pf_identity + ef_government + ef_trade + 
+                          population, data = data_question1)
 
-#and so on for goals remaining after deleting variables when correlations > |0.8| (goal2 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17)
+#reg10
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal10_all_new, scope=list(lower=nullmod, upper=reg_goal10_all_new), direction="backward") 
+vif(selmod) #goal6
+reg_goal10_all_new <- lm(goal10 ~ goal1 + goal2 + goal5 + goal8 + goal13 + goal15 + 
+                           goal17 + unemployment.rate + GDPpercapita + internet_usage + 
+                           pf_law + pf_security + pf_movement + pf_religion + pf_expression + 
+                           ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+selmod <- step(reg_goal10_all_new, scope=list(lower=nullmod, upper=reg_goal10_all_new), direction="backward") 
+vif(selmod) #pf_law
+reg_goal10_all_new <- lm(goal10 ~ goal1 + goal2 + goal5 + goal8 + goal13 + goal15 + goal17 + 
+                           unemployment.rate + GDPpercapita + internet_usage + 
+                           pf_security + pf_movement + pf_religion + pf_expression + 
+                           ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
 
+#reg13
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal13_all_new, scope=list(lower=nullmod, upper=reg_goal13_all_new), direction="backward") 
+vif(selmod) 
+reg_goal13_all_new <- lm(goal13 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal17 + unemployment.rate + 
+                           GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + 
+                           pf_law + pf_religion + ef_government + ef_regulation, data = data_question1)
 
+#reg15
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal15_all_new, scope=list(lower=nullmod, upper=reg_goal15_all_new), direction="backward") 
+vif(selmod) 
+reg_goal15_all_new <- lm(goal15 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal17 + unemployment.rate + 
+                           GDPpercapita + internet_usage + pf_law + pf_security + pf_religion + 
+                           pf_expression + pf_identity + ef_government + population, data = data_question1)
+
+#reg16
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal16_all_new, scope=list(lower=nullmod, upper=reg_goal16_all_new), direction="backward") 
+vif(selmod) 
+reg_goal16_all_new <- lm(goal16 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal13 + 
+                           unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + 
+                           internet_usage + pf_law + pf_security + pf_movement + pf_religion + 
+                           pf_expression + pf_identity + ef_government + ef_money + 
+                           ef_regulation + population, data = data_question1)
+selmod <- step(reg_goal16_all_new, scope=list(lower=nullmod, upper=reg_goal16_all_new), direction="backward") 
+vif(selmod)#pf_law
+reg_goal16_all_new <- lm(goal16 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal13 + unemployment.rate + 
+  GDPpercapita + MilitaryExpenditurePercentGDP + pf_security + 
+  pf_movement + pf_religion + pf_expression + pf_identity + 
+  ef_government + ef_money + ef_regulation + population, data = data_question1)
+selmod <- step(reg_goal16_all_new, scope=list(lower=nullmod, upper=reg_goal16_all_new), direction="backward") 
+vif(selmod) #pf_law
+reg_goal16_all_new <- lm(goal16 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal13 + unemployment.rate + 
+                           GDPpercapita + MilitaryExpenditurePercentGDP + pf_security + 
+                           pf_movement + pf_religion + pf_expression + pf_identity + 
+                           ef_government + ef_money + ef_regulation + population, data = data_question1)
+
+#reg17
+nullmod <- lm(goal1 ~ 1, data = data_question1)
+selmod <- step(reg_goal17_all_new, scope=list(lower=nullmod, upper=reg_goal17_all_new), direction="backward") 
+vif(selmod) 
+reg_goal17_all_new <- lm(goal17 ~ goal1 + goal2 + goal5 + goal10 + goal13 + goal15 + unemployment.rate + 
+                           GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_security + pf_movement + pf_religion + pf_expression +
+                           pf_identity + ef_government + ef_money + ef_trade + ef_regulation + 
+                           population, data=data_question1)
 ```
-stargazer reg 1
+stargazer regressions
 ```{r results='asis'}
 sg1 <- stargazer(reg_goal1_all_new,
-          title="Impact of variables over SDG goals1",
+                 reg_goal2_all_new,
+          title="Impact of variables over SDG goals 1,2",
           type='html',
           digits=3)
 ```
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+##### geom point #####
+
+#print values with correlation > 0.8 and make plots
+
+# Filtering values where the absolute value is greater than 0.8
+highcorrelations <- melted_corr_matrix_GVar %>% filter(value > 0.8)
+
+ggplot(data_question1, aes(internet_usage, overallscore)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and internet usage")
+
+ggplot(data_question1, aes(GDPpercapita, goal9)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and internet usage")
+
+ggplot(data_question1, aes(internet_usage,goal9)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and internet usage")
+
+ggplot(data_question1, aes(ef_legal,goal9)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and internet usage")
+
+ggplot(data_question1, aes(pf_law, goal16)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and internet usage")
+
+ggplot(data_question1, aes(ef_legal, goal16)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and internet usage")
+```
+
 Let's explore how the different SDG are correlated together by creating a heatmap of the correlation between our variables. We added a script to check whether the correlations are significantly different from 0. First, let's select the SDGs scores.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
