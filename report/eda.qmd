@@ -480,7 +480,33 @@ lower.panel <- function(x, y, ...){
   points(x, y, pch = 20, col = "black", cex = 0.2)
 }
 
-pairs(data_question3_1[,c("overallscore", "total_affected", "total_deaths")], upper.panel=panel.cor, diag.panel=panel.hist, lower.panel = lower.panel,main="Correlation table and distribution of Disaster variables")
+evaluateCorrelationStars <- function(correlation) {
+  if (abs(correlation) >= 0.7) {
+    return("*****")  # Strong correlation: 5 stars
+  } else if (abs(correlation) >= 0.5) {
+    return("****")   # Moderate correlation: 4 stars
+  } else if (abs(correlation) >= 0.3) {
+    return("***")    # Fair correlation: 3 stars
+  } else if (abs(correlation) >= 0.1) {
+    return("**")     # Weak correlation: 2 stars
+  } else {
+    return("*")      # Very weak correlation: 1 star
+  }
+}
+
+# panel.cor function with stars alongside correlation coefficients
+panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
+  usr <- par("usr"); on.exit(par(usr)) 
+  par(usr = c(0, 1, 0, 1)) 
+  r <- cor(x, y)
+  stars <- evaluateCorrelationStars(r)
+  txt <- paste0(format(c(r, 0.123456789), digits = digits)[1], " ", stars)
+  if(missing(cex.cor)) cex.cor <- 0.5/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor)
+}
+
+pairs(data_question3_1[, c("overallscore", "total_affected", "total_deaths")], upper.panel = panel.cor_stars,diag.panel = panel.hist,lower.panel = lower.panel, main = "Correlation table and distribution of Disaster variables")
+
 ```
 
 The different variables used to materialize the impact of climate disasters do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that such disasters have a specific influence on some SDGs.
@@ -490,7 +516,32 @@ lower.panel <- function(x, y, ...){
   points(x, y, pch = 20, col = "black", cex = 0.2)
 }
 
-pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_million", "stringency")], upper.panel=panel.cor, diag.panel=panel.hist, lower.panel = lower.panel,main="Correlation table and distribution of COVID variables")
+evaluateCorrelationStars <- function(correlation) {
+  if (abs(correlation) >= 0.7) {
+    return("*****")  
+  } else if (abs(correlation) >= 0.5) {
+    return("****")
+  } else if (abs(correlation) >= 0.3) {
+    return("***") 
+  } else if (abs(correlation) >= 0.1) {
+    return("**")
+  } else {
+    return("*")
+  }
+}
+
+# panel.cor function with stars alongside correlation coefficients
+panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
+  usr <- par("usr"); on.exit(par(usr)) 
+  par(usr = c(0, 1, 0, 1)) 
+  r <- cor(x, y)
+  stars <- evaluateCorrelationStars(r)
+  txt <- paste0(format(c(r, 0.123456789), digits = digits)[1], " ", stars)
+  if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor)
+}
+
+pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_million", "stringency")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel,main="Correlation table and distribution of COVID variables")
 ```
 
 The different variables used to materialize the impact of COVID19 do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that COVID19 had a specific influence on some SDGs, for instance "good health and well-being" or "decent work and economic growth".
@@ -499,8 +550,32 @@ The different variables used to materialize the impact of COVID19 do not seem to
 lower.panel <- function(x, y, ...){
   points(x, y, pch = 20, col = "black", cex = 0.5)
 }
+evaluateCorrelationStars <- function(correlation) {
+  if (abs(correlation) >= 0.7) {
+    return("*****") 
+  } else if (abs(correlation) >= 0.5) {
+    return("****")
+  } else if (abs(correlation) >= 0.3) {
+    return("***") 
+  } else if (abs(correlation) >= 0.1) {
+    return("**")
+  } else {
+    return("*")
+  }
+}
 
-pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")], upper.panel=panel.cor, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of conflicts variables")
+# panel.cor function with stars alongside correlation coefficients
+panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
+  usr <- par("usr"); on.exit(par(usr)) 
+  par(usr = c(0, 1, 0, 1)) 
+  r <- cor(x, y)
+  stars <- evaluateCorrelationStars(r)
+  txt <- paste0(format(c(r, 0.123456789), digits = digits)[1], " ", stars)
+  if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor)
+}
+
+pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of conflicts variables")
 
 ```
 
@@ -525,7 +600,7 @@ ggplot(data = covid_filtered, aes(x = year, y = cases_per_million, group = regio
   geom_smooth(method = "loess",  se = FALSE, span = 0.8, size = 0.5) + 
   labs(title = "Trend of COVID-19 Cases per Million Over Time",
        x = "Year", y = "Cases per Million") +
-  facet_wrap(~ region, nrow = 4) +
+  facet_wrap(~ region, ncol = 3) +
   theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
          axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
          plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
@@ -533,8 +608,8 @@ ggplot(data = covid_filtered, aes(x = year, y = cases_per_million, group = regio
          strip.text = element_blank(),
          panel.spacing = unit(0.5, "lines")
   ) +
-  theme(legend.position = "right") +
-  guides(color = guide_legend(ncol = 1))
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nrow = 3))
 ```
 
 These is our time-analysis concerning the COVID-19 deaths per million per region between end 2018 and 2022
@@ -543,6 +618,25 @@ These is our time-analysis concerning the COVID-19 deaths per million per region
 ggplot(data = covid_filtered, aes(x = year, y = deaths_per_million, group = region, color = region)) +
   geom_smooth(method = "loess",  se = FALSE, span = 0.8, size = 0.5) + 
   labs(title = "Trend of COVID-19 Deaths per Million Over Time", x = "Year", y = "Deaths per Million") +
+  facet_wrap(~ region, nrow = 3) +
+  theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+         plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
+                                   vjust = 8, lineheight = 2),
+         strip.text = element_blank(),
+         panel.spacing = unit(0.5, "lines")
+  ) +
+  theme(legend.position = "bottom") +
+  guides(color = guide_legend(nlin = 3))
+```
+
+These is our time-analysis concerning the COVID-19 stringency per region between end 2018 and 2022
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+ggplot(data = covid_filtered, aes(x = year, y = stringency, group = region, 
+                                  color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
+  labs(title = "Trend of COVID-19 Stringency Over Time", x = "Year", y = "Stringency") +
   facet_wrap(~ region, nrow = 4) +
   theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
          axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
@@ -553,18 +647,6 @@ ggplot(data = covid_filtered, aes(x = year, y = deaths_per_million, group = regi
   ) +
   theme(legend.position = "right") +
   guides(color = guide_legend(ncol = 1))
-```
-
-These is our time-analysis concerning the COVID-19 stringency per region between end 2018 and 2022
-
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
-ggplot(data = covid_filtered, aes(x = year, y = stringency, group = region, color = region)) +
-  geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
-  labs(title = "Trend of COVID-19 Stringency Over Time", x = "Year", y = "Stringency") +
-  facet_wrap(~ region, nrow = 2) +
-  theme_minimal() +
-  theme(legend.position = "right") +
-  guides(color = guide_legend(nrow = 4))
 ```
 
 These is our time-analysis concerning climatic disasters with total affected per region
