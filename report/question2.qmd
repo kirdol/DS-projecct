@@ -3,7 +3,8 @@ source(here::here("scripts/Clean/setup.R"))
 ```
 
 # Focus on the evolution of SDG scores over time
-** How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
+
+\*\* How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"))
@@ -69,7 +70,7 @@ ggplot(data = data4) +
        ) 
 ```
 
-We continue with the graph that distinguishes continents to get more information. 
+We continue with the graph that distinguishes continents to get more information.
 
 ```{r, echo = TRUE, message = FALSE, cache = TRUE, warning=FALSE, out.height="100%", out.width="100%"}
 data5 <- data_question2 %>%
@@ -126,11 +127,11 @@ data0 %>%
   theme_minimal()
 ```
 
-Again, we see that the overall achievement score of the SDGs is increasing and that the countries that have the most red (bad score) are in Africa. However it is also there that it increases more rapidly. Our hypothesis is that when a score is very low, it is easier to make it better than when it becomes very high (around 90%) it may be hard to increase it, because it would mean perfection. In the next section, we will further investigate this idea. 
+Again, we see that the overall achievement score of the SDGs is increasing and that the countries that have the most red (bad score) are in Africa. However it is also there that it increases more rapidly. Our hypothesis is that when a score is very low, it is easier to make it better than when it becomes very high (around 90%) it may be hard to increase it, because it would mean perfection. In the next section, we will further investigate this idea.
 
 ## Analysis: SDG adoption in 2015
 
-We create one new variable per goal that captures the difference in SDG score between the year of the observation and the previous year. This will allow us to see how the countries improve (or not) on SDG scores each year. In addition, preparing for the specific question around 2015, we only keep the years from 2009 to 2022 (7 years before and after 2015). 
+We create one new variable per goal that captures the difference in SDG score between the year of the observation and the previous year. This will allow us to see how the countries improve (or not) on SDG scores each year. In addition, preparing for the specific question around 2015, we only keep the years from 2009 to 2022 (7 years before and after 2015).
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 binary2015 <- data_question2 %>% 
@@ -179,14 +180,9 @@ plot_ly() %>%
   )
 ```
 
-We notice that across the years, the distribution stays on the right of the x-axis, which means that there are more improvement than deterioration. If there is deterioration, it is less than one percent per year, except some extreme cases, for instance in 2013, there was almost a 3% decrease in the overall SDG score of one country. It is also rare to see improvements of more than 2% per year. 
-Regarding our specific question, we do not see a major improvement of the distribution after 2015, if it was the case we would see the distribution going more to the right, but except for 2017, there are more and more values centered around zero, which means less score improvements overall. 
+We notice that across the years, the distribution stays on the right of the x-axis, which means that there are more improvement than deterioration. If there is deterioration, it is less than one percent per year, except some extreme cases, for instance in 2013, there was almost a 3% decrease in the overall SDG score of one country. It is also rare to see improvements of more than 2% per year. Regarding our specific question, we do not see a major improvement of the distribution after 2015, if it was the case we would see the distribution going more to the right, but except for 2017, there are more and more values centered around zero, which means less score improvements overall.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
-#ggplot(binary2015, x=year, y=diff)
-```
-
-After having visualized the improvements and declines of SDG overall score for the whole world, we are now interested in the top 5 countries in terms of improvement each year and we see that major improvement often comes from Sub-Saharan Africa countries or Middle East and North Africa. This confirms that more efforts are made in these regions to achieve better scores, but we also know from our previous visualizations that their initial scores are lower. Moreover, we record that the higher improvements are of 3% per year and were mostly achieved before 2015. Indeed, we can tell that in terms of maximum improvements, the adoption of SDGs in 2015 did not have a strong impact. We also notice that 2020 is the year with the smallest best improvements. We keep that in mind for the next question regarding events and specifically COVID. 
+After having visualized the improvements and declines of SDG overall score for the whole world, we are now interested in the top 5 countries in terms of improvement each year and we see that major improvement often comes from Sub-Saharan Africa countries or Middle East and North Africa. This confirms that more efforts are made in these regions to achieve better scores, but we also know from our previous visualizations that their initial scores are lower. Moreover, we record that the higher improvements are of 3% per year and were mostly achieved before 2015. Indeed, we can tell that in terms of maximum improvements, the adoption of SDGs in 2015 did not have a strong impact. We also notice that 2020 is the year with the smallest best improvements. We keep that in mind for the next question regarding events and specifically COVID.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%"}
 top_n_values <- 5
@@ -246,7 +242,7 @@ legend_plot <- ggplot(legend_data, aes(x = region, fill = region)) +
 legend_plot
 ```
 
-We continue by looking at the worst 5 countries in terms of decline in SDG overall score each year and we see that the years with the worst declines are those closer to us. Indeed the declines were generally no more than 1%, until 2018, where these became more frequent. We notice that the adoption of SDGs in 2015 may have had a good impact, because during the two years that follow, the worst SDG score declines were low (no more than 1% in 2016 and no more 0.5% in 2017). It was stabilizing, but it was of short duration, because then come the more extreme deteriotations. Interestingly, the regions that had were the worst in terms of decline during the past twelve years were very different, the only pattern appears during the last four years, where most of them are in Latin America and the Caribbean. 
+We continue by looking at the worst 5 countries in terms of decline in SDG overall score each year and we see that the years with the worst declines are those closer to us. Indeed the declines were generally no more than 1%, until 2018, where these became more frequent. We notice that the adoption of SDGs in 2015 may have had a good impact, because during the two years that follow, the worst SDG score declines were low (no more than 1% in 2016 and no more 0.5% in 2017). It was stabilizing, but it was of short duration, because then come the more extreme deteriotations. Interestingly, the regions that had were the worst in terms of decline during the past twelve years were very different, the only pattern appears during the last four years, where most of them are in Latin America and the Caribbean.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 plots <- list()
@@ -279,7 +275,7 @@ wrap + plot_annotation(
 legend_plot
 ```
 
-We move on to the specific SDG scores and look at the 20 best improvements by score. We additionaly differentiate between the improvements than occurred before and after 2015. We want to see which goals get the best improvements and which countries put more effort into it. 
+We move on to the specific SDG scores and look at the 20 best improvements by score. We additionaly differentiate between the improvements than occurred before and after 2015. We want to see which goals get the best improvements and which countries put more effort into it.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%", out.height="75%"}
 # Best improvements
@@ -596,10 +592,17 @@ plot_ly() %>%
   )
 ```
 
-We notice various patterns, among them: 
-2, 3, 6, 8 
+We notice various patterns, among them:
 
-2 fitted regression lines (before and after 2015) to see if there is a jump after the adoption and if the the SDG scores increase faster.
+-   Goals 2 (zero hunger), 3 (good health and well-being), 6 (clean water and sanitation), 8 (decent work and economic growth), 12 (responsible consumption and production), 16 (peace, justice and strong institutions) have very low improvements per year. Indeed, even the best ones are below 10%.
+
+-   Goal 10 (reduced inequalities) has the best improvements, all 20 best improvements are above 20% and it goes up to 45%.
+
+-   Some goals clearly had most of their best improvements before 2015: goals 3 (good health and well-being), 5 (gender equality), 6 (clean water and sanitation), 7 (affordable and clean energy).
+
+-   Some goals clearly had most of their best improvements after 2015: goals 8 (decent work and economic growth), 12 (responsible consumption and production).
+
+Regarding the impact of the adoption of SDGs in 2015, we can not tell that it had a positive impact, because there are not more big improvements after 2015 than before, even a little bit less. In addition, the most impressive improvements mostly occurred before 2015. These conclusions are supported by the next graph: we fit to different regression lines (before and after 2015) to see if there is a jump after the adoption and if the the SDG scores increase faster.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 # Graphs to show the jump (or not) in 2015
@@ -770,7 +773,7 @@ plotly::plot_ly() %>%
   )
 ```
 
-Simple OLS regression on the difference between years of SDG scores: 
+Simple OLS regression on the difference between years of SDG scores:
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%", results='asis'}
 # Simple linear regression of the overall score on the difference in SDG scores variables "after2015"
