@@ -354,67 +354,19 @@ kable(table1)
 
 ## Focus on the influence of the factors over the SDG scores
 
-After importing our our cleaned data, we looked first at the correlations between our numerical variables.
+Using our cleandata set, first want to observe how ech of our variable are correlated with the other. For that, we will use a heatmap. Given that most of our variables are not normally distributed, we will use the Spearman method to calculate the correlation.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
-#### Correlations between variables ####
+#### Correlations between variables Heatmap ####
 
-sdg_scores2 <- data_question1[, c('goal1', 'goal2', 'goal3', 'goal4', 'goal5', 'goal6',
-                      'goal7', 'goal8', 'goal9', 'goal10', 'goal11', 'goal12',
-                      'goal13', 'goal15', 'goal16', 'goal17')]
-
-Correlation_overall <- data_question1 %>% 
+Correlation_overall <-data_question1 %>% # selection of the numerical data
       select(population:ef_regulation)
 
-#before computing Pearson -> logarithmic transformation may be required for some variables with high skewness
+cor_matrix_sper <- # calculation of the correlation matrix
+  cor(Correlation_overall, method = "spearman", use = "everything")
 
-# Calculating skewness for each variable
-
-Correlation_overall_skew <- Correlation_overall
-Correlation_overall_sqrt <- Correlation_overall
-
-skewness_values <- sapply(Correlation_overall_skew, e1071::skewness)
-
-# Identifying highly skewed variables
-highly_skewed_vars <- names(skewness_values[abs(skewness_values) > 1])
-highly_skewed_vars_sqrt <- names(skewness_values[abs(skewness_values) > 1])
-# Applying logarithmic transformation
-Correlation_overall_skew[highly_skewed_vars] <- lapply(Correlation_overall_skew[highly_skewed_vars], function(x) log1p(x))
-#applying squart root transformation
-Correlation_overall_sqrt[highly_skewed_vars_sqrt] <- lapply(Correlation_overall_sqrt[highly_skewed_vars_sqrt], function(x) sqrt(x))
-
-new_skewness_values <- sapply(Correlation_overall_skew[highly_skewed_vars], e1071::skewness)
-new_skewness_values_sqrt <- sapply(Correlation_overall_sqrt[highly_skewed_vars_sqrt], e1071::skewness)
-
-#après transformation, il reste toujours beaucoup de variables avec un high skewness values print(new_skewness_values), print(new_skewness_values_sqrt)
-
-cor_matrix_log <- cor(Correlation_overall_skew, use = "everything")
-cor_matrix_sqrt <- cor(Correlation_overall_sqrt, use = "everything")
-cor_matrix_sper <- cor(Correlation_overall, method = "spearman", use = "everything")
-
-datatable(cor_matrix_log, 
-          options = list(
-            pageLength = 10, 
-            class = "hover", 
-            searchHighlight = TRUE,
-            columnDefs = list(
-              list(targets = "_all",
-                   render = JS(
-                     "function(data, type, row, meta){",
-                     "  if(type === 'display'){",
-                     "    return parseFloat(data).toFixed(2)",
-                     "  }",
-                     "  return data;",
-                     "}")))),
-          rownames = FALSE)
-```
-
-By doing so, we obtain a lot of positive and negative correlations. To help us to better understand and having a overall vision of the situation, we used the following heatmap.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
-#### Heatmap ####
-
-cor_melted <- melt(cor_matrix_sper)
+cor_melted <- # wide to long transformation
+  melt(cor_matrix_sper)
 
 ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   geom_tile() +
@@ -427,13 +379,12 @@ ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   coord_fixed() +
   labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
 
-
 #do 3 different heatmaps : goals on goals, goals on other variables except goals, variables on variables (except goals)
 ```
 
-In the correlation matrix heatmap, we can notice that many goals from 1 to 11 are actually positively correlated together. On another hand, the goals 12 and 13 are have negative relationships with the majority of our variables, except between themself, whereas they are strongely correlated. In addition, we can notice another strongly correlation between personal freedom variables (pf) related to the scores given by the Human Freedom Index on movement, religion, assembly and expression.
+In the correlation matrix heatmap, we observe that goals 1 to 11 are predominantly positively correlated. Conversely, goals 12 and 13 exhibit negative correlations with most variables, except between themselves where they are strongly correlated. Additionally, there is a notable strong correlation among personal freedom variables (pf), reflecting scores from the Human Freedom Index on movement, religion, assembly, and expression.
 
-In order to have an overview of the relationship between our independent variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
+In order to have an overview of the relationship between our independent variables and the SDG overall score, we make several graphs containing the Spearman correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 #### Spearman's correlation coeff ####
@@ -457,33 +408,69 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
 }
 
 # # Independent variables 
-# #with log transformation
-# pairs(Correlation_overall_skew[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of various variables")
-# #with square root transformation
-# pairs(Correlation_overall_sqrt[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of various variables")
+pairs(Correlation_overall[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of various variables")
 ```
 
 The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, out.width="100%", out.height="100%"}
-#with log transformation
-# pairs(Correlation_overall_skew[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly", "pf_expression", "pf_identity")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of personal freedom variables")
-# 
-# #with square root transformation
-# pairs(Correlation_overall_sqrt[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly", "pf_expression", "pf_identity")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of personal freedom variables")
-```
 
 The overall SDG achievement score is highly correlated with "personal freedom: law" (p=.69) and "personal freedom: identity" (p=.62). The other dimensions of personal freedom do not seem to have important influence. Regarding the distribution of the personal freedom variables, we notice that except for law, all have right-skewed distributions meaning that most of the countries have high scores.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%", out.height="100%"}
-#with log transformation
-pairs(Correlation_overall_skew[,c("overallscore", "ef_government", "ef_legal", "ef_money", "ef_trade", "ef_regulation")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of economic freedom variables")
-#with square root transformation
-pairs(Correlation_overall_sqrt[,c("overallscore", "ef_government", "ef_legal", "ef_money", "ef_trade", "ef_regulation")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of economic freedom variables")
-```
-
 The overall SDG achievement score is highly correlated with "economical freedom: legal" (p=.77), "economical trade: legal" (p=.67) and "economical freedom: money" (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom.
 
+<<<<<<< Updated upstream
+=======
+### Looking at SDGs
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+#### PCA ####
+
+# for goals
+myPCA_g <- PCA(data_question1[,9:24], graph = FALSE)
+
+fviz_eig(myPCA_g,
+         addlabels = TRUE) +
+  theme_minimal()
+
+fviz_pca_biplot(myPCA_g,
+                label="var",
+                col.var="dodgerblue3",
+                geom="point",
+                pointsize = 0.1,
+                labelsize = 5) +
+  theme_minimal()
+```
+
+Concerning the SDG goals, we conclude that most of our variables are going along the 1st component, except the goals 10 and 15 that are rather uncorrelated with the dimension 1. In addition, as seen before, the goals 12 and 13 are negatively correlated to the other goals. With a eigenvalue bigger than 1 for the first two components, we conclude that there are only 2 dimensions to take into account, according to the Kaiser-Guttman's rule. Nevertheless, they are explaining less than 80% of cumulated variance.
+
+### Looking at the HFI scores
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+#for HFI scores
+myPCA_s <- PCA(data_question1[,29:40], graph = FALSE)
+plot(myPCA_s$ind$coord[, 1], myPCA_s$ind$coord[, 2], xlab = "PC1", ylab = "PC2", main = "PCA Plot HFI Scores", pch = 19, col = "blue", cex = 0.5) + 
+  abline(h = 0, col = "red", lty = 2) + 
+  abline(v = 0, col = "red", lty = 2)
+plot.PCA(myPCA_s, choix = "var",cex = 0.5)
+summary(myPCA_s)
+myPCA_s$eig
+```
+
+Now concerning the Human Freedom Index scores, most of the variables are positively correlated to the dimension 1, slightly less for the PF religion and security, and finaly the EF government variable is uncorrelated to the dimension 1. With a eigenvalue bigger than 1 for the three first components, we conclude that there are 3 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+#### Kmean clustering ####
+
+data1_scaled <- scale(Correlation_overall)
+rownames(data1_scaled) <- seq_along(row.names(data1_scaled))
+fviz_nbclust(data1_scaled, kmeans, method="wss")
+kmean <- kmeans(data1_scaled, 7, nstart = 25)
+fviz_cluster(kmean, data=data1_scaled, repel=FALSE, depth =NULL, ellipse.type = "norm", labelsize = 0, pointsize = 0.5)
+
+### NOW CLUSTERING BY COUNTRY? AND TAKE MEAN OF EVERY VARIABLE ON EVERY CONCERNED YEAR?
+```
+
+Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough.
+
+>>>>>>> Stashed changes
 ## Focus on the influence of events over the SDG scores
 
 In order to have an overview of the relationship between the different events variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.

@@ -58,9 +58,6 @@ goals_data <- goals_data_4_cl[, grep('goal', names(goals_data_4_cl))]
 goals_data_scaled <- scale(goals_data) # Scaling the data
 pca_result <- prcomp(goals_data_scaled) # Running PCA
 
-# Summary of PCA - shows variance explained by each principal component
-# summary(pca_result)
-
 # Plotting Scree plot to visualize the importance of each principal component
 fviz_eig(pca_result,
          addlabels = TRUE) +
