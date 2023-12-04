@@ -366,6 +366,8 @@ server <- function(input, output) {
 }
 shinyApp(ui = ui, server = server)
 ```
+The results seems logic because if the SDG scores continue to go higher and the conflicts remains the same or finishes we get a negative correlation
+
 
 Our last idea is to see the regressions between the SDG scores and the variables of each event that we thought interesting.
 
