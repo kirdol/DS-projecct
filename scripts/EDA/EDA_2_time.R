@@ -42,6 +42,10 @@ ggplot(data1) +
   geom_line(mapping=aes(x=year, y=mean_overall_score_by_year), color="blue", lwd=1) +
   scale_y_continuous(limits = c(0, 100)) 
 
+ggplot(data1) +
+  geom_smooth(mapping=aes(x=year, y=overallscore), color="blue", lwd=1) +
+  scale_y_continuous(limits = c(0, 100)) 
+
 ggplot(data2) +
   geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=1) +
   scale_y_continuous(limits = c(0, 100)) 
