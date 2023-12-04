@@ -64,6 +64,7 @@ data_Q1_Africa_long <- data_Q1_Africa_long %>%
 bandwidth_nrd_AF <- bw.nrd(data_Q1_Africa_long$value)
 AF <- ggplot(data_Q1_Africa_long, aes(x = variable, y = value, fill = color)) + 
   geom_violin(trim = FALSE, bw = bandwidth_nrd_AF) +  
+  facet_grid(variable ~ ., scales = "free_y") +
   scale_fill_identity() +
   labs(title = "Africa SDG goals boxplot", x = "Goals", y = "Score") +
   geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +
@@ -176,6 +177,41 @@ grid.arrange(AF,EU,AS,AM,OC, ncol = 2, nrow = 3)
 
 #### WHY GOING BELOW 0 TO > 100 ?? SCORES ONLY FROM 0 TO 100
 
+```
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+# Step 1: Combine all data into one data frame with a region identifier
+
+# Melt the data
+data_long <- data_question1 %>% 
+  select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17) %>% 
+  melt()
+
+# Calculate medians and colors
+medians <- data_long %>%
+  group_by(variable) %>%
+  summarize(median_value = median(value), .groups = 'drop')
+medians$color <- ifelse(medians$median_value > 75, "lightblue", 
+                        ifelse(medians$median_value < 25, "red", 'orange'))
+
+# Join the medians back to the long data
+data_long <- left_join(data_long, medians, by = "variable")
+
+# Calculate the bandwidth
+bandwidth_nrd <- bw.nrd(data_long$value)
+
+# Create the plot
+p <- ggplot(data_long, aes(x = variable, y = value, fill = color)) + 
+  geom_violin(trim = FALSE, bw = bandwidth_nrd) +  
+  #geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +
+  scale_fill_identity() +
+  labs(title = "SDG Goals by Region", x = "Goals", y = "Score") +
+  facet_grid(continent ~ ., scales = "free_y") +
+  scale_y_continuous(labels = scales::label_number()) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+# Print the plot
+print(p)
 ```
 
 We see different schemes among the different goals. Indeed some are quite homogeneous with a small spread of values (e.g. overall score, goals 2 and 8) while others have a large spread of values (e.g. goals 1 and 10). Goals 1, 3, 4, 7, 9, 10 and 13 have values across all possible percentages. Goals 2, 5, 8, 13 and 17 have extreme values situated outside the 95% confidence interval. It is interesting to see that goal 8 (decent work and economic growth) is the one with smaller spread of values, whereas goal 1 (no poverty) have the higher distance between the first and the third quartile. Goal 2 (no hunger) has a tight spread of values, but with the greater amount of outliers in the smaller values, meaning hunger is similar across most countries, but when it differs it is in very bad manner.
