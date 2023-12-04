@@ -84,7 +84,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="general-exploration" class="level2">
 <h2 class="anchored" data-anchor-id="general-exploration">General exploration</h2>
 <p>We display the distribution of the different SDG achievement scores, using boxplots to have an overview of the median, the range with most of the observations and the outliers.</p>
+<<<<<<< Updated upstream
 <div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-1_3176dd0c713c1d5adde9f479fc23b714">
+=======
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-1_3f24928748bceee4d395ab37edaa8f2c">
+>>>>>>> Stashed changes
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data_question1 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>,<span class="st">"data"</span>,<span class="st">"data_question1.csv"</span>))</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>data_question24 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"data"</span>, <span class="st">"data_question24.csv"</span>))</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>data_question2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"data"</span>, <span class="st">"data_question24.csv"</span>))</span>
@@ -238,6 +242,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
 <span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
 <span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a></span>
+<<<<<<< Updated upstream
 <span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(AF,EU,AS,AM,OC, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">3</span>)</span>
 <span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation_goals &lt;- melt(Correlation_overall[,2:18])</span></span>
@@ -250,6 +255,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))</span></span>
 <span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a><span class="do">#### WHY GOING BELOW 0 TO &gt; 100 ?? SCORES ONLY FROM 0 TO 100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+=======
+<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(AF,EU, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">1</span>)</span>
+<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(AS,AM, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">1</span>)</span>
+<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_Q1_Oceania_long, <span class="fu">aes</span>(<span class="at">x =</span> variable, <span class="at">y =</span> value, <span class="at">fill =</span> color)) <span class="sc">+</span> </span>
+<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">trim =</span> <span class="cn">FALSE</span>, <span class="at">bw =</span> bandwidth_nrd_OC) <span class="sc">+</span></span>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_identity</span>() <span class="sc">+</span></span>
+<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Oceanian SDG goals boxplot"</span>, <span class="at">x =</span> <span class="st">"Goals"</span>, <span class="at">y =</span> <span class="st">"Score"</span>) <span class="sc">+</span></span>
+<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">outlier.size =</span> <span class="dv">1</span>, <span class="at">fill =</span> <span class="st">'white'</span>) <span class="sc">+</span></span>
+<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_number</span>()) <span class="sc">+</span></span>
+<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
+<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation_goals &lt;- melt(Correlation_overall[,2:18])</span></span>
+<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot(Correlation_goals, aes(x= variable, y= value)) + </span></span>
+<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_violin(trim=FALSE, fill="orange") +</span></span>
+<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title="Merged goals violin boxplot",x="Goals", y = "Distribution") +</span></span>
+<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_boxplot(width=0.1, outlier.size = 1) +</span></span>
+<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a><span class="co">#   scale_y_continuous(labels = scales::label_number()) + #limits = c(0, 100)</span></span>
+<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme_classic() +</span></span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))</span></span>
+<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a><span class="do">#### WHY GOING BELOW 0 TO &gt; 100 ?? SCORES ONLY FROM 0 TO 100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+>>>>>>> Stashed changes
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -257,6 +285,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </div>
+<<<<<<< Updated upstream
+=======
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="eda_files/figure-html/unnamed-chunk-1-2.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="eda_files/figure-html/unnamed-chunk-1-3.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+>>>>>>> Stashed changes
 </div>
 <p>We see different schemes among the different goals. Indeed some are quite homogeneous with a small spread of values (e.g.&nbsp;overall score, goals 2 and 8) while others have a large spread of values (e.g.&nbsp;goals 1 and 10). Goals 1, 3, 4, 7, 9, 10 and 13 have values across all possible percentages. Goals 2, 5, 8, 13 and 17 have extreme values situated outside the 95% confidence interval. It is interesting to see that goal 8 (decent work and economic growth) is the one with smaller spread of values, whereas goal 1 (no poverty) have the higher distance between the first and the third quartile. Goal 2 (no hunger) has a tight spread of values, but with the greater amount of outliers in the smaller values, meaning hunger is similar across most countries, but when it differs it is in very bad manner.</p>
 <p>We now display boxplpots for the different variables of the human freedom index, and then also for our other independent variables.</p>
@@ -729,6 +774,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score.</p>
 <p>The overall SDG achievement score is highly correlated with “personal freedom: law” (p=.69) and “personal freedom: identity” (p=.62). The other dimensions of personal freedom do not seem to have important influence. Regarding the distribution of the personal freedom variables, we notice that except for law, all have right-skewed distributions meaning that most of the countries have high scores.</p>
 <p>The overall SDG achievement score is highly correlated with “economical freedom: legal” (p=.77), “economical trade: legal” (p=.67) and “economical freedom: money” (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom.</p>
+<<<<<<< Updated upstream
 <section id="looking-at-sdgs" class="level3">
 <h3 class="anchored" data-anchor-id="looking-at-sdgs">Looking at SDGs</h3>
 <p>ADD GREEN GRAPH HERE TO HAVE ALSO THE DISTRIBUTION</p>
@@ -830,11 +876,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough.</p>
+=======
+>>>>>>> Stashed changes
 </section>
 </section>
 <section id="focus-on-the-influence-of-events-over-the-sdg-scores" class="level2">
 <h2 class="anchored" data-anchor-id="focus-on-the-influence-of-events-over-the-sdg-scores">Focus on the influence of events over the SDG scores</h2>
 <p>In order to have an overview of the relationship between the different events variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.</p>
+<<<<<<< Updated upstream
 <div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-11_3cba5176a31046aee67ce3b7ebe6ab35">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lower.panel <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, ...){</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>(x, y, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">"black"</span>, <span class="at">cex =</span> <span class="fl">0.2</span>)</span>
@@ -906,14 +955,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question3_2[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"cases_per_million"</span>, <span class="st">"deaths_per_million"</span>, <span class="st">"stringency"</span>)], <span class="at">upper.panel =</span> panel.cor_stars, <span class="at">diag.panel=</span>panel.hist, <span class="at">lower.panel =</span> lower.panel,<span class="at">main=</span><span class="st">"Correlation table and distribution of COVID variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+=======
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-9_faf9f0ed6f74f3994d2d9f528e7de107">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lower.panel <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, ...){</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>(x, y, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">"black"</span>, <span class="at">cex =</span> <span class="fl">0.2</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>evaluateCorrelationStars <span class="ot">&lt;-</span> <span class="cf">function</span>(correlation) {</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">abs</span>(correlation) <span class="sc">&gt;=</span> <span class="fl">0.7</span>) {</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"*****"</span>)  <span class="co"># Strong correlation: 5 stars</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">abs</span>(correlation) <span class="sc">&gt;=</span> <span class="fl">0.5</span>) {</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"****"</span>)   <span class="co"># Moderate correlation: 4 stars</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">abs</span>(correlation) <span class="sc">&gt;=</span> <span class="fl">0.3</span>) {</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"***"</span>)    <span class="co"># Fair correlation: 3 stars</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">abs</span>(correlation) <span class="sc">&gt;=</span> <span class="fl">0.1</span>) {</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"**"</span>)     <span class="co"># Weak correlation: 2 stars</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"*"</span>)      <span class="co"># Very weak correlation: 1 star</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co"># panel.cor function with stars alongside correlation coefficients</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>panel.cor_stars <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">prefix =</span> <span class="st">""</span>, cex.cor, ...) {</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  usr <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="st">"usr"</span>); <span class="fu">on.exit</span>(<span class="fu">par</span>(usr)) </span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">usr =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>)) </span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">cor</span>(x, y)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  stars <span class="ot">&lt;-</span> <span class="fu">evaluateCorrelationStars</span>(r)</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  txt <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">format</span>(<span class="fu">c</span>(r, <span class="fl">0.123456789</span>), <span class="at">digits =</span> digits)[<span class="dv">1</span>], <span class="st">" "</span>, stars)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">missing</span>(cex.cor)) cex.cor <span class="ot">&lt;-</span> <span class="fl">0.5</span><span class="sc">/</span><span class="fu">strwidth</span>(txt)</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">text</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>, txt, <span class="at">cex =</span> cex.cor)</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question3_1[, <span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"total_affected"</span>, <span class="st">"total_deaths"</span>)], <span class="at">upper.panel =</span> panel.cor_stars,<span class="at">diag.panel =</span> panel.hist,<span class="at">lower.panel =</span> lower.panel, <span class="at">main =</span> <span class="st">"Correlation table and distribution of Disaster variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+>>>>>>> Stashed changes
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="eda_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
+<<<<<<< Updated upstream
 <p>The different variables used to materialize the impact of COVID19 do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that COVID19 had a specific influence on some SDGs, for instance “good health and well-being” or “decent work and economic growth”.</p>
 <div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-13_db729c7930b97afd4e4c6a6c3d0b186b">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lower.panel <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, ...){</span>
@@ -945,14 +1028,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question3_3[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"ongoing"</span>, <span class="st">"sum_deaths"</span>, <span class="st">"pop_affected"</span>, <span class="st">"area_affected"</span>, <span class="st">"maxintensity"</span>)], <span class="at">upper.panel =</span> panel.cor_stars, <span class="at">diag.panel=</span>panel.hist, <span class="at">lower.panel =</span> lower.panel, <span class="at">main=</span><span class="st">"Correlation table and distribution of conflicts variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+=======
+<p>The different variables used to materialize the impact of climate disasters do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that such disasters have a specific influence on some SDGs.</p>
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-10_de36a6f249eecf134960917fc53cc3a0">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>lower.panel <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, ...){</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>(x, y, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">"black"</span>, <span class="at">cex =</span> <span class="fl">0.2</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>evaluateCorrelationStars <span class="ot">&lt;-</span> <span class="cf">function</span>(correlation) {</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">abs</span>(correlation) <span class="sc">&gt;=</span> <span class="fl">0.7</span>) {</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"*****"</span>)  </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">abs</span>(correlation) <span class="sc">&gt;=</span> <span class="fl">0.5</span>) {</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"****"</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">abs</span>(correlation) <span class="sc">&gt;=</span> <span class="fl">0.3</span>) {</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"***"</span>) </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">abs</span>(correlation) <span class="sc">&gt;=</span> <span class="fl">0.1</span>) {</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"**"</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"*"</span>)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co"># panel.cor function with stars alongside correlation coefficients</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>panel.cor_stars <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">prefix =</span> <span class="st">""</span>, cex.cor, ...) {</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  usr <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="st">"usr"</span>); <span class="fu">on.exit</span>(<span class="fu">par</span>(usr)) </span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">usr =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>)) </span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">cor</span>(x, y)</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  stars <span class="ot">&lt;-</span> <span class="fu">evaluateCorrelationStars</span>(r)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  txt <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">format</span>(<span class="fu">c</span>(r, <span class="fl">0.123456789</span>), <span class="at">digits =</span> digits)[<span class="dv">1</span>], <span class="st">" "</span>, stars)</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">missing</span>(cex.cor)) cex.cor <span class="ot">&lt;-</span> <span class="fl">0.8</span><span class="sc">/</span><span class="fu">strwidth</span>(txt)</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">text</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>, txt, <span class="at">cex =</span> cex.cor)</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question3_2[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"cases_per_million"</span>, <span class="st">"deaths_per_million"</span>, <span class="st">"stringency"</span>)], <span class="at">upper.panel =</span> panel.cor_stars, <span class="at">diag.panel=</span>panel.hist, <span class="at">lower.panel =</span> lower.panel,<span class="at">main=</span><span class="st">"Correlation table and distribution of COVID variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+>>>>>>> Stashed changes
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="eda_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="eda_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
+<<<<<<< Updated upstream
 <p>The different variables used to materialize the impact of conflicts do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that conflicts have a specific influence on some SDGs.</p>
 <p>To explore our data on events such as disasters, covid-19 and conflicts we have to first see which countries are the most touched by these. To do so, we made time-series analysis on this three events each time depending on different variables.</p>
 <div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-14_636159fb1885371b716a6a476014aaa4">
@@ -984,10 +1102,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="eda_files/figure-html/unnamed-chunk-15-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+=======
+<p>The different variables used to materialize the impact of COVID19 do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that COVID19 had a specific influence on some SDGs, for instance “good health and well-being” or “decent work and economic growth”.</p>
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-11_7f693abf08cd4842529fac2812f260be">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lower.panel <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, ...){</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>(x, y, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">"black"</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>evaluateCorrelationStars <span class="ot">&lt;-</span> <span class="cf">function</span>(correlation) {</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">abs</span>(correlation) <span class="sc">&gt;=</span> <span class="fl">0.7</span>) {</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"*****"</span>) </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">abs</span>(correlation) <span class="sc">&gt;=</span> <span class="fl">0.5</span>) {</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"****"</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">abs</span>(correlation) <span class="sc">&gt;=</span> <span class="fl">0.3</span>) {</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"***"</span>) </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">abs</span>(correlation) <span class="sc">&gt;=</span> <span class="fl">0.1</span>) {</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"**"</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"*"</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co"># panel.cor function with stars alongside correlation coefficients</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>panel.cor_stars <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">prefix =</span> <span class="st">""</span>, cex.cor, ...) {</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  usr <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="st">"usr"</span>); <span class="fu">on.exit</span>(<span class="fu">par</span>(usr)) </span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">usr =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>)) </span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">cor</span>(x, y)</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  stars <span class="ot">&lt;-</span> <span class="fu">evaluateCorrelationStars</span>(r)</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  txt <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">format</span>(<span class="fu">c</span>(r, <span class="fl">0.123456789</span>), <span class="at">digits =</span> digits)[<span class="dv">1</span>], <span class="st">" "</span>, stars)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">missing</span>(cex.cor)) cex.cor <span class="ot">&lt;-</span> <span class="fl">0.8</span><span class="sc">/</span><span class="fu">strwidth</span>(txt)</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">text</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>, txt, <span class="at">cex =</span> cex.cor)</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(data_question3_3[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"ongoing"</span>, <span class="st">"sum_deaths"</span>, <span class="st">"pop_affected"</span>, <span class="st">"area_affected"</span>, <span class="st">"maxintensity"</span>)], <span class="at">upper.panel =</span> panel.cor_stars, <span class="at">diag.panel=</span>panel.hist, <span class="at">lower.panel =</span> lower.panel, <span class="at">main=</span><span class="st">"Correlation table and distribution of conflicts variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="eda_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+>>>>>>> Stashed changes
 </figure>
 </div>
 </div>
 </div>
+<<<<<<< Updated upstream
 <p>These is our time-analysis concerning the COVID-19 deaths per million per region between end 2018 and 2022</p>
 <div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-16_e437faf482c26eff8b245d1c3b780d64">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> covid_filtered, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> deaths_per_million, <span class="at">group =</span> region, <span class="at">color =</span> region)) <span class="sc">+</span></span>
@@ -1003,6 +1159,106 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
 <span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">nlin =</span> <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+=======
+<p>The different variables used to materialize the impact of conflicts do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that conflicts have a specific influence on some SDGs.</p>
+<p>To explore our data on events such as disasters, covid-19 and conflicts we have to first see which countries are the most touched by these. To do so, we made time-series analysis on this three events each time depending on different variables.</p>
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-12_23f0f269c602eab25a639923adffcf72">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Converted 'year' column to date format</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Q3<span class="fl">.1</span><span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">as.character</span>(Q3<span class="fl">.1</span><span class="sc">$</span>year), <span class="at">format =</span> <span class="st">"%Y"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>Q3<span class="fl">.2</span><span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">as.character</span>(Q3<span class="fl">.2</span><span class="sc">$</span>year), <span class="at">format =</span> <span class="st">"%Y"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>Q3<span class="fl">.3</span><span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">as.character</span>(Q3<span class="fl">.3</span><span class="sc">$</span>year), <span class="at">format =</span> <span class="st">"%Y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>These is our time-analysis concerning the COVID-19 cases per million by region between end 2018 and 2022.</p>
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-13_7146ff1461e15af29681d64e3d753662">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>covid_filtered <span class="ot">&lt;-</span> Q3<span class="fl">.2</span>[Q3<span class="fl">.2</span><span class="sc">$</span>year <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2018-12-12"</span>), ]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> covid_filtered, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> cases_per_million, <span class="at">group =</span> region, <span class="at">color =</span> region)) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>,  <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">span =</span> <span class="fl">0.8</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Trend of COVID-19 Cases per Million Over Time"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Cases per Million"</span>) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> region, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>( <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">20</span>), <span class="at">hjust =</span> <span class="fl">0.5</span>, </span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">vjust =</span> <span class="dv">8</span>, <span class="at">lineheight =</span> <span class="dv">2</span>),</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">strip.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"lines"</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">nrow =</span> <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="eda_files/figure-html/unnamed-chunk-13-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>These is our time-analysis concerning the COVID-19 deaths per million per region between end 2018 and 2022</p>
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-14_48477ae654343bae04eea00d01a54a49">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> covid_filtered, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> deaths_per_million, <span class="at">group =</span> region, <span class="at">color =</span> region)) <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>,  <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">span =</span> <span class="fl">0.8</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Trend of COVID-19 Deaths per Million Over Time"</span>, <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Deaths per Million"</span>) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> region, <span class="at">nrow =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>( <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">20</span>), <span class="at">hjust =</span> <span class="fl">0.5</span>, </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">vjust =</span> <span class="dv">8</span>, <span class="at">lineheight =</span> <span class="dv">2</span>),</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">strip.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"lines"</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">nlin =</span> <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="eda_files/figure-html/unnamed-chunk-14-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>These is our time-analysis concerning the COVID-19 stringency per region between end 2018 and 2022</p>
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-15_c68033a1386058502311f447c2537904">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> covid_filtered, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> stringency, <span class="at">group =</span> region, </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">color =</span> region)) <span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>,  <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">span =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Trend of COVID-19 Stringency Over Time"</span>, <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Stringency"</span>) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> region, <span class="at">nrow =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>( <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">20</span>), <span class="at">hjust =</span> <span class="fl">0.5</span>, </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">vjust =</span> <span class="dv">8</span>, <span class="at">lineheight =</span> <span class="dv">2</span>),</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">strip.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"lines"</span>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>) <span class="sc">+</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="eda_files/figure-html/unnamed-chunk-15-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>These is our time-analysis concerning climatic disasters with total affected per region</p>
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-16_6eed653aac8f6e9ed0f08363d1ae3584">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Q3<span class="fl">.1</span>[<span class="fu">is.na</span>(Q3<span class="fl">.1</span>)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Q3<span class="fl">.1</span>, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> total_affected, <span class="at">group =</span> region, <span class="at">color =</span> region)) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>,  <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">span =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Trend of Total Affected from Climatic Disasters Over Time"</span>, <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Total Affected"</span>) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> region, <span class="at">nrow =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>( <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">20</span>), <span class="at">hjust =</span> <span class="fl">0.5</span>, </span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">vjust =</span> <span class="dv">8</span>, <span class="at">lineheight =</span> <span class="dv">2</span>),</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">strip.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"lines"</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>) <span class="sc">+</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+>>>>>>> Stashed changes
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1011,6 +1267,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<<<<<<< Updated upstream
 <p>These is our time-analysis concerning the COVID-19 stringency per region between end 2018 and 2022</p>
 <div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-17_d7b2a76f56e908af04ab2f7d77e23ead">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> covid_filtered, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> stringency, <span class="at">group =</span> region, </span>
@@ -1027,6 +1284,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>) <span class="sc">+</span></span>
 <span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+=======
+<p>These is our time-analysis concerning conflicts deaths per region between 2000 and 2016</p>
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-17_491f9fd2e3f74b46af0337ef930cc211">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>conflicts_filtered <span class="ot">&lt;-</span> Q3<span class="fl">.3</span>[Q3<span class="fl">.3</span><span class="sc">$</span>year <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2000-01-01"</span>) <span class="sc">&amp;</span> Q3<span class="fl">.3</span><span class="sc">$</span>year <span class="sc">&lt;=</span> <span class="fu">as.Date</span>(<span class="st">"2016-12-31"</span>), ]</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> conflicts_filtered, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> sum_deaths, <span class="at">group =</span> region, <span class="at">color =</span> region)) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">span =</span> <span class="fl">0.3</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span>  <span class="co"># Using loess smoothing method</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Trend of Deaths by Conflicts Over Time"</span>, <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Sum Deaths"</span>) <span class="sc">+</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> region, <span class="at">nrow =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>( <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">20</span>), <span class="at">hjust =</span> <span class="fl">0.5</span>, </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">vjust =</span> <span class="dv">8</span>, <span class="at">lineheight =</span> <span class="dv">2</span>),</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">strip.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"lines"</span>)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>) <span class="sc">+</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+>>>>>>> Stashed changes
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1035,6 +1311,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<<<<<<< Updated upstream
 <p>These is our time-analysis concerning climatic disasters with total affected per region</p>
 <div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-18_b626987c8f6b3b7d1968379501cced91">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>Q3<span class="fl">.1</span>[<span class="fu">is.na</span>(Q3<span class="fl">.1</span>)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
@@ -1051,6 +1328,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>) <span class="sc">+</span></span>
 <span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+=======
+<p>We can see that the regions’ the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, then less America &amp; the Caribbean and Eastern Europe</p>
+<p>These is our time-analysis concerning conflicts affected population per region between 2000 and 2016</p>
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-18_1614ebe8afd6934f75a59de8c7b207ec">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> conflicts_filtered, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> pop_affected, <span class="at">group =</span> region, <span class="at">color =</span> region)) <span class="sc">+</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">span =</span> <span class="fl">0.3</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span>  <span class="co"># Using loess smoothing method</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Trend of Population Affected by Conflicts Over Time"</span>, <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"pop_affected"</span>) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> region, <span class="at">nrow =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>( <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">20</span>), <span class="at">hjust =</span> <span class="fl">0.5</span>, </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">vjust =</span> <span class="dv">8</span>, <span class="at">lineheight =</span> <span class="dv">2</span>),</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">strip.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"lines"</span>)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>) <span class="sc">+</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+>>>>>>> Stashed changes
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1059,6 +1354,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<<<<<<< Updated upstream
 <p>These is our time-analysis concerning conflicts deaths per region between 2000 and 2016</p>
 <div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-19_556698713dfdf1f9c32297cb13ade871">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>conflicts_filtered <span class="ot">&lt;-</span> Q3<span class="fl">.3</span>[Q3<span class="fl">.3</span><span class="sc">$</span>year <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2000-01-01"</span>) <span class="sc">&amp;</span> Q3<span class="fl">.3</span><span class="sc">$</span>year <span class="sc">&lt;=</span> <span class="fu">as.Date</span>(<span class="st">"2016-12-31"</span>), ]</span>
@@ -1121,6 +1417,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>correlation_matrix_disaster_Asia <span class="ot">&lt;-</span> <span class="fu">cor</span>(south_east_asia_data[, relevant_columns], <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(correlation_matrix_disaster_Asia)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+=======
+<p>We can see that the regions’ the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, America &amp; the Caribbean, Eastern Europe and sometimes Caucasus and Central Asia</p>
+<p>Now that we could visualize which regions are the most impacted by these three events we can do correlations analysis per region to see if this events have indeed an impact on the evolution of SDG goals.</p>
+<p>Here we want to analyse the correlation between the climate disasters and the SDG goals in South and East Asia.</p>
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-19_d7c98d670d4ff0cd42d8e05de2c9101b">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Q3<span class="fl">.1</span>[<span class="fu">is.na</span>(Q3<span class="fl">.1</span>)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>south_east_asia_data <span class="ot">&lt;-</span> Q3<span class="fl">.1</span>[Q3<span class="fl">.1</span><span class="sc">$</span>region <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"South Asia"</span>, <span class="st">"East Asia"</span>), ]</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>relevant_columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"goal1"</span>, <span class="st">"goal2"</span>, <span class="st">"goal3"</span>, <span class="st">"goal4"</span>, <span class="st">"goal5"</span>, <span class="st">"goal6"</span>, <span class="st">"goal7"</span>, <span class="st">"goal8"</span>, <span class="st">"goal9"</span>, <span class="st">"goal10"</span>, <span class="st">"goal11"</span>, <span class="st">"goal12"</span>, <span class="st">"goal13"</span>, <span class="st">"goal15"</span>, <span class="st">"goal16"</span>, <span class="st">"total_affected"</span>, <span class="st">"no_homeless"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>correlation_matrix_disaster_Asia <span class="ot">&lt;-</span> <span class="fu">cor</span>(south_east_asia_data[, relevant_columns], <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(correlation_matrix_disaster_Asia)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+>>>>>>> Stashed changes
 <div class="cell-output-display">
 <table data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
@@ -1491,6 +1802,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 </div>
+<<<<<<< Updated upstream
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>cor_melted <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">as.table</span>(correlation_matrix_disaster_Asia))</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cor_melted) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Variable1"</span>, <span class="st">"Variable2"</span>, <span class="st">"Correlation"</span>)</span>
@@ -1510,12 +1822,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="eda_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+=======
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>cor_melted <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">as.table</span>(correlation_matrix_disaster_Asia))</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cor_melted) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Variable1"</span>, <span class="st">"Variable2"</span>, <span class="st">"Correlation"</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> cor_melted, <span class="fu">aes</span>(Variable1, Variable2, <span class="at">fill =</span> Correlation)) <span class="sc">+</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">mid =</span> <span class="st">"white"</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">midpoint =</span> <span class="dv">0</span>, <span class="at">limit =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">space =</span> <span class="st">"Lab"</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">name =</span> <span class="st">"Correlation"</span>) <span class="sc">+</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">''</span>, <span class="at">y =</span> <span class="st">''</span>,</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">'Correlation between the climate disasters and the SDG goals in South and East Asia'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="eda_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+>>>>>>> Stashed changes
 </figure>
 </div>
 </div>
 </div>
 <p>We conclude that climate disasters do not really have a big impact on SDG goals.</p>
 <p>Here we want to analyse the correlation between the Covid-19 and the SDG goals only during Covid time.</p>
+<<<<<<< Updated upstream
 <div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-22_81c7a3205c85d20e518b43eb1651a725">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>covid_filtered <span class="ot">&lt;-</span> Q3<span class="fl">.2</span>[Q3<span class="fl">.2</span><span class="sc">$</span>year <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2019-01-01"</span>), ]</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1526,6 +1860,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>correlation_matrix_Covid <span class="ot">&lt;-</span> <span class="fu">cor</span>(relevant_data, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(correlation_matrix_Covid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+=======
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-20_63258c25a710ca1e3a0f252d0544f1c6">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>covid_filtered <span class="ot">&lt;-</span> Q3<span class="fl">.2</span>[Q3<span class="fl">.2</span><span class="sc">$</span>year <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2019-01-01"</span>), ]</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>relevant_columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"goal1"</span>, <span class="st">"goal2"</span>, <span class="st">"goal3"</span>, <span class="st">"goal4"</span>, <span class="st">"goal5"</span>, <span class="st">"goal6"</span>, <span class="st">"goal7"</span>, <span class="st">"goal8"</span>, <span class="st">"goal9"</span>, <span class="st">"goal10"</span>, <span class="st">"goal11"</span>, <span class="st">"goal12"</span>, <span class="st">"goal13"</span>, <span class="st">"goal15"</span>, <span class="st">"goal16"</span>, <span class="st">"stringency"</span>, <span class="st">"cases_per_million"</span>, <span class="st">"deaths_per_million"</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset data with relevant columns for correlation analysis</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>relevant_data <span class="ot">&lt;-</span> covid_filtered[, relevant_columns]</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>correlation_matrix_Covid <span class="ot">&lt;-</span> <span class="fu">cor</span>(relevant_data, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(correlation_matrix_Covid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+>>>>>>> Stashed changes
 <div class="cell-output-display">
 <table data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
@@ -1935,6 +2281,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 </div>
+<<<<<<< Updated upstream
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>cor_melted <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">as.table</span>(correlation_matrix_Covid))</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cor_melted) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Variable1"</span>, <span class="st">"Variable2"</span>, <span class="st">"Correlation"</span>)</span>
@@ -1954,12 +2301,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="eda_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+=======
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>cor_melted <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">as.table</span>(correlation_matrix_Covid))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cor_melted) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Variable1"</span>, <span class="st">"Variable2"</span>, <span class="st">"Correlation"</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> cor_melted, <span class="fu">aes</span>(Variable1, Variable2, <span class="at">fill =</span> Correlation)) <span class="sc">+</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">mid =</span> <span class="st">"white"</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">midpoint =</span> <span class="dv">0</span>, <span class="at">limit =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">space =</span> <span class="st">"Lab"</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">name =</span> <span class="st">"Correlation"</span>) <span class="sc">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">''</span>, <span class="at">y =</span> <span class="st">''</span>,</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">'Correlation between COVID and the SDG goals'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="eda_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+>>>>>>> Stashed changes
 </figure>
 </div>
 </div>
 </div>
 <p>Same conclusion, really weird.</p>
 <p>Here we want to analyse the correlation between conflicts deaths and the SDG goals only for the Middle East &amp; North Africa, Sub-Saharan Africa, South Asia, Latin America &amp; the Caribbean and Eastern Europe regions.</p>
+<<<<<<< Updated upstream
 <div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-23_daf9ba2b5a8b277a565ba8998843a20f">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter data for specific regions</span></span>
@@ -1974,6 +2343,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="co"># View the correlation matrix</span></span>
 <span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(correlation_matrix_Conflicts_Deaths)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+=======
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-21_42bb922ca24a774702b1ede6963aed69">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter data for specific regions</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>selected_regions <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Middle East &amp; North Africa"</span>, <span class="st">"Sub-Saharan Africa"</span>, <span class="st">"South Asia"</span>, <span class="st">"Latin America &amp; the Caribbean"</span>, <span class="st">"Eastern Europe"</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>conflicts_selected <span class="ot">&lt;-</span> Q3<span class="fl">.3</span>[Q3<span class="fl">.3</span><span class="sc">$</span>region <span class="sc">%in%</span> selected_regions, ]</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Select relevant columns for the correlation analysis</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>relevant_columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"goal1"</span>, <span class="st">"goal2"</span>, <span class="st">"goal3"</span>, <span class="st">"goal4"</span>, <span class="st">"goal5"</span>, <span class="st">"goal6"</span>, <span class="st">"goal7"</span>, <span class="st">"goal8"</span>, <span class="st">"goal9"</span>, <span class="st">"goal10"</span>, <span class="st">"goal11"</span>, <span class="st">"goal12"</span>, <span class="st">"goal13"</span>, <span class="st">"goal15"</span>, <span class="st">"goal16"</span>, <span class="st">"sum_deaths"</span>)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute correlation matrix for the selected regions</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>correlation_matrix_Conflicts_Deaths <span class="ot">&lt;-</span> <span class="fu">cor</span>(conflicts_selected[, relevant_columns], <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="co"># View the correlation matrix</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(correlation_matrix_Conflicts_Deaths)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+>>>>>>> Stashed changes
 <div class="cell-output-display">
 <table data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
@@ -2307,6 +2692,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 </div>
+<<<<<<< Updated upstream
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Melt the correlation matrix for ggplot2</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>cor_melted <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">as.table</span>(correlation_matrix_Conflicts_Deaths))</span>
@@ -2328,11 +2714,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="eda_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+=======
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Melt the correlation matrix for ggplot2</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>cor_melted <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">as.table</span>(correlation_matrix_Conflicts_Deaths))</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cor_melted) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Variable1"</span>, <span class="st">"Variable2"</span>, <span class="st">"Correlation"</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the heatmap</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> cor_melted, <span class="fu">aes</span>(Variable1, Variable2, <span class="at">fill =</span> Correlation)) <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">mid =</span> <span class="st">"white"</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">midpoint =</span> <span class="dv">0</span>, <span class="at">limit =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">space =</span> <span class="st">"Lab"</span>,</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">name =</span> <span class="st">"Correlation"</span>) <span class="sc">+</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">''</span>, <span class="at">y =</span> <span class="st">''</span>,</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">'Correlation between Conflicts deaths and the SDG goals'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="eda_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+>>>>>>> Stashed changes
 </figure>
 </div>
 </div>
 </div>
 <p>Finally, we want to analyse the correlation between conflicts affected population and the SDG goals only for the Middle East &amp; North Africa, Sub-Saharan Africa, South Asia, Latin America &amp; the Caribbean, Eastern Europe regions and Caucasus and Central Asia.</p>
+<<<<<<< Updated upstream
 <div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-24_50ecefeb0870dbf183982e2b0ccc7265">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter data for specific regions (pop_affected)</span></span>
@@ -2347,6 +2757,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="co"># View the correlation matrix</span></span>
 <span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(correlation_matrix_Conflicts_Pop_Affected)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+=======
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-22_276c08c22c4c8a0b0f5e849ee094aa9e">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter data for specific regions (pop_affected)</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>selected_regions <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Middle East &amp; North Africa"</span>, <span class="st">"Sub-Saharan Africa"</span>, <span class="st">"South Asia"</span>, <span class="st">"Latin America &amp; the Caribbean"</span>, <span class="st">"Eastern Europe"</span>,<span class="st">"Caucasus and Central Asia"</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>conflicts_selected <span class="ot">&lt;-</span> Q3<span class="fl">.3</span>[Q3<span class="fl">.3</span><span class="sc">$</span>region <span class="sc">%in%</span> selected_regions, ]</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Select relevant columns for the correlation analysis</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>relevant_columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"goal1"</span>, <span class="st">"goal2"</span>, <span class="st">"goal3"</span>, <span class="st">"goal4"</span>, <span class="st">"goal5"</span>, <span class="st">"goal6"</span>, <span class="st">"goal7"</span>, <span class="st">"goal8"</span>, <span class="st">"goal9"</span>, <span class="st">"goal10"</span>, <span class="st">"goal11"</span>, <span class="st">"goal12"</span>, <span class="st">"goal13"</span>, <span class="st">"goal15"</span>, <span class="st">"goal16"</span>, <span class="st">"pop_affected"</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute correlation matrix for the selected regions</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>correlation_matrix_Conflicts_Pop_Affected <span class="ot">&lt;-</span> <span class="fu">cor</span>(conflicts_selected[, relevant_columns], <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="co"># View the correlation matrix</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(correlation_matrix_Conflicts_Pop_Affected)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+>>>>>>> Stashed changes
 <div class="cell-output-display">
 <table data-quarto-postprocess="true" class="table table-sm table-striped small">
 <thead>
@@ -2680,6 +3106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 </div>
+<<<<<<< Updated upstream
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Melt the correlation matrix for ggplot2</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>cor_melted <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">as.table</span>(correlation_matrix_Conflicts_Pop_Affected))</span>
@@ -2701,6 +3128,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="eda_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+=======
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Melt the correlation matrix for ggplot2</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>cor_melted <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">as.table</span>(correlation_matrix_Conflicts_Pop_Affected))</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cor_melted) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Variable1"</span>, <span class="st">"Variable2"</span>, <span class="st">"Correlation"</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the heatmap</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> cor_melted, <span class="fu">aes</span>(Variable1, Variable2, <span class="at">fill =</span> Correlation)) <span class="sc">+</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">mid =</span> <span class="st">"white"</span>,</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">midpoint =</span> <span class="dv">0</span>, <span class="at">limit =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">space =</span> <span class="st">"Lab"</span>,</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">name =</span> <span class="st">"Correlation"</span>) <span class="sc">+</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">''</span>, <span class="at">y =</span> <span class="st">''</span>,</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">'Correlation between Conflicts Affected Population and the SDG goals'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="eda_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+>>>>>>> Stashed changes
 </figure>
 </div>
 </div>
