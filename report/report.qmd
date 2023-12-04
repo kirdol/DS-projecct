@@ -10,7 +10,7 @@ format:
     number-sections: true
     code-fold: true
     code-tools: true
-    theme: flatly
+    theme: flatly3
     link-external-icon: true
 ---
 
