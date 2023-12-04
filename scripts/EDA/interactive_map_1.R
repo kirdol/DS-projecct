@@ -58,6 +58,7 @@ server <- function(input, output, session) {
 
 # Run the Shiny app
 mapApp <- shinyApp(ui, server)
+mapApp
 shinylive::export("mapApp", "report")
 
 # Test 2
@@ -77,9 +78,9 @@ unique_years <- unique(data0$year)
 
 plot_ly(
   type = "choropleth",
-  z = ~data0$overallscore,
-  locations = ~data0$iso_a3,
-  text = ~paste("Country: ", data0$name, "<br>Overall Score: ", data0$overallscore),
+  z = ~data0$overallscore[data0$year==2000],
+  locations = ~data0$iso_a3[data0$year==2000],
+  text = ~paste("Country: ", data0$name[data0$year==2000], "<br>Overall Score: ", data0$overallscore[data0$year==2000]),
   colors = c("darkred", "orange", "yellow", "darkgreen"),
   colorbar = list(title = "Overall Score", cmin = 40, cmax = 87),
   zmin = 40,
@@ -99,7 +100,8 @@ plot_ly(
             label = as.character(year),
             method = "restyle",
             args = list(
-              list(z = list(data0$overallscore[data0$year == year]))
+              list(z = list(data0$overallscore[data0$year == year]),
+                   text = ~paste("Country: ", data0$name[data0$year==year], "<br>Overall Score: ", data0$overallscore[data0$year==year]))
             )
           )
         })

@@ -39,7 +39,8 @@ packages <- c(
   "stargazer",
   "patchwork",
   "e1071",
-  "car"
+  "car",
+  "naniar"
 )
 
 for (pkg in packages) {
