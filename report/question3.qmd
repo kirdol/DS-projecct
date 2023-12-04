@@ -360,7 +360,7 @@ Our last idea is to see the regressions between the SDG scores and the variables
 
 Let's see the regressions for each score depending of each variable in the disasters dataset (total_affected and total_deaths)
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
 library(shiny)
 library(dplyr)
@@ -435,7 +435,7 @@ shinyApp(ui, server)
 ```
 Let's see the regressions for each score depending of each variable in the COVID-19 dataset (stringency, cases_per_million and deaths_per_million).
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
 covid_filtered <- Q3.2
 
@@ -523,7 +523,7 @@ shinyApp(ui, server)
 ```
 Now, let's see the regressions for each SDG score depending of each variable in the Conflicts dataset (pop_affected and sum_deaths).
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
 conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe", "Caucasus and Central Asia"), ]
 
