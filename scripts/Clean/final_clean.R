@@ -33,9 +33,6 @@ data_question3_3 <- all_Merge %>% filter(year<=2016) %>% select(c(code, year, co
 
 #### Question1
 data_question1 <- data_question1 %>% select(-X)
-
-library(UpSetR)
-naniar::gg_miss_upset(data_question1, nsets=16, nintersects=21)
  
 variable_names <- names(data_question1)
 missing_percentages <- sapply(data_question1, function(col) mean(is.na(col)) * 100)
@@ -200,6 +197,8 @@ list_country_deleted <- c(list_country_deleted, "CIV")
 # Human Freedom Index
 # Remove hf_score, pf_score and ef_score because many missing and since these variables are summary of other ones, deleting the mwon't make us loose information
 data_question1 <- data_question1 %>% select(-c(hf_score, pf_score, ef_score))
+
+naniar::gg_miss_upset(data_question1, nsets=10, nintersects=11)
 
 # pf_law has (many) missing only for one country:BLZ, we remove it 
 data_question1 <- data_question1 %>% filter(code!="BLZ")
