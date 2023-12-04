@@ -9,6 +9,73 @@ source(here::here("scripts/Clean/setup.R"))
 ### Focus on relationship between SDGs
 **How are the different SDGs linked? (We want to see if some SDGs are linked in the fact that a high score on one implies a high score on the other, and thus if we can make groups of SDGs that are comparable in that way).**
 
+## Focus on relationship between SDGs
+```{r Improting the data, echo=FALSE, message=FALSE}
+source(here::here("scripts","Clean","setup.R"))
+threashold_heatmap <- 0.5
+```
+
+Let's analyse our relationship between the SDGs. For that, we'll import our dataset to examine the interconnections among the Sustainable Development Goals (SDGs). After importing, we'll focus specifically on the columns representing the goals of interest. To provide a comprehensive analysis, we will construct a correlation matrix, highlighting only those goals where the correlation coefficient is either greater than `r threashold_heatmap` (indicating a strong positive relationship) or less than -`r threashold_heatmap` (signifying a strong negative relationship). This approach will enable us to identify and analyze the most significant relationships between the selected SDGs.
+
+```{r Preparation of the data, echo = TRUE, message = FALSE, warning=FALSE}
+data_4 <- read.csv(here::here("scripts", "data", "data_question24.csv"))
+goals_data_4_cl <- na.omit(data_4, cols=c("goal1", "goal10"))
+goals_data_4_cl <- goals_data_4_cl[, grepl("goal", names(goals_data_4_cl))]
+```
+
+Given that our variables do not follow a normal distribution, employing the Pearson correlation method is not suitable in our analysis. We attempted to normalize the data through logarithmic and square root transformations, but these adjustments were insufficiently effective. Consequently, we will resort to computing the Spearman correlation. While not ideal, this method does not necessitate the normal distribution of our data. In our analysis, particularly for the heatmap visualization, we will focus on correlations that exceed the threshold of r threshold_heatmap or fall below -r threshold_heatmap. This selective approach will enhance the readability and interpretability of the heatmap.
+
+```{r Spearman cor, echo = TRUE, message = FALSE, warning=FALSE}
+spearman_corr_4_cl <- cor(goals_data_4_cl, method = "spearman", use = "everything")
+spearman_corr_4_cl[abs(spearman_corr_4_cl) < threashold_heatmap] <- NA
+```
+
+We can then plot the Heatmap of the Spearman correlation using the `ggplot2` package.
+
+```{r Spearman Heatmap, echo = TRUE, message = FALSE, warning=FALSE}
+# Melting the data
+melted_corr_4 <- melt(spearman_corr_4_cl, na.rm = TRUE)
+
+# Creating the heatmap
+ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
+    geom_tile() +
+    geom_text(aes(label = sprintf("%.2f", value)), vjust = 0.5, size=2.5) + # Adding text
+    scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                         midpoint = 0, limit = c(-1,1), space = "Lab", 
+                         name="Spearman\nCorrelation",
+                         na.value = "grey") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(title = "Heatmap of Spearman Correlations for Goals", 
+         x = "", y = "")
+```
+
+It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals appear to be less interrelated compared to others. Specifically, SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) demonstrate a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also exhibits a lesser degree of interconnection with the other SDGs.
+
+```{r Scree Plot and Biplot, echo = TRUE, message = FALSE, warning=FALSE}
+# Selecting only numeric columns, assuming they are named as 'goal1', 'goal2', etc.
+goals_data <- goals_data_4_cl[, grep('goal', names(goals_data_4_cl))]
+goals_data_scaled <- scale(goals_data) # Scaling the data
+pca_result <- prcomp(goals_data_scaled) # Running PCA
+
+# Summary of PCA - shows variance explained by each principal component
+# summary(pca_result)
+
+# Plotting Scree plot to visualize the importance of each principal component
+fviz_eig(pca_result,
+         addlabels = TRUE) +
+  theme_minimal()
+
+# Plotting Biplot to visualize the two main PCs
+fviz_pca_biplot(pca_result,
+                label="var",
+                col.var="dodgerblue3",
+                geom="point",
+                pointsize = 0.1,
+                labelsize = 5) +
+  theme_minimal()
+```
+
 In our EDA on the focus on the influence of the factors over the SDG scores, we had made a correlation matrix heatmap that took into account every variable of our dataset. Here, we tried to zoom on certain parts of the heatmap. We have decided to add on our graphs the correlations between variables when our pvalue was significant (alpha = 0.05). The grey zones are concerning our non-significant pvalues. 
 
 Let's see first the correlation matrix heatmap regarding our SDG goals and all our variables different than our SDG goals.

@@ -14,5 +14,9 @@ format:
     link-external-icon: true
 ---
 
+<<<<<<< Updated upstream
 ```{r child = c('intro.qmd', 'data.qmd', 'eda.qmd', 'question2.qmd', 'question3.qmd', 'question4.qmd', 'analysis.qmd', 'concl.qmd')}
+=======
+```{r child = c('intro.qmd', 'data.qmd', 'eda.qmd', 'question2.qmd', 'analysis.qmd', 'concl.qmd')}
+>>>>>>> Stashed changes
 ```
