@@ -158,6 +158,11 @@ Here you can see an interactive map of the correlation between the climate disas
 library(shiny)
 library(plotly)
 
+# grouper par pays et par année (regrouper)
+Q3.1 <- Q3.1 %>%
+  arrange(code,year)%>%
+  group_by(code)
+
 south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
 
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "total_deaths")
@@ -234,6 +239,10 @@ here you can see an interactive map of the correlation between COVID-19 and the 
 library(shiny)
 library(plotly)
 
+Q3.2 <- Q3.2 %>%
+  arrange(code,year)%>%
+  group_by(code)
+
 Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
 
 covid_filtered <- Q3.2
@@ -297,6 +306,10 @@ Finally, here you can see an interactive map of the correlation between Conflict
 
 library(shiny)
 library(plotly)
+
+Q3.3 <- Q3.3 %>%
+  arrange(code,year)%>%
+  group_by(code)
 
 conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe", "Caucasus and Central Asia"), ]
 
