@@ -62,7 +62,7 @@ data_Q1_Africa_long <- data_Q1_Africa_long %>%
   left_join(medians_AF, by = "variable")
 
 bandwidth_nrd_AF <- bw.nrd(data_Q1_Africa_long$value)
-ggplot(data_Q1_Africa_long, aes(x = variable, y = value, fill = color)) + 
+AF <- ggplot(data_Q1_Africa_long, aes(x = variable, y = value, fill = color)) + 
   geom_violin(trim = FALSE, bw = bandwidth_nrd_AF) +  
   scale_fill_identity() +
   labs(title = "Africa SDG goals boxplot", x = "Goals", y = "Score") +
@@ -85,7 +85,7 @@ data_Q1_Europe_long <- data_Q1_Europe_long %>%
   left_join(medians_EU, by = "variable")
 
 bandwidth_nrd_EU <- bw.nrd(data_Q1_Europe_long$value)
-ggplot(data_Q1_Europe_long, aes(x = variable, y = value, fill = color)) + 
+EU <- ggplot(data_Q1_Europe_long, aes(x = variable, y = value, fill = color)) + 
   geom_violin(trim = FALSE, bw = bandwidth_nrd_EU) +
   scale_fill_identity() +
   labs(title = "European SDG goals boxplot", x = "Goals", y = "Score") +
@@ -108,7 +108,7 @@ data_Q1_Asia_long <- data_Q1_Asia_long %>%
   left_join(medians_AS, by = "variable")
 
 bandwidth_nrd_AS <- bw.nrd(data_Q1_Asia_long$value)
-ggplot(data_Q1_Asia_long, aes(x = variable, y = value, fill = color)) + 
+AS <- ggplot(data_Q1_Asia_long, aes(x = variable, y = value, fill = color)) + 
   geom_violin(trim = FALSE, bw = bandwidth_nrd_AS) +
   scale_fill_identity() +
   labs(title = "Asian SDG goals boxplot", x = "Goals", y = "Score") +
@@ -131,7 +131,7 @@ data_Q1_Americas_long <- data_Q1_Americas_long %>%
   left_join(medians_AM, by = "variable")
 
 bandwidth_nrd_AM <- bw.nrd(data_Q1_Americas_long$value)
-ggplot(data_Q1_Americas_long, aes(x = variable, y = value, fill = color)) + 
+AM <- ggplot(data_Q1_Americas_long, aes(x = variable, y = value, fill = color)) + 
   geom_violin(trim = FALSE, bw = bandwidth_nrd_AM) +
   scale_fill_identity() +
   labs(title = "American SDG goals boxplot", x = "Goals", y = "Score") +
@@ -154,7 +154,7 @@ data_Q1_Oceania_long <- data_Q1_Oceania_long %>%
   left_join(medians_OC, by = "variable")
 
 bandwidth_nrd_OC <- bw.nrd(data_Q1_Oceania_long$value)
-ggplot(data_Q1_Oceania_long, aes(x = variable, y = value, fill = color)) + 
+OC <- ggplot(data_Q1_Oceania_long, aes(x = variable, y = value, fill = color)) + 
   geom_violin(trim = FALSE, bw = bandwidth_nrd_OC) +
   scale_fill_identity() +
   labs(title = "Oceanian SDG goals boxplot", x = "Goals", y = "Score") +
@@ -162,6 +162,8 @@ ggplot(data_Q1_Oceania_long, aes(x = variable, y = value, fill = color)) +
   scale_y_continuous(labels = scales::label_number()) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+grid.arrange(AF,EU,AS,AM,OC, ncol = 2, nrow = 3)
 
 # Correlation_goals <- melt(Correlation_overall[,2:18])
 # ggplot(Correlation_goals, aes(x= variable, y= value)) + 
@@ -183,7 +185,94 @@ We now display boxplpots for the different variables of the human freedom index,
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 #for Human Freedom Index scores 
 
+#Africa 
+data_Q1_Africa_HFI_long <- melt(data_Q1_Africa[,29:40])
 
+medians_HFI_AF <- data_Q1_Africa_HFI_long %>%
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+
+medians_HFI_AF$color <- ifelse(medians_HFI_AF$median_value > 7.5, "lightblue", 
+                        ifelse(medians_HFI_AF$median_value < 2.5, "red", 'orange'))
+
+data_Q1_Africa_HFI_long <- data_Q1_Africa_HFI_long %>%
+  left_join(medians_HFI_AF, by = "variable")
+
+bandwidth_nrd_HFI_AF <- bw.nrd(data_Q1_Africa_HFI_long$value)
+HFI_AF <- ggplot(data_Q1_Africa_HFI_long, aes(x = variable, y = value, fill = color)) + 
+  geom_violin(trim = FALSE, bw = bandwidth_nrd_HFI_AF) +
+  scale_fill_identity() +
+  labs(title = "African HFI Scores boxplot", x = "Human Freedom Index goals", y = "Score") +
+  geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +
+  scale_y_continuous(labels = scales::label_number()) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+#Europe
+data_Q1_Europe_HFI_long <- melt(data_Q1_Europe[,29:40])
+
+medians_HFI_EU <- data_Q1_Europe_HFI_long %>%
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+
+medians_HFI_EU$color <- ifelse(medians_HFI_EU$median_value > 7.5, "lightblue", 
+                        ifelse(medians_HFI_EU$median_value < 2.5, "red", 'orange'))
+
+data_Q1_Europe_HFI_long <- data_Q1_Europe_HFI_long %>%
+  left_join(medians_HFI_EU, by = "variable")
+
+bandwidth_nrd_HFI_EU <- bw.nrd(data_Q1_Europe_HFI_long$value)
+HFI_EU <- ggplot(data_Q1_Europe_HFI_long, aes(x = variable, y = value, fill = color)) + 
+  geom_violin(trim = FALSE, bw = bandwidth_nrd_HFI_EU) +
+  scale_fill_identity() +
+  labs(title = "Europe HFI Scores boxplot", x = "Human Freedom Index goals", y = "Score") +
+  geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +
+  scale_y_continuous(labels = scales::label_number()) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+#Asia
+data_Q1_Asia_HFI_long <- melt(data_Q1_Asia[,29:40])
+
+medians_HFI_AS <- data_Q1_Asia_HFI_long %>%
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+
+medians_HFI_AS$color <- ifelse(medians_HFI_AS$median_value > 7.5, "lightblue", 
+                        ifelse(medians_HFI_AS$median_value < 2.5, "red", 'orange'))
+
+data_Q1_Asia_HFI_long <- data_Q1_Asia_HFI_long %>%
+  left_join(medians_HFI_AS, by = "variable")
+
+bandwidth_nrd_HFI_AS <- bw.nrd(data_Q1_Asia_HFI_long$value)
+HFI_AS <- ggplot(data_Q1_Asia_HFI_long, aes(x = variable, y = value, fill = color)) + 
+  geom_violin(trim = FALSE, bw = bandwidth_nrd_HFI_AS) +
+  scale_fill_identity() +
+  labs(title = "Asian HFI Scores boxplot", x = "Human Freedom Index goals", y = "Score") +
+  geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +
+  scale_y_continuous(labels = scales::label_number()) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+#America
+data_Q1_America_HFI_long <- melt(data_Q1_Americas[,29:40])
+
+medians_HFI_AM <- data_Q1_America_HFI_long %>%
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+
+medians_HFI_AM$color <- ifelse(medians_HFI_AM$median_value > 7.5, "lightblue", 
+                        ifelse(medians_HFI_AM$median_value < 2.5, "red", 'orange'))
+
+data_Q1_America_HFI_long <- data_Q1_America_HFI_long %>%
+  left_join(medians_HFI_AM, by = "variable")
+
+bandwidth_nrd_HFI_AM <- bw.nrd(data_Q1_America_HFI_long$value)
+HFI_AM <- ggplot(data_Q1_Asia_HFI_long, aes(x = variable, y = value, fill = color)) + 
+  geom_violin(trim = FALSE, bw = bandwidth_nrd_HFI_AM) +
+  scale_fill_identity() +
+  labs(title = "America HFI Scores boxplot", x = "Human Freedom Index goals", y = "Score") +
+  geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +
+  scale_y_continuous(labels = scales::label_number()) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 #Oceania
 
 data_Q1_Oceania_HFI_long <- melt(data_Q1_Oceania[,29:40])
@@ -199,7 +288,7 @@ data_Q1_Oceania_HFI_long <- data_Q1_Oceania_HFI_long %>%
   left_join(medians_HFI_OC, by = "variable")
 
 bandwidth_nrd_HFI_OC <- bw.nrd(data_Q1_Oceania_HFI_long$value)
-ggplot(data_Q1_Oceania_HFI_long, aes(x = variable, y = value, fill = color)) + 
+HFI_OC <- ggplot(data_Q1_Oceania_HFI_long, aes(x = variable, y = value, fill = color)) + 
   geom_violin(trim = FALSE, bw = bandwidth_nrd_HFI_OC) +
   scale_fill_identity() +
   labs(title = "Oceanian HFI Scores boxplot", x = "Human Freedom Index goals", y = "Score") +
@@ -208,24 +297,26 @@ ggplot(data_Q1_Oceania_HFI_long, aes(x = variable, y = value, fill = color)) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 
-boxplot(Correlation_overall[23:34], 
-        las = 2,            # Makes the axis labels perpendicular to the axis
-        par(mar = c(7, 5, 2, 1)),  # Adjusts the margins to fit all labels
-        cex.axis = 0.7,      # Reduces the size of the axis labels
-        cex.lab = 1,       # Reduces the size of the x and y labels
-        notch = TRUE,       # Specifies whether to add notches or not
-        main = "Merged Human Freedom Index scores boxplot", 
-        ylab = "Score")     # Y-axis label
+grid.arrange(HFI_AF,HFI_EU,HFI_AS,HFI_AM,HFI_OC, ncol = 2, nrow = 3)
+
+# boxplot(Correlation_overall[23:34], 
+#         las = 2,            # Makes the axis labels perpendicular to the axis
+#         par(mar = c(7, 5, 2, 1)),  # Adjusts the margins to fit all labels
+#         cex.axis = 0.7,      # Reduces the size of the axis labels
+#         cex.lab = 1,       # Reduces the size of the x and y labels
+#         notch = TRUE,       # Specifies whether to add notches or not
+#         main = "Merged Human Freedom Index scores boxplot", 
+#         ylab = "Score")     # Y-axis label
 
 
-Correlation_HFI <- melt(Correlation_overall[,23:34])
-ggplot(Correlation_HFI, aes(x= variable, y= value)) + 
-  geom_violin(trim=FALSE, fill="orange")+
-  labs(title="Merged Human Freedom Index scores violin boxplot",x="Variables", y = "Score")+
-  geom_boxplot(width=0.1, outlier.size = 1)+
-  scale_y_continuous(labels = scales::label_number()) + #limits = c(0, 100)
-  theme_classic() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+# Correlation_HFI <- melt(Correlation_overall[,23:34])
+# ggplot(Correlation_HFI, aes(x= variable, y= value)) + 
+#   geom_violin(trim=FALSE, fill="orange")+
+#   labs(title="Merged Human Freedom Index scores violin boxplot",x="Variables", y = "Score")+
+#   geom_boxplot(width=0.1, outlier.size = 1)+
+#   scale_y_continuous(labels = scales::label_number()) + #limits = c(0, 100)
+#   theme_classic() +
+#   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 v1 <- ggplot(Correlation_overall, aes(x= factor(1), y= GDPpercapita)) + 
   geom_violin(trim=FALSE, fill="orange")+
@@ -426,50 +517,6 @@ pairs(Correlation_overall_sqrt[,c("overallscore", "ef_government", "ef_legal", "
 ```
 
 The overall SDG achievement score is highly correlated with "economical freedom: legal" (p=.77), "economical trade: legal" (p=.67) and "economical freedom: money" (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-#### PCA ####
-
-# for goals
-myPCA_g <- PCA(data_question1[,9:24], graph = FALSE)
-plot(myPCA_g$ind$coord[, 1], myPCA_g$ind$coord[, 2], xlab = "PC1", ylab = "PC2", main = "PCA Plot SDG Goals", pch = 19, col = "blue", cex = 0.5) + 
-  abline(h = 0, col = "red", lty = 2) + 
-  abline(v = 0, col = "red", lty = 2)
-plot.PCA(myPCA_g, choix = "var", pch = 10, cex = 0.6)
-
-summary(myPCA_g)
-myPCA_g$eig
-```
-
-Concerning the SDG goals, we conclude that most of our variables are going along the 1st component, except the goals 10 and 15 that are rather uncorrelated with the dimension 1. In addition, as seen before, the goals 12 and 13 are negatively correlated to the other goals. With a eigenvalue bigger than 1 for the first two components, we conclude that there are only 2 dimensions to take into account, according to the Kaiser-Guttman's rule. Nevertheless, they are explaining less than 80% of cumulated variance.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-#for HFI scores
-myPCA_s <- PCA(data_question1[,29:40], graph = FALSE)
-plot(myPCA_s$ind$coord[, 1], myPCA_s$ind$coord[, 2], xlab = "PC1", ylab = "PC2", main = "PCA Plot HFI Scores", pch = 19, col = "blue", cex = 0.5) + 
-  abline(h = 0, col = "red", lty = 2) + 
-  abline(v = 0, col = "red", lty = 2)
-plot.PCA(myPCA_s, choix = "var",cex = 0.5)
-summary(myPCA_s)
-myPCA_s$eig
-```
-
-Now concerning the Human Freedom Index scores, most of the variables are positively correlated to the dimension 1, slightly less for the PF religion and security, and finaly the EF government variable is uncorrelated to the dimension 1. With a eigenvalue bigger than 1 for the three first components, we conclude that there are 3 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-#### Kmean clustering ####
-
-data1_scaled <- scale(Correlation_overall)
-rownames(data1_scaled) <- seq_along(row.names(data1_scaled))
-fviz_nbclust(data1_scaled, kmeans, method="wss")
-kmean <- kmeans(data1_scaled, 7, nstart = 25)
-print(kmean)
-fviz_cluster(kmean, data=data1_scaled, repel=FALSE, depth =NULL, ellipse.type = "norm", labelsize = 0, pointsize = 0.5)
-
-### NOW CLUSTERING BY COUNTRY? AND TAKE MEAN OF EVERY VARIABLE ON EVERY CONCERNED YEAR?
-```
-
-Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough.
 
 ## Focus on the influence of events over the SDG scores
 

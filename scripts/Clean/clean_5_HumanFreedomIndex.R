@@ -123,5 +123,52 @@ country_na_count <- na_long %>%
 
 print(country_na_count)
 
+###### Partie quarto data.qmd #####
+
+### D5_0_Human_freedom_index {.unnumbered}
+
+```{r}
+D5_0_Human_freedom_index_table_info <- data.frame(
+  Column1 = c("code",
+              "country",
+              "year",
+              "region",
+              "pf_law",
+              "pf_security",
+              "pf_movement",
+              "pf_religion",
+              "pf_assembly",
+              "pf_expression",
+              "pf_identity",
+              "ef_gouvernment",
+              "ef_legal",
+              "ef_money",
+              "ef_trade",
+              "ef_regulation"),
+  Column2 = c("Country code (ISO)", 
+              "Country name",
+              "Year of the observation (2000-2022)",
+              "Part of the world, group of countries (e.g. Eastern Europe, Dub-Saharan Africa, South Asia, etc.)",
+              "Rule of law, mean score of: Procedural justice, Civil, justice, Criminal justice, Rule of law (V-Dem)",
+              "Security and safety, mean score of: Homicide, Disappearances conflicts, terrorism",
+              "Freedom of movement (V-Dem), Freedom of movement (CLD)",
+              "Freedom of religion, Religious organization, repression",
+              "Civil society entry and exit, Freedom of assembly, Freedom to form/run political parties, Civil society repression",
+              "Direct attacks on the press, Media and expression (V-Dem), Media and expression (Freedom House), Media and expression (BTI), Media and expression (CLD)",
+              "Same-sex relationships, Divorce, Inheritance rights, Female genital mutilation",
+              "Government consumption, Transfers and subsidies, Government investment, Top marginal tax rate, State ownership of assets",
+              "Judicial independence, Impartial courts, Protection of property rights, Military interference Integrity of the legal system Legal enforcementof contracts, Regulatory costs, Reliability of police",
+              "Money growth, Standard deviation of inflation, Inflation: Most recent year, Freedom to own foreign currency",
+              "Tariffs, Regulatory trade barriers, Black-market exchange rates, Movement of capital and people",
+              "Credit market regulations, Labor market regulations, Business regulations"))
+
+colnames(D5_0_Human_freedom_index_table_info) <- c("Variable Name",
+                                                   "Explanation")
+
+D5_0_Human_freedom_index_table_info %>%
+  kable(format = "html", escape = FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
+  column_spec(1, width = "35%")
+```
 
 
