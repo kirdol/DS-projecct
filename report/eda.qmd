@@ -1,6 +1,6 @@
 # Exploratory data analysis
 
-```{r setup, echo = FALSE, message = FALSE, warning=FALSE, cache = TRUE}
+```{r setup, echo = FALSE, message = FALSE, warning=FALSE}
 source(here::here("scripts/Clean/setup.R"))
 source(here::here("scripts/EDA/EDA_4_SDG.R"))
 ```
@@ -320,40 +320,8 @@ datatable(cor_matrix_log,
 
 By doing so, we obtain a lot of positive and negative correlations. To help us to better understand and having a overall vision of the situation, we used the following heatmap.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### Heatmap ####
-
-#with log transformation
-
-cor_melted_log <- melt(cor_matrix_log)
-
-ggplot(data = cor_melted_log, aes(Var1, Var2, fill = value)) +
-  geom_tile() +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
-                       name="Pearson\nCorrelation") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
-        axis.text.y = element_text(size = 8)) +
-  coord_fixed() +
-  labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
-
-#with square root transformation
-
-cor_melted_sqrt <- melt(cor_matrix_sqrt)
-
-ggplot(data = cor_melted_sqrt, aes(Var1, Var2, fill = value)) +
-  geom_tile() +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
-                       name="Pearson\nCorrelation") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
-        axis.text.y = element_text(size = 8)) +
-  coord_fixed() +
-  labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
-
-#with Spearman
 
 cor_melted <- melt(cor_matrix_sper)
 
@@ -369,17 +337,15 @@ ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
 
 
-
 #do 3 different heatmaps : goals on goals, goals on other variables except goals, variables on variables (except goals)
-
 ```
 
 In the correlation matrix heatmap, we can notice that many goals from 1 to 11 are actually positively correlated together. On another hand, the goals 12 and 13 are have negative relationships with the majority of our variables, except between themself, whereas they are strongely correlated. In addition, we can notice another strongly correlation between personal freedom variables (pf) related to the scores given by the Human Freedom Index on movement, religion, assembly and expression.
 
 In order to have an overview of the relationship between our independent variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-#### Pearson's correlation coeff ####
+```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
+#### Spearman's correlation coeff ####
 
 panel.hist <- function(x, ...){ 
   usr <- par("usr"); on.exit(par(usr)) 
@@ -392,28 +358,28 @@ panel.hist <- function(x, ...){
 panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){ 
   usr <- par("usr"); on.exit(par(usr)) 
   par(usr = c(0, 1, 0, 1)) 
-  r <- (cor(x, y)) 
+  r <- cor(x, y, method = "spearman") 
   txt <- format(c(r, 0.123456789), digits = digits)[1] 
   txt <- paste0(prefix, txt) 
   if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt) 
   text(0.5, 0.5, txt, cex = cex.cor * r)
 }
 
-# Independent variables 
-#with log transformation
-pairs(Correlation_overall_skew[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of various variables")
-#with square root transformation
-pairs(Correlation_overall_sqrt[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of various variables")
+# # Independent variables 
+# #with log transformation
+# pairs(Correlation_overall_skew[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of various variables")
+# #with square root transformation
+# pairs(Correlation_overall_sqrt[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of various variables")
 ```
 
 The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%", out.height="100%"}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, out.width="100%", out.height="100%"}
 #with log transformation
-pairs(Correlation_overall_skew[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly", "pf_expression", "pf_identity")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of personal freedom variables")
-
-#with square root transformation
-pairs(Correlation_overall_sqrt[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly", "pf_expression", "pf_identity")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of personal freedom variables")
+# pairs(Correlation_overall_skew[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly", "pf_expression", "pf_identity")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of personal freedom variables")
+# 
+# #with square root transformation
+# pairs(Correlation_overall_sqrt[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly", "pf_expression", "pf_identity")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of personal freedom variables")
 ```
 
 The overall SDG achievement score is highly correlated with "personal freedom: law" (p=.69) and "personal freedom: identity" (p=.62). The other dimensions of personal freedom do not seem to have important influence. Regarding the distribution of the personal freedom variables, we notice that except for law, all have right-skewed distributions meaning that most of the countries have high scores.
@@ -583,7 +549,7 @@ The different variables used to materialize the impact of conflicts do not seem 
 
 To explore our data on events such as disasters, covid-19 and conflicts we have to first see which countries are the most touched by these. To do so, we made time-series analysis on this three events each time depending on different variables.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 # Converted 'year' column to date format
 Q3.1$year <- as.Date(as.character(Q3.1$year), format = "%Y")
 Q3.2$year <- as.Date(as.character(Q3.2$year), format = "%Y")
@@ -592,7 +558,7 @@ Q3.3$year <- as.Date(as.character(Q3.3$year), format = "%Y")
 
 These is our time-analysis concerning the COVID-19 cases per million by region between end 2018 and 2022.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 library(ggplot2)
 covid_filtered <- Q3.2[Q3.2$year >= as.Date("2018-12-12"), ]
 
@@ -614,7 +580,7 @@ ggplot(data = covid_filtered, aes(x = year, y = cases_per_million, group = regio
 
 These is our time-analysis concerning the COVID-19 deaths per million per region between end 2018 and 2022
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 ggplot(data = covid_filtered, aes(x = year, y = deaths_per_million, group = region, color = region)) +
   geom_smooth(method = "loess",  se = FALSE, span = 0.8, size = 0.5) + 
   labs(title = "Trend of COVID-19 Deaths per Million Over Time", x = "Year", y = "Deaths per Million") +
@@ -632,7 +598,7 @@ ggplot(data = covid_filtered, aes(x = year, y = deaths_per_million, group = regi
 
 These is our time-analysis concerning the COVID-19 stringency per region between end 2018 and 2022
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 ggplot(data = covid_filtered, aes(x = year, y = stringency, group = region, 
                                   color = region)) +
   geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
@@ -651,7 +617,7 @@ ggplot(data = covid_filtered, aes(x = year, y = stringency, group = region,
 
 These is our time-analysis concerning climatic disasters with total affected per region
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 Q3.1[is.na(Q3.1)] <- 0
 ggplot(data = Q3.1, aes(x = year, y = total_affected, group = region, color = region)) +
   geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
@@ -670,7 +636,7 @@ ggplot(data = Q3.1, aes(x = year, y = total_affected, group = region, color = re
 
 These is our time-analysis concerning conflicts deaths per region between 2000 and 2016
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 conflicts_filtered <- Q3.3[Q3.3$year >= as.Date("2000-01-01") & Q3.3$year <= as.Date("2016-12-31"), ]
 
 ggplot(data = conflicts_filtered, aes(x = year, y = sum_deaths, group = region, color = region)) +
@@ -692,7 +658,7 @@ We can see that the regions' the most affected by the conflicts are : Middle eas
 
 These is our time-analysis concerning conflicts affected population per region between 2000 and 2016
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region, color = region)) +
   geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.5) +  # Using loess smoothing method
   labs(title = "Trend of Population Affected by Conflicts Over Time", x = "Year", y = "pop_affected") +
