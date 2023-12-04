@@ -74,7 +74,11 @@ plots <- list()
 for (year in unique_years) {
   top_countries <- binary2015[binary2015$year == year, ] %>%
     arrange(desc(year), desc(diff_overallscore)) %>%
-    head(n = top_n_values)
+    head(n = top_n_values)%>%
+    select(c(year, country, diff_overallscore, region))
+  
+  print(top_countries$diff_overallscore)
+  print(top_countries$region)
   
   plot <- ggplot(data = top_countries, mapping = aes(x = country, y = diff_overallscore, fill = region)) +
     geom_bar(stat = "identity") +
