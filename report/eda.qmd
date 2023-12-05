@@ -530,7 +530,6 @@ In order to have an overview of the relationship between the different events va
 lower.panel <- function(x, y, ...){
   points(x, y, pch = 20, col = "black", cex = 0.2)
 }
-
 evaluateCorrelationStars <- function(correlation) {
   if (abs(correlation) >= 0.7) {
     return("*****")  # Strong correlation: 5 stars
@@ -566,7 +565,6 @@ The different variables used to materialize the impact of climate disasters do n
 lower.panel <- function(x, y, ...){
   points(x, y, pch = 20, col = "black", cex = 0.2)
 }
-
 evaluateCorrelationStars <- function(correlation) {
   if (abs(correlation) >= 0.7) {
     return("*****")  

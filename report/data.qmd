@@ -42,7 +42,9 @@ source_info %>%
 
 During the wrangling process, we added data to our table (D1_1_SDG) from different other datasets and match them based on the country code, and the year. The tables below show all the variables present in our 9 databases. We will then merge them to have our final table for the analysis.
 
-### D1_1_SDG {.unnumbered}
+### Our databases
+
+#### Sustainable Development Goals database (***DGD1_1_SDG***) {.unnumbered}
 
 Our primary database focuses on the Sustainable Development Goals (SDG). Below is a table summarizing the key variables included:
 
@@ -70,7 +72,9 @@ D1_1_SDG_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-### D2_2_Unemployment_rate {.unnumbered}
+The Sustainable Development Goals (SDGs) are a universal set of 17 interlinked goals that were adopted by the United Nations in 2015 as part of the 2030 Agenda for Sustainable Development. These goals provide a shared blueprint for peace and prosperity for people and the planet, now and into the future.
+
+####  Unemployment rate database (***D2_2_Unemployment_rate***) {.unnumbered}
 
 ```{r}
 D2_2_Unemployment_rate_table_info <- data.frame(
@@ -92,7 +96,7 @@ D2_2_Unemployment_rate_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-### D3_0_GDP_per_capita {.unnumbered}
+#### GDP per capita database (***D3_0_GDP_per_capita***) {.unnumbered}
 
 ```{r}
 D3_0_GDP_per_capita_table_info <- data.frame(
@@ -114,7 +118,7 @@ D3_0_GDP_per_capita_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-### D3_1_Military_expenditure_percent_GDP {.unnumbered}
+#### Proportion of the GDP dedicated to Military expenditures database (***D3_1_Military_expenditure_percent_GDP***) {.unnumbered}
 
 ```{r}
 D3_1_Military_expenditure_percent_GDP_table_info <- data.frame(
@@ -136,7 +140,7 @@ D3_1_Military_expenditure_percent_GDP_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-### D4_0_Internet_usage {.unnumbered}
+#### Internet usage database (***D4_0_Internet_usage***) {.unnumbered}
 
 ```{r}
 D4_0_Internet_usage_table_info <- data.frame(
@@ -158,7 +162,7 @@ D4_0_Internet_usage_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-### D5_0_Human_freedom_index {.unnumbered}
+#### Human freedom index database (***D5_0_Human_freedom_index***) {.unnumbered}
 
 ```{r}
 D5_0_Human_freedom_index_table_info <- data.frame(
@@ -204,7 +208,7 @@ D5_0_Human_freedom_index_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-### D6_0_Disaters {.unnumbered}
+#### Disaster list database (***D6_0_Disaters***) {.unnumbered}
 
 ```{r}
 D6_0_Disaters_table_info <- data.frame(
@@ -238,7 +242,7 @@ D6_0_Disaters_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-### D7_0_COVID {.unnumbered}
+#### COVID database (*D7_0_COVID*) {.unnumbered}
 
 ```{r}
 D7_0_COVID_table_info <- data.frame(
@@ -264,7 +268,7 @@ D7_0_COVID_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-### D8_0_Conflicts {.unnumbered}
+#### Conflicts database (***D8_0_Conflicts***) {.unnumbered}
 
 ```{r}
 D8_0_Conflicts_table_info <- data.frame(
