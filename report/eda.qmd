@@ -484,6 +484,36 @@ fviz_pca_biplot(myPCA_g,
 
 Concerning the SDG goals, we conclude that most of our variables are going along the 1st component, except the goals 10 and 15 that are rather uncorrelated with the dimension 1. In addition, as seen before, the goals 12 and 13 are negatively correlated to the other goals. With a eigenvalue bigger than 1 for the first two components, we conclude that there are only 2 dimensions to take into account, according to the Kaiser-Guttman's rule. Nevertheless, they are explaining less than 80% of cumulated variance.
 
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+#### Forward selection ####
+
+library(MASS)
+clean_data <- na.omit(data_question24)
+# Initialize variables to store the results
+step_results <- data.frame(step = integer(), aic = numeric(), adjusted_r_squared = numeric())
+
+# Initial model (null model)
+current_model <- lm(overallscore ~ 1, data = clean_data)
+
+# Record initial metrics
+step_results <- rbind(step_results, data.frame(step = 0, aic = AIC(current_model), adjusted_r_squared = summary(current_model)$adj.r.squared))
+
+# Perform forward selection
+for (variable in colnames(clean_data)[grepl("goal", colnames(clean_data))]) {
+    current_model <- update(current_model, paste(". ~ . +", variable))
+    current_step <- nrow(step_results) + 1
+    step_results <- rbind(step_results, data.frame(step = current_step, aic = AIC(current_model), adjusted_r_squared = summary(current_model)$adj.r.squared))
+}
+
+ggplot(step_results, aes(x = step)) +
+    geom_line(aes(y = aic, color = "AIC")) +
+    geom_line(aes(y = adjusted_r_squared * 100, color = "Adjusted R-squared")) +
+    labs(title = "Forward Selection Process", x = "Step", y = "Metric Value") +
+    scale_color_manual("", breaks = c("AIC", "Adjusted R-squared"), values = c("blue", "red"))
+
+```
+
+
 ### Looking at the HFI scores
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
@@ -590,7 +620,9 @@ panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
   text(0.5, 0.5, txt, cex = cex.cor)
 }
 
-pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_million", "stringency")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel,main="Correlation table and distribution of COVID variables")
+#ERROR TO RESOLVE (PROBABLY NAs SOMEWHERE)
+
+# pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_million", "stringency")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel,main="Correlation table and distribution of COVID variables")
 ```
 
 The different variables used to materialize the impact of COVID19 do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that COVID19 had a specific influence on some SDGs, for instance "good health and well-being" or "decent work and economic growth".
@@ -624,7 +656,9 @@ panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
   text(0.5, 0.5, txt, cex = cex.cor)
 }
 
-pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of conflicts variables")
+# ALSO ERROR
+
+# pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of conflicts variables")
 
 ```
 

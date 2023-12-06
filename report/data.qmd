@@ -44,7 +44,7 @@ During the wrangling process, we added data to our table (D1_1_SDG) from differe
 
 ### Our databases
 
-#### Sustainable Development Goals database (***DGD1_1_SDG***) {.unnumbered}
+#### Sustainable Development Goals database (*DGD1_1_SDG*) {.unnumbered}
 
 Our primary database focuses on the Sustainable Development Goals (SDG). Below is a table summarizing the key variables included:
 
@@ -74,7 +74,9 @@ D1_1_SDG_table_info %>%
 
 The Sustainable Development Goals (SDGs) are a universal set of 17 interlinked goals that were adopted by the United Nations in 2015 as part of the 2030 Agenda for Sustainable Development. These goals provide a shared blueprint for peace and prosperity for people and the planet, now and into the future.
 
-####  Unemployment rate database (***D2_2_Unemployment_rate***) {.unnumbered}
+![Source: <a href="https://www.un.org/sustainabledevelopment/news/communications-material/">UN Communication materials</a>](E_SDG_poster_UN_emblem_WEB%202020.png)
+
+#### Unemployment rate database (*D2_2_Unemployment_rate*) {.unnumbered}
 
 ```{r}
 D2_2_Unemployment_rate_table_info <- data.frame(
@@ -96,7 +98,7 @@ D2_2_Unemployment_rate_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-#### GDP per capita database (***D3_0_GDP_per_capita***) {.unnumbered}
+#### GDP per capita database (*D3_0_GDP_per_capita*) {.unnumbered}
 
 ```{r}
 D3_0_GDP_per_capita_table_info <- data.frame(
@@ -118,7 +120,7 @@ D3_0_GDP_per_capita_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-#### Proportion of the GDP dedicated to Military expenditures database (***D3_1_Military_expenditure_percent_GDP***) {.unnumbered}
+#### Proportion of the GDP dedicated to Military expenditures database (*D3_1_Military_expenditure_percent_GDP*) {.unnumbered}
 
 ```{r}
 D3_1_Military_expenditure_percent_GDP_table_info <- data.frame(
@@ -140,7 +142,7 @@ D3_1_Military_expenditure_percent_GDP_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-#### Internet usage database (***D4_0_Internet_usage***) {.unnumbered}
+#### Internet usage database (*D4_0_Internet_usage*) {.unnumbered}
 
 ```{r}
 D4_0_Internet_usage_table_info <- data.frame(
@@ -162,7 +164,7 @@ D4_0_Internet_usage_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-#### Human freedom index database (***D5_0_Human_freedom_index***) {.unnumbered}
+#### Human freedom index database (*D5_0_Human_freedom_index*) {.unnumbered}
 
 ```{r}
 D5_0_Human_freedom_index_table_info <- data.frame(
@@ -208,7 +210,7 @@ D5_0_Human_freedom_index_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-#### Disaster list database (***D6_0_Disaters***) {.unnumbered}
+#### Disaster list database (*D6_0_Disaters*) {.unnumbered}
 
 ```{r}
 D6_0_Disaters_table_info <- data.frame(
@@ -268,7 +270,7 @@ D7_0_COVID_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-#### Conflicts database (***D8_0_Conflicts***) {.unnumbered}
+#### Conflicts database (*D8_0_Conflicts*) {.unnumbered}
 
 ```{r}
 D8_0_Conflicts_table_info <- data.frame(
@@ -300,7 +302,7 @@ D8_0_Conflicts_table_info %>%
 
 ## Wrangling/cleaning
 
-To accommodate the large scale of the datasets, we pre-cleaned each one prior to merging. This streamlined the process, simplifying the cleaning of the final, combined dataset.
+To accommodate the large scale of the datasets, we pre-cleaned each one prior to merging. This streamlined the process, simplifying the cleaning of the final, combined dataset. The treatment of missing values wil be taken care of after merging our datasets.
 
 ### Dataset on SDG
 
@@ -314,7 +316,12 @@ D1_0_SDG <- as.data.frame(D1_0_SDG)
 
 D1_0_SDG <- D1_0_SDG[,1:22]
 
-colnames(D1_0_SDG) <- c("code", "country", "year", "population", "overallscore", "goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal14", "goal15", "goal16", "goal17")
+colnames(D1_0_SDG) <- c("code", "country", "year", "population",
+                        "overallscore", "goal1", "goal2", "goal3",
+                        "goal4", "goal5", "goal6", "goal7", "goal8",
+                        "goal9", "goal10", "goal11", "goal12",
+                        "goal13", "goal14", "goal15", "goal16",
+                        "goal17")
 
 D1_0_SDG[["overallscore"]] <- as.double(gsub(",", ".", D1_0_SDG[["overallscore"]]))
 
@@ -356,10 +363,11 @@ ggplot(prop_missing_data, aes(x = variable, y = prop_missing)) +
 Observing that the 'population' column contains numerous NAs, we investigate and discover that missing values are common, as some observations represent regions, not countries. Therefore, we can safely exclude these observations.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="55%"}
-SDG0 <- D1_0_SDG |> 
-  group_by(code) |> 
-  select(population) |> 
-  summarize(NaPop = mean(is.na(population))) |>
+
+SDG0 <- D1_0_SDG %>%
+  group_by(code) %>%
+  select(population) %>%
+  summarize(NaPop = mean(is.na(population))) %>%
   filter(NaPop != 0)
 
 ggplot(SDG0, aes(x = code, y = NaPop)) +
@@ -1077,7 +1085,7 @@ datatable(D8_0_Conflicts,
           rownames = FALSE)
 ```
 
-### Merge data
+### Merging our dataset
 
 By merging our eight pre-cleaned datasets, we create a final database.
 
@@ -1114,35 +1122,43 @@ all_Merge <- merge_123456_7 |> left_join(D8_0_Conflicts, join_by(code, year))
 
 ### Cleaning of the final database
 
-#### COMPLETE COLUMNS
+#### FILLING COLOMNS
 
-Since we took the information on the continent and region from databases that are not the main one, we complete these information for the whole final dataset.
+When we merged our dataset, we noticed that some countries were not assigned their corresponding continents and/or region. This issue arose because we sourced the continent and region data from secondary databases, not from our main one. We now add this the corresponding missing continents and regions.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = TRUE, warning = FALSE}
+#### Filling missing continents and regions ####
+
+# Update all_Merge with region and continent information
 all_Merge <- all_Merge %>%
   group_by(country) %>%
-  mutate(continent = ifelse(is.na(continent), first(na.omit(continent)), continent)) %>%
-  ungroup()
-
-all_Merge <- all_Merge %>%
-  group_by(country) %>%
-  mutate(region = ifelse(is.na(region), first(na.omit(region)), region)) %>%
-  ungroup()
-
-all_Merge <- all_Merge %>%
+  mutate(
+    continent = ifelse(is.na(continent), first(na.omit(continent)), continent),
+    region = ifelse(is.na(region), first(na.omit(region)), region)
+    ) %>%
+  ungroup() %>%
   mutate(continent = case_when(
     code %in% c("BHR") ~ "Asia",
     code %in% c("BRN") ~ "Asia",
     code %in% c("MLT") ~ "Europe",
-    TRUE ~ continent
-  ))
+      TRUE ~ continent
+    ))
 
+# Load Disasters dataset to add region information
+Disasters <- read.csv(here("scripts", "data", "Disasters.csv")) %>%
+  select(ISO, Region) %>%
+  distinct(ISO, Region, .keep_all = TRUE) %>%
+  rename(code = ISO, region = Region)
+# Merge All_Merge with Disasters dataset
+all_Merge <- left_join(all_Merge, Disasters, by = "code") %>%
+  mutate(region = ifelse(is.na(region.x), region.y, region.x)) %>%
+  select(-region.x, -region.y)
 ```
 
 We order the database, beginning by the information on the country, the year, the continent and the region.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-all_Merge <- all_Merge %>%
+all_Merge <- as.data.frame(all_Merge) %>%
   select(code, year, country, continent, region, everything())
 
 write.csv(all_Merge, file = here("scripts","data","all_Merge.csv"))
@@ -1163,6 +1179,7 @@ We load our final database and we visualize the missing values.
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%", out.height="75%"}
 all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
 
+# Remove unnecessary column
 all_Merge <- all_Merge %>% select(-c(X))
 
 # Create a dataframe with the goals without NAs summarize in one column to simplify the visualization
@@ -1182,9 +1199,9 @@ vis_dat(to_plot_missing, warn_large_data = FALSE) + scale_fill_brewer(palette = 
   )
 ```
 
-We subset our database according to the data that we will need in order to answer the different questions. This will help us dealing with the missing values.
+For each of our research question, we will start with the merged data set and deal with the missing value separately. This will allow us to not delete observations when we do not need to.
 
-For question 1, we only keep the years until 2020, because most of the explanatory variables that we want to use (those coming from the human freedom index) only have values until 2020.
+**For question 1**, we only keep the years until 2020, because most of the explanatory variables that we want to use (those coming from the human freedom index) only have values until 2020.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 data_question1 <- all_Merge %>%
@@ -1193,7 +1210,7 @@ data_question1 <- all_Merge %>%
 
 ```
 
-For question 2 and 4, we use the main data from the SDG database.
+**For question 2 and 4**, we use the main data from the SDG database.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 data_question24 <- all_Merge %>%
@@ -1201,7 +1218,7 @@ data_question24 <- all_Merge %>%
 
 ```
 
-For question 3, we create 3 distinct databases according to the different type of event that we wwill analyse: disasters, COVID19 and conflicts. For the disasters, we only keep the years until 2021, because after this date, we don't have data. For the conflicts, we only keep the years until 2016, because after this date, we don't have data.
+**For question 3**, we create 3 distinct databases according to the different type of event that we wwill analyse: disasters, COVID19 and conflicts. For the disasters, we only keep the years until 2021, because after this date, we don't have data. For the conflicts, we only keep the years until 2016, because after this date, we don't have data.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 # Disasters
@@ -1222,7 +1239,7 @@ data_question3_3 <- all_Merge %>%
 
 #### Data for question 1
 
-##### COLUMNS
+##### Dealing with missing values in colomns
 
 We begin by visualizing the missing values. To have a less messy graph we group all the goals wihtout NAs into one single variable. We decide to remove MilitaryExpenditurePercentGovExp, because it has too many missing values and it contains similar information to MilitaryExpenditurePercentGDP.We also remove hf_score, pf_score and ef_score, because there are many missing values and since these variables summarize the other ones, deleting them will not make us loose information.
 
@@ -1259,7 +1276,8 @@ ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Perce
 
 data_question1 <- data_question1 %>% select(-c(MiliratyExpenditurePercentGovExp, hf_score, pf_score, ef_score))
 ```
-##### ROWS
+
+##### Dealing with missing vlaues in rows
 
 We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We decide to remove the countries that have more than 50 missing values.
 
@@ -1311,7 +1329,7 @@ ggplot(see_missing1_2, aes(x = num_missing , y = reorder(code, num_missing), fil
         labs(title = "Number of missing values per country", x = "Number of Missing Values", y = "Countries")
 ```
 
-We also look at patterns of missing values in the rows and see that except for the two goals with NAs that we discussed earlier and for the triplet "ef_money", "ef_trade" and "ef_regulation" there are not well defined patterns. We removes the countries that have NAs in the three variables mentioned at the same time. 
+We also look at patterns of missing values in the rows and see that except for the two goals with NAs that we discussed earlier and for the triplet "ef_money", "ef_trade" and "ef_regulation" there are not well defined patterns. We removes the countries that have NAs in the three variables mentioned at the same time.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%"}
 naniar::gg_miss_upset(data_question1, nsets=10, nintersects=11)
@@ -1488,7 +1506,7 @@ data_question1 <- data_question1 %>%
 
 ###### ***Economic freedom: government***
 
-There are no more missing values, thanks to the previous steps. 
+There are no more missing values, thanks to the previous steps.
 
 ###### ***Economic freedom: money***
 
@@ -1501,7 +1519,7 @@ question1_missing_ef_money <- data_question1 %>%
   filter(Na_ef_money != 0)
 ```
 
-We look at the evolution of the variable over time, and for the countries with a linear evolution in time, we fill the missing values using linear interpolation. 
+We look at the evolution of the variable over time, and for the countries with a linear evolution in time, we fill the missing values using linear interpolation.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%", out.height="50%"}
 question1_missing_ef_money <- data_question1 %>%
@@ -1662,9 +1680,9 @@ data_question1 <- data_question1 %>%
 
 ###### ***Economic freedom: regulation***
 
-There are no more missing values, thanks to the previous steps. 
+There are no more missing values, thanks to the previous steps.
 
-##### **SDGs 1 and 10*+
+##### \*\*SDGs 1 and 10\*+
 
 We noticed earlier that there were only missing values for goals 1 and 10. As we did before, we have started to investigate where are located the NAs in our dataset for first goal1, then goal 10.
 
@@ -1766,7 +1784,7 @@ data_question3_1[is.na(data_question3_1)] <- 0
 
 **COVID19**
 
-We look at the missing values for the three variables that are specific to COVID during the years of COVID: 2020 to 2022. We delete the countries that have NAs (only stringency has 6 countries with 100% NAs). 
+We look at the missing values for the three variables that are specific to COVID during the years of COVID: 2020 to 2022. We delete the countries that have NAs (only stringency has 6 countries with 100% NAs).
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="75%", out.height="55%"}
 COVID4 <- data_question3_2 %>%

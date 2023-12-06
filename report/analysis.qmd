@@ -88,7 +88,6 @@ for (i in 1:ncol(data_question1[7:40])) {
 }
 
 #Switch population at the end of heatmap
-
 corr_matrix[which(p_matrix2 > 0.05)] <- NA
 melted_corr_matrix_GVar <- melt(corr_matrix[19:34,1:18])
 ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +

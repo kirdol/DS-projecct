@@ -1,0 +1,922 @@
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+source(here::here("scripts/Clean/setup.R"))
+```
+
+
+# Focus on the evolution of SDG scores over time
+
+**How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?**
+
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
+data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"))
+data_question2 <- data_question2 %>% select(-X)
+
+```
+
+
+## EDA: General time evolution of SDG socres
+
+First, we look at the evolution of SDG achievement overall score over time by continent and by region and we see that the general evolution of SDG scores around the world is increasing over the years, but very slowly.
+
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="75%"}
+data2 <- data_question2 %>% group_by(year, continent) %>%
+  mutate(mean_overall_score_by_year=mean(overallscore))
+
+ggplot(data2) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=0.8) +
+  geom_point(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=1.5) +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Evolution of the mean overall SDG achievement score",
+       y = "Mean Overall SDG Score",
+       x = "Year"
+       )
+```
+
+
+Looking at the continents, we see that Europe is above the others, while Africa is below, but in general, all have increasing overall scores.
+
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="75%", out.height="50%"}
+data3 <- data_question2 %>% group_by(year, region) %>%
+  mutate(mean_overall_score_by_year=mean(overallscore))
+
+ggplot(data3) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=region), lwd=0.8) +
+  geom_point(mapping=aes(x=year, y=mean_overall_score_by_year, color=region), lwd=1.5) +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Evolution of the mean overall SDG achievement score",
+       y = "Mean Overall SDG Score",
+       x = "Year"
+       )+
+  theme(legend.position = "bottom")
+```
+
+
+This view that groups the countries by region gives us precision about the previous information. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below.
+
+Second, we look at the evolution of SDG achievement scores(16) over time for the whole world and by continent. We notice that all SDGs except from goal 9 (industry innovation and infrastructure) are close to one another in terms of level and growth. Goal 9 starts far below the others in 2000 and growths faster until exceeding 50%. In addition, some goals did not increase their scores much in the last two decades, for example goal 13 (climate action) and goal 12 (responsible consumption and production).
+
+
+```{r, echo = TRUE, message = FALSE, cache = TRUE, warning = FALSE, out.height="100%", out.width="100%"}
+data4 <- data_question2 %>%
+  group_by(year) %>%
+  summarise(across(starts_with("goal"), mean, na.rm=TRUE)) %>%
+  pivot_longer(cols = starts_with("goal"), names_to = "goal", values_to = "mean_value")
+
+color_palette <- c("red", "blue", "green", "orange", "purple", "pink", "lightblue", "gray", "cyan", "magenta", "yellow", "darkgreen", "darkblue", "darkred", "darkgrey", "darkcyan")
+
+ggplot(data = data4) +
+  geom_line(mapping = aes(x = year, y = mean_value, color = goal), size = 0.7) +
+  geom_point(mapping = aes(x = year, y = mean_value, color = goal), size = 1) +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Evolution of the mean SDG achievement scores across the world",
+       y = "Mean SDG Scores",
+       x = "Year"
+       ) 
+```
+
+
+We continue with the graph that distinguishes continents to get more information.
+
+
+```{r, echo = TRUE, message = FALSE, cache = TRUE, warning=FALSE, out.height="100%", out.width="100%"}
+data5 <- data_question2 %>%
+  group_by(year, continent) %>%
+  summarise(across(starts_with("goal"), mean, na.rm=TRUE)) %>%
+  pivot_longer(cols = starts_with("goal"), names_to = "goal", values_to = "mean_value")
+
+ggplot(data = data5) +
+  geom_line(mapping = aes(x = year, y = mean_value, color=continent), size = 0.7) +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Evolution of the mean SDG achievement scores by continent",
+       y = "Mean SDG Scores",
+       x = "Years from 2000 to 2022"
+       ) +
+  facet_wrap(~ goal, nrow = 4)+
+  scale_x_continuous(breaks = NULL)+
+  theme_light()
+```
+
+
+We observe that most of the time, Europe is at the top of the graph and Africa at the bottom, except for goals 12 and 13 that are linked to ecology. Some other information stand out:
+
+-   Americas are far behind the other parts of the world regarding goal 10: reduced inequalities.
+
+-   Africa is far behind the other continents (even if becoming better) for goals 1, 3, 4 and 7.
+
+-   Goal 9 (industry, innovation and infrastructure) show exponential growth for almost all continents.
+
+Third we create an interactive map of the world to be able to navigate from year 2000 to 2022, seeing the level of achievement of the SDGs (overall score) for each country.
+
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+# Load world map data
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Merge data with the world map data
+data0 <- merge(world, data_question2, by.x = "iso_a3", by.y = "code", all.x = TRUE)
+
+data0 <- data0 %>%
+  filter(!is.na(overallscore))
+
+unique_years <- unique(data0$year)
+
+plot_ly(
+  type = "choropleth",
+  z = ~data0$overallscore[data0$year == 2000],
+  locations = ~data0$iso_a3[data0$year == 2000],
+  text = ~paste("Country: ", data0$name[data0$year == 2000], "<br>Overall Score: ", data0$overallscore[data0$year == 2000]),
+  colors = c("darkred", "orange", "yellow", "darkgreen"),
+  colorbar = list(title = "Overall Score", cmin = 40, cmax = 87),
+  zmin = 40,
+  zmax = 87,
+  hoverinfo = "text"
+) %>%
+  layout(
+    title = "SDG overall score evolution",
+    sliders = list(
+      list(
+        active = 0,
+        currentvalue = list(prefix = "Year: "),
+        steps = lapply(seq_along(unique_years), function(i) {
+          year <- unique_years[i]
+          list(
+            label = as.character(year),
+            method = "restyle",
+            args = list(
+              list(
+                z = list(data0$overallscore[data0$year == year]),
+                locations = list(data0$iso_a3[data0$year == year]),
+                text = list(~paste("Country: ", data0$name[data0$year == year], "<br>Overall Score: ", data0$overallscore[data0$year == year]))
+              )
+            )
+          )
+        })
+      )
+    )
+  )
+```
+
+
+Again, we see that the overall achievement score of the SDGs is increasing and that the countries that have the most red (bad score) are in Africa. However it is also there that it increases more rapidly. Our hypothesis is that when a score is very low, it is easier to make it better than when it becomes very high (around 90%) it may be hard to increase it, because it would mean perfection. In the next section, we will further investigate this idea.
+
+## Analysis: SDG adoption in 2015
+
+We create one new variable per goal that captures the difference in SDG score between the year of the observation and the previous year. This will allow us to see how the countries improve (or not) on SDG scores each year. In addition, preparing for the specific question around 2015, we only keep the years from 2009 to 2022 (7 years before and after 2015).
+
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+binary2015 <- data_question2 %>% 
+  group_by(code) %>%
+  mutate(across(5:21, ~ . - dplyr::lag(.), .names = "diff_{.col}")) %>%
+  ungroup()
+
+# Create a new column (binary variable) with value 1 if the year is after 2015 and zero otherwise. 
+binary2015 <- binary2015 %>% 
+  mutate(after2015 = ifelse(year > 2015, 1, 0)) %>%
+  filter(as.numeric(year)>=2009)
+```
+
+
+We begin by looking at the distribution of the difference in SDG scores from one year to the next (improvement if it is above zero and deterioration if it is below zero).
+
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+# histogram of difference in scores between years
+unique_years <- unique(binary2015$year)
+plot_ly() %>%
+  add_trace(
+    type = "histogram", 
+    data = binary2015, 
+    x = ~diff_overallscore[year == 2009],
+    marker = list(color = "lightgreen", line = list(color = "black", width = 1))
+  ) %>%
+  layout(
+    title = "Distribution of SDG evolution",
+    xaxis = list(title = "Year difference SDG score", range = c(-3, 3)),
+    yaxis = list(title = "Frequency", range = c(0, 40)),
+    sliders = list(
+      list(
+        active = 0,
+        currentvalue = list(prefix = "Year: "),
+        steps = lapply(seq_along(unique_years), function(i) {
+          year <- unique_years[i]
+          list(
+            label = as.character(year),
+            method = "restyle",
+            args = list(
+              list(x = list(binary2015$diff_overallscore[binary2015$year == year]))
+            )
+          )
+        })
+      )
+    )
+  )
+```
+
+
+We notice that across the years, the distribution stays on the right of the x-axis, which means that there are more improvement than deterioration. If there is deterioration, it is less than one percent per year, except some extreme cases, for instance in 2013, there was almost a 3% decrease in the overall SDG score of one country. It is also rare to see improvements of more than 2% per year. Regarding our specific question, we do not see a major improvement of the distribution after 2015, if it was the case we would see the distribution going more to the right, but except for 2017, there are more and more values centered around zero, which means less score improvements overall.
+
+After having visualized the improvements and declines of SDG overall score for the whole world, we are now interested in the top 5 countries in terms of improvement each year and we see that major improvement often comes from Sub-Saharan Africa countries or Middle East and North Africa. This confirms that more efforts are made in these regions to achieve better scores, but we also know from our previous visualizations that their initial scores are lower. Moreover, we record that the higher improvements are of 3% per year and were mostly achieved before 2015. Indeed, we can tell that in terms of maximum improvements, the adoption of SDGs in 2015 did not have a strong impact. We also notice that 2020 is the year with the smallest best improvements. We keep that in mind for the next question regarding events and specifically COVID.
+
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%"}
+top_n_values <- 5
+
+# Test with ggpot2
+custom_colors <- c("blue", "darkblue", "cyan", "green", "darkgreen", "lightgreen", "lightblue","turquoise", "lightgrey", "darkgrey")
+
+# Get unique regions in the dataset
+unique_regions <- unique(binary2015$region)
+
+# Create a color dictionary mapping each region to a specific color
+region_colors <- setNames(custom_colors[1:length(unique_regions)], unique_regions)
+
+library(patchwork)
+
+plots <- list()
+
+for (year in unique_years) {
+  top_countries <- binary2015[binary2015$year == year, ] %>%
+    arrange(desc(year), desc(diff_overallscore)) %>%
+    head(n = top_n_values)
+  
+  plot <- ggplot(data = top_countries, mapping = aes(x = country, y = diff_overallscore, fill = region)) +
+    geom_bar(stat = "identity") +
+    scale_fill_manual(values = region_colors) +  # Use the specified colors
+    labs(title = paste(year), x = NULL, y = NULL) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size= 6), legend.position = "none", plot.title = element_text(size = 10)) + 
+    scale_y_continuous(limits = c(0, 3))
+  
+  plots[[as.character(year)]] <- plot
+}
+
+# Arrange the plots in a 4x4 grid using patchwork
+wrap <- wrap_plots(plots, ncol = 5)
+
+wrap + plot_annotation(
+  title = 'Best 5 countries in terms of SDG score improvement'
+)
+```
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="33%"}
+# Create a common legend manually
+legend_data <- data.frame(region = unique_regions)
+legend_plot <- ggplot(legend_data, aes(x = region, fill = region)) +
+  geom_bar(position = position_stack(reverse = TRUE)) +
+  scale_fill_manual(values = region_colors) +
+  labs(title = "Regions") +
+  theme_void() +
+  theme(
+    legend.position = "none",
+    axis.text.y = element_text(angle = 0, hjust = 1, size = 18),
+    plot.title = element_text(size = 20, face = "bold")
+  ) +
+  coord_flip()
+
+legend_plot
+```
+
+
+We continue by looking at the worst 5 countries in terms of decline in SDG overall score each year and we see that the years with the worst declines are those closer to us. Indeed the declines were generally no more than 1%, until 2018, where these became more frequent. We notice that the adoption of SDGs in 2015 may have had a good impact, because during the two years that follow, the worst SDG score declines were low (no more than 1% in 2016 and no more 0.5% in 2017). It was stabilizing, but it was of short duration, because then come the more extreme deteriotations. Interestingly, the regions that had were the worst in terms of decline during the past twelve years were very different, the only pattern appears during the last four years, where most of them are in Latin America and the Caribbean.
+
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+plots <- list()
+
+for (year in unique_years) {
+  top_countries <- binary2015[binary2015$year == year, ] %>%
+    arrange(desc(year), diff_overallscore) %>%
+    head(n = top_n_values)
+  
+  plot <- ggplot(data = top_countries, mapping = aes(x = country, y = diff_overallscore, fill = region)) +
+    geom_bar(stat = "identity") +
+    scale_fill_manual(values = region_colors) +  # Use the specified colors
+    labs(title = paste(year), x = NULL, y = NULL) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size=6), legend.position = "none", plot.title = element_text(size = 10)) + 
+    scale_y_continuous(limits = c(-3,0))
+  
+  plots[[as.character(year)]] <- plot
+}
+
+# Arrange the plots in a 4x4 grid using patchwork
+wrap <- wrap_plots(plots, ncol = 5)
+
+wrap + plot_annotation(
+  title = 'Worst 5 countries in terms of SDG score improvement'
+)
+```
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="33%"}
+legend_plot
+```
+
+
+We move on to the specific SDG scores and look at the 20 best improvements by score. We additionaly differentiate between the improvements than occurred before and after 2015. We want to see which goals get the best improvements and which countries put more effort into it.
+
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%", out.height="75%"}
+# Best improvements
+data_long <- binary2015 %>%
+  pivot_longer(cols = c(starts_with("diff_goal"), "diff_overallscore"),
+               names_to = "goal", values_to = "improvement") %>%
+  group_by(goal) %>%
+  top_n(20, wt = improvement) %>%
+  ungroup()
+
+plot_ly() %>%
+  add_trace(
+    type = "bar",
+    data = data_long,
+    x = ~country[after2015 == 1 & goal == "diff_overallscore"],
+    y = ~improvement[after2015 == 1 & goal == "diff_overallscore"],
+    legendgroup = "after 2015",
+    name = "after 2015",
+    marker = list(color = "blue", size = 10),
+    showlegend = TRUE
+  ) %>%
+  add_trace(
+    type = "bar",
+    x = ~country[after2015 == 0 & goal == "diff_overallscore"],
+    y = ~improvement[after2015 == 0 & goal == "diff_overallscore"],
+    legendgroup = "before 2015",
+    name = "before 2015",
+    marker = list(color = "red", size = 10),
+    showlegend = TRUE
+  ) %>%
+  layout(
+    title = paste("Top 20 countries per SDG Score evolution"),
+    yaxis = list(title = "Year difference SDG score", range = c(0, 50)),
+    xaxis = list(title = "Countries", categoryorder = "total ascending"),
+    barmode = "stack",
+    updatemenus = list(
+      list(
+        buttons = list(
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_overallscore"],
+                  ~improvement[after2015 == 0 & goal == "diff_overallscore"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_overallscore"],
+                  ~country[after2015 == 0 & goal == "diff_overallscore"]
+                )
+              )
+            ),
+            label = "Overall score",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal1"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal1"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal1"],
+                  ~country[after2015 == 0 & goal == "diff_goal1"]
+                )
+              )
+            ),
+            label = "Goal 1",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal2"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal2"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal2"],
+                  ~country[after2015 == 0 & goal == "diff_goal2"]
+                )
+              )
+            ),
+            label = "Goal 2",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal3"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal3"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal3"],
+                  ~country[after2015 == 0 & goal == "diff_goal3"]
+                )
+              )
+            ),
+            label = "Goal 3",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal4"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal4"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal4"],
+                  ~country[after2015 == 0 & goal == "diff_goal4"]
+                )
+              )
+            ),
+            label = "Goal 4",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal5"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal5"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal5"],
+                  ~country[after2015 == 0 & goal == "diff_goal5"]
+                )
+              )
+            ),
+            label = "Goal 5",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal6"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal6"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal6"],
+                  ~country[after2015 == 0 & goal == "diff_goal6"]
+                )
+              )
+            ),
+            label = "Goal 6",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal7"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal7"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal7"],
+                  ~country[after2015 == 0 & goal == "diff_goal7"]
+                )
+              )
+            ),
+            label = "Goal 7",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal8"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal8"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal8"],
+                  ~country[after2015 == 0 & goal == "diff_goal8"]
+                )
+              )
+            ),
+            label = "Goal 8",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal9"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal9"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal9"],
+                  ~country[after2015 == 0 & goal == "diff_goal9"]
+                )
+              )
+            ),
+            label = "Goal 9",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal10"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal10"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal10"],
+                  ~country[after2015 == 0 & goal == "diff_goal10"]
+                )
+              )
+            ),
+            label = "Goal 10",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal11"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal11"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal11"],
+                  ~country[after2015 == 0 & goal == "diff_goal11"]
+                )
+              )
+            ),
+            label = "Goal 11",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal12"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal12"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal12"],
+                  ~country[after2015 == 0 & goal == "diff_goal12"]
+                )
+              )
+            ),
+            label = "Goal 12",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal13"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal13"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal13"],
+                  ~country[after2015 == 0 & goal == "diff_goal13"]
+                )
+              )
+            ),
+            label = "Goal 13",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal15"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal15"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal15"],
+                  ~country[after2015 == 0 & goal == "diff_goal15"]
+                )
+              )
+            ),
+            label = "Goal 15",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal16"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal16"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal16"],
+                  ~country[after2015 == 0 & goal == "diff_goal16"]
+                )
+              )
+            ),
+            label = "Goal 16",
+            method = "restyle"
+          ),
+          list(
+            args = list(
+              list(
+                y = list(
+                  ~improvement[after2015 == 1 & goal == "diff_goal17"],
+                  ~improvement[after2015 == 0 & goal == "diff_goal17"]
+                ),
+                x = list(
+                  ~country[after2015 == 1 & goal == "diff_goal17"],
+                  ~country[after2015 == 0 & goal == "diff_goal17"]
+                )
+              )
+            ),
+            label = "Goal 17",
+            method = "restyle"
+          )
+        )
+      )
+    )
+  )
+```
+
+
+We notice various patterns, among them:
+
+-   Goals 2 (zero hunger), 3 (good health and well-being), 6 (clean water and sanitation), 8 (decent work and economic growth), 12 (responsible consumption and production), 16 (peace, justice and strong institutions) have very low improvements per year. Indeed, even the best ones are below 10%.
+
+-   Goal 10 (reduced inequalities) has the best improvements, all 20 best improvements are above 20% and it goes up to 45%.
+
+-   Some goals clearly had most of their best improvements before 2015: goals 3 (good health and well-being), 5 (gender equality), 6 (clean water and sanitation), 7 (affordable and clean energy).
+
+-   Some goals clearly had most of their best improvements after 2015: goals 8 (decent work and economic growth), 12 (responsible consumption and production).
+
+Regarding the impact of the adoption of SDGs in 2015, we can not tell that it had a positive impact, because there are not more big improvements after 2015 than before, even a little bit less. In addition, the most impressive improvements mostly occurred before 2015. These conclusions are supported by the next graph: we fit to different regression lines (before and after 2015) to see if there is a jump after the adoption and if the the SDG scores increase faster.
+
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+# Graphs to show the jump (or not) in 2015
+
+# Filter data
+data_after_2015 <- filter(binary2015, as.numeric(year) >= 2015)
+data_before_2016 <- filter(binary2015, as.numeric(year) <= 2015)
+
+plotly::plot_ly() %>%
+  plotly::add_trace(data = data_after_2015, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_after_2015)), type = 'scatter', mode = 'lines', line = list(color = 'blue'), name = "After 2015") %>%
+  plotly::add_trace(data = data_before_2016, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_before_2016)), type = 'scatter', mode = 'lines', line = list(color = 'red'), name = "Before 2015") %>%
+  plotly::layout(title = "Different patterns across SDGs before and after 2015",
+         xaxis = list(title = "Year"),
+         yaxis = list(title = "SDG achievement score", range = c(30, 85)),
+         shapes = list(
+           list(
+             type = 'line',
+             x0 = 2015,
+             x1 = 2015,
+             y0 = 0,
+             y1 = 1,
+             yref = 'paper',
+             line = list(color = 'grey', width = 2, dash = 'dot')
+           )
+         ),
+         updatemenus = list(
+           list(
+             buttons = list(
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(overallscore ~ year, data = data_after_2015)),
+                   ~fitted(lm(overallscore ~ year, data = data_before_2016))
+                 )),
+                 label = "Overall score",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal1 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal1 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 1: \nno poverty",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal2 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal2 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 2: \nzero hunger",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal3 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal3 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 3: good health \nand well-being",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal4 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal4 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 4: \nquality education",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal5 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal5 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 5: \ngender equality",
+                 method = "restyle"
+               ), 
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal6 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal6 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 6: clean water \nand sanitation",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal7 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal7 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 7: affordable \nand clean energy",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal8 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal8 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 8: decent work \nand economic growth",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal9 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal9 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 9: industry, innovation \nand infrastructure",
+                 method = "restyle"
+               ), 
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal10 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal10 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 10: \nreduced inequalities",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal11 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal11 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 11: sustainable \ncities and communities",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal12 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal12 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 12: responsible \nconsumption and production",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal13 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal13 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 13: \nclimate action",
+                 method = "restyle"
+               ), 
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal15 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal15 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 15: \nlife on earth",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal16 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal16 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 16: peace, justice \nand strong institutions",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal17 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal17 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 17: partnerships \nfor the goals",
+                 method = "restyle"
+               )
+             )
+           )
+         )
+  )
+```
+
+
+Simple OLS regression on the difference between years of SDG scores:
+
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%", results='asis'}
+# Simple linear regression of the overall score on the difference in SDG scores variables "after2015"
+library(huxtable)
+reg2.1 <- lm(diff_overallscore ~ after2015, data=binary2015)
+reg2.1.1 <- lm(diff_goal1 ~ after2015, data=binary2015)
+reg2.1.2 <- lm(diff_goal2 ~ after2015, data=binary2015)
+reg2.1.3 <- lm(diff_goal3 ~ after2015, data=binary2015)
+reg2.1.4 <- lm(diff_goal4 ~ after2015, data=binary2015)
+reg2.1.5 <- lm(diff_goal5 ~ after2015, data=binary2015)
+reg2.1.6 <- lm(diff_goal6 ~ after2015, data=binary2015)
+reg2.1.7 <- lm(diff_goal7 ~ after2015, data=binary2015)
+reg2.1.8 <- lm(diff_goal8 ~ after2015, data=binary2015)
+reg2.1.9 <- lm(diff_goal9 ~ after2015, data=binary2015)
+reg2.1.10 <- lm(diff_goal10 ~ after2015, data=binary2015)
+reg2.1.11 <- lm(diff_goal11 ~ after2015, data=binary2015)
+reg2.1.12 <- lm(diff_goal12 ~ after2015, data=binary2015)
+reg2.1.13 <- lm(diff_goal13 ~ after2015, data=binary2015)
+reg2.1.15 <- lm(diff_goal15 ~ after2015, data=binary2015)
+reg2.1.16 <- lm(diff_goal16 ~ after2015, data=binary2015)
+reg2.1.17 <- lm(diff_goal17 ~ after2015, data=binary2015)
+
+models_list1 <- list("Overall score"=reg2.1, "Goal 1"=reg2.1.1, "Goal 2"=reg2.1.2, "Goal 3"= reg2.1.3, "Goal 4"=reg2.1.4, "Goal 5"=reg2.1.5, "Goal 6"= reg2.1.6, "Goal 7"=reg2.1.7, "Goal 8"=reg2.1.8, "Goal 9"=reg2.1.9, "Goal 10"=reg2.1.10, "Goal 11" = reg2.1.11, "Goal 12"=reg2.1.12, "Goal 13"=reg2.1.13, "Goal 15" =reg2.1.15, "Goal 16"=reg2.1.16, "Goal 17"=reg2.1.17)
+
+huxreg(models_list1[1:9])
+huxreg(models_list1[10:17])
+
+```
+
+
+DiD using panel data:
+
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+# Create a panel data object
+panel_data <- plm::pdata.frame(binary2015, index = c("country", "year"))
+
+# Run the difference-in-differences model to take into account the general evolution over the years
+reg2.2 <- plm::plm(diff_overallscore ~ after2015 + year + after2015:year, 
+                 data = panel_data,
+                 model = "within")
+reg2.2.1 <- plm::plm(diff_goal1 ~ after2015 + year + after2015:year, 
+              data = panel_data,
+              model = "within")
+reg2.2.2 <- plm::plm(diff_goal2 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.3 <- plm::plm(diff_goal3 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.4 <- plm::plm(diff_goal4 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.5 <- plm::plm(diff_goal5 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.6 <- plm::plm(diff_goal6 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.7 <- plm::plm(diff_goal7 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.8 <- plm::plm(diff_goal8 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.9 <- plm::plm(diff_goal9 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.10 <- plm::plm(diff_goal10 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.11 <- plm::plm(diff_goal11 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.12 <- plm::plm(diff_goal12 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.13 <- plm::plm(diff_goal13 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.15 <- plm::plm(diff_goal15 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.16 <- plm::plm(diff_goal16 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+reg2.2.17 <- plm::plm(diff_goal17 ~ after2015 + year + after2015:year, 
+                data = panel_data,
+                model = "within")
+
+# Create a list of your regression models
+models_list2 <- list("Overall score"=reg2.2, "Goal 1"=reg2.2.1, "Goal 2"=reg2.2.2, "Goal 3"= reg2.2.3, "Goal 4"=reg2.2.4, "Goal 5"=reg2.2.5, "Goal 6"= reg2.2.6, "Goal 7"=reg2.2.7, "Goal 8"=reg2.2.8, "Goal 9"=reg2.2.9, "Goal 10"=reg2.2.10, "Goal 11" = reg2.2.11,"Goal 12"=reg2.2.12, "Goal 13"=reg2.2.13, "Goal 15" =reg2.2.15, "Goal 16"=reg2.2.16, "Goal 17"=reg2.2.17)
+
+huxreg(models_list2[1:9])
+huxreg(models_list2[10:17])
+
+```
+
