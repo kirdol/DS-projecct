@@ -1682,7 +1682,7 @@ data_question1 <- data_question1 %>%
 
 There are no more missing values, thanks to the previous steps.
 
-##### \*\*SDGs 1 and 10\*+
+##### **SDGs 1 and 10**
 
 We noticed earlier that there were only missing values for goals 1 and 10. As we did before, we have started to investigate where are located the NAs in our dataset for first goal1, then goal 10.
 
@@ -1721,7 +1721,6 @@ question1_missing_goal10 <- data_question1 %>%
   filter(Na_goal10 != 0)
 
 data_question1 <- data_question1 %>% filter(!code %in% question1_missing_goal10$code)
-
 ```
 
 We have found the 2 lasts countries containing missing values. Now, our dataset is completely clean and ready to be used for our question 1.
@@ -1730,12 +1729,16 @@ We have found the 2 lasts countries containing missing values. Now, our dataset 
 
 We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Since there are no other missing values, we stop here.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = TRUE, warning = FALSE}
 see_missing24 <- data_question24 %>%
   group_by(code) %>%
   summarise(across(everything(), ~ sum(is.na(.))) %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 0))
+
+data_question24 <- data_question24 %>%
+  group_by(country) %>%
+  filter(!all(is.na(goal1)) & !all(is.na(goal10)))
 ```
 
 #### Data for question 3

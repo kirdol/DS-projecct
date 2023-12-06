@@ -454,66 +454,6 @@ The overall SDG achievement score is highly correlated with "personal freedom: l
 
 The overall SDG achievement score is highly correlated with "economical freedom: legal" (p=.77), "economical trade: legal" (p=.67) and "economical freedom: money" (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom.
 
-### Looking at SDGs
-ADD GREEN GRAPH HERE TO HAVE ALSO THE DISTRIBUTION
-
-As we can see in the graph, most of our goals are correlated toghether. We will nown perform a PCA analysis to see how our variables are explained. You can see below the Scree plot of our PCA analysis.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-#### PCA and PCA Scree plot####
-
-myPCA_g <- PCA(data_question1[,9:24], graph = FALSE)
-fviz_eig(myPCA_g,
-         addlabels = TRUE) +
-  theme_minimal()
-```
-
-As we can see, Dimension 1 explain already more than 60% of the variations in our data. With Dimension 2, it goes up to around 70%. We can now plot our data with our two firsts dimensions.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-#### PCA Biplot ####
-
-fviz_pca_biplot(myPCA_g,
-                label="var",
-                col.var="dodgerblue3",
-                geom="point",
-                pointsize = 0.1,
-                labelsize = 5) +
-  theme_minimal()
-```
-
-Concerning the SDG goals, we conclude that most of our variables are going along the 1st component, except the goals 10 and 15 that are rather uncorrelated with the dimension 1. In addition, as seen before, the goals 12 and 13 are negatively correlated to the other goals. With a eigenvalue bigger than 1 for the first two components, we conclude that there are only 2 dimensions to take into account, according to the Kaiser-Guttman's rule. Nevertheless, they are explaining less than 80% of cumulated variance.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
-#### Forward selection ####
-
-library(MASS)
-clean_data <- na.omit(data_question24)
-# Initialize variables to store the results
-step_results <- data.frame(step = integer(), aic = numeric(), adjusted_r_squared = numeric())
-
-# Initial model (null model)
-current_model <- lm(overallscore ~ 1, data = clean_data)
-
-# Record initial metrics
-step_results <- rbind(step_results, data.frame(step = 0, aic = AIC(current_model), adjusted_r_squared = summary(current_model)$adj.r.squared))
-
-# Perform forward selection
-for (variable in colnames(clean_data)[grepl("goal", colnames(clean_data))]) {
-    current_model <- update(current_model, paste(". ~ . +", variable))
-    current_step <- nrow(step_results) + 1
-    step_results <- rbind(step_results, data.frame(step = current_step, aic = AIC(current_model), adjusted_r_squared = summary(current_model)$adj.r.squared))
-}
-
-ggplot(step_results, aes(x = step)) +
-    geom_line(aes(y = aic, color = "AIC")) +
-    geom_line(aes(y = adjusted_r_squared * 100, color = "Adjusted R-squared")) +
-    labs(title = "Forward Selection Process", x = "Step", y = "Metric Value") +
-    scale_color_manual("", breaks = c("AIC", "Adjusted R-squared"), values = c("blue", "red"))
-
-```
-
-
 ### Looking at the HFI scores
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}

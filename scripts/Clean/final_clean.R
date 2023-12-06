@@ -19,7 +19,7 @@ vis_dat(to_plot_missing, warn_large_data = FALSE) + scale_fill_brewer(palette = 
 data_question1 <- all_Merge %>% filter(year<=2020) %>% select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages, cases_per_million, deaths_per_million, stringency, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
 
 # for question 2 and 4: time and relationship between SDGs
-data_question24 <- all_Merge %>% select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17))
+data_question24 <- all_Merge %>% dplyr::select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17))
 
 # for question 3: events
 # Disasters (only until 2021 because no information for disasters after)
@@ -531,7 +531,11 @@ see_missing24 <- data_question24 %>%
   summarise(across(everything(), ~ sum(is.na(.))) %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 0))
-# Nothing to remove, only goals 1 and 10 have missing (already discussed before)
+
+data_question24 <- data_question24 %>%
+  group_by(country) %>%
+  filter(!all(is.na(goal1)) & !all(is.na(goal10)))
+# We remove the countries that have all NA values for goal1 and goal10
 
 #### Question 3
 
