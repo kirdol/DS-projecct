@@ -1,5 +1,6 @@
-```{r test, echo = FALSE, message = FALSE}
-source(here::here("scripts/Clean/setup.R"))
+```{r echo = FALSE, message = FALSE}
+#### Setup ####
+source(here::here("scripts","Clean","setup.R"))
 ```
 
 ### Focus on relationship between SDGs
