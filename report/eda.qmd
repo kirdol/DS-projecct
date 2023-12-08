@@ -373,20 +373,32 @@ panel.hist <- function(x, ...){
   y <- h$counts; y <- y/max(y) 
   rect(breaks[-nB], 0, breaks[-1], y, col = "lightgreen", ...)
 }
-panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){ 
+
+# panel.cor_stars function with stars alongside correlation coefficients
+panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
   usr <- par("usr"); on.exit(par(usr)) 
   par(usr = c(0, 1, 0, 1)) 
-  r <- cor(x, y, method = "spearman") 
-  txt <- format(c(r, 0.123456789), digits = digits)[1] 
-  txt <- paste0(prefix, txt) 
-  if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt) 
-  text(0.5, 0.5, txt, cex = cex.cor * r)
+  r <- cor(x, y)
+  p_value <- cor.test (x,y)$p.value
+  
+  if (p_value < 0.001){
+    stars <- "***"
+  } else if (p_value < 0.01) {
+    stars <- "**"
+  } else if (p_value < 0.05) {
+    stars <- "*"
+  } else {
+    stars <- ""
+  }
+  txt <- paste0(format(c(r, 0.123456789), digits = digits)[1], " ", stars)
+  if(missing(cex.cor)) cex.cor <- 0.5/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor)
 }
 
 # # Independent variables 
-pairs(Correlation_overall[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of various variables")
+pairs(Correlation_overall[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of various variables")
 
-pairs(Correlation_overall[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of various variables")
+pairs(Correlation_overall[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of various variables")
 ```
 
 The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score.
@@ -435,33 +447,28 @@ In order to have an overview of the relationship between the different events va
 lower.panel <- function(x, y, ...){
   points(x, y, pch = 20, col = "darkgreen", cex = 0.2)
 }
-evaluateCorrelationStars <- function(correlation) {
-  if (abs(correlation) >= 0.7) {
-    return("*****")  # Strong correlation: 5 stars
-  } else if (abs(correlation) >= 0.5) {
-    return("****")   # Moderate correlation: 4 stars
-  } else if (abs(correlation) >= 0.3) {
-    return("***")    # Fair correlation: 3 stars
-  } else if (abs(correlation) >= 0.1) {
-    return("**")     # Weak correlation: 2 stars
-  } else {
-    return("*")      # Very weak correlation: 1 star
-  }
-}
-
-# panel.cor function with stars alongside correlation coefficients
+# panel.cor_stars function with stars alongside correlation coefficients
 panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
   usr <- par("usr"); on.exit(par(usr)) 
   par(usr = c(0, 1, 0, 1)) 
   r <- cor(x, y)
-  stars <- evaluateCorrelationStars(r)
+  p_value <- cor.test (x,y)$p.value
+  
+  if (p_value < 0.001){
+    stars <- "***"
+  } else if (p_value < 0.01) {
+    stars <- "**"
+  } else if (p_value < 0.05) {
+    stars <- "*"
+  } else {
+    stars <- ""
+  }
   txt <- paste0(format(c(r, 0.123456789), digits = digits)[1], " ", stars)
   if(missing(cex.cor)) cex.cor <- 0.5/strwidth(txt)
   text(0.5, 0.5, txt, cex = cex.cor)
 }
 
 pairs(data_question3_1[, c("overallscore", "total_affected", "total_deaths")], upper.panel = panel.cor_stars,diag.panel = panel.hist,lower.panel = lower.panel, main = "Correlation table and distribution of Disaster variables")
-
 ```
 
 The different variables used to materialize the impact of climate disasters do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that such disasters have a specific influence on some SDGs.
@@ -470,28 +477,25 @@ The different variables used to materialize the impact of climate disasters do n
 lower.panel <- function(x, y, ...){
   points(x, y, pch = 20, col = "darkgreen", cex = 0.2)
 }
-evaluateCorrelationStars <- function(correlation) {
-  if (abs(correlation) >= 0.7) {
-    return("*****")  
-  } else if (abs(correlation) >= 0.5) {
-    return("****")
-  } else if (abs(correlation) >= 0.3) {
-    return("***") 
-  } else if (abs(correlation) >= 0.1) {
-    return("**")
-  } else {
-    return("*")
-  }
-}
 
-# panel.cor function with stars alongside correlation coefficients
+# panel.cor_stars function with stars alongside correlation coefficients
 panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
   usr <- par("usr"); on.exit(par(usr)) 
   par(usr = c(0, 1, 0, 1)) 
   r <- cor(x, y)
-  stars <- evaluateCorrelationStars(r)
+  p_value <- cor.test (x,y)$p.value
+  
+  if (p_value < 0.001){
+    stars <- "***"
+  } else if (p_value < 0.01) {
+    stars <- "**"
+  } else if (p_value < 0.05) {
+    stars <- "*"
+  } else {
+    stars <- ""
+  }
   txt <- paste0(format(c(r, 0.123456789), digits = digits)[1], " ", stars)
-  if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+  if(missing(cex.cor)) cex.cor <- 0.5/strwidth(txt)
   text(0.5, 0.5, txt, cex = cex.cor)
 }
 
@@ -504,33 +508,33 @@ The different variables used to materialize the impact of COVID19 do not seem to
 lower.panel <- function(x, y, ...){
   points(x, y, pch = 20, col = "darkgreen", cex = 0.5)
 }
-evaluateCorrelationStars <- function(correlation) {
-  if (abs(correlation) >= 0.7) {
-    return("*****") 
-  } else if (abs(correlation) >= 0.5) {
-    return("****")
-  } else if (abs(correlation) >= 0.3) {
-    return("***") 
-  } else if (abs(correlation) >= 0.1) {
-    return("**")
-  } else {
-    return("*")
-  }
-}
 
-# panel.cor function with stars alongside correlation coefficients
+# panel.cor_stars function with stars alongside correlation coefficients
 panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
   usr <- par("usr"); on.exit(par(usr)) 
   par(usr = c(0, 1, 0, 1)) 
   r <- cor(x, y)
-  stars <- evaluateCorrelationStars(r)
+  p_value <- cor.test (x,y)$p.value
+  
+  if (p_value < 0.001){
+    stars <- "***"
+  } else if (p_value < 0.01) {
+    stars <- "**"
+  } else if (p_value < 0.05) {
+    stars <- "*"
+  } else {
+    stars <- ""
+  }
   txt <- paste0(format(c(r, 0.123456789), digits = digits)[1], " ", stars)
-  if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+  if(missing(cex.cor)) cex.cor <- 0.5/strwidth(txt)
   text(0.5, 0.5, txt, cex = cex.cor)
 }
 
 pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of conflicts variables")
 ```
+
+"***": p_value < 0.001; "**" : p_value < 0.01; "*": p_value <0.05; no star if higher p_value
+
 
 The different variables used to materialize the impact of conflicts do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that conflicts have a specific influence on some SDGs.
 
