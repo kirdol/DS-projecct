@@ -69,28 +69,66 @@ We display the distribution of the different SDG achievement scores, using boxpl
 
 #For goals per continent 
 
-# Step 1: Combine all data into one data frame with a region identifier
+#Africa
+data_Q1_Africa <- data_question1 %>%
+  filter(data_question1$continent == 'Africa') %>%
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
 
-# Melt the data
-data_long <- data_question1 %>% 
-  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17) %>% 
-  melt()
+data_Q1_Africa_long <- melt(data_Q1_Africa)
 
-# Calculate medians and colors
-medians <- data_long %>%
+medians_AF <- data_Q1_Africa_long %>%
   group_by(variable) %>%
-  summarize(median_value = median(value), .groups = 'drop')
-medians$color <- ifelse(medians$median_value > 75, "lightblue", 
-                        ifelse(medians$median_value < 25, "red", 'orange'))
+  summarize(median_value = median(value))
+data_Q1_Africa_long <- data_Q1_Africa_long %>%
+                  left_join(medians_AF, by = "variable")
+#America
+data_Q1_Americas <- data_question1 %>%
+  filter(data_question1$continent == 'Americas') %>%
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+data_Q1_Americas_long <- melt(data_Q1_Americas)
+medians_AM <- data_Q1_Americas_long %>%
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+data_Q1_Americas_long <- data_Q1_Americas_long %>%
+                  left_join(medians_AM, by = "variable")
+#Asia
+data_Q1_Asia <- data_question1 %>%
+  filter(data_question1$continent == 'Asia') %>%
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+data_Q1_Asia_long <- melt(data_Q1_Asia)
+medians_AS <- data_Q1_Asia_long %>%
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+data_Q1_Asia_long <- data_Q1_Asia_long %>%
+                  left_join(medians_AS, by = "variable")
+#Europe
+data_Q1_Europe <- data_question1 %>%
+  filter(data_question1$continent == 'Europe') %>%
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+data_Q1_Europe_long <- melt(data_Q1_Europe)
+medians_EU <- data_Q1_Europe_long %>%
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+data_Q1_Europe_long <- data_Q1_Europe_long %>%
+                  left_join(medians_EU, by = "variable")
+#Oceania
+data_Q1_Oceania <- data_question1 %>%
+  filter(data_question1$continent == 'Oceania') %>%
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+data_Q1_Oceania_long <- melt(data_Q1_Oceania)
+medians_OC <- data_Q1_Oceania_long %>%
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+data_Q1_Oceania_long <- data_Q1_Oceania_long %>%
+                  left_join(medians_OC, by = "variable")
+# merge all medians
+medians_all <- rbind(data_Q1_Oceania_long, data_Q1_Americas_long,data_Q1_Africa_long,data_Q1_Asia_long,data_Q1_Europe_long)
 
-# Join the medians back to the long data
-data_long <- left_join(data_long, medians, by = "variable")
+medians_all$color <- ifelse(medians_all$median_value > 75, "lightblue",
+                        ifelse(medians_all$median_value < 25, "red", 'orange'))
 
-# Calculate the bandwidth
-bandwidth_nrd <- bw.nrd(data_long$value)
+bandwidth_nrd <- bw.nrd(medians_all$value)
 
-
-# Create the plot
 ggplot(medians_all, aes(x = variable, y = value, fill = color)) +
   geom_violin(trim = FALSE, bw = bandwidth_nrd) +
   #geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +
