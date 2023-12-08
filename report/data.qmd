@@ -1277,7 +1277,11 @@ ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Perce
 data_question1 <- data_question1 %>% select(-c(MiliratyExpenditurePercentGovExp, hf_score, pf_score, ef_score))
 ```
 
+<<<<<<< Updated upstream
 ##### Dealing with missing vlaues in rows
+=======
+##### ROWS
+>>>>>>> Stashed changes
 
 We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We decide to remove the countries that have more than 50 missing values.
 
@@ -1682,7 +1686,11 @@ data_question1 <- data_question1 %>%
 
 There are no more missing values, thanks to the previous steps.
 
+<<<<<<< Updated upstream
 ##### **SDGs 1 and 10**
+=======
+##### \*\*SDGs 1 and 10\*+
+>>>>>>> Stashed changes
 
 We noticed earlier that there were only missing values for goals 1 and 10. As we did before, we have started to investigate where are located the NAs in our dataset for first goal1, then goal 10.
 
