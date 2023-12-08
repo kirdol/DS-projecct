@@ -5,7 +5,20 @@ source(here::here("scripts/Clean/setup.R"))
 source(here::here("scripts/EDA/EDA_4_SDG.R"))
 ```
 
-## General exploration
+## Focus on the influence of the factors over the SDG scores
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+# # Reshape the data
+# melted_data_distribution = Correlation_overall.melt(id_vars=['population', 'overallscore'], 
+#                         value_vars=['goal1', 'goal2', 'goal3', 'goal4', 'goal5', 'goal6', 'goal7', 'goal8', 'goal9', 'goal10', 'goal11', 'goal12', 'goal13', 'goal14', 'goal15', 'goal16', 'goal17'],
+#                         var_name='Goal', value_name='Score')
+# 
+# # Plotting
+# ggplot(melted_data_distribution, aes(x='Score', y='Goal', fill='Score')) + \
+#     geom_density_ridges_gradient(scale=3, size=0.3, rel_min_height=0.01) + \
+#     scale_fill_viridis_c(name='Score', option='C') + \
+#     labs(title='Goal Scores Distribution')
+# ```
 
 We display the distribution of the different SDG achievement scores, using boxplots to have an overview of the median, the range with most of the observations and the outliers.
 
@@ -284,11 +297,9 @@ grid.arrange(v1,v2,v3,v4, ncol = 2, nrow = 2)
 We now look at the variables in a summary table to have a more precise view of the numbers.
 
 ```{r, echo = FALSE, message = FALSE, warning=FALSE, cache = TRUE}
-table1 <- summary(data_question24)
-kable(table1)
+# table1 <- summary(data_question24)
+# kable(table1)
 ```
-
-## Focus on the influence of the factors over the SDG scores
 
 Using our cleaned dataset, we first want to observe how each of our variables are correlated with the others. For that, we will use a heatmap. Given that most of our variables are not normally distributed, we will use the Spearman method to calculate the correlation.
 
@@ -345,6 +356,8 @@ panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...){
 
 # # Independent variables 
 pairs(Correlation_overall[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of various variables")
+
+pairs(Correlation_overall[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor, diag.panel=panel.hist, main="Correlation table and distribution of various variables")
 ```
 
 The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score.
@@ -353,6 +366,7 @@ The overall SDG achievement score is highly correlated with "personal freedom: l
 
 The overall SDG achievement score is highly correlated with "economical freedom: legal" (p=.77), "economical trade: legal" (p=.67) and "economical freedom: money" (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom.
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 =======
 ### Looking at SDGs
@@ -447,6 +461,8 @@ fviz_cluster(kmean, data=means_by_country[,-1], repel=FALSE, depth =NULL, ellips
 
 Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough.
 
+=======
+>>>>>>> Stashed changes
 ## Focus on the influence of events over the SDG scores
 
 In order to have an overview of the relationship between the different events variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
