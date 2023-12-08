@@ -1828,7 +1828,7 @@ data_question3_2 <- data_question3_2 %>% filter(!code %in% COVID4$code)
 We replace the NAs of the other COVID columns (years 2000 t0 2019) by 0 (because we don't have real missing, only introduced by merging with the other databases).
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-all_Merge <- all_Merge %>%
+data_question3_2 <- data_question3_2 %>%
   mutate(
     cases_per_million = ifelse(is.na(cases_per_million), 0, cases_per_million),
     deaths_per_million = ifelse(is.na(deaths_per_million), 0, deaths_per_million),
