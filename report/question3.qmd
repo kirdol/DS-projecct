@@ -81,11 +81,11 @@ Here you can see an extract of our correlation map between the conflicts and the
 
 conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe", "Caucasus and Central Asia"), ]
 
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected", "sum_deaths")
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected", "sum_deaths", "maxintensity")
 
 subset_data <- conflicts_filtered[, relevant_columns]
 
-correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected", "sum_deaths")])
+correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected", "sum_deaths", "maxintensity")])
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
@@ -313,11 +313,11 @@ Q3.3 <- Q3.3 %>%
 
 conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe", "Caucasus and Central Asia"), ]
 
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected", "sum_deaths")
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected", "sum_deaths", "maxintensity")
 
 subset_data <- conflicts_filtered[, relevant_columns]
 
-correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected", "sum_deaths")])
+correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected", "sum_deaths", "maxintensity")])
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
@@ -336,7 +336,7 @@ server <- function(input, output) {
   })
   
   output$heatmap <- renderPlotly({
-    correlation_matrix_Conflicts_Pop_Aff <- cor(selected_conflicts_data(), selected_conflicts_data()[, c("pop_affected", "sum_deaths")])
+    correlation_matrix_Conflicts_Pop_Aff <- cor(selected_conflicts_data(), selected_conflicts_data()[, c("pop_affected", "sum_deaths", "maxintensity")])
     cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
     names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
     
@@ -542,7 +542,7 @@ Now, let's see the regressions for each SDG score depending of each variable in 
 
 conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe", "Caucasus and Central Asia"), ]
 
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected", "sum_deaths")
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected", "sum_deaths", "maxintensity")
 
 subset_data <- conflicts_filtered[, relevant_columns]
 
@@ -561,7 +561,8 @@ ui <- fluidPage(
     mainPanel(
       width = 9,
       plotOutput("regression_plot_pop_affected"),
-      plotOutput("regression_plot_sum_deaths")
+      plotOutput("regression_plot_sum_deaths"),
+      plotOutput("regression_plot_maxintensity")
     )
   )
 )
@@ -570,9 +571,11 @@ server <- function(input, output) {
   generate_regression_plot <- function(selected_goal) {
     formula_pop_affected <- as.formula(paste(selected_goal, "~ pop_affected"))
     formula_sum_deaths <- as.formula(paste(selected_goal, "~ sum_deaths"))
+    formula_maxintensity <- as.formula(paste(selected_goal, "~maxintensity"))
     
     lm_pop_affected <- lm(formula_pop_affected, data = subset_data)
     lm_sum_deaths <- lm(formula_sum_deaths, data = subset_data)
+    lm_maxintensity <- lm(formula_maxintensity, data = subset_data)
     
     plot_pop_affected <- ggplot(subset_data, aes(x = pop_affected, y = !!as.name(selected_goal))) +
       geom_point() +
@@ -588,7 +591,14 @@ server <- function(input, output) {
            x = "Sum of Deaths", y = selected_goal) +
       scale_x_continuous(labels = comma_format()) 
     
-    list(plot_pop_affected, plot_sum_deaths)
+    plot_maxintensity <- ggplot(subset_data, aes(x = sum_deaths, y = !!as.name(selected_goal))) +
+      geom_point() +
+      geom_smooth(method = "lm", se = FALSE) +
+      labs(title = paste("Regression plot for", selected_goal, "vs Maxintensity"),
+           x = "Maxintensity", y = selected_goal) +
+      scale_x_continuous(labels = comma_format()) 
+    
+    list(plot_pop_affected, plot_sum_deaths, plot_maxintensity)
   }
   
   output$regression_plot_pop_affected <- renderPlot({
@@ -601,6 +611,12 @@ server <- function(input, output) {
     selected_goal <- input$sdg
     regression_plots <- generate_regression_plot(selected_goal)
     print(regression_plots[[2]])  
+  })
+  
+    output$regression_plot_maxintensity <- renderPlot({
+    selected_goal <- input$sdg
+    regression_plots <- generate_regression_plot(selected_goal)
+    print(regression_plots[[3]])  
   })
 }
 
