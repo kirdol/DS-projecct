@@ -399,7 +399,7 @@ fviz_pca_biplot(myPCA_g,
 
 Concerning the SDG goals, we conclude that most of our variables are going along the 1st component, except the goals 10 and 15 that are rather uncorrelated with the dimension 1. In addition, as seen before, the goals 12 and 13 are negatively correlated to the other goals. With a eigenvalue bigger than 1 for the first two components, we conclude that there are only 2 dimensions to take into account, according to the Kaiser-Guttman's rule. Nevertheless, they are explaining less than 80% of cumulated variance.
 
->>>>>>> Stashed changes
+
 ### Looking at the HFI scores
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
@@ -460,13 +460,12 @@ fviz_cluster(kmean, data=means_by_country[,-1], repel=FALSE, depth =NULL, ellips
 
 Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough.
 
-=======
->>>>>>> Stashed changes
+
 ## Focus on the influence of events over the SDG scores
 
 In order to have an overview of the relationship between the different events variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
 
-<<<<<<< Updated upstream
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 lower.panel <- function(x, y, ...){
   points(x, y, pch = 20, col = "black", cex = 0.2)
@@ -532,7 +531,6 @@ panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
 }
 
 #ERROR TO RESOLVE (PROBABLY NAs SOMEWHERE)
-
 pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_million", "stringency")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel,main="Correlation table and distribution of COVID variables")
 ```
 
@@ -674,7 +672,7 @@ panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
 # pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of conflicts variables")
 # 
 # ```
->>>>>>> Stashed changes
+
 
 The different variables used to materialize the impact of conflicts do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that conflicts have a specific influence on some SDGs.
 
