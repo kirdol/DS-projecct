@@ -22,7 +22,7 @@ Q3.3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
 data <- read.csv(here("scripts", "data", "all_Merge.csv"))
 
 Correlation_overall <- data_question1 %>% 
-      select(population:ef_regulation)
+      dplyr::select(population:ef_regulation)
 
 #### boxplots ####
 
@@ -33,7 +33,7 @@ Correlation_overall <- data_question1 %>%
 #Africa
 data_Q1_Africa <- data_question1 %>%
   filter(data_question1$continent == 'Africa') %>%
-  select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
 
 data_Q1_Africa_long <- melt(data_Q1_Africa)
 
@@ -47,7 +47,7 @@ data_Q1_Africa_long <- data_Q1_Africa_long %>%
 #America
 data_Q1_Americas <- data_question1 %>%
   filter(data_question1$continent == 'Americas') %>%
-  select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
 
 data_Q1_Americas_long <- melt(data_Q1_Americas)
 
@@ -61,7 +61,7 @@ data_Q1_Americas_long <- data_Q1_Americas_long %>%
 #Asia
 data_Q1_Asia <- data_question1 %>%
   filter(data_question1$continent == 'Asia') %>%
-  select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
 
 data_Q1_Asia_long <- melt(data_Q1_Asia)
 
@@ -75,7 +75,7 @@ data_Q1_Asia_long <- data_Q1_Asia_long %>%
 #Europe
 data_Q1_Europe <- data_question1 %>%
   filter(data_question1$continent == 'Europe') %>%
-  select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
 
 data_Q1_Europe_long <- melt(data_Q1_Europe)
 
@@ -89,7 +89,7 @@ data_Q1_Europe_long <- data_Q1_Europe_long %>%
 #Oceania 
 data_Q1_Oceania <- data_question1 %>%
   filter(data_question1$continent == 'Oceania') %>%
-  select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
 
 data_Q1_Oceania_long <- melt(data_Q1_Oceania)
 
@@ -129,7 +129,7 @@ We now display boxplpots for the different variables of the human freedom index,
 #Africa
 data_Q1_Africa_HFI <- data_question1 %>%
   filter(data_question1$continent == 'Africa') %>%
-  select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
 
 data_Q1_Africa_HFI_long <- melt(data_Q1_Africa_HFI)
 
@@ -143,7 +143,7 @@ data_Q1_Africa_HFI_long <- data_Q1_Africa_HFI_long %>%
 #America
 data_Q1_Americas_HFI <- data_question1 %>%
   filter(data_question1$continent == 'Americas') %>%
-  select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
 
 data_Q1_Americas_HFI_long <- melt(data_Q1_Americas_HFI)
 
@@ -157,7 +157,7 @@ data_Q1_Americas_HFI_long <- data_Q1_Americas_HFI_long %>%
 #Asia
 data_Q1_Asia_HFI <- data_question1 %>%
   filter(data_question1$continent == 'Asia') %>%
-  select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
 
 data_Q1_Asia_HFI_long <- melt(data_Q1_Asia_HFI)
 
@@ -171,7 +171,7 @@ data_Q1_Asia_HFI_long <- data_Q1_Asia_HFI_long %>%
 #Europe
 data_Q1_Europe_HFI <- data_question1 %>%
   filter(data_question1$continent == 'Europe') %>%
-  select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
 
 data_Q1_Europe_HFI_long <- melt(data_Q1_Europe_HFI)
 
@@ -185,7 +185,7 @@ data_Q1_Europe_HFI_long <- data_Q1_Europe_HFI_long %>%
 #Oceania 
 data_Q1_Oceania_HFI <- data_question1 %>%
   filter(data_question1$continent == 'Oceania') %>%
-  select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
 
 data_Q1_Oceania_HFI_long <- melt(data_Q1_Oceania_HFI)
 
@@ -260,7 +260,7 @@ Using our cleaned dataset, we first want to observe how each of our variables ar
 #### Correlations between variables Heatmap ####
 
 Correlation_overall <-data_question1 %>% # selection of the numerical data
-      select(population:ef_regulation)
+      dplyr::select(population:ef_regulation)
 
 cor_matrix_sper <- # calculation of the correlation matrix
   cor(Correlation_overall, method = "spearman", use = "everything")
@@ -345,11 +345,33 @@ Now concerning the Human Freedom Index scores, most of the variables are positiv
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 #### Kmean clustering ####
 
-data1_scaled <- scale(Correlation_overall)
-rownames(data1_scaled) <- seq_along(row.names(data1_scaled))
-fviz_nbclust(data1_scaled, kmeans, method="wss")
-kmean <- kmeans(data1_scaled, 7, nstart = 25)
-fviz_cluster(kmean, data=data1_scaled, repel=FALSE, depth =NULL, ellipse.type = "norm", labelsize = 0, pointsize = 0.5)
+# data1_scaled <- scale(Correlation_overall)
+# rownames(data1_scaled) <- seq_along(row.names(data1_scaled))
+# fviz_nbclust(data1_scaled, kmeans, method="wss")
+# kmean <- kmeans(data1_scaled, 7, nstart = 25)
+# fviz_cluster(kmean, data=data1_scaled, repel=FALSE, depth =NULL, ellipse.type = "norm", labelsize = 0, pointsize = 0.5)
+
+data_kmean_country <- data_question1 %>% dplyr::select(-c(X,code,year,continent,region))
+
+
+
+#filter data different than 0 and dropping observations 
+filtered_data <- data_kmean_country %>%
+  group_by(country) %>%
+  filter_if(is.numeric, all_vars(sd(.) != 0)) %>%
+  ungroup()
+
+scale_by_country <- filtered_data %>%
+  group_by(country) %>% summarise_all(~ scale(.))
+
+means_by_country <- scale_by_country %>%
+  group_by(country) %>%
+  summarise_all(~ mean(., na.rm = TRUE))
+
+rownames(means_by_country) <- seq_along(row.names(means_by_country))
+fviz_nbclust(means_by_country[,-1], kmeans, method="wss")
+kmean <- kmeans(means_by_country[,-1], 4, nstart = 25)
+fviz_cluster(kmean, data=means_by_country[,-1], repel=FALSE, depth =NULL, ellipse.type = "norm", labelsize = 10, pointsize = 0.5)
 
 ### NOW CLUSTERING BY COUNTRY? AND TAKE MEAN OF EVERY VARIABLE ON EVERY CONCERNED YEAR?
 ```
