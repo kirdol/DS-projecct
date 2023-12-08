@@ -1,7 +1,7 @@
 # Data
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
-source(here::here("scripts/Clean/setup.R"))
+source(here::here("scripts","Clean","setup.R"))
 ```
 
 ## Sources
