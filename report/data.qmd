@@ -894,6 +894,7 @@ list_country_disasters <- c(unique(D6_0_Disasters$code))
 setdiff(list_country, list_country_disasters)
 ```
 
+
 **Here are the first few lines of the cleaned dataset on Disasters:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
@@ -1218,12 +1219,13 @@ data_question24 <- all_Merge %>%
 
 ```
 
-**For question 3**, we create 3 distinct databases according to the different type of event that we wwill analyse: disasters, COVID19 and conflicts. For the disasters, we only keep the years until 2021, because after this date, we don't have data. For the conflicts, we only keep the years until 2016, because after this date, we don't have data.
+**For question 3**, we create 3 distinct databases according to the different type of event that we will analyse: disasters, COVID19 and conflicts. For the disasters, we only keep the years until 2021, because after this date, we don't have data, moreover we decided to delete the country Bahrain, Brunei and Malta as we do not have any data concerning them. For the conflicts, we only keep the years until 2016, because after this date, we don't have data.
+Concerning the conflict dataset, we decided to erase Belarus because once again we do not have any data concerning this country.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 # Disasters
 data_question3_1 <- all_Merge %>%
-  filter(year<=2021) %>%
+  filter(year<=2021 & code!="BHR" & code!="BRN" & code!="MLT") %>%
   select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages))
 
 # COVID
@@ -1232,7 +1234,7 @@ data_question3_2 <- all_Merge %>%
 
 # Conflicts 
 data_question3_3 <- all_Merge %>%
-  filter(year<=2016) %>%
+  filter(year<=2016 & code !="BLR") %>%
   select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
 
 ```
@@ -1781,6 +1783,7 @@ ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Perce
 In this particular case, even if there are many missing values in our disaster dataset, we made the hypothesis that disaster events can not happen every year for every country given that these are uncontrollable and non-recurring events. Therefore the NAs that we encounter will become zeroes, implying that there have been no climatic disasters.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+
 data_question3_1[is.na(data_question3_1)] <- 0
 
 ```
@@ -1849,7 +1852,7 @@ see_missing3_3 <- data_question3_3 %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 0))
 
-data_question3_3 <- data_question3_3 %>% filter(!code %in% c("MNE","SRB"))
+data_question3_3 <- data_question3_3 %>% filter(!code %in% c("MNE","SRB","SSD"))
 
 ##### EXPORT as CSV #####
 write.csv(data_question1, file = here("scripts","data","data_question1.csv"))
