@@ -40,7 +40,8 @@ packages <- c(
   "patchwork",
   "e1071",
   "car",
-  "naniar"
+  "naniar",
+  "ggridges"
 )
 
 for (pkg in packages) {
