@@ -422,67 +422,6 @@ fviz_pca_biplot(myPCA_g,
 
 Concerning the SDG goals, we conclude that most of our variables are going along the 1st component, except the goals 10 and 15 that are rather uncorrelated with the dimension 1. In addition, as seen before, the goals 12 and 13 are negatively correlated to the other goals. With a eigenvalue bigger than 1 for the first two components, we conclude that there are only 2 dimensions to take into account, according to the Kaiser-Guttman's rule. Nevertheless, they are explaining less than 80% of cumulated variance.
 
-
-### Looking at the HFI scores
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
-#### PCA and PCA Scree plot####
-
-myPCA_s <- PCA(data_question1[,29:40], graph = FALSE)
-fviz_eig(myPCA_s,
-         addlabels = TRUE) +
-  theme_minimal()
-```
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
-#### PCA Biplot ####
-fviz_pca_biplot(myPCA_s,
-                label="var",
-                col.var="dodgerblue3",
-                geom="point",
-                pointsize = 0.1,
-                labelsize = 5) +
-  theme_minimal()
-```
-
-Now concerning the Human Freedom Index scores, most of the variables are positively correlated to the dimension 1, slightly less for the PF religion and security, and finaly the EF government variable is uncorrelated to the dimension 1. With a eigenvalue bigger than 1 for the three first components, we conclude that there are 3 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-#### Kmean clustering ####
-
-# data1_scaled <- scale(Correlation_overall)
-# rownames(data1_scaled) <- seq_along(row.names(data1_scaled))
-# fviz_nbclust(data1_scaled, kmeans, method="wss")
-# kmean <- kmeans(data1_scaled, 7, nstart = 25)
-# fviz_cluster(kmean, data=data1_scaled, repel=FALSE, depth =NULL, ellipse.type = "norm", labelsize = 0, pointsize = 0.5)
-
-data_kmean_country <- data_question1 %>% dplyr::select(-c(X,code,year,continent,region))
-
-
-
-#filter data different than 0 and dropping observations 
-filtered_data <- data_kmean_country %>%
-  group_by(country) %>%
-  filter_if(is.numeric, all_vars(sd(.) != 0)) %>%
-  ungroup()
-
-scale_by_country <- filtered_data %>%
-  group_by(country) %>% summarise_all(~ scale(.))
-
-means_by_country <- scale_by_country %>%
-  group_by(country) %>%
-  summarise_all(~ mean(., na.rm = TRUE))
-
-rownames(means_by_country) <- seq_along(row.names(means_by_country))
-fviz_nbclust(means_by_country[,-1], kmeans, method="wss")
-kmean <- kmeans(means_by_country[,-1], 4, nstart = 25)
-fviz_cluster(kmean, data=means_by_country[,-1], repel=FALSE, depth =NULL, ellipse.type = "norm", labelsize = 10, pointsize = 0.5)
-
-### NOW CLUSTERING BY COUNTRY? AND TAKE MEAN OF EVERY VARIABLE ON EVERY CONCERNED YEAR?
-```
-
-Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough.
-
 ## Focus on the influence of events over the SDG scores
 
 In order to have an overview of the relationship between the different events variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
