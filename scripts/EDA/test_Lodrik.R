@@ -24,3 +24,5 @@ server <- function(input, output) {
 
 # Run the app
 shinyApp(ui = ui, server = server)
+
+AM <- read.csv(here("scripts", "data", "All_Merge.csv"))
