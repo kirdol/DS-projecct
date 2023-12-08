@@ -18,7 +18,7 @@ source(here::here("scripts/EDA/EDA_4_SDG.R"))
 #     geom_density_ridges_gradient(scale=3, size=0.3, rel_min_height=0.01) + \
 #     scale_fill_viridis_c(name='Score', option='C') + \
 #     labs(title='Goal Scores Distribution')
-# ```
+```
 
 We display the distribution of the different SDG achievement scores, using boxplots to have an overview of the median, the range with most of the observations and the outliers.
 
@@ -139,7 +139,7 @@ bandwidth_nrd <- bw.nrd(medians_all$value)
 
 # Melt the data
 data_long <- data_question1 %>% 
-  select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17) %>% 
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17) %>% 
   melt()
 
 # Calculate medians and colors
