@@ -46,6 +46,10 @@ During the wrangling process, we added data to our table (D1_1_SDG) from differe
 
 #### Sustainable Development Goals database (*DGD1_1_SDG*) {.unnumbered}
 
+The Sustainable Development Goals (SDGs) are a universal set of 17 interlinked goals that were adopted by the United Nations in 2015 as part of the 2030 Agenda for Sustainable Development. These goals provide a shared blueprint for peace and prosperity for people and the planet, now and into the future.
+
+![Source: <a href="https://www.un.org/sustainabledevelopment/news/communications-material/">UN Communication materials</a>](E_SDG_poster_UN_emblem_WEB%202020.png)
+
 Our primary database focuses on the Sustainable Development Goals (SDG). Below is a table summarizing the key variables included:
 
 ```{r}
@@ -72,11 +76,9 @@ D1_1_SDG_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-The Sustainable Development Goals (SDGs) are a universal set of 17 interlinked goals that were adopted by the United Nations in 2015 as part of the 2030 Agenda for Sustainable Development. These goals provide a shared blueprint for peace and prosperity for people and the planet, now and into the future.
-
-![Source: <a href="https://www.un.org/sustainabledevelopment/news/communications-material/">UN Communication materials</a>](E_SDG_poster_UN_emblem_WEB%202020.png)
-
 #### Unemployment rate database (*D2_2_Unemployment_rate*) {.unnumbered}
+
+This database give us comprehensive data on the unemployment rates for each country from 2000 to 2022. Originally, it included categories based on various age groups. However, for simplicity and coherence, the database has been streamlined to focus exclusively on the unemployment rates of individuals aged 15 years and older.
 
 ```{r}
 D2_2_Unemployment_rate_table_info <- data.frame(
@@ -100,6 +102,8 @@ D2_2_Unemployment_rate_table_info %>%
 
 #### GDP per capita database (*D3_0_GDP_per_capita*) {.unnumbered}
 
+This database offers detailed information on the GDP per capita in dollars for various countries, covering the period from 2000 to 2022. It is designed to provide insights into the economic performance of each country over these years, measured through the lens of per capita GDP.
+
 ```{r}
 D3_0_GDP_per_capita_table_info <- data.frame(
   Column1 = c("code",
@@ -121,6 +125,8 @@ D3_0_GDP_per_capita_table_info %>%
 ```
 
 #### Proportion of the GDP dedicated to Military expenditures database (*D3_1_Military_expenditure_percent_GDP*) {.unnumbered}
+
+This database provides an insightful view of the proportion of their respective GDPs that countries have allocated to military expenditures. It covers the period from 2000 to 2022.
 
 ```{r}
 D3_1_Military_expenditure_percent_GDP_table_info <- data.frame(
@@ -144,6 +150,8 @@ D3_1_Military_expenditure_percent_GDP_table_info %>%
 
 #### Internet usage database (*D4_0_Internet_usage*) {.unnumbered}
 
+This database provides information on the percentage of the population that uses the internet in each country. It covers the period from 2000 to 2022.
+
 ```{r}
 D4_0_Internet_usage_table_info <- data.frame(
   Column1 = c("code",
@@ -165,6 +173,8 @@ D4_0_Internet_usage_table_info %>%
 ```
 
 #### Human freedom index database (*D5_0_Human_freedom_index*) {.unnumbered}
+
+This database provides information on the Human Freedom Index (HFI) for each country. The HFI is a composite index that measures the degree to which people are free to enjoy important rights and freedoms. It covers the period from 2000 to 2022.
 
 ```{r}
 D5_0_Human_freedom_index_table_info <- data.frame(
@@ -212,6 +222,8 @@ D5_0_Human_freedom_index_table_info %>%
 
 #### Disaster list database (*D6_0_Disaters*) {.unnumbered}
 
+This database provides information on the number of deaths, injured, affected and homeless people, as well as the total number of affected people and the total of infrastructure damages caused by disasters in each country. It covers the period from 2000 to 2021.
+
 ```{r}
 D6_0_Disaters_table_info <- data.frame(
   Column1 = c("code",
@@ -226,7 +238,7 @@ D6_0_Disaters_table_info <- data.frame(
               "total_damages"),
   Column2 = c("Country code (ISO)", 
               "Country name",
-              "Year of the observation (2000-2022)",
+              "Year of the observation (2000-2021)",
               "Continents touched by the disasters such as floods, ouragan",
               "Number of deaths caused by disasters",
               "Number of injured caused by disasters",
@@ -246,6 +258,8 @@ D6_0_Disaters_table_info %>%
 
 #### COVID database (*D7_0_COVID*) {.unnumbered}
 
+This database provides information on the number of people dead due to COVID, the number of COVID cases and the Government Response Stringency Index in each country. It covers the period from 2020 to 2022.
+
 ```{r}
 D7_0_COVID_table_info <- data.frame(
   Column1 = c("code",
@@ -256,7 +270,7 @@ D7_0_COVID_table_info <- data.frame(
               "stringency"),
   Column2 = c("Country code (ISO)", 
               "Country name",
-              "Year of the observation (2000-2022)",
+              "Year of the observation (2020-2022)",
               "Number of people dead due to COVID",
               "Number of COVID cases",
               "Government Response Stringency Index: composite measure based on 9 response indicators including school closures, workplace closures, and trave"))
@@ -271,6 +285,8 @@ D7_0_COVID_table_info %>%
 ```
 
 #### Conflicts database (*D8_0_Conflicts*) {.unnumbered}
+
+This database provides information on the number of deaths, the number of people affected and the maximum intensity of conflicts in each country. It covers the period from 2000 to 2022.
 
 ```{r}
 D8_0_Conflicts_table_info <- data.frame(

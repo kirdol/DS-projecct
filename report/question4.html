@@ -79,23 +79,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="focus-on-relationship-between-sdgs" class="level3">
-<h3 class="anchored" data-anchor-id="focus-on-relationship-between-sdgs">Focus on relationship between SDGs</h3>
+<section id="focus-on-relationship-between-sdgs" class="level1">
+<h1>Focus on relationship between SDGs</h1>
 <p><strong>How are the different SDGs linked? (We want to see if some SDGs are linked in the fact that a high score on one implies a high score on the other, and thus if we can make groups of SDGs that are comparable in that way).</strong></p>
-</section>
-<section id="focus-on-relationship-between-sdgs-1" class="level2">
-<h2 class="anchored" data-anchor-id="focus-on-relationship-between-sdgs-1">Focus on relationship between SDGs</h2>
-<p>Let’s analyse our relationship between the SDGs. For that, we’ll import our dataset to examine the interconnections among the Sustainable Development Goals (SDGs). After importing, we’ll focus specifically on the columns representing the goals of interest. To provide a comprehensive analysis, we will construct a correlation matrix, highlighting only those goals where the correlation coefficient is either greater than 0.5 (indicating a strong positive relationship) or less than -0.5 (signifying a strong negative relationship). This approach will enable us to identify and analyze the most significant relationships between the selected SDGs.</p>
+<section id="eda-general-visualization-of-the-sdgs" class="level2">
+<h2 class="anchored" data-anchor-id="eda-general-visualization-of-the-sdgs">EDA: General visualization of the SDGs</h2>
+<p>Let’s analyse our relationship between the SDGs. For that, we’ll import our dataset to examine the interconnections among the Sustainable Development Goals (SDGs). After importing, we’ll focus specifically on the columns representing the goals of interest. To provide a comprehensive analysis, we will construct a correlation matrix that we will show as a heatmap to highlighting only those goals where the correlation coefficient is either greater than a arbitrary threashold that we fixed at 0.5 (indicating a strong positive relationship) and less than -0.5 (signifying a strong negative relationship). This approach will enable us to identify and analyze the most significant relationships between the selected SDGs.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Preparation of the data ####</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>data_4 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"data"</span>, <span class="st">"data_question24.csv"</span>))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>data_4_goals <span class="ot">&lt;-</span> data_4[, <span class="fu">grepl</span>(<span class="st">"goal"</span>, <span class="fu">names</span>(data_4))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>data_4 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"data"</span>, <span class="st">"data_question24.csv"</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>data_4_goals <span class="ot">&lt;-</span> data_4 <span class="sc">%&gt;%</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(overallscore, goal1, goal2, goal3, goal4, goal5,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                goal6,goal7, goal8, goal9, goal10, goal11, goal12,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                goal13, goal15, goal16, goal17)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Given that our variables do not follow a normal distribution, employing the Pearson correlation method is not suitable in our analysis. We attempted to normalize the data through logarithmic and square root transformations, but these adjustments were insufficiently effective. Consequently, we will resort to computing the Spearman correlation. While not ideal, this method does not necessitate the normal distribution of our data. In our analysis, particularly for the heatmap visualization, we will focus on correlations that exceed the threshold of r threshold_heatmap or fall below -r threshold_heatmap. This selective approach will enhance the readability and interpretability of the heatmap.</p>
+<p>Given that our variables do not follow a normal distribution, employing the Pearson correlation method is not suitable in our analysis. We attempted to normalize the data through logarithmic or square root transformations, but these adjustments were insufficiently effective. Consequently, we will resort to computing the Spearman correlation. While not ideal, this method does not necessitate the normal distribution of our data. In our analysis, particularly for the heatmap visualization, we will focus on correlations that exceed the threshold of 0.5 or fall below -0.5. This selective approach will enhance the readability and interpretability of the heatmap.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Spearman Correlation ####</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>spearman_corr_4 <span class="ot">&lt;-</span> <span class="fu">cor</span>(data_4_goals, <span class="at">method =</span> <span class="st">"spearman"</span>, <span class="at">use =</span> <span class="st">"everything"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>spearman_corr_4[<span class="fu">abs</span>(spearman_corr_4) <span class="sc">&lt;</span> threashold_heatmap] <span class="ot">&lt;-</span> <span class="cn">NA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>spearman_corr_4 <span class="ot">&lt;-</span> <span class="fu">cor</span>(data_4_goals, <span class="at">method =</span> <span class="st">"spearman"</span>, <span class="at">use =</span> <span class="st">"everything"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>spearman_corr_4[<span class="fu">abs</span>(spearman_corr_4) <span class="sc">&lt;</span> threashold_heatmap] <span class="ot">&lt;-</span> <span class="cn">NA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can then plot the Heatmap of the Spearman correlation using the <code>ggplot2</code> package.</p>
 <div class="cell" data-layout-align="center">
@@ -119,83 +123,115 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals appear to be less interrelated compared to others. Specifically, SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) demonstrate a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also exhibits a lesser degree of interconnection with the other SDGs.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecting only numeric columns, assuming they are named as 'goal1', 'goal2', etc.</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>goals_data <span class="ot">&lt;-</span> data_4_goals[, <span class="fu">grep</span>(<span class="st">'goal'</span>, <span class="fu">names</span>(data_4_goals))]</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>goals_data_scaled <span class="ot">&lt;-</span> <span class="fu">scale</span>(goals_data) <span class="co"># Scaling the data</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>pca_result <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(goals_data_scaled) <span class="co"># Running PCA</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting Scree plot to visualize the importance of each principal component</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(pca_result,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">addlabels =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting Biplot to visualize the two main PCs</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(pca_result,</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                <span class="at">label=</span><span class="st">"var"</span>,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                <span class="at">col.var=</span><span class="st">"dodgerblue3"</span>,</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                <span class="at">geom=</span><span class="st">"point"</span>,</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                <span class="at">pointsize =</span> <span class="fl">0.1</span>,</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                <span class="at">labelsize =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="question4_files/figure-html/Scree%20Plot%20and%20Biplot-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="question4_files/figure-html/Scree%20Plot%20and%20Biplot-2.png" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>In our EDA on the focus on the influence of the factors over the SDG scores, we had made a correlation matrix heatmap that took into account every variable of our dataset. Here, we tried to zoom on certain parts of the heatmap. We have decided to add on our graphs the correlations between variables when our pvalue was significant (alpha = 0.05). The grey zones are concerning our non-significant pvalues.</p>
-<p>///////////////////////////////////////////////////////////////////////</p>
-<div class="cell" data-layout-align="center" data-hash="question4_cache/html/unnamed-chunk-5_b7666a542311a697fa45e203da0c5bd1">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Forward selection ####</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>clean_data <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(data_4)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize variables to store the results</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>step_results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">step =</span> <span class="fu">integer</span>(), <span class="at">aic =</span> <span class="fu">numeric</span>(), <span class="at">adjusted_r_squared =</span> <span class="fu">numeric</span>())</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial model (null model)</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>current_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(overallscore <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> clean_data)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Record initial metrics</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>step_results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(step_results, <span class="fu">data.frame</span>(<span class="at">step =</span> <span class="dv">0</span>, <span class="at">aic =</span> <span class="fu">AIC</span>(current_model), <span class="at">adjusted_r_squared =</span> <span class="fu">summary</span>(current_model)<span class="sc">$</span>adj.r.squared))</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform forward selection</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (variable <span class="cf">in</span> <span class="fu">colnames</span>(clean_data)[<span class="fu">grepl</span>(<span class="st">"goal"</span>, <span class="fu">colnames</span>(clean_data))]) {</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    current_model <span class="ot">&lt;-</span> <span class="fu">update</span>(current_model, <span class="fu">paste</span>(<span class="st">". ~ . +"</span>, variable))</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    current_step <span class="ot">&lt;-</span> <span class="fu">nrow</span>(step_results) <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    step_results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(step_results, <span class="fu">data.frame</span>(<span class="at">step =</span> current_step, <span class="at">aic =</span> <span class="fu">AIC</span>(current_model), <span class="at">adjusted_r_squared =</span> <span class="fu">summary</span>(current_model)<span class="sc">$</span>adj.r.squared))</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(step_results, <span class="fu">aes</span>(<span class="at">x =</span> step)) <span class="sc">+</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> aic, <span class="at">color =</span> <span class="st">"AIC"</span>)) <span class="sc">+</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> adjusted_r_squared <span class="sc">*</span> <span class="dv">100</span>, <span class="at">color =</span> <span class="st">"Adjusted R-squared"</span>)) <span class="sc">+</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Forward Selection Process"</span>, <span class="at">x =</span> <span class="st">"Step"</span>, <span class="at">y =</span> <span class="st">"Metric Value"</span>) <span class="sc">+</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="st">""</span>, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"AIC"</span>, <span class="st">"Adjusted R-squared"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"red"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
 <p><img src="question4_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>data &lt;- read.csv(here(“scripts”,“data”,“data_question1.csv”)) summary(data)</p>
+<p>It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals appear to be less interrelated compared to others. Specifically, SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) demonstrate a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also exhibits a lesser degree of interconnection with the other SDGs.</p>
+</section>
+<section id="analysis-factor-analysis-of-the-sdgs" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-factor-analysis-of-the-sdgs">Analysis: Factor analysis of the SDGs</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Scree Plot ####</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecting only the goals</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>goals_data <span class="ot">&lt;-</span> data_4 <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(goal1, goal2, goal3, goal4, goal5,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                goal6,goal7, goal8, goal9, goal10, goal11, goal12,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                goal13, goal15, goal16, goal17)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>goals_data_scaled <span class="ot">&lt;-</span> <span class="fu">scale</span>(goals_data) <span class="co"># Scaling the data</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>pca_result <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(goals_data_scaled) <span class="co"># Running PCA</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting Scree plot to visualize the importance of each principal component</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(pca_result,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">addlabels =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Biplot ####</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting Biplot to visualize the two main dimensions</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(pca_result,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">label=</span><span class="st">"var"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">col.var=</span><span class="st">"dodgerblue3"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">geom=</span><span class="st">"point"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">pointsize =</span> <span class="fl">0.1</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">labelsize =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In our EDA on the focus on the influence of the factors over the SDG scores, we had made a correlation matrix heatmap that took into account every variable of our dataset. Here, we tried to zoom on certain parts of the heatmap. We have decided to add on our graphs the correlations between variables when our pvalue was significant (alpha = 0.05). The grey zones are concerning our non-significant pvalues.</p>
+<p>/////////////////////////////////////////////////////////////////////////</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>goals_data <span class="ot">&lt;-</span> data_4 <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(overallscore, goal1, goal2, goal3, goal4, goal5,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                goal6,goal7, goal8, goal9, goal10, goal11, goal12,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                goal13, goal15, goal16, goal17)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(overallscore <span class="sc">~</span> ., <span class="at">data =</span> goals_data)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(fit)</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaps)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>leaps<span class="ot">&lt;-</span><span class="fu">regsubsets</span>(overallscore <span class="sc">~</span> .,<span class="at">data=</span>goals_data,<span class="at">nbest=</span><span class="dv">10</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(leaps)</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Forward selection ####</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>clean_data <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(data_4)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize variables to store the results</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>step_results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">step =</span> <span class="fu">integer</span>(), <span class="at">aic =</span> <span class="fu">numeric</span>(), <span class="at">adjusted_r_squared =</span> <span class="fu">numeric</span>())</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Initial model (null model)</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>current_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(overallscore <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> clean_data)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Record initial metrics</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>step_results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(step_results, <span class="fu">data.frame</span>(<span class="at">step =</span> <span class="dv">0</span>, <span class="at">aic =</span> <span class="fu">AIC</span>(current_model), <span class="at">adjusted_r_squared =</span> <span class="fu">summary</span>(current_model)<span class="sc">$</span>adj.r.squared))</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform forward selection</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (variable <span class="cf">in</span> <span class="fu">colnames</span>(clean_data)[<span class="fu">grepl</span>(<span class="st">"goal"</span>, <span class="fu">colnames</span>(clean_data))]) {</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    current_model <span class="ot">&lt;-</span> <span class="fu">update</span>(current_model, <span class="fu">paste</span>(<span class="st">". ~ . +"</span>, variable))</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    current_step <span class="ot">&lt;-</span> <span class="fu">nrow</span>(step_results) <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    step_results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(step_results, <span class="fu">data.frame</span>(<span class="at">step =</span> current_step, <span class="at">aic =</span> <span class="fu">AIC</span>(current_model), <span class="at">adjusted_r_squared =</span> <span class="fu">summary</span>(current_model)<span class="sc">$</span>adj.r.squared))</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(step_results, <span class="fu">aes</span>(<span class="at">x =</span> step)) <span class="sc">+</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> aic, <span class="at">color =</span> <span class="st">"AIC"</span>)) <span class="sc">+</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> adjusted_r_squared <span class="sc">*</span> <span class="dv">100</span>, <span class="at">color =</span> <span class="st">"Adjusted R-squared"</span>)) <span class="sc">+</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Forward Selection Process"</span>, <span class="at">x =</span> <span class="st">"Step"</span>, <span class="at">y =</span> <span class="st">"Metric Value"</span>) <span class="sc">+</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="st">""</span>, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"AIC"</span>, <span class="st">"Adjusted R-squared"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"red"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 </section>
 
 </main>
