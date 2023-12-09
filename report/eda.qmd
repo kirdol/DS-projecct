@@ -32,12 +32,17 @@ ggplot(long_df_goal_distribution, aes(x = Value, y = Goal, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
   scale_fill_viridis_c(name = "Value", option = "C") +
   labs(title = 'Distribution of Goals')
+```
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 
 ggplot(long_df_hfi_distribution, aes(x = Value, y = Category, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
   scale_fill_viridis_c(name = "Value", option = "C") +
   labs(title = 'Distribution of Human Freedom Index Scores')
+```
 
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 #now, same for the remaining variables. No need to reshape our data as only one variable.
 unempl_d <- ggplot(Correlation_overall, aes(x = unemployment.rate, y = 1, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +

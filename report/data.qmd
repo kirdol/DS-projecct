@@ -6,7 +6,7 @@ source(here::here("scripts","Clean","setup.R"))
 
 ## Sources
 
-We are collecting our Data from the sustainability development report (SDG), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn't find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next section. Utilizing the kableExtra package, we provide a comprehensive list and corresponding links to our sources, as outlined below:
+We are collecting our Data from the sustainability development report (SDG), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn't find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next section. Utilizing the `kableExtra` package, we provide a comprehensive list and corresponding links to our sources, as outlined below:
 
 ```{r}
 source_info <- data.frame(
