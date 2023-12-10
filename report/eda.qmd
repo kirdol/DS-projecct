@@ -426,7 +426,7 @@ pairs(data_question3_1[, c("overallscore", "total_affected", "total_deaths")], u
 Meaning of the stars: *** : p_value < 0.001; ** : p_value < 0.01; *: p_value <0.05; no star if p_value is higher.
 
 
-The different variables used to materialize the impact of climate disasters do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that such disasters have a specific influence on some SDGs.
+The different variables used to materialize the impact of climate disasters do not seem to have important influence on the overall score. Indeed, the overallscore and total_affected have a correlation coefficient that suggests a very weak negative linear relationship between this variables and which is not statistically significant (p ≥ 0.05), and the overallscore and total_deaths have a correlation that also indicates a weak negative linear relationship that is statistically significant at  p < 0.05. But we will further explore for the different SDGs, since we believe that such disasters have a specific influence on some SDGs.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 lower.panel <- function(x, y, ...){
@@ -459,7 +459,9 @@ pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_milli
 Meaning of the stars: *** : p_value < 0.001; ** : p_value < 0.01; *: p_value <0.05; no star if p_value is higher.
 
 
-The different variables used to materialize the impact of COVID19 do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that COVID19 had a specific influence on some SDGs, for instance "good health and well-being" or "decent work and economic growth".
+The different variables used to materialize the impact of COVID19 do not seem to have important influence on the overall score, we can see that Overallscore and cases_per_million/deaths_per_million/stringency have a correlation coefficient indicating a weak positive linear relationship that is highly statistically significant at p < 0.001. But we will further explore for the different SDGs, since we believe that COVID19 had a specific influence on some SDGs, for instance "good health and well-being" or "decent work and economic growth".
+
+Concerning the correlation effect between the COVID19 variables, we could have no surprises, Cases_per_million and deaths_per_million have a moderate to strong positive correlation suggesting a stronger relationship where an increase in the number of COVID-19 cases per million is associated with a substantial increase in the number of deaths per million. This indicates a significant correlation between case prevalence and mortality rate. Cases_per_million and stringency have a moderate positive correlation indicates that higher levels of cases per million are associated with slightly higher severity of health measures. This could mean that in regions where cases are more numerous, stricter sanitary measures can be put in place to control the spread of the virus. Finally, Deaths_per_million and stringency have a strong positive correlation indicating a robust relationship where higher mortality rates are associated with higher severity of sanitary measures. This  suggest that in areas where deaths are higher, stricter sanitary measures are applied in an attempt to reduce the spread of the virus and mortality.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 lower.panel <- function(x, y, ...){
@@ -492,8 +494,7 @@ pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected
 Meaning of the stars: *** : p_value < 0.001; ** : p_value < 0.01; *: p_value <0.05; no star if p_value is higher.
 
 
-
-The different variables used to materialize the impact of conflicts do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that conflicts have a specific influence on some SDGs.
+Negative values (ranging from -0.17 to -0.28) with three stars (***) indicate a strong and statistically significant negative correlation between the overall index (Overallscore) and the various conflict-related variables (Ongoing, sum_deaths, pop_affected, area_affected, maxintensity). A strong negative correlation means that an increase in the Overallscore is associated with a decrease in the values of the other variables. But we have to take into account that correlation does not necessarily imply direct causation. Further analysis may be required to understand in depth the nature of the relationships between these variables.
 
 To explore our data on events such as disasters, covid-19 and conflicts we have to first see which countries are the most touched by these. To do so, we made time-series analysis on this three events each time depending on different variables.
 
@@ -626,15 +627,16 @@ Here we want to analyse the correlation between the climate disasters and the SD
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 Q3.1[is.na(Q3.1)] <- 0
 
-south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
+selected_regions <- c("South Asia", "East Asia", "North America")
+disaster_selected <- Q3.1[Q3.3$region %in% selected_regions, ]
 
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "no_homeless")
 
-correlation_matrix_disaster_Asia <- cor(south_east_asia_data[, relevant_columns], use = "complete.obs")
+correlation_matrix_disaster <- cor(disaster_selected[, relevant_columns], use = "complete.obs")
 
-kable(correlation_matrix_disaster_Asia)
+kable(correlation_matrix_disaster)
 
-cor_melted <- as.data.frame(as.table(correlation_matrix_disaster_Asia))
+cor_melted <- as.data.frame(as.table(correlation_matrix_disaster))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 
 ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
@@ -659,7 +661,7 @@ Here we want to analyse the correlation between the Covid-19 and the SDG goals o
 covid_filtered <- Q3.2[Q3.2$year >= as.Date("2019-01-01"), ]
 
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
-# Subset data with relevant columns for correlation analysis
+
 relevant_data <- covid_filtered[, relevant_columns]
 
 correlation_matrix_Covid <- cor(relevant_data, use = "complete.obs")
@@ -688,24 +690,18 @@ Here we want to analyse the correlation between conflicts deaths and the SDG goa
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 
-# Filter data for specific regions
 selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe")
 conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
 
-# Select relevant columns for the correlation analysis
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "sum_deaths", "maxintensity")
 
-# Compute correlation matrix for the selected regions
 correlation_matrix_Conflicts_Deaths <- cor(conflicts_selected[, relevant_columns], use = "complete.obs")
 
-# View the correlation matrix
 kable(correlation_matrix_Conflicts_Deaths)
 
-# Melt the correlation matrix for ggplot2
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 
-# Create the heatmap
 ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white",
@@ -727,20 +723,15 @@ Finally, we want to analyse the correlation between conflicts affected populatio
 selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe","Caucasus and Central Asia")
 conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
 
-# Select relevant columns for the correlation analysis
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected")
 
-# Compute correlation matrix for the selected regions
 correlation_matrix_Conflicts_Pop_Affected <- cor(conflicts_selected[, relevant_columns], use = "complete.obs")
 
-# View the correlation matrix
 kable(correlation_matrix_Conflicts_Pop_Affected)
 
-# Melt the correlation matrix for ggplot2
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Affected))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 
-# Create the heatmap
 ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
   geom_tile() +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white",
