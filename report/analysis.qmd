@@ -6,10 +6,16 @@ source(here::here("scripts/Clean/setup.R"))
 
 ## Answers to the research questions
 
-Let's see first the correlation matrix heatmap regarding our SDG goals and all our variables different than our SDG goals.
+### Influence of the factors over the Sustainable Development Goals 
+
+In order to answer the first question of our work, let's start by zooming on the correlation matrix heatmap made in our EDA part. Here are the correlations between the SDG goals and all the other variables except the SDG goals.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-corr_matrix <- cor(data_question1[7:40])
+
+### Correlation Matrix Heatmap SDG/Other variables ###
+
+#computing pvals of our interested variables
+corr_matrix <- cor(data_question1[7:40], method = "spearman", use = "everything")
 p_matrix2 <- matrix(nrow = ncol(data_question1[7:40]), ncol = ncol(data_question1[7:40]))
 for (i in 1:ncol(data_question1[7:40])) {
   for (j in 1:ncol(data_question1[7:40])) {
@@ -18,74 +24,52 @@ for (i in 1:ncol(data_question1[7:40])) {
   }
 }
 
-#Switch population at the end of heatmap
-corr_matrix[which(p_matrix2 > 0.05)] <- NA
+corr_matrix[which(p_matrix2 > 0.05)] <- NA #only keeping significant pval alpha = 0.05
+
 melted_corr_matrix_GVar <- melt(corr_matrix[19:34,1:18])
+
 ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
   geom_tile() +
-  geom_text(aes(label = ifelse(!is.na(value), sprintf("%.2f", value), '')),
+  geom_text(aes(label = ifelse(!is.na(value) & abs(value) > 0.75, sprintf("%.2f", value), '')),
             color = "black", size = 2) +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white",
                        midpoint = 0, limit = c(-1, 1), space = "Lab",
-                       name = "Pearson\nCorrelation") +
+                       name = "Spearman\nCorrelation") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.text.y = element_text(angle = 45, hjust = 1)) +
   labs(x = 'Goals', y = 'Goals',
        title = 'Correlations Heatmap between goals and our other variables')
 ```
-As we can see, our SDG goals 12 & 13 (responsible consumption & production and climate action) are negatively correlated with most of our variables, as is the economic freedom government variable to our SDG goals. In that sens, we could understand it as having a higher Human Freedom Index Score would influence more negatively the SDG scores of these two goals, i.e. the more people in a country can access and afford civil justice, the more it impact negatively the score of these two SDG goals. 
+The numbers are representing the significant pval between our variables. The grey parts are the non significant pvals. 
 
-Nevertheless, goals 12 & 13 and ef_government are positively correlated together. In addition, some variables such as internet_usage, pf_law or ef_legal are strongely correlated with most of our SDG goals. This is mostly due to the large scope englobed in these variables. That makes them influence various sectors of our economies and thus, mostly impacting all our SDG goals. 
+GDP per capita, internet_usage, pf_law or ef_legal are strongely correlated with most of our SDG goals. This is mostly due to the large scope englobed in these variables. That makes them influence various sectors of our economies and thus, mostly impacting all our SDG goals. Therefore, we can think that these variables have a strong impact on the scores. Nevertheless, as correlation doesn't mean causality, we cannot jump to conclusions.
 
-Now let's zoom on the correlations between all our variables except our SDG goals:
+As we can see, our SDG goals 12 & 13 (responsible consumption & production and climate action) are negatively correlated with most of our variables, as is the economic freedom government variable to our SDG goals. Nevertheless, goals 12 & 13 and ef_government are positively correlated together.
+
+<!-- ((In that sens, we could understand it as having a higher Human Freedom Index Score would influence more negatively the SDG scores of these two goals, i.e. the more people in a country can access and afford civil justice, the more it impact negatively the score of these two SDG goals.)) but correlation doesn't implie causality --> 
+
+Now let's zoom on the correlations between all our variables except the SDG goals:
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 melted_corr_matrix_Var <- melt(corr_matrix[19:34,19:34])
 ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
   geom_tile() +
-  geom_text(aes(label = ifelse(!is.na(value), sprintf("%.2f", value), '')),
+  geom_text(aes(label = ifelse(!is.na(value) & abs(value) > 0.75, sprintf("%.2f", value), '')),
             color = "black", size = 1.7) +
   scale_fill_gradient2(low = "blue", high = "red", mid = "white",
                        midpoint = 0, limit = c(-1, 1), space = "Lab",
-                       name = "Pearson\nCorrelation") +
+                       name = "Spearman\nCorrelation") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.text.y = element_text(angle = 45, hjust = 1)) +
   labs(x = 'Goals', y = 'Goals',
        title = 'Correlations Heatmap between other variables than SDG goals')
 ```
+As noticed earlier, there is a strong correlation among personal freedom variables (pf), reflecting scores from the Human Freedom Index on movement, religion, assembly, and expression.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-#### PCA ####
+Again, we can see that GDP per capita, pf_law, ef_legal are highly correlated with some other variables. On another hand, we notice that pf_movement, pf_assembly, pf_expression are now also higly correlated with some of the other variables. 
 
-# for goals
-myPCA_g <- PCA(data_question1[,9:24], graph = FALSE)
-plot(myPCA_g$ind$coord[, 1], myPCA_g$ind$coord[, 2], xlab = "PC1", ylab = "PC2", main = "PCA Plot SDG Goals", pch = 19, col = "blue", cex = 0.5) + 
-  abline(h = 0, col = "red", lty = 2) + 
-  abline(v = 0, col = "red", lty = 2)
-plot.PCA(myPCA_g, choix = "var", pch = 10, cex = 0.6)
-
-summary(myPCA_g)
-myPCA_g$eig
-```
-
-Concerning the SDG goals, we conclude that most of our variables are going along the 1st component, except the goals 10 and 15 that are rather uncorrelated with the dimension 1. In addition, as seen before, the goals 12 and 13 are negatively correlated to the other goals. With a eigenvalue bigger than 1 for the first two components, we conclude that there are only 2 dimensions to take into account, according to the Kaiser-Guttman's rule. Nevertheless, they are explaining less than 80% of cumulated variance.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-#for HFI scores
-myPCA_s <- PCA(data_question1[,29:40], graph = FALSE)
-plot(myPCA_s$ind$coord[, 1], myPCA_s$ind$coord[, 2], xlab = "PC1", ylab = "PC2", main = "PCA Plot HFI Scores", pch = 19, col = "blue", cex = 0.5) + 
-  abline(h = 0, col = "red", lty = 2) + 
-  abline(v = 0, col = "red", lty = 2)
-plot.PCA(myPCA_s, choix = "var",cex = 0.5)
-summary(myPCA_s)
-myPCA_s$eig
-```
-
-Now concerning the Human Freedom Index scores, most of the variables are positively correlated to the dimension 1, slightly less for the PF religion and security, and finaly the EF government variable is uncorrelated to the dimension 1. With a eigenvalue bigger than 1 for the three first components, we conclude that there are 3 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance.
-
-### Looking at the HFI scores
-
+In order to have a look at the influence of some factors over our dependent variables, let's conduct a Principal Component Analysis over the Human Freedom Index Scores. 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### PCA and PCA Scree plot####
 
@@ -93,6 +77,7 @@ myPCA_s <- PCA(data_question1[,29:40], graph = FALSE)
 fviz_eig(myPCA_s,
          addlabels = TRUE) +
   theme_minimal()
+summary(myPCA_s)
 ```
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
@@ -106,20 +91,11 @@ fviz_pca_biplot(myPCA_s,
   theme_minimal()
 ```
 
-Now concerning the Human Freedom Index scores, most of the variables are positively correlated to the dimension 1, slightly less for the PF religion and security, and finaly the EF government variable is uncorrelated to the dimension 1. With a eigenvalue bigger than 1 for the three first components, we conclude that there are 3 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance.
+Now concerning the Human Freedom Index scores, most of the variables are positively correlated to the dimension 1, slightly less for the PF religion, and finally the EF government variable is slighlty incorrelated to the dimension 1. With a eigenvalue bigger than 1 for the three first components, we conclude that there are 3 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance. Therefore, the rule of thumb would suggest us to take 4 dimensions into account. 
 
+Let's try now to conduct a cluster analysis, using the Kmean method. 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-#### Kmean clustering ####
-
-# data1_scaled <- scale(Correlation_overall)
-# rownames(data1_scaled) <- seq_along(row.names(data1_scaled))
-# fviz_nbclust(data1_scaled, kmeans, method="wss")
-# kmean <- kmeans(data1_scaled, 7, nstart = 25)
-# fviz_cluster(kmean, data=data1_scaled, repel=FALSE, depth =NULL, ellipse.type = "norm", labelsize = 0, pointsize = 0.5)
-
-data_kmean_country <- data_question1 %>% dplyr::select(-c(X,code,year,continent,region))
-
-
+data_kmean_country <- data_question1 %>% dplyr::select(-c(X,code,year,continent,region, population))
 
 #filter data different than 0 and dropping observations 
 filtered_data <- data_kmean_country %>%
@@ -127,350 +103,180 @@ filtered_data <- data_kmean_country %>%
   filter_if(is.numeric, all_vars(sd(.) != 0)) %>%
   ungroup()
 
-scale_by_country <- filtered_data %>%
-  group_by(country) %>% summarise_all(~ scale(.))
+scale_by_country <- filtered_data %>% #scale data
+  group_by(country) %>% 
+  summarise_all(~ scale(.))
 
-means_by_country <- scale_by_country %>%
+means_by_country <- scale_by_country %>% #mean by country
   group_by(country) %>%
   summarise_all(~ mean(., na.rm = TRUE))
 
 rownames(means_by_country) <- seq_along(row.names(means_by_country))
+
 fviz_nbclust(means_by_country[,-1], kmeans, method="wss")
+```
+After adapting the data for conducting our cluster analysis, we can see that according the the elbow method that we would only need 4 clusters in our analysis.
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 kmean <- kmeans(means_by_country[,-1], 4, nstart = 25)
 fviz_cluster(kmean, data=means_by_country[,-1], repel=FALSE, depth =NULL, ellipse.type = "norm", labelsize = 10, pointsize = 0.5)
-
-### NOW CLUSTERING BY COUNTRY? AND TAKE MEAN OF EVERY VARIABLE ON EVERY CONCERNED YEAR?
 ```
+Our cluster analysis gives us one principal cluster (here in purple) --> CENTERED ON 0 BECAUSE AFTER DATA SCALED-> REALLY SMALL VALUES --> HOW TO DEAL WITH IT? I TRIED TO TAKE ONLY HFI INTO ACCOUNT BUT NOT WORKING NEITHER. STILL CENTERED ON 0.
 
-Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough.
+<!-- Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough. -->
 
-
+##Regressions
+While considering our regressions, we have noticed that we had high multicolinearity between our dependent variables in our models. This is due to the numerous variables that we tried to take into account while computing our regressions. Let's find a model that could explain the overall SDG score without having severe multicollinearity (VIF > 5)
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-# #### Kmean clustering ####
-# 
-# data1_scaled <- scale(Correlation_overall)
-# rownames(data1_scaled) <- seq_along(row.names(data1_scaled))
-# fviz_nbclust(data1_scaled, kmeans, method="wss")
-# kmean <- kmeans(data1_scaled, 7, nstart = 25)
-# print(kmean)
-# fviz_cluster(kmean, data=data1_scaled, repel=FALSE, depth =NULL, ellipse.type = "norm", labelsize = 0, pointsize = 0.5)
-# 
-# ### NOW CLUSTERING BY COUNTRY? AND TAKE MEAN OF EVERY VARIABLE ON EVERY CONCERNED YEAR?
+goals_data <- data_question1 %>%
+  dplyr::select(overallscore, unemployment.rate, GDPpercapita, MilitaryExpenditurePercentGDP, internet_usage, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+
+fit <- lm(overallscore ~ ., data = goals_data)
+# plot(fit)
+library(leaps)
+leaps<-regsubsets(overallscore ~ .,data=goals_data,nbest=10)
+# summary(leaps)
+plot(leaps,scale="r2") + theme_minimal()
 ```
+The model found is taking into account the following dependent variables: unmeployment rate, military expenditure percentage of GDP, internet_usage, pf_security, pf_religion, pf_identity, ef_legal, ef_trade. We notice here that the previous variables highly correlated to the SDG goals (GDP per capita, pf_law, internet_usage and ef_legal), we dropped the first two ones. 
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+#### Forward selection ####
 
-Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough.
+library(MASS)
+Forward_data1 <- data_question1 %>% dplyr::select(overallscore, unemployment.rate, GDPpercapita, MilitaryExpenditurePercentGDP, internet_usage, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+# Initialize variables to store the results
+step_results <- data.frame(step = integer(), aic = numeric(), adjusted_r_squared = numeric())
 
-We have noticed that we had high multicolinearity in on regression. Therefore, before to compute them, let's try to get rid of on of the two variables having at least |0.8| of correlation. 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-correlation_overall_matrix <- cor(Correlation_overall, use = "everything")
-high_cor_pairs <- which(abs(correlation_overall_matrix) >= 0.8, arr.ind = TRUE)
+# Initial model (null model)
+current_model <- lm(overallscore ~ 1, data = Forward_data1)
 
-# Displaying the results
-for (i in 1:nrow(high_cor_pairs)) {
-  row <- high_cor_pairs[i, "row"]
-  col <- high_cor_pairs[i, "col"]
-  
-  # Avoiding duplicate pairs and diagonal elements
-  if (row < col) {
-    cat(sprintf("Variables: %s and %s, Correlation: %f\n", 
-                names(Correlation_overall)[row], names(Correlation_overall)[col], correlation_overall_matrix[row, col]))
-  }
+# Record initial metrics
+step_results <- rbind(step_results, data.frame(step = 0, aic = AIC(current_model), adjusted_r_squared = summary(current_model)$adj.r.squared))
+
+# Perform forward selection
+for (variable in colnames(Forward_data1)[grepl("goal", colnames(Forward_data1))]) {
+    current_model <- update(current_model, paste(". ~ . +", variable))
+    current_step <- nrow(step_results) + 1
+    step_results <- rbind(step_results, data.frame(step = current_step, aic = AIC(current_model), adjusted_r_squared = summary(current_model)$adj.r.squared))
 }
 
-# List of high-correlation pairs
-correlation_pairs <- list(
-  c("overallscore", "goal1"), c("overallscore", "goal3"), c("goal1", "goal3"),
-  c("overallscore", "goal4"), c("goal1", "goal4"), c("goal3", "goal4"),
-  c("overallscore", "goal6"), c("goal3", "goal6"),
-  c("overallscore", "goal7"), c("goal1", "goal7"), c("goal3", "goal7"), c("goal4", "goal7"), c("goal6", "goal7"),
-  c("overallscore", "goal9"), c("goal3", "goal9"),
-  c("overallscore", "goal11"), c("goal3", "goal11"), c("goal4", "goal11"), c("goal6", "goal11"), c("goal7", "goal11"),
-  c("goal9", "goal12"), c("goal12", "goal13"),
-  c("overallscore", "goal16"), c("goal12", "goal16"),
-  c("goal9", "GDPpercapita"), c("goal12", "GDPpercapita"),
-  c("overallscore", "internet_usage"), c("goal9", "internet_usage"),
-  c("goal12", "pf_law"), c("goal16", "pf_law"),
-  c("pf_religion", "pf_assembly"), c("pf_assembly", "pf_expression"),
-  c("goal9", "ef_legal"), c("goal12", "ef_legal"), c("goal16", "ef_legal"), c("pf_law", "ef_legal")
-)
-
-# Flatten the list and count the frequency of each variable
-flattened_list <- unlist(correlation_pairs)
-frequency_count <- table(flattened_list)
-variables_to_remove <- c()
-
-for (pair in correlation_pairs) {
-  # Select the variable that appears more frequently for removal
-  if (frequency_count[pair[1]] > frequency_count[pair[2]]) {
-    variables_to_remove <- c(variables_to_remove, pair[1])
-  } else if (frequency_count[pair[1]] < frequency_count[pair[2]]) {
-    variables_to_remove <- c(variables_to_remove, pair[2])
-  } else {
-    # If both appear equally, arbitrarily choose one to remove
-    variables_to_remove <- c(variables_to_remove, pair[1])
-  }
-}
-
-variables_to_remove <- unique(variables_to_remove)
-variables_to_remove <- sort(variables_to_remove)
-print(variables_to_remove) 
+ggplot(step_results, aes(x = step)) +
+    geom_line(aes(y = aic, color = "AIC")) +
+    geom_line(aes(y = adjusted_r_squared * 100, color = "Adjusted R-squared")) +
+    labs(title = "Forward Selection Process", x = "Step", y = "Metric Value") +
+    scale_color_manual("", breaks = c("AIC", "Adjusted R-squared"), values = c("blue", "red"))
 ```
-Therefore, we will not take into account the variables "ef_legal"     "goal11"       "goal12"       "goal16"       "goal3"        "goal4"        "goal7"        "goal9"        "overallscore" "pf_assembly" in our regressions, for multicollinearity purpose. 
+Now let's compute our regression model with the variables selected by our stepwise methode
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+# Your R code for the regression and stargazer output goes here
+reg_overall_Q1 <- lm(overallscore ~ unemployment.rate + MilitaryExpenditurePercentGDP + internet_usage + pf_security + pf_religion + pf_identity + ef_legal + ef_trade, data = data_question1)
 
-Now, let's compute the regressions without these variables. 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-reg_goal1_all_new <- lm(goal1 ~ goal2 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal2_all_new <- lm(goal2 ~ goal1 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal3_all_new <- lm(goal3 ~ goal1 + goal2 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal4_all_new <- lm(goal4 ~ goal1 + goal2 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal5_all_new <- lm(goal5 ~ goal1 + goal2 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal6_all_new <- lm(goal6 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal7_all_new <- lm(goal7 ~ goal1 + goal2 + goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal8_all_new <- lm(goal8 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal9_all_new <- lm(goal9 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal10_all_new <- lm(goal10 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal11_all_new <- lm(goal11 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal12_all_new <- lm(goal12 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal10 + goal11 + goal13 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal13_all_new <- lm(goal13 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal10 + goal11 + goal12 + goal15 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal15_all_new <- lm(goal15 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal10 + goal11 + goal12 + goal13 + goal17 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal16_all_new <- lm(goal16 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal10 + goal11 + goal12 + goal13 + goal15 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-reg_goal17_all_new <- lm(goal17 ~ goal1 + goal2 + goal5 + goal6 + goal7 + goal8 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + pf_identity + ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-
-
-```
-The problem is that even by getting rid of the previous variables, there still might be multicollinearity. Therefore, we need to analyse the vif for each regression and adapt the model in consequence. 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-#for reg1
-nullmod <- lm(goal1 ~ 1, data = data_question1)
-selmod <- step(reg_goal1_all_new, scope=list(lower=nullmod, upper=reg_goal1_all_new), direction="backward") 
-summary(selmod)
-vif(selmod) #pf_law -> get rid of it
-reg_goal1_all_new <- lm(goal1 ~ goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + 
-                          unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + 
-                          internet_usage + pf_movement + pf_religion + ef_government + 
-                          ef_money + ef_trade + ef_regulation, data = data_question1)
-selmod <- step(reg_goal1_all_new, scope=list(lower=nullmod, upper=reg_goal1_all_new), direction="backward") 
-vif(selmod)
-reg_goal1_all_new <- lm(goal1 ~ goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + 
-                          unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + 
-                          internet_usage + pf_movement + pf_religion + ef_government + 
-                          ef_money + ef_trade + ef_regulation, data = data_question1)
-#for reg2
-nullmod <- lm(goal1 ~ 1, data = data_question1)
-selmod <- step(reg_goal2_all_new, scope=list(lower=nullmod, upper=reg_goal2_all_new), direction="backward") 
-vif(selmod) 
-reg_goal2_all_new <- lm(goal2 ~ goal5 + goal6 + goal8 + goal10 + goal13 + goal15 + goal17 + 
-                          unemployment.rate + MilitaryExpenditurePercentGDP + internet_usage + 
-                          pf_law + pf_security + pf_movement + pf_identity + ef_money + 
-                          ef_trade + ef_regulation + population, data = data_question1)
-#reg5
-nullmod <- lm(goal1 ~ 1, data = data_question1)
-selmod <- step(reg_goal5_all_new, scope=list(lower=nullmod, upper=reg_goal5_all_new), direction="backward") 
-vif(selmod) #goal6
-reg_goal5_all_new <- lm(goal5 ~ goal1 + goal2 + goal10 + goal13 + goal15 + goal17 + 
-                          unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + 
-                          internet_usage + pf_law + pf_security + pf_movement + pf_religion + 
-                          pf_expression + pf_identity + ef_government + ef_money + 
-                          ef_trade + ef_regulation, data = data_question1)
-selmod <- step(reg_goal5_all_new, scope=list(lower=nullmod, upper=reg_goal5_all_new), direction="backward") 
-vif(selmod) #pf_law
-reg_goal5_all_new <- lm(goal5 ~ goal1 + goal2 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + 
-                          GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + 
-                          pf_security + pf_movement + pf_religion + pf_identity + 
-                          ef_government + ef_money + ef_trade + ef_regulation, data = data_question1)
-selmod <- step(reg_goal5_all_new, scope=list(lower=nullmod, upper=reg_goal5_all_new), direction="backward") 
-vif(selmod) 
-reg_goal5_all_new <- lm(goal5 ~ goal1 + goal2 + goal10 + goal13 + goal15 + goal17 + unemployment.rate + 
-                          GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + 
-                          pf_security + pf_movement + pf_religion + pf_identity + ef_government + 
-                          ef_money + ef_regulation, data = data_question1)
-#reg6
-nullmod <- lm(goal1 ~ 1, data = data_question1)
-selmod <- step(reg_goal6_all_new, scope=list(lower=nullmod, upper=reg_goal6_all_new), direction="backward") 
-vif(selmod) 
-reg_goal6_all_new <- lm(goal6 ~ goal1 + goal2 + goal5 + goal8 + unemployment.rate + GDPpercapita + 
-                          MilitaryExpenditurePercentGDP + internet_usage + pf_security + 
-                          pf_movement + pf_religion + pf_expression + pf_identity + 
-                          ef_government + ef_money + population, data = data_question1)
-
-#reg8
-nullmod <- lm(goal1 ~ 1, data = data_question1)
-selmod <- step(reg_goal8_all_new, scope=list(lower=nullmod, upper=reg_goal8_all_new), direction="backward") 
-vif(selmod) #goal6
-reg_goal8_all_new <- lm(goal8 ~ goal1 + goal2 + goal13 + goal15 + unemployment.rate + 
-                          internet_usage + pf_law + pf_security + pf_movement + pf_religion + 
-                          pf_expression + pf_identity + ef_government + ef_trade + 
-                          population, data = data_question1)
-
-#reg10
-nullmod <- lm(goal1 ~ 1, data = data_question1)
-selmod <- step(reg_goal10_all_new, scope=list(lower=nullmod, upper=reg_goal10_all_new), direction="backward") 
-vif(selmod) #goal6
-reg_goal10_all_new <- lm(goal10 ~ goal1 + goal2 + goal5 + goal8 + goal13 + goal15 + 
-                           goal17 + unemployment.rate + GDPpercapita + internet_usage + 
-                           pf_law + pf_security + pf_movement + pf_religion + pf_expression + 
-                           ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-selmod <- step(reg_goal10_all_new, scope=list(lower=nullmod, upper=reg_goal10_all_new), direction="backward") 
-vif(selmod) #pf_law
-reg_goal10_all_new <- lm(goal10 ~ goal1 + goal2 + goal5 + goal8 + goal13 + goal15 + goal17 + 
-                           unemployment.rate + GDPpercapita + internet_usage + 
-                           pf_security + pf_movement + pf_religion + pf_expression + 
-                           ef_government + ef_money + ef_trade + ef_regulation + population, data = data_question1)
-
-#reg13
-nullmod <- lm(goal1 ~ 1, data = data_question1)
-selmod <- step(reg_goal13_all_new, scope=list(lower=nullmod, upper=reg_goal13_all_new), direction="backward") 
-vif(selmod) 
-reg_goal13_all_new <- lm(goal13 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal17 + unemployment.rate + 
-                           GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + 
-                           pf_law + pf_religion + ef_government + ef_regulation, data = data_question1)
-
-#reg15
-nullmod <- lm(goal1 ~ 1, data = data_question1)
-selmod <- step(reg_goal15_all_new, scope=list(lower=nullmod, upper=reg_goal15_all_new), direction="backward") 
-vif(selmod) 
-reg_goal15_all_new <- lm(goal15 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal17 + unemployment.rate + 
-                           GDPpercapita + internet_usage + pf_law + pf_security + pf_religion + 
-                           pf_expression + pf_identity + ef_government + population, data = data_question1)
-
-#reg16
-nullmod <- lm(goal1 ~ 1, data = data_question1)
-selmod <- step(reg_goal16_all_new, scope=list(lower=nullmod, upper=reg_goal16_all_new), direction="backward") 
-vif(selmod) 
-reg_goal16_all_new <- lm(goal16 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal13 + 
-                           unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + 
-                           internet_usage + pf_law + pf_security + pf_movement + pf_religion + 
-                           pf_expression + pf_identity + ef_government + ef_money + 
-                           ef_regulation + population, data = data_question1)
-selmod <- step(reg_goal16_all_new, scope=list(lower=nullmod, upper=reg_goal16_all_new), direction="backward") 
-vif(selmod)#pf_law
-reg_goal16_all_new <- lm(goal16 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal13 + unemployment.rate + 
-  GDPpercapita + MilitaryExpenditurePercentGDP + pf_security + 
-  pf_movement + pf_religion + pf_expression + pf_identity + 
-  ef_government + ef_money + ef_regulation + population, data = data_question1)
-selmod <- step(reg_goal16_all_new, scope=list(lower=nullmod, upper=reg_goal16_all_new), direction="backward") 
-vif(selmod) #pf_law
-reg_goal16_all_new <- lm(goal16 ~ goal1 + goal2 + goal5 + goal8 + goal10 + goal13 + unemployment.rate + 
-                           GDPpercapita + MilitaryExpenditurePercentGDP + pf_security + 
-                           pf_movement + pf_religion + pf_expression + pf_identity + 
-                           ef_government + ef_money + ef_regulation + population, data = data_question1)
-
-#reg17
-nullmod <- lm(goal1 ~ 1, data = data_question1)
-selmod <- step(reg_goal17_all_new, scope=list(lower=nullmod, upper=reg_goal17_all_new), direction="backward") 
-vif(selmod) 
-reg_goal17_all_new <- lm(goal17 ~ goal1 + goal2 + goal5 + goal10 + goal13 + goal15 + unemployment.rate + 
-                           GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_security + pf_movement + pf_religion + pf_expression +
-                           pf_identity + ef_government + ef_money + ef_trade + ef_regulation + 
-                           population, data=data_question1)
-```
-stargazer regressions
-```{r results='asis'}
-sg1 <- stargazer(reg_goal1_all_new,
-                 reg_goal2_all_new,
-          title="Impact of variables over SDG goals 1,2",
-          type='html',
+sg1 <- stargazer(reg_overall_Q1,
+          title="Impact of variables over Overallscore SDG goals",
+          type='text',
           digits=3)
 ```
+As we can see, all of the variables above are significantly impacting the overall score of our Sustainable Development Goals. In addition, our Radjusted is high enough, which means that our model is well explained. 
+
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 ##### geom point #####
 
-#print values with correlation > 0.8 and make plots
-
-# Filtering values where the absolute value is greater than 0.8
-highcorrelations <- melted_corr_matrix_GVar %>% filter(value > 0.8)
-
-ggplot(data_question1, aes(internet_usage, overallscore)) +
+geom1 <- ggplot(data_question1, aes(internet_usage, overallscore)) +
   geom_point()+ geom_smooth(se = FALSE) +
   labs(title = "Scarplot overallscore and internet usage")
 
-ggplot(data_question1, aes(GDPpercapita, goal9)) +
+geom2 <- ggplot(data_question1, aes(unemployment.rate, overallscore)) +
   geom_point()+ geom_smooth(se = FALSE) +
-  labs(title = "Scarplot overallscore and internet usage")
+  labs(title = "Scarplot overallscore and unemployment rate")
 
-ggplot(data_question1, aes(internet_usage,goal9)) +
+geom3 <- ggplot(data_question1, aes(MilitaryExpenditurePercentGDP,overallscore)) +
   geom_point()+ geom_smooth(se = FALSE) +
-  labs(title = "Scarplot overallscore and internet usage")
+  labs(title = "Scarplot overallscore and military expenditure")
 
-ggplot(data_question1, aes(ef_legal,goal9)) +
+geom4 <- ggplot(data_question1, aes(pf_security,overallscore)) +
   geom_point()+ geom_smooth(se = FALSE) +
-  labs(title = "Scarplot overallscore and internet usage")
+  labs(title = "Scarplot overallscore and pf_security")
 
-ggplot(data_question1, aes(pf_law, goal16)) +
+geom5 <-ggplot(data_question1, aes(pf_religion, overallscore)) +
   geom_point()+ geom_smooth(se = FALSE) +
-  labs(title = "Scarplot overallscore and internet usage")
+  labs(title = "Scarplot overallscore and pf_religion")
 
-ggplot(data_question1, aes(ef_legal, goal16)) +
+geom7 <-ggplot(data_question1, aes(pf_identity, overallscore)) +
   geom_point()+ geom_smooth(se = FALSE) +
-  labs(title = "Scarplot overallscore and internet usage")
+  labs(title = "Scarplot overallscore and pf_identity")
+
+geom8 <-ggplot(data_question1, aes(ef_legal, overallscore)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and ef_legal")
+
+geom9 <-ggplot(data_question1, aes(ef_trade, overallscore)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and ef_trade")
+
+grid.arrange(geom1, geom2, geom3, geom4, geom5, geom7, geom8, geom9, nrow=3, ncol=3)
 ```
+By checking the influence of the chosen variables over the overallscore, we can see that the functions are not linear. For some, such as internet_usage and ef_legal, we notice that the more the variable increase, the more it influence positively the overall score. For the others, the relations are more complex. I.e.: Unemployment.rate increase mostly the overallscore between 0 and 10%. pf_identity is slowly reducing the overallscore before going back up.
 
-Let's explore how the different SDG are correlated together by creating a heatmap of the correlation between our variables. We added a script to check whether the correlations are significantly different from 0. First, let's select the SDGs scores.
+In conclusion, after reviewing which variables are correlating between themself, after taking care of multicollinearity problems and doing our regressions on our overall SDG score and finally seeing the influence of these dependent variables depending on their range, we notice that most of our variables taken into account in our model is significant in explaining their influence (positive or negative) over the overall SDG goals. As our goals are mostly correlated between eachother, we can presume that taking the overall score as our dependent variable is giving us the same conclusion. Nevertheless, we still need to go deeper and check the influence of the scores between themself. 
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-sdg_scores <- Q4[, c('goal1', 'goal2', 'goal3', 'goal4', 'goal5', 'goal6',
-                     'goal7', 'goal8', 'goal9', 'goal10', 'goal11', 'goal12',
-                     'goal13', 'goal15', 'goal16', 'goal17')]
-```
+<!-- Let's explore how the different SDG are correlated together by creating a heatmap of the correlation between our variables. We added a script to check whether the correlations are significantly different from 0. First, let's select the SDGs scores. -->
 
-We then, initialize the matrices and calculate the correlation, and p-values of each combination of SDGs scores
+<!-- ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"} -->
+<!-- sdg_scores <- Q4[, c('goal1', 'goal2', 'goal3', 'goal4', 'goal5', 'goal6', -->
+<!--                      'goal7', 'goal8', 'goal9', 'goal10', 'goal11', 'goal12', -->
+<!--                      'goal13', 'goal15', 'goal16', 'goal17')] -->
+<!-- ``` -->
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-cor_matrix <- matrix(nrow = ncol(sdg_scores), ncol = ncol(sdg_scores))
-p_matrix <- matrix(nrow = ncol(sdg_scores), ncol = ncol(sdg_scores))
-rownames(cor_matrix) <- colnames(sdg_scores)
-rownames(p_matrix) <- colnames(sdg_scores)
-colnames(cor_matrix) <- colnames(sdg_scores)
-colnames(p_matrix) <- colnames(sdg_scores)
+<!-- We then, initialize the matrices and calculate the correlation, and p-values of each combination of SDGs scores -->
 
-# Calculate correlation and p-values
-for (i in 1:ncol(sdg_scores)) {
-  for (j in 1:ncol(sdg_scores)) {
-    test_result <- cor.test(sdg_scores[, i], sdg_scores[, j])
-    cor_matrix[i, j] <- test_result$estimate
-    p_matrix[i, j] <- test_result$p.value}}
-```
+<!-- ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"} -->
+<!-- cor_matrix <- matrix(nrow = ncol(sdg_scores), ncol = ncol(sdg_scores)) -->
+<!-- p_matrix <- matrix(nrow = ncol(sdg_scores), ncol = ncol(sdg_scores)) -->
+<!-- rownames(cor_matrix) <- colnames(sdg_scores) -->
+<!-- rownames(p_matrix) <- colnames(sdg_scores) -->
+<!-- colnames(cor_matrix) <- colnames(sdg_scores) -->
+<!-- colnames(p_matrix) <- colnames(sdg_scores) -->
 
-We then reshape our data to be able to use the `ggplot2` package to create our heatmap.
+<!-- # Calculate correlation and p-values -->
+<!-- for (i in 1:ncol(sdg_scores)) { -->
+<!--   for (j in 1:ncol(sdg_scores)) { -->
+<!--     test_result <- cor.test(sdg_scores[, i], sdg_scores[, j]) -->
+<!--     cor_matrix[i, j] <- test_result$estimate -->
+<!--     p_matrix[i, j] <- test_result$p.value}} -->
+<!-- ``` -->
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.width="100%"}
-melted_cor_matrix <-
-  melt(cor_matrix)
-melted_p_matrix <-
-  melt(matrix(as.vector(p_matrix), nrow = ncol(sdg_scores)))
+<!-- We then reshape our data to be able to use the `ggplot2` package to create our heatmap. -->
 
-plot_data <- # Combine the datasets
-  cbind(melted_cor_matrix, p_value = melted_p_matrix$value)
+<!-- ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.width="100%"} -->
+<!-- melted_cor_matrix <- -->
+<!--   melt(cor_matrix) -->
+<!-- melted_p_matrix <- -->
+<!--   melt(matrix(as.vector(p_matrix), nrow = ncol(sdg_scores))) -->
 
-ggplot(plot_data, aes(Var1, Var2, fill = value)) +
-  geom_tile() +
-  geom_text(aes(label = sprintf("%.2f", value), color = p_value < 0.05),
-            vjust = 1) +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                       midpoint = 0, limit = c(-1,1), space = "Lab", 
-                       name="Pearson\nCorrelation") +
-  scale_color_manual(values = c("black", "yellow")) + # black when significant, yellow if not
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.y = element_text(angle = 45, hjust = 1),
-        legend.position = "none") +
-  labs(x = 'SDG Goals', y = 'SDG Goals',
-       title = 'Correlation Matrix with Significance Indicator')
-```
+<!-- plot_data <- # Combine the datasets -->
+<!--   cbind(melted_cor_matrix, p_value = melted_p_matrix$value) -->
 
-Note that as said previously, we assessed the correlations to ascertain if they substantially deviated from zero, setting the significance level at an alpha of 5%. To aid in visualization, we marked any correlations that did not meet this level of significance with a yellow highlight in our graphical representation. The absence of yellow markings on our plot suggests that all Sustainable Development Goal (SDG) scores demonstrate a statistically significant correlation.
+<!-- ggplot(plot_data, aes(Var1, Var2, fill = value)) + -->
+<!--   geom_tile() + -->
+<!--   geom_text(aes(label = sprintf("%.2f", value), color = p_value < 0.05), -->
+<!--             vjust = 1) + -->
+<!--   scale_fill_gradient2(low = "blue", high = "red", mid = "white",  -->
+<!--                        midpoint = 0, limit = c(-1,1), space = "Lab",  -->
+<!--                        name="Pearson\nCorrelation") + -->
+<!--   scale_color_manual(values = c("black", "yellow")) + # black when significant, yellow if not -->
+<!--   theme_minimal() + -->
+<!--   theme(axis.text.x = element_text(angle = 45, hjust = 1), -->
+<!--         axis.text.y = element_text(angle = 45, hjust = 1), -->
+<!--         legend.position = "none") + -->
+<!--   labs(x = 'SDG Goals', y = 'SDG Goals', -->
+<!--        title = 'Correlation Matrix with Significance Indicator') -->
+<!-- ``` -->
 
-We can have a look at the shape of the corelation between the SDGs with the plot function.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-plot(sdg_scores)
-```
+<!-- Note that as said previously, we assessed the correlations to ascertain if they substantially deviated from zero, setting the significance level at an alpha of 5%. To aid in visualization, we marked any correlations that did not meet this level of significance with a yellow highlight in our graphical representation. The absence of yellow markings on our plot suggests that all Sustainable Development Goal (SDG) scores demonstrate a statistically significant correlation. -->
 
 
+<!-- ## Different methods considered -->
 
-## Different methods considered
+<!-- ## Competing approaches -->
 
-## Competing approaches
-
-## Justifications
+<!-- ## Justifications -->
