@@ -351,6 +351,8 @@ pairs(Correlation_overall[,c("overallscore", "unemployment.rate", "GDPpercapita"
 
 pairs(Correlation_overall[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of various variables")
 ```
+Meaning of the stars: *** : p_value < 0.001; ** : p_value < 0.01; *: p_value <0.05; no star if p_value is higher.
+
 
 The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score.
 
@@ -421,6 +423,8 @@ panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
 
 pairs(data_question3_1[, c("overallscore", "total_affected", "total_deaths")], upper.panel = panel.cor_stars,diag.panel = panel.hist,lower.panel = lower.panel, main = "Correlation table and distribution of Disaster variables")
 ```
+Meaning of the stars: *** : p_value < 0.001; ** : p_value < 0.01; *: p_value <0.05; no star if p_value is higher.
+
 
 The different variables used to materialize the impact of climate disasters do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that such disasters have a specific influence on some SDGs.
 
@@ -452,6 +456,8 @@ panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
 
 pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_million", "stringency")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel,main="Correlation table and distribution of COVID variables")
 ```
+Meaning of the stars: *** : p_value < 0.001; ** : p_value < 0.01; *: p_value <0.05; no star if p_value is higher.
+
 
 The different variables used to materialize the impact of COVID19 do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that COVID19 had a specific influence on some SDGs, for instance "good health and well-being" or "decent work and economic growth".
 
@@ -483,8 +489,8 @@ panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
 
 pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of conflicts variables")
 ```
+Meaning of the stars: *** : p_value < 0.001; ** : p_value < 0.01; *: p_value <0.05; no star if p_value is higher.
 
-"***": p_value < 0.001; "**" : p_value < 0.01; "*": p_value <0.05; no star if higher p_value
 
 
 The different variables used to materialize the impact of conflicts do not seem to have important influence on the overall score, but we will further explore for the different SDGs, since we believe that conflicts have a specific influence on some SDGs.
@@ -501,60 +507,57 @@ Q3.3$year <- as.Date(as.character(Q3.3$year), format = "%Y")
 These is our time-analysis concerning the COVID-19 cases per million by region between end 2018 and 2022.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-library(ggplot2)
+
 covid_filtered <- Q3.2[Q3.2$year >= as.Date("2018-12-12"), ]
 
 ggplot(data = covid_filtered, aes(x = year, y = cases_per_million, group = region, color = region)) +
-  geom_smooth(method = "loess",  se = FALSE, span = 0.8, size = 0.5) + 
-  labs(title = "Trend of COVID-19 Cases per Million Over Time",
-       x = "Year", y = "Cases per Million") +
-  facet_wrap(~ region, nrow = 4) +
-  theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
-         plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
-                                   vjust = 8, lineheight = 2),
-         strip.text = element_blank(),
-         panel.spacing = unit(0.5, "lines")
+  geom_smooth(method = "loess", se = FALSE, span = 0.8, size = 0.6) + 
+  labs(x = "Year", y = "Cases per Million") +
+  facet_wrap(~ region, ncol = 3, strip.position = "top") +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+        strip.text = element_text(size = 8),
+        plot.title = element_text(hjust = 0.5),
+        panel.spacing = unit(1, "lines"),
+        legend.position = "none"
   ) +
-  theme(legend.position = "right") +
-  guides(color = guide_legend(ncol = 1))
+  ggtitle("Trend of COVID-19 Cases per Million Over Time")
 ```
 
 These is our time-analysis concerning the COVID-19 deaths per million per region between end 2018 and 2022
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+
 ggplot(data = covid_filtered, aes(x = year, y = deaths_per_million, group = region, color = region)) +
-  geom_smooth(method = "loess",  se = FALSE, span = 0.8, size = 0.5) + 
-  labs(title = "Trend of COVID-19 Deaths per Million Over Time", x = "Year", y = "Deaths per Million") +
-  facet_wrap(~ region, nrow = 4) +
-  theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
-         plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
-                                   vjust = 8, lineheight = 2),
-         strip.text = element_blank(),
-         panel.spacing = unit(0.5, "lines")
+  geom_smooth(method = "loess", se = FALSE, span = 0.8, size = 0.6) + 
+  labs(x = "Year", y = "Deaths per Million") +
+  facet_wrap(~ region, nrow = 5, strip.position = "top") +
+  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+        strip.text = element_text(size = 8),
+        panel.spacing = unit(0.5, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none"
   ) +
-  theme(legend.position = "right") +
-  guides(color = guide_legend(ncol = 1))
+  ggtitle("Trend of COVID-19 Deaths per Million Over Time")
 ```
 
 These is our time-analysis concerning the COVID-19 stringency per region between end 2018 and 2022
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-ggplot(data = covid_filtered, aes(x = year, y = stringency, group = region, 
-                                  color = region)) +
-  geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
-  labs(title = "Trend of COVID-19 Stringency Over Time", x = "Year", y = "Stringency") +
-  facet_wrap(~ region, nrow = 4) +
-  theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
-         plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
-                                   vjust = 8, lineheight = 2),
-         strip.text = element_blank(),
-         panel.spacing = unit(0.5, "lines")
+ggplot(data = covid_filtered, aes(x = year, y = stringency, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.6) + 
+  labs(x = "Year", y = "Stringency") +
+  facet_wrap(~ region, nrow = 5) +
+  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+        strip.text = element_text(size = 8),
+        panel.spacing = unit(0.5, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none"
   ) +
-  theme(legend.position = "right") +
-  guides(color = guide_legend(ncol = 1))
+  ggtitle("Trend of COVID-19 Stringency Over Time")
 ```
 
 These is our time-analysis concerning climatic disasters with total affected per region
@@ -563,17 +566,17 @@ These is our time-analysis concerning climatic disasters with total affected per
 Q3.1[is.na(Q3.1)] <- 0
 ggplot(data = Q3.1, aes(x = year, y = total_affected, group = region, color = region)) +
   geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
-  labs(title = "Trend of Total Affected from Climatic Disasters Over Time", x = "Year", y = "Total Affected") +
-  facet_wrap(~ region, nrow = 4) +
-  theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
-         plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
-                                   vjust = 8, lineheight = 2),
-         strip.text = element_blank(),
-         panel.spacing = unit(0.5, "lines")
+  labs(x = "Year", y = "Total Affected") +
+  facet_wrap(~ region, nrow = 5) +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+        strip.text = element_text(size = 8),
+        panel.spacing = unit(0.5, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none"
   ) +
-  theme(legend.position = "right") +
-  guides(color = guide_legend(ncol = 1))
+  ggtitle("Trend of Total Affected from Climatic Disasters Over Time")
 ```
 
 These is our time-analysis concerning conflicts deaths per region between 2000 and 2016
@@ -582,18 +585,17 @@ These is our time-analysis concerning conflicts deaths per region between 2000 a
 conflicts_filtered <- Q3.3[Q3.3$year >= as.Date("2000-01-01") & Q3.3$year <= as.Date("2016-12-31"), ]
 
 ggplot(data = conflicts_filtered, aes(x = year, y = sum_deaths, group = region, color = region)) +
-  geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.5) +  # Using loess smoothing method
-  labs(title = "Trend of Deaths by Conflicts Over Time", x = "Year", y = "Sum Deaths") +
-  facet_wrap(~ region, nrow = 4) +
-  theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
-         plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
-                                   vjust = 8, lineheight = 2),
-         strip.text = element_blank(),
-         panel.spacing = unit(0.5, "lines")
+  geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.6) +
+  labs(x = "Year", y = "Sum 0f Deaths") +
+  facet_wrap(~ region, nrow = 5) +
+  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+        strip.text = element_text(size = 8),
+        panel.spacing = unit(0.5, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none"
   ) +
-  theme(legend.position = "right") +
-  guides(color = guide_legend(ncol = 1))
+  ggtitle("Trend of Deaths by Conflicts Over Time")
 ```
 
 We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, then less America & the Caribbean and Eastern Europe
@@ -602,18 +604,17 @@ These is our time-analysis concerning conflicts affected population per region b
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region, color = region)) +
-  geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.5) +  # Using loess smoothing method
-  labs(title = "Trend of Population Affected by Conflicts Over Time", x = "Year", y = "pop_affected") +
-  facet_wrap(~ region, nrow = 4) +
-  theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
-         plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
-                                   vjust = 8, lineheight = 2),
-         strip.text = element_blank(),
-         panel.spacing = unit(0.5, "lines")
+  geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.6) + 
+  labs(x = "Year", y = "Population affected") +
+  facet_wrap(~ region, nrow = 5) +
+  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+        strip.text = element_text(size = 8),
+        panel.spacing = unit(0.5, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none"
   ) +
-  theme(legend.position = "right") +
-  guides(color = guide_legend(ncol = 1))
+  ggtitle("Trend of Population Affected by Conflicts Over Time")
 ```
 
 We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, America & the Caribbean, Eastern Europe and sometimes Caucasus and Central Asia

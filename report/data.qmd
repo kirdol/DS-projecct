@@ -911,7 +911,6 @@ list_country_disasters <- c(unique(D6_0_Disasters$code))
 setdiff(list_country, list_country_disasters)
 ```
 
-
 **Here are the first few lines of the cleaned dataset on Disasters:**
 
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
@@ -1236,8 +1235,7 @@ data_question24 <- all_Merge %>%
 
 ```
 
-**For question 3**, we create 3 distinct databases according to the different type of event that we will analyse: disasters, COVID19 and conflicts. For the disasters, we only keep the years until 2021, because after this date, we don't have data, moreover we decided to delete the country Bahrain, Brunei and Malta as we do not have any data concerning them. For the conflicts, we only keep the years until 2016, because after this date, we don't have data.
-Concerning the conflict dataset, we decided to erase Belarus because once again we do not have any data concerning this country.
+**For question 3**, we create 3 distinct databases according to the different type of event that we will analyse: disasters, COVID19 and conflicts. For the disasters, we only keep the years until 2021, because after this date, we don't have data, moreover we decided to delete the country Bahrain, Brunei and Malta as we do not have any data concerning them. For the conflicts, we only keep the years until 2016, because after this date, we don't have data. Concerning the conflict dataset, we decided to erase Belarus because once again we do not have any data concerning this country.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 # Disasters
