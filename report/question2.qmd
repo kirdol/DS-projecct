@@ -8,7 +8,7 @@ source(here::here("scripts/Clean/setup.R"))
 
 We create one new variable per goal that captures the difference in SDG score between the year of the observation and the previous year. This will allow us to see how the countries improve (or not) on SDG scores each year.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
+```{r, echo = FALSE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"))
 data_question2 <- data_question2 %>% dplyr::select(-X)
 
@@ -21,15 +21,15 @@ data_question2 <- data_question2 %>%
 
 ## EDA: General time evolution of SDG socres
 
-First, we look at the evolution of SDG achievement overall score over time by continent and by region and we see that the general evolution of SDG scores around the world is increasing over the years, but very slowly.
+First, we look at the evolution of SDG achievement overall score over time by continent and by region and we see that the general evolution of SDG scores around the world is increasing over the years, but very slowly. Looking at the continents, we see that Europe is above the others, while Africa is below, but in general, all have increasing overall scores.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="50%"}
+```{r, echo = FALSE, message = FALSE, warning=FALSE, cache = TRUE, out.height="50%"}
 data1 <- data_question2 %>% group_by(year, continent) %>%
   mutate(mean_overall_score_by_year=mean(overallscore))
 
 plot1 <- ggplot(data1) +
-  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=0.5) +
-  geom_point(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=0.5) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=0.6) +
+  #geom_point(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=1) +
   scale_y_continuous(limits = c(0, 100)) +
   labs(title = "Mean overall SDG \nachievement score",
        y = "Mean Overall SDG Score",
@@ -43,6 +43,7 @@ data2 <- data_question2 %>% group_by(year, continent) %>%
 plot2 <- ggplot(data2) +
   geom_line(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=continent), lwd=0.6) +
   #geom_point(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=continent), lwd=1.5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") + 
   scale_y_continuous(limits = c(-0.3, 1.2)) +
   labs(title = "Score difference",
        y = "Mean Overall SDG Score difference",
@@ -53,15 +54,15 @@ plot2 <- ggplot(data2) +
 (plot1 + plot2) / plot_spacer() 
 ```
 
-Looking at the continents, we see that Europe is above the others, while Africa is below, but in general, all have increasing overall scores.
+This view that groups the countries by region gives us precision about the previous information. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+```{r, echo = FALSE, message = FALSE, warning=FALSE, cache = TRUE}
 data3 <- data_question2 %>% group_by(year, region) %>%
   mutate(mean_overall_score_by_year=mean(overallscore))
 
 plot3 <- ggplot(data3) +
   geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=region), lwd=0.5) +
-  geom_point(mapping=aes(x=year, y=mean_overall_score_by_year, color=region), lwd=0.7) +
+  #geom_point(mapping=aes(x=year, y=mean_overall_score_by_year, color=region), lwd=0.7) +
   scale_y_continuous(limits = c(0, 100)) +
   labs(title = "Evolution of the mean \noverall SDG achievement score",
        y = "Mean Overall SDG Score",
@@ -75,21 +76,27 @@ data4 <- data_question2 %>% group_by(year, region) %>%
 plot4 <- ggplot(data4) +
   geom_line(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=region), lwd=0.5) +
   #geom_point(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=region), lwd=0.8) +
-  scale_y_continuous(limits = c(-2.1,1.75)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  scale_y_continuous(limits = c(-0.3,1.2)) +
   labs(title = "Score difference",
        y = "Mean Overall SDG Score difference",
        x = "Year"
        ) +
-  theme(legend.position="right",plot.title = element_text(size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8), legend.text = element_text(size= 8),legend.title = element_text(size= 10))
+  theme(legend.position="none",plot.title = element_text(size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8), legend.text = element_text(size= 8),legend.title = element_text(size= 10))
 
-(plot3 + plot4) / plot_spacer() 
+legend <- ggplot(data4) +
+  geom_line(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=region), lwd=0.5) +
+  theme(legend.position="bottom",legend.text = element_text(size= 6),legend.title = element_text(size= 8))+
+  guides(color = guide_legend(nrow=4))
+
+legend <- cowplot::get_legend(legend)
+
+(plot3 + plot4) / legend
 ```
-
-This view that groups the countries by region gives us precision about the previous information. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below.
 
 Second, we look at the evolution of SDG achievement scores(16) over time for the whole world and by continent. We notice that all SDGs except from goal 9 (industry innovation and infrastructure) are close to one another in terms of level and growth. Goal 9 starts far below the others in 2000 and growths faster until exceeding 50%. In addition, some goals did not increase their scores much in the last two decades, for example goal 13 (climate action) and goal 12 (responsible consumption and production).
 
-```{r, echo = TRUE, message = FALSE, cache = TRUE, warning = FALSE, out.height="200%"}
+```{r, echo = FALSE, message = FALSE, cache = TRUE, warning = FALSE, out.height="200%"}
 data5 <- data_question2 %>%
   group_by(year) %>%
   summarise(across(starts_with("goal"), mean, na.rm=TRUE)) %>%
@@ -102,12 +109,11 @@ plot5 <- ggplot(data = data5) +
   geom_point(mapping = aes(x = year, y = mean_value, color = goal), size = 1) +
   scale_color_manual(values = color_palette) +
   scale_y_continuous(limits = c(0, 100)) +
-  labs(title = "Evolution of the mean SDG achievement scores across the world",
+  labs(title = "Evolution of the mean SDG \nachievement scores across the world",
        y = "Mean SDG Scores",
        x = "Year"
        ) +
-  theme(legend.position="right", legend.title = element_blank(), plot.title = element_text(size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8), legend.text = element_text(size= 6))+
-  guides(color = guide_legend(ncol=4))
+  theme(legend.position="none", plot.title = element_text(size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8))
 
 data6 <- data_question2 %>%
   group_by(year) %>%
@@ -115,8 +121,9 @@ data6 <- data_question2 %>%
   pivot_longer(cols = starts_with("diff_goal"), names_to = "goal", values_to = "mean_diff_value")
 
 plot6 <- ggplot(data = data6) +
-  geom_line(mapping = aes(x = year, y = mean_diff_value, color = goal), size = 0.5) +
+  geom_line(mapping = aes(x = year, y = mean_diff_value, color = goal), size = 0.3) +
   #geom_point(mapping = aes(x = year, y = mean_diff_value, color = goal), size = 1) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
   scale_color_manual(values = color_palette) +
   scale_y_continuous(limits = c(-1.5, 2.5)) +
   labs(title = "Score difference",
@@ -125,28 +132,36 @@ plot6 <- ggplot(data = data6) +
        ) +
   theme(legend.position="none", plot.title = element_text(size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8), legend.text = element_text(size= 6),legend.title = element_text(size= 10))
 
-plot5/plot6 
+plot7 <- ggplot(data = data5) +
+  geom_line(mapping = aes(x = year, y = mean_value, color = goal), size = 1) +
+  scale_color_manual(values = color_palette) +
+  theme(legend.position="bottom", legend.text = element_text(size= 8), legend.title = element_blank())+
+  guides(color = guide_legend(nrow=3))
+
+legend <- cowplot::get_legend(plot7)
+
+(plot5 + plot6) / legend
+
 ```
 
 We continue with the graph that distinguishes continents to get more information.
 
-```{r, echo = TRUE, message = FALSE, cache = TRUE, warning=FALSE, out.height="100%", out.width="100%"}
+```{r, echo = FALSE, message = FALSE, cache = TRUE, warning=FALSE, out.height="100%", out.width="100%"}
 data5 <- data_question2 %>%
   group_by(year, continent) %>%
   summarise(across(starts_with("goal"), mean, na.rm=TRUE)) %>%
   pivot_longer(cols = starts_with("goal"), names_to = "goal", values_to = "mean_value")
 
 ggplot(data = data5) +
-  geom_line(mapping = aes(x = year, y = mean_value, color=continent), size = 0.7) +
-  scale_color_manual(values = color_palette) +
+  geom_line(mapping = aes(x = year, y = mean_value, color = continent), size = 0.7) +
   scale_y_continuous(limits = c(0, 100)) +
   labs(title = "Evolution of the mean SDG achievement scores by continent",
        y = "Mean SDG Scores",
-       x = "Years from 2000 to 2022"
-       ) +
-  facet_wrap(~ goal, nrow = 4)+
-  scale_x_continuous(breaks = NULL)+
-  theme_light()
+       x = "Year"
+  ) +
+  facet_wrap(~ goal, nrow = 4) +
+  theme_light() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 6), plot.title = element_text(size=10))
 ```
 
 We observe that most of the time, Europe is at the top of the graph and Africa at the bottom, except for goals 12 and 13 that are linked to ecology. Some other information stand out:
@@ -159,7 +174,7 @@ We observe that most of the time, Europe is at the top of the graph and Africa a
 
 Third we create an interactive map of the world to be able to navigate from year 2000 to 2022, seeing the level of achievement of the SDGs (overall score) for each country.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+```{r, echo = FALSE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 # Load world map data
 world <- ne_countries(scale = "medium", returnclass = "sf")
 
@@ -211,9 +226,9 @@ Again, we see that the overall achievement score of the SDGs is increasing and t
 
 ## Analysis: SDG adoption in 2015
 
-Preparing for the specific question around 2015, we only keep the years from 2009 to 2022 (7 years before and after 2015).In addition, we create a binary variable that take the value 1 if the observation occurred after 2015 and zero otherwise. 
+Preparing for the specific question around 2015, we only keep the years from 2009 to 2022 (7 years before and after 2015).In addition, we create a binary variable that take the value 1 if the observation occurred after 2015 and zero otherwise.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+```{r, echo = FALSE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 # Create a new column (binary variable) with value 1 if the year is after 2015 and zero otherwise. 
 binary2015 <- data_question2 %>% 
   mutate(after2015 = ifelse(year > 2015, 1, 0)) %>%
@@ -259,7 +274,7 @@ We notice that across the years, the distribution stays on the right of the x-ax
 
 After having visualized the improvements and declines of SDG overall score for the whole world, we are now interested in the top 5 countries in terms of improvement each year and we see that major improvement often comes from Sub-Saharan Africa countries or Middle East and North Africa. This confirms that more efforts are made in these regions to achieve better scores, but we also know from our previous visualizations that their initial scores are lower. Moreover, we record that the higher improvements are of 3% per year and were mostly achieved before 2015. Indeed, we can tell that in terms of maximum improvements, the adoption of SDGs in 2015 did not have a strong impact. We also notice that 2020 is the year with the smallest best improvements. We keep that in mind for the next question regarding events and specifically COVID.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%"}
+```{r, echo = FALSE, message = FALSE, warning = FALSE, out.height="100%"}
 top_n_values <- 5
 
 # Test with ggpot2
@@ -291,35 +306,34 @@ for (year in unique_years) {
   plots[[as.character(year)]] <- plot
 }
 
-# Arrange the plots in a 4x4 grid using patchwork
 wrap <- wrap_plots(plots, ncol = 5)
 
-wrap + plot_annotation(
-  title = 'Best 5 countries in terms of SDG score improvement'
+wrap+ plot_annotation(
+  title = 'Best 5 countries in terms of SDG score improvement by region'
 )
 ```
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="33%"}
-# Create a common legend manually
+```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.height=0.5}
 legend_data <- data.frame(region = unique_regions)
 legend_plot <- ggplot(legend_data, aes(x = region, fill = region)) +
-  geom_bar(position = position_stack(reverse = TRUE)) +
+  geom_bar() +
   scale_fill_manual(values = region_colors) +
-  labs(title = "Regions") +
-  theme_void() +
-  theme(
-    legend.position = "none",
-    axis.text.y = element_text(angle = 0, hjust = 1, size = 18),
-    plot.title = element_text(size = 20, face = "bold")
-  ) +
-  coord_flip()
+  theme(legend.position="top",
+        legend.text = element_text(size = 6), 
+        legend.title = element_blank(), legend.key.size = unit(0.3, "cm")
+  )+
+  guides(fill = guide_legend(nrow=2))
 
-legend_plot
+legend <- cowplot::get_legend(legend_plot)
+
+grid.newpage()
+grid.draw(legend)
+
 ```
 
 We continue by looking at the worst 5 countries in terms of decline in SDG overall score each year and we see that the years with the worst declines are those closer to us. Indeed the declines were generally no more than 1%, until 2018, where these became more frequent. We notice that the adoption of SDGs in 2015 may have had a good impact, because during the two years that follow, the worst SDG score declines were low (no more than 1% in 2016 and no more 0.5% in 2017). It was stabilizing, but it was of short duration, because then come the more extreme deteriotations. Interestingly, the regions that had were the worst in terms of decline during the past twelve years were very different, the only pattern appears during the last four years, where most of them are in Latin America and the Caribbean.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 plots <- list()
 
 for (year in unique_years) {
@@ -346,13 +360,14 @@ wrap + plot_annotation(
 )
 ```
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="33%"}
-legend_plot
+```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.height=0.5}
+grid.draw(legend)
+
 ```
 
 We move on to the specific SDG scores and look at the 20 best improvements by score. We additionaly differentiate between the improvements than occurred before and after 2015. We want to see which goals get the best improvements and which countries put more effort into it.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%", out.height="75%"}
+```{r, echo = FALSE, message = FALSE, warning = FALSE, out.width="100%", out.height="75%"}
 # Best improvements
 data_long <- binary2015 %>%
   pivot_longer(cols = c(starts_with("diff_goal"), "diff_overallscore"),
@@ -418,7 +433,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 1",
+            label = "Goal 1: \nno poverty",
             method = "restyle"
           ),
           list(
@@ -434,7 +449,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 2",
+            label = "Goal 2: \nzero hunger",
             method = "restyle"
           ),
           list(
@@ -450,7 +465,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 3",
+            label = "Goal 3: good health \nand well-being",
             method = "restyle"
           ),
           list(
@@ -466,7 +481,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 4",
+            label = "Goal 4: \nquality education",
             method = "restyle"
           ),
           list(
@@ -482,7 +497,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 5",
+            label = "Goal 5: \ngender equality",
             method = "restyle"
           ),
           list(
@@ -498,7 +513,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 6",
+            label = "Goal 6: clean water \nand sanitation",
             method = "restyle"
           ),
           list(
@@ -514,7 +529,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 7",
+            label = "Goal 7: affordable \nand clean energy",
             method = "restyle"
           ),
           list(
@@ -530,7 +545,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 8",
+            label = "Goal 8: decent work \nand economic growth",
             method = "restyle"
           ),
           list(
@@ -546,7 +561,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 9",
+            label = "Goal 9: industry, innovation \nand infrastructure",
             method = "restyle"
           ),
           list(
@@ -562,7 +577,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 10",
+            label = "Goal 10: \nreduced inequalities",
             method = "restyle"
           ),
           list(
@@ -578,7 +593,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 11",
+            label = "Goal 11: sustainable \ncities and communities",
             method = "restyle"
           ),
           list(
@@ -594,7 +609,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 12",
+            label = "Goal 12: responsible \nconsumption and production",
             method = "restyle"
           ),
           list(
@@ -610,7 +625,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 13",
+            label = "Goal 13: \nclimate action",
             method = "restyle"
           ),
           list(
@@ -626,7 +641,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 15",
+            label = "Goal 15: \nlife on earth",
             method = "restyle"
           ),
           list(
@@ -642,7 +657,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 16",
+            label = "Goal 16: peace, justice \nand strong institutions",
             method = "restyle"
           ),
           list(
@@ -658,7 +673,7 @@ plot_ly() %>%
                 )
               )
             ),
-            label = "Goal 17",
+            label = "Goal 17: partnerships \nfor the goals",
             method = "restyle"
           )
         )
@@ -679,7 +694,7 @@ We notice various patterns, among them:
 
 -   Goal 9 (industry, innovation and infrastructure) has all of its 20 best improvements after 2015.
 
-Regarding the impact of the adoption of SDGs in 2015, we can not tell that it had a positive impact, because there are not more big improvements after 2015 than before, even a little bit less. In addition, the most impressive improvements mostly occurred before 2015. These conclusions are supported by the next graph: we fit to different regression lines (before and after 2015) to see if there is a jump after the adoption and if the the SDG scores increase faster.
+Regarding the impact of the adoption of SDGs in 2015, we can not tell that it had a positive impact, because there are not more big improvements after 2015 than before, even a little bit less. In addition, the most impressive improvements mostly occurred before 2015. These conclusions are supported by the next graph: we fit two different regression lines (before and after 2015) to see if there is a jump after the adoption of the SDGs and if the the SDG scores increase faster.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 # Graphs to show the jump (or not) in 2015
@@ -693,7 +708,7 @@ plotly::plot_ly() %>%
   plotly::add_trace(data = data_before_2016, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_before_2016)), type = 'scatter', mode = 'lines', line = list(color = 'red'), name = "Before 2015") %>%
   plotly::layout(title = "Different patterns across SDGs before and after 2015",
          xaxis = list(title = "Year"),
-         yaxis = list(title = "SDG achievement score", range = c(30, 85)),
+         yaxis = list(title = "SDG achievement score", range = c(30, 90)),
          shapes = list(
            list(
              type = 'line',
@@ -849,3 +864,15 @@ plotly::plot_ly() %>%
          )
   )
 ```
+
+We notice various patterns, among them:
+
+-   Goals 1, 4, 3, and 15 increase faster before 2015 than after.
+
+-   Except for goal 17, none seem to increase faster after the adoption of SDGs. Since goal 17 is about collaboration of the countries for SDGs achievement, it is no surprise that before the adoption, there were no increase. It is thus disappointing to see that it is the only goal that has a improvement rate after 2015.
+
+-   Goal 17 also has a small downward jump in 2015, but since it immediately increases in the following years, it is due to the fitting of the lines.
+
+-   We observe small upwards jumps for goals 8, 9, 10 and 11.
+
+To sum up, the adoption of SDGs was a success in terms of collaboration between countries to better themselves on some aspects of durability (goal 17), but regarding the goals themselves, we can not conclude to faster improvements or radical efforts following 2015.

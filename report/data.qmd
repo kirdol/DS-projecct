@@ -808,7 +808,7 @@ datatibble <- datatibble %>% filter(code %in% list_country)
 list_country_free <- c(unique(datatibble$code))
 setdiff(list_country, list_country_free)
 
-# Turkey was missing but present in the initial database (it was a problem when stadardizing the country names of D1_0SDG_country_list that we corrected) and the other missing countries are:"AFG" "CUB" "MDV" "STP" "SSD" "TKM" "UZB" 
+# Turkey was missing but present in the initial database (it was a problem when standardizing the country names of D1_0SDG_country_list that we corrected) and the other missing countries are:"AFG" "CUB" "MDV" "STP" "SSD" "TKM" "UZB" 
 D5_0_Human_freedom_index <- datatibble
 ```
 
@@ -1158,17 +1158,16 @@ all_Merge <- all_Merge %>%
     code %in% c("BRN") ~ "Asia",
     code %in% c("MLT") ~ "Europe",
       TRUE ~ continent
-    ))
+    ), 
+    region = case_when(
+    code %in% c("AFG", "MDV") ~ "South Asia",
+    code %in% c("CUB") ~ "Latin America & the Caribbean",
+    code %in% c("STP", "SSD") ~ "Sub-Saharan Africa",
+    code %in% c("TKM", "UZB") ~ "Caucasus & Central Asia",
+      TRUE ~ region))
 
-# Load Disasters dataset to add region information
-Disasters <- read.csv(here("scripts", "data", "Disasters.csv")) %>%
-  select(ISO, Region) %>%
-  distinct(ISO, Region, .keep_all = TRUE) %>%
-  rename(code = ISO, region = Region)
-# Merge All_Merge with Disasters dataset
-all_Merge <- left_join(all_Merge, Disasters, by = "code") %>%
-  mutate(region = ifelse(is.na(region.x), region.y, region.x)) %>%
-  select(-region.x, -region.y)
+
+
 ```
 
 We order the database, beginning by the information on the country, the year, the continent and the region.
@@ -1806,7 +1805,7 @@ data_question3_1[is.na(data_question3_1)] <- 0
 
 We look at the missing values for the three variables that are specific to COVID during the years of COVID: 2020 to 2022. We delete the countries that have NAs (only stringency has 6 countries with 100% NAs).
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="75%", out.height="55%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 COVID4 <- data_question3_2 %>%
   filter(year >= 2020 & year <= 2022) %>%
   group_by(code) %>%
@@ -1815,7 +1814,7 @@ COVID4 <- data_question3_2 %>%
             Na_stringency = mean(is.na(stringency))) %>%
   filter(Na_deaths != 0 | Na_cases!=0 |  Na_stringency !=0)
 
-ggplot(COVID4, aes(x = reorder(code, Na_deaths), y = Na_deaths)) +
+g1 <- ggplot(COVID4, aes(x = reorder(code, Na_deaths), y = Na_deaths)) +
   geom_bar(stat = "identity", fill = "lightgreen", color = "black") +
   labs(title = "NAs by rows: deaths per million",
        x = "Code",
@@ -1823,7 +1822,7 @@ ggplot(COVID4, aes(x = reorder(code, Na_deaths), y = Na_deaths)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggplot(COVID4, aes(x = reorder(code, Na_cases), y = Na_cases)) +
+g2 <- ggplot(COVID4, aes(x = reorder(code, Na_cases), y = Na_cases)) +
   geom_bar(stat = "identity", fill = "lightgreen", color = "black") +
   labs(title = "NAs by rows: cases per million",
        x = "Code",
@@ -1831,13 +1830,15 @@ ggplot(COVID4, aes(x = reorder(code, Na_cases), y = Na_cases)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggplot(COVID4, aes(x = reorder(code, Na_stringency), y = Na_stringency)) +
+g3 <- ggplot(COVID4, aes(x = reorder(code, Na_stringency), y = Na_stringency)) +
   geom_bar(stat = "identity", fill = "lightgreen", color = "black") +
   labs(title = "NAs by rows: stringency",
        x = "Code",
        y = "Proportion of Missing Values") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+(g1 + g2 + g3) / plot_spacer()
 
 data_question3_2 <- data_question3_2 %>% filter(!code %in% COVID4$code)
 ```

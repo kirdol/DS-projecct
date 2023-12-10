@@ -11,6 +11,7 @@ packages <- c(
   "tidyr",
   "lubridate",
   "gridExtra",
+  "grid",
   "readr",
   "readxl",
   "ggplot2",
