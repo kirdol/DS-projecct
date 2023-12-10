@@ -1,4 +1,11 @@
 ---
+project:
+  type: website
+  output-dir: docs
+website:
+title: "demosite"
+
+
 title: "Comparative Analysis of SDG Implementation Evolution Worldwide"
 author: "Lodrik Adam, Sofia Benczédi, Stefan Favre, Delia Fuchs"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
