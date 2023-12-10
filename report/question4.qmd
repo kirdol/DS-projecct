@@ -1,6 +1,8 @@
 ```{r echo = FALSE, message = FALSE}
 #### Setup ####
 source(here::here("scripts","Clean","setup.R"))
+data_4 <- read.csv(here::here("scripts", "data", "data_question24.csv"))
+threashold_heatmap <- 0.5
 ```
 
 # Focus on relationship between SDGs
@@ -8,26 +10,53 @@ source(here::here("scripts","Clean","setup.R"))
 
 ## EDA: General visualization of the SDGs
 
-```{r echo=FALSE, message=FALSE}
-#### Setup ####
+First, let's look at how our goals are ditributed. To do that, it is important to show the distribution at a year level since showing it a once would be impacted by the change over the year. We created below a shiny app that allows us to select the year we want to look at and see the distribution of the goals for that year. Since shiny apps are not well supported with quarto, we show here only scrrenshots. We chose to show year 2000 and year 2023 to see both extreme in terms of ditribution. it is interesting to see how the goals tended to be skewed in the past, well representing the developping countries lagging behind. But the ditribution beeing more normaly ditributed in recent years.
 
-source(here::here("scripts","Clean","setup.R"))
-threashold_heatmap <- 0.5
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+data_long <- data_4 %>% 
+  gather(key = "goal", value = "score", goal1:goal17) %>%
+  mutate(goal = factor(goal, levels = paste0("goal", 1:17)))
+
+ui <- fluidPage(
+  titlePanel("Goals Score Distribution"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("year", "Year", choices = unique(data_long$year))
+    ),
+    mainPanel(
+      plotOutput("ridgePlot")
+    )
+  )
+)
+
+server <- function(input, output) {
+  output$ridgePlot <- renderPlot({
+    filteredData <- filter(data_long, year == input$year)
+    ggplot(filteredData, aes(x = score, y = goal, fill = stat(x))) +
+      geom_density_ridges_gradient(scale = 3, rel_min_height = 0.01) +
+      geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
+      scale_fill_viridis_c(name = "Value", option = "C") +
+      labs(title = paste("Goal Score Distribution in", input$year))
+  })
+}
+
+shinyApp(ui = ui, server = server)
 ```
 
-Let's analyse our relationship between the SDGs. For that, we'll import our dataset to examine the interconnections among the Sustainable Development Goals (SDGs). After importing, we'll focus specifically on the columns representing the goals of interest. To provide a comprehensive analysis, we will construct a correlation matrix that we will show as a heatmap to highlighting only those goals where the correlation coefficient is either greater than a arbitrary threashold that we fixed at `r threashold_heatmap` (indicating a strong positive relationship) and less than -`r threashold_heatmap` (signifying a strong negative relationship). This approach will enable us to identify and analyze the most significant relationships between the selected SDGs.
+We now interest ourself to the correlation between the goals scores To do that we chose to use a correlation heatmap. We set an arbitrary threashold to better concentrate our attention to the most corrolated goals. We fixed our threashold at `r threashold_heatmap` (indicating a strong positive relationship) and less than -`r threashold_heatmap` (signifying a strong negative relationship).
+
+Given that our variables, as seen previously, do not follow a normal distribution, employing the Pearson correlation method is not suitable in our analysis since it requires observations to be normaly distributed. We attempted to normalize the data through logarithmic or square root transformations, but these adjustments were insufficiently effective. Consequently, we will resort to computing the Spearman correlation. While not ideal, this method does not necessitate the normal distribution of our data. In our analysis, particularly for the heatmap visualization, we will focus on correlations that exceed the threshold of `r threashold_heatmap` or fall below -`r threashold_heatmap`. This selective approach will enhance the readability and interpretability of the heatmap.
+
+To do that, we select only the colums of interest and compute the correlation matrix using Spearman correlation. We then melt the matrix to be able to plot it. We then plot the heatmap using `ggplot2`.
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 #### Preparation of the data ####
 
-data_4 <- read.csv(here::here("scripts", "data", "data_question24.csv"))
 data_4_goals <- data_4 %>%
   dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
                 goal6,goal7, goal8, goal9, goal10, goal11, goal12,
                 goal13, goal15, goal16, goal17)
 ```
-
-Given that our variables do not follow a normal distribution, employing the Pearson correlation method is not suitable in our analysis. We attempted to normalize the data through logarithmic or square root transformations, but these adjustments were insufficiently effective. Consequently, we will resort to computing the Spearman correlation. While not ideal, this method does not necessitate the normal distribution of our data. In our analysis, particularly for the heatmap visualization, we will focus on correlations that exceed the threshold of `r threashold_heatmap` or fall below -`r threashold_heatmap`. This selective approach will enhance the readability and interpretability of the heatmap.
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 #### Spearman Correlation ####
@@ -35,8 +64,6 @@ Given that our variables do not follow a normal distribution, employing the Pear
 spearman_corr_4 <- cor(data_4_goals, method = "spearman", use = "everything")
 spearman_corr_4[abs(spearman_corr_4) < threashold_heatmap] <- NA
 ```
-
-We can then plot the Heatmap of the Spearman correlation using the `ggplot2` package.
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 #### Spearman Correlation Heatmap ####
@@ -58,9 +85,13 @@ ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
          x = "", y = "")
 ```
 
+The correaltion can be read on the graph. The darker the color, the stronger the correlation. If there is not colors, it means that the gaols correlation those not exceed our threashold of ±`r threashold_heatmap`.
+
 It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals appear to be less interrelated compared to others. Specifically, SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) demonstrate a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also exhibits a lesser degree of interconnection with the other SDGs.
 
 ## Analysis: Factor analysis of the SDGs
+
+At this point, we saw that the goals were mostly correlated. We now want to see if we can group them in a smaller number of factors. To do that, we will use a principal component analysis (PCA). We will first look at the scree plot to see how many factors we should keep. We will then look at the biplot to see how the goals are grouped together.
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 #### Scree Plot ####
@@ -78,8 +109,6 @@ fviz_eig(pca_result,
          addlabels = TRUE) +
   theme_minimal()
 ```
-
-
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 #### Biplot ####
@@ -114,33 +143,3 @@ leaps<-regsubsets(overallscore ~ .,data=goals_data,nbest=10)
 plot(leaps,scale="r2") + theme_minimal()
 ```
 
-
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Forward selection ####
-
-library(MASS)
-clean_data <- na.omit(data_4)
-# Initialize variables to store the results
-step_results <- data.frame(step = integer(), aic = numeric(), adjusted_r_squared = numeric())
-
-# Initial model (null model)
-current_model <- lm(overallscore ~ 1, data = clean_data)
-
-# Record initial metrics
-step_results <- rbind(step_results, data.frame(step = 0, aic = AIC(current_model), adjusted_r_squared = summary(current_model)$adj.r.squared))
-
-# Perform forward selection
-for (variable in colnames(clean_data)[grepl("goal", colnames(clean_data))]) {
-    current_model <- update(current_model, paste(". ~ . +", variable))
-    current_step <- nrow(step_results) + 1
-    step_results <- rbind(step_results, data.frame(step = current_step, aic = AIC(current_model), adjusted_r_squared = summary(current_model)$adj.r.squared))
-}
-
-ggplot(step_results, aes(x = step)) +
-    geom_line(aes(y = aic, color = "AIC")) +
-    geom_line(aes(y = adjusted_r_squared * 100, color = "Adjusted R-squared")) +
-    labs(title = "Forward Selection Process", x = "Step", y = "Metric Value") +
-    scale_color_manual("", breaks = c("AIC", "Adjusted R-squared"), values = c("blue", "red"))
-
-```

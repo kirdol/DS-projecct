@@ -34,6 +34,7 @@ ggplot(long_df_goal_distribution, aes(x = Value, y = Goal, fill = stat(x))) +
   labs(title = 'Distribution of Goals')
 ```
 
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 
 ggplot(long_df_hfi_distribution, aes(x = Value, y = Category, fill = stat(x))) +
