@@ -21,7 +21,7 @@ data_question2 <- data_question2 %>%
 
 ## EDA: General time evolution of SDG socres
 
-First, we look at the evolution of SDG achievement overall score over time by continent and by region and we see that the general evolution of SDG scores around the world is increasing over the years, but very slowly.
+First, we look at the evolution of SDG achievement overall score over time by continent and by region and we see that the general evolution of SDG scores around the world is increasing over the years, but very slowly. Looking at the continents, we see that Europe is above the others, while Africa is below, but in general, all have increasing overall scores.
 
 ```{r, echo = FALSE, message = FALSE, warning=FALSE, cache = TRUE, out.height="50%"}
 data1 <- data_question2 %>% group_by(year, continent) %>%
@@ -54,7 +54,7 @@ plot2 <- ggplot(data2) +
 (plot1 + plot2) / plot_spacer() 
 ```
 
-Looking at the continents, we see that Europe is above the others, while Africa is below, but in general, all have increasing overall scores.
+This view that groups the countries by region gives us precision about the previous information. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below.
 
 ```{r, echo = FALSE, message = FALSE, warning=FALSE, cache = TRUE}
 data3 <- data_question2 %>% group_by(year, region) %>%
@@ -94,8 +94,6 @@ legend <- cowplot::get_legend(legend)
 (plot3 + plot4) / legend
 ```
 
-This view that groups the countries by region gives us precision about the previous information. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below.
-
 Second, we look at the evolution of SDG achievement scores(16) over time for the whole world and by continent. We notice that all SDGs except from goal 9 (industry innovation and infrastructure) are close to one another in terms of level and growth. Goal 9 starts far below the others in 2000 and growths faster until exceeding 50%. In addition, some goals did not increase their scores much in the last two decades, for example goal 13 (climate action) and goal 12 (responsible consumption and production).
 
 ```{r, echo = FALSE, message = FALSE, cache = TRUE, warning = FALSE, out.height="200%"}
@@ -123,7 +121,7 @@ data6 <- data_question2 %>%
   pivot_longer(cols = starts_with("diff_goal"), names_to = "goal", values_to = "mean_diff_value")
 
 plot6 <- ggplot(data = data6) +
-  geom_line(mapping = aes(x = year, y = mean_diff_value, color = goal), size = 0.5) +
+  geom_line(mapping = aes(x = year, y = mean_diff_value, color = goal), size = 0.3) +
   #geom_point(mapping = aes(x = year, y = mean_diff_value, color = goal), size = 1) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
   scale_color_manual(values = color_palette) +
@@ -135,7 +133,7 @@ plot6 <- ggplot(data = data6) +
   theme(legend.position="none", plot.title = element_text(size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8), legend.text = element_text(size= 6),legend.title = element_text(size= 10))
 
 plot7 <- ggplot(data = data5) +
-  geom_line(mapping = aes(x = year, y = mean_value, color = goal), size = 0.5) +
+  geom_line(mapping = aes(x = year, y = mean_value, color = goal), size = 1) +
   scale_color_manual(values = color_palette) +
   theme(legend.position="bottom", legend.text = element_text(size= 8), legend.title = element_blank())+
   guides(color = guide_legend(nrow=3))
@@ -228,7 +226,7 @@ Again, we see that the overall achievement score of the SDGs is increasing and t
 
 ## Analysis: SDG adoption in 2015
 
-Preparing for the specific question around 2015, we only keep the years from 2009 to 2022 (7 years before and after 2015).In addition, we create a binary variable that take the value 1 if the observation occurred after 2015 and zero otherwise. 
+Preparing for the specific question around 2015, we only keep the years from 2009 to 2022 (7 years before and after 2015).In addition, we create a binary variable that take the value 1 if the observation occurred after 2015 and zero otherwise.
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 # Create a new column (binary variable) with value 1 if the year is after 2015 and zero otherwise. 
@@ -696,7 +694,7 @@ We notice various patterns, among them:
 
 -   Goal 9 (industry, innovation and infrastructure) has all of its 20 best improvements after 2015.
 
-Regarding the impact of the adoption of SDGs in 2015, we can not tell that it had a positive impact, because there are not more big improvements after 2015 than before, even a little bit less. In addition, the most impressive improvements mostly occurred before 2015. These conclusions are supported by the next graph: we fit to different regression lines (before and after 2015) to see if there is a jump after the adoption and if the the SDG scores increase faster.
+Regarding the impact of the adoption of SDGs in 2015, we can not tell that it had a positive impact, because there are not more big improvements after 2015 than before, even a little bit less. In addition, the most impressive improvements mostly occurred before 2015. These conclusions are supported by the next graph: we fit two different regression lines (before and after 2015) to see if there is a jump after the adoption of the SDGs and if the the SDG scores increase faster.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 # Graphs to show the jump (or not) in 2015
@@ -710,7 +708,7 @@ plotly::plot_ly() %>%
   plotly::add_trace(data = data_before_2016, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_before_2016)), type = 'scatter', mode = 'lines', line = list(color = 'red'), name = "Before 2015") %>%
   plotly::layout(title = "Different patterns across SDGs before and after 2015",
          xaxis = list(title = "Year"),
-         yaxis = list(title = "SDG achievement score", range = c(30, 85)),
+         yaxis = list(title = "SDG achievement score", range = c(30, 90)),
          shapes = list(
            list(
              type = 'line',
@@ -866,3 +864,15 @@ plotly::plot_ly() %>%
          )
   )
 ```
+
+We notice various patterns, among them:
+
+-   Goals 1, 4, 3, and 15 increase faster before 2015 than after.
+
+-   Except for goal 17, none seem to increase faster after the adoption of SDGs. Since goal 17 is about collaboration of the countries for SDGs achievement, it is no surprise that before the adoption, there were no increase. It is thus disappointing to see that it is the only goal that has a improvement rate after 2015.
+
+-   Goal 17 also has a small downward jump in 2015, but since it immediately increases in the following years, it is due to the fitting of the lines.
+
+-   We observe small upwards jumps for goals 8, 9, 10 and 11.
+
+To sum up, the adoption of SDGs was a success in terms of collaboration between countries to better themselves on some aspects of durability (goal 17), but regarding the goals themselves, we can not conclude to faster improvements or radical efforts following 2015.
