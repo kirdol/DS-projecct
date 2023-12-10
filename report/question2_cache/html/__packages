@@ -39,3 +39,5 @@ shiny
 e1071
 carData
 car
+naniar
+ggridges
