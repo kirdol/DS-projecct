@@ -639,13 +639,13 @@ library(scales)
 
 
 # Subset data for South and East Asia from Q3.1 dataset
-south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
+disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
 
 # Select relevant columns for correlation analysis
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "no_homeless")
 
 # Subset the data
-subset_data <- south_east_asia_data[, relevant_columns]
+subset_data <- disaster_data[, relevant_columns]
 
 # Define the specific goal columns you want to include in regression
 goal_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16")
@@ -741,6 +741,93 @@ shinyApp(ui, server)
 #for "goal12," both "Total Affected" and "No Homeless" are significantly positively associated. However, for "goal13," "No Homeless" shows a marginal association, while "Total Affected" doesn't significantly explain the variability.
 
 #for "goal15," neither "Total Affected" nor "No Homeless" significantly explains the variability. However, for "goal16," both "Total Affected" and "No Homeless" are significantly negatively associated.
+
+
+
+
+
+
+
+
+#Model 1 :
+#Regression of Goal 1 vs total affected: The coefficient for 'total_affected' is -3.41e-08 with a standard error of 4.19e-08. This indicates a very small negative relationship between 'total_affected' and 'Goal 1.' However, the p-value (0.42) is larger than the typical significance level of 0.05, suggesting that the relationship between 'total_affected' and 'Goal 1' is not statistically significant.
+#Regression of Goal 1 vs Total Deaths: The coefficient for 'total_deaths' is -0.000117 with a standard error of 0.000165. This indicates a negative relationship between 'total_deaths' and 'Goal 1,' but the p-value (0.32) is larger than 0.05, suggesting that the relationship between 'total_deaths' and 'Goal 1' is not statistically significant.
+
+#Model 2: 
+#Regression of Goal 2 vs total affected:The coefficient for 'total_affected' is 3.60e-08 with a standard error of 1.68e-08. This suggests a slight positive relationship between 'total_affected' and 'Goal 2.' The p-value (0.044) is marginally significant, indicating a potential relationship between 'total_affected' and 'Goal 2.'
+#Regression of Goal 2 vs Total Deaths: The coefficient for 'total_deaths' is -2.37e-05 with a standard error of 0.000134. This indicates no significant relationship between 'total_deaths' and 'Goal 2,' as the p-value (0.64) is larger than 0.05.
+
+#Model 3: 
+#Regression of Goal 3 vs total affected: The coefficient for 'total_affected' is 1.85e-08 with a standard error of 3.72e-08. This shows a very small positive relationship between 'total_affected' and 'Goal 3.' However, the p-value (0.62) is larger than 0.05, suggesting that the relationship between 'total_affected' and 'Goal 3' is not statistically significant.
+#Regression of Goal 3 vs Total Deaths: The coefficient for 'total_deaths' is -0.000158 with a standard error of 0.000172. This indicates a negative relationship between 'total_deaths' and 'Goal 3.' The p-value (0.28) is larger than 0.05, suggesting that the relationship between 'total_deaths' and 'Goal 3' is not statistically significant.
+
+#Model 4: 
+#Regression of Goal 4 vs total affected: The coefficient for 'total_affected' is -2.07e-09 with a standard error of 1.58e-08. This suggests an extremely small negative relationship between 'total_affected' and 'Goal 4.' Moreover, the p-value (0.89) is much larger than 0.05, indicating no statistically significant relationship between 'total_affected' and 'Goal 4.'
+#Regression of Goal 4 vs Total Deaths:The coefficient for 'total_deaths' is 0.000108 with a standard error of 0.000194. This shows a positive relationship between 'total_deaths' and 'Goal 4.' However, the p-value (0.58) is larger than 0.05, suggesting that the relationship between 'total_deaths' and 'Goal 4' is not statistically significant.
+
+#Model 5;
+#Regression of Goal 5 vs total affected: The coefficient for 'total_affected' is 2.45e-08 with a standard error of 5.03e-08. This demonstrates a very small positive relationship between 'total_affected' and 'Goal 5.' However, the p-value (0.63) is larger than 0.05, indicating that the relationship between 'total_affected' and 'Goal 5' is not statistically significant.
+#Regression of Goal 5 vs Total Deaths: The coefficient for 'total_deaths' is -0.000042 with a standard error of 0.000217. This shows a small negative relationship between 'total_deaths' and 'Goal 5.' Yet, the p-value (0.86) is larger than 0.05, suggesting that the relationship between 'total_deaths' and 'Goal 5' is not statistically significant.
+
+#Model 6:
+#Regression of Goal 6 vs total affected:The coefficient for 'total_affected' is -1.02e-08 with a standard error of 1.77e-08. This indicates an extremely small negative relationship between 'total_affected' and 'Goal 6.' Also, the p-value (0.56) is larger than 0.05, suggesting no statistically significant relationship between 'total_affected' and 'Goal 6.'
+#Regression of Goal 6 vs Total Deaths: The coefficient for 'total_deaths' is 0.000104 with a standard error of 0.000127. This shows a positive relationship between 'total_deaths' and 'Goal 6.' However, the p-value (0.41) is larger than 0.05, indicating that the relationship between 'total_deaths' and 'Goal 6' is not statistically significant.
+
+#Model 7:
+#Regression of Goal 7 vs total affected: The coefficient for 'total_affected' is 5.72e-08 with a standard error of 2.15e-08. This indicates a small positive relationship between 'total_affected' and 'Goal 7.' However, the p-value (0.008) is less than 0.05, suggesting a statistically significant relationship between 'total_affected' and 'Goal 7.'
+#Regression of Goal 7 vs Total Deaths: The coefficient for 'total_deaths' is -0.000267 with a standard error of 0.000122. This indicates a moderate negative relationship between 'total_deaths' and 'Goal 7.' Furthermore, the p-value (0.026) is less than 0.05, suggesting a statistically significant relationship between 'total_deaths' and 'Goal 7.'
+
+#Model 8:
+#Regression of Goal 7 vs total affected: The coefficient for 'total_affected' is 4.11e-08 with a standard error of 1.09e-08. This indicates a small positive relationship between 'total_affected' and 'Goal 8.' However, the p-value (0.0003) is less than 0.05, indicating a statistically significant relationship between 'total_affected' and 'Goal 8.'
+#Regression of Goal 8 vs Total Deaths:The coefficient for 'total_deaths' is -0.000335 with a standard error of 0.000143. This indicates a moderate negative relationship between 'total_deaths' and 'Goal 8.' Additionally, the p-value (0.019) is less than 0.05, suggesting a statistically significant relationship between 'total_deaths' and 'Goal 8.'
+
+#Model 9:
+#Regression of Goal 7 vs total affected: The coefficient for 'total_affected' is 1.82e-08 with a standard error of 1.14e-08. This indicates a small positive relationship between 'total_affected' and 'Goal 9.' However, the p-value (0.113) is larger than 0.05, suggesting that the relationship between 'total_affected' and 'Goal 9' is not statistically significant.
+#Regression of Goal 9 vs Total Deaths: The coefficient for 'total_deaths' is -0.000212 with a standard error of 0.000176. This indicates a moderate negative relationship between 'total_deaths' and 'Goal 9.' Nevertheless, the p-value (0.231) is larger than 0.05, suggesting that the relationship between 'total_deaths' and 'Goal 9' is not statistically significant.
+
+#Model 10: 
+#Regression of Goal 7 vs total affected: The coefficient for 'total_affected' is 3.91e-08 with a standard error of 1.74e-08. This indicates a small positive relationship between 'total_affected' and 'Goal 10.' However, the p-value (0.026) is less than 0.05, suggesting a statistically significant relationship between 'total_affected' and 'Goal 10.'
+#Regression of Goal 10 vs Total Deaths: The coefficient for 'total_deaths' is -0.000207 with a standard error of 0.000128. This indicates a moderate negative relationship between 'total_deaths' and 'Goal 10.' Furthermore, the p-value (0.104) is larger than 0.05, indicating that the relationship between 'total_deaths' and 'Goal 10' is not statistically significant.
+
+#Model 11: 
+#Regression of Goal 7 vs total affected: The coefficient for 'total_affected' is 6.35e-08 with a standard error of 3.84e-08. This indicates a small positive relationship between 'total_affected' and 'Goal 11.' However, the p-value (0.095) is larger than 0.05, suggesting that the relationship between 'total_affected' and 'Goal 11' is not statistically significant.
+#Regression of Goal 11 vs Total Deaths: The coefficient for 'total_deaths' is -0.000097 with a standard error of 0.00016. This indicates a weak negative relationship between 'total_deaths' and 'Goal 11.' Nevertheless, the p-value (0.549) is larger than 0.05, indicating that the relationship between 'total_deaths' and 'Goal 11' is not statistically significant.
+
+#Model 12: 
+#Regression of Goal 7 vs total affected:The coefficient for 'total_affected' is 5.28e-08 with a standard error of 2.85e-08. This indicates a small positive relationship between 'total_affected' and 'Goal 12.' However, the p-value (0.069) is larger than 0.05, suggesting that the relationship between 'total_affected' and 'Goal 12' is not statistically significant.
+#Regression of Goal 12 vs Total Deaths: The coefficient for 'total_deaths' is -0.000037 with a standard error of 0.000122. This indicates a very weak negative relationship between 'total_deaths' and 'Goal 12.' Moreover, the p-value (0.761) is larger than 0.05, indicating that the relationship between 'total_deaths' and 'Goal 12' is not statistically significant.
+
+#Model 13:
+#Regression of Goal 7 vs total affected: The coefficient for 'total_affected' is 1.32e-07 with a standard error of 3.57e-08. This indicates a moderate positive relationship between 'total_affected' and 'Goal 13.' Additionally, the p-value (0.0005) is less than 0.05, suggesting a statistically significant relationship between 'total_affected' and 'Goal 13.'
+#Regression of Goal 13 vs Total Deaths:The coefficient for 'total_deaths' is -0.000092 with a standard error of 0.000051. This indicates a moderate negative relationship between 'total_deaths' and 'Goal 13.' Furthermore, the p-value (0.078) is larger than 0.05, indicating that the relationship between 'total_deaths' and 'Goal 13' is not statistically significant.
+
+#Model 14:
+#Regression of Goal 7 vs total affected:The coefficient for 'total_affected' is 1.28e-07 with a standard error of 4.12e-08. This indicates a moderate positive relationship between 'total_affected' and 'Goal 14.' However, the p-value (0.002) is less than 0.05, suggesting a statistically significant relationship between 'total_affected' and 'Goal 14.'
+#Regression of Goal 14 vs Total Deaths:The coefficient for 'total_deaths' is -0.000042 with a standard error of 0.000048. This indicates a very weak negative relationship between 'total_deaths' and 'Goal 14.' Moreover, the p-value (0.388) is larger than 0.05, indicating that the relationship between 'total_deaths' and 'Goal 14' is not statistically significant.
+
+#Model 15:
+#Regression of Goal 7 vs total affected: The coefficient for 'total_affected' is 1.25e-07 with a standard error of 4.27e-08. This indicates a moderate positive relationship between 'total_affected' and 'Goal 15.' However, the p-value (0.003) is less than 0.05, suggesting a statistically significant relationship between 'total_affected' and 'Goal 15.'
+#Regression of Goal 15 vs Total Deaths: The coefficient for 'total_deaths' is -0.000073 with a standard error of 0.000057. This indicates a weak negative relationship between 'total_deaths' and 'Goal 15.' Additionally, the p-value (0.205) is larger than 0.05, indicating that the relationship between 'total_deaths' and 'Goal 15' is not statistically significant.
+
+#Model 16:
+#Regression of Goal 7 vs total affected: The coefficient for 'total_affected' is 1.85e-07 with a standard error of 1.24e-07. This indicates a moderate positive relationship between 'total_affected' and 'Goal 16.' However, the p-value (0.140) is larger than 0.05, suggesting that the relationship between 'total_affected' and 'Goal 16' is not statistically significant.
+#Regression of Goal 16 vs Total Deaths: The coefficient for 'total_deaths' is -0.000093 with a standard error of 0.000131. This indicates a weak negative relationship between 'total_deaths' and 'Goal 16.' Furthermore, the p-value (0.475) is larger than 0.05, indicating that the relationship between 'total_deaths' and 'Goal 16' is not statistically significant.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -182,7 +182,8 @@ names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
 ui <- fluidPage(
   titlePanel("Interactive Correlation Heatmap between the climate disasters and the SDG goals in South and East Asia with 1 year gap"),
   plotlyOutput("heatmap"),
-  sliderInput("year", "Select Year", min = 2000, max = 2021, value = 2012, step = 1)
+  sliderInput("year", "Select Year", min = 2000, max = 2021, value = 2012, step = 1),
+  verbatimTextOutput("correlation_output") 
 )
 
 server <- function(input, output) {
@@ -231,7 +232,7 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 ```
 
-here you can see an interactive map of the correlation between COVID-19 and the SDG goals with 1 year gap. And strangely, instead of having a negative correlation, we expected that the more cases and deaths happened because of CPVOD-19, the scores of the SDG would be negatively affected,but with the gap year we can see that the scores of the Goal3, Goal6, Goal9 and Goal16 are quite positively impacted by the COVID-19.
+here you can see an interactive map of the correlation between COVID-19 and the SDG goals with 1 year gap. And strangely, instead of having a negative correlation, we expected that the more cases and deaths happened because of COVID-19, the scores of the SDG would be negatively affected,but with the gap year we can see that the scores of the Goal3, Goal6, Goal9 and Goal16 are quite positively impacted by the COVID-19.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
@@ -381,11 +382,11 @@ library(dplyr)
 library(ggplot2)
 library(scales)
 
-south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
+disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
 
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "total_deaths")
 
-subset_data <- south_east_asia_data[, relevant_columns]
+subset_data <- disaster_data[, relevant_columns]
 
 goal_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16")
 
@@ -447,6 +448,15 @@ server <- function(input, output) {
 }
 shinyApp(ui, server)
 ```
+Most relationships between the goals and the variables ('total_affected' and 'total_deaths') are not statistically significant (indicated by p-values > 0.05).
+More specifically, in several models, the coefficients for 'total_affected' and 'total_deaths' are small, indicating weak or negligible relationships with the respective goals.
+Some models have marginally significant p-values (close to 0.05) but still lack statistical significance.
+Goals 7, 8, 10, 13, 14, and 15 exhibit statistically significant relationships with 'total_affected,' indicating small to moderate positive relationships.
+Goals 7 and 8 also show statistically significant relationships with 'total_deaths,' indicating moderate negative relationships.
+
+These findings suggest that, in most cases, the relationships between the specified goals and COVID-19 variables (total affected and total deaths) are not statistically significant. However, some goals do indicate small to moderate associations with these variables.
+
+
 Let's see the regressions for each score depending of each variable in the COVID-19 dataset (stringency, cases_per_million and deaths_per_million).
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
