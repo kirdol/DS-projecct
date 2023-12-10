@@ -6,7 +6,7 @@ source(here::here("scripts","Clean","setup.R"))
 
 ## Sources
 
-We are collecting our Data from the sustainability development report (SDG), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn't find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next section. Utilizing the kableExtra package, we provide a comprehensive list and corresponding links to our sources, as outlined below:
+We are collecting our Data from the sustainability development report (SDG), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn't find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next section. Utilizing the `kableExtra` package, we provide a comprehensive list and corresponding links to our sources, as outlined below:
 
 ```{r}
 source_info <- data.frame(
@@ -46,6 +46,10 @@ During the wrangling process, we added data to our table (D1_1_SDG) from differe
 
 #### Sustainable Development Goals database (*DGD1_1_SDG*) {.unnumbered}
 
+The Sustainable Development Goals (SDGs) are a universal set of 17 interlinked goals that were adopted by the United Nations in 2015 as part of the 2030 Agenda for Sustainable Development. These goals provide a shared blueprint for peace and prosperity for people and the planet, now and into the future.
+
+![Source: <a href="https://www.un.org/sustainabledevelopment/news/communications-material/">UN Communication materials</a>](E_SDG_poster_UN_emblem_WEB%202020.png)
+
 Our primary database focuses on the Sustainable Development Goals (SDG). Below is a table summarizing the key variables included:
 
 ```{r}
@@ -72,11 +76,9 @@ D1_1_SDG_table_info %>%
   column_spec(1, width = "35%")
 ```
 
-The Sustainable Development Goals (SDGs) are a universal set of 17 interlinked goals that were adopted by the United Nations in 2015 as part of the 2030 Agenda for Sustainable Development. These goals provide a shared blueprint for peace and prosperity for people and the planet, now and into the future.
-
-![Source: <a href="https://www.un.org/sustainabledevelopment/news/communications-material/">UN Communication materials</a>](E_SDG_poster_UN_emblem_WEB%202020.png)
-
 #### Unemployment rate database (*D2_2_Unemployment_rate*) {.unnumbered}
+
+This database give us comprehensive data on the unemployment rates for each country from 2000 to 2022. Originally, it included categories based on various age groups. However, for simplicity and coherence, the database has been streamlined to focus exclusively on the unemployment rates of individuals aged 15 years and older.
 
 ```{r}
 D2_2_Unemployment_rate_table_info <- data.frame(
@@ -100,6 +102,8 @@ D2_2_Unemployment_rate_table_info %>%
 
 #### GDP per capita database (*D3_0_GDP_per_capita*) {.unnumbered}
 
+This database offers detailed information on the GDP per capita in dollars for various countries, covering the period from 2000 to 2022. It is designed to provide insights into the economic performance of each country over these years, measured through the lens of per capita GDP.
+
 ```{r}
 D3_0_GDP_per_capita_table_info <- data.frame(
   Column1 = c("code",
@@ -121,6 +125,8 @@ D3_0_GDP_per_capita_table_info %>%
 ```
 
 #### Proportion of the GDP dedicated to Military expenditures database (*D3_1_Military_expenditure_percent_GDP*) {.unnumbered}
+
+This database provides an insightful view of the proportion of their respective GDPs that countries have allocated to military expenditures. It covers the period from 2000 to 2022.
 
 ```{r}
 D3_1_Military_expenditure_percent_GDP_table_info <- data.frame(
@@ -144,6 +150,8 @@ D3_1_Military_expenditure_percent_GDP_table_info %>%
 
 #### Internet usage database (*D4_0_Internet_usage*) {.unnumbered}
 
+This database provides information on the percentage of the population that uses the internet in each country. It covers the period from 2000 to 2022.
+
 ```{r}
 D4_0_Internet_usage_table_info <- data.frame(
   Column1 = c("code",
@@ -165,6 +173,8 @@ D4_0_Internet_usage_table_info %>%
 ```
 
 #### Human freedom index database (*D5_0_Human_freedom_index*) {.unnumbered}
+
+This database provides information on the Human Freedom Index (HFI) for each country. The HFI is a composite index that measures the degree to which people are free to enjoy important rights and freedoms. It covers the period from 2000 to 2022.
 
 ```{r}
 D5_0_Human_freedom_index_table_info <- data.frame(
@@ -212,6 +222,8 @@ D5_0_Human_freedom_index_table_info %>%
 
 #### Disaster list database (*D6_0_Disaters*) {.unnumbered}
 
+This database provides information on the number of deaths, injured, affected and homeless people, as well as the total number of affected people and the total of infrastructure damages caused by disasters in each country. It covers the period from 2000 to 2021.
+
 ```{r}
 D6_0_Disaters_table_info <- data.frame(
   Column1 = c("code",
@@ -226,7 +238,7 @@ D6_0_Disaters_table_info <- data.frame(
               "total_damages"),
   Column2 = c("Country code (ISO)", 
               "Country name",
-              "Year of the observation (2000-2022)",
+              "Year of the observation (2000-2021)",
               "Continents touched by the disasters such as floods, ouragan",
               "Number of deaths caused by disasters",
               "Number of injured caused by disasters",
@@ -246,6 +258,8 @@ D6_0_Disaters_table_info %>%
 
 #### COVID database (*D7_0_COVID*) {.unnumbered}
 
+This database provides information on the number of people dead due to COVID, the number of COVID cases and the Government Response Stringency Index in each country. It covers the period from 2020 to 2022.
+
 ```{r}
 D7_0_COVID_table_info <- data.frame(
   Column1 = c("code",
@@ -256,7 +270,7 @@ D7_0_COVID_table_info <- data.frame(
               "stringency"),
   Column2 = c("Country code (ISO)", 
               "Country name",
-              "Year of the observation (2000-2022)",
+              "Year of the observation (2020-2022)",
               "Number of people dead due to COVID",
               "Number of COVID cases",
               "Government Response Stringency Index: composite measure based on 9 response indicators including school closures, workplace closures, and trave"))
@@ -271,6 +285,8 @@ D7_0_COVID_table_info %>%
 ```
 
 #### Conflicts database (*D8_0_Conflicts*) {.unnumbered}
+
+This database provides information on the number of deaths, the number of people affected and the maximum intensity of conflicts in each country. It covers the period from 2000 to 2022.
 
 ```{r}
 D8_0_Conflicts_table_info <- data.frame(
@@ -290,6 +306,7 @@ D8_0_Conflicts_table_info <- data.frame(
               "Share of population affected by violence in percentage (0 to 100) measured as described above based on population data from CIESIN, the PRIO-GRID structure as well as UCDP GED.",
               "Area affected by conflict",
               "Two different intensity levels are coded: minor armed conflicts (1) and wars (2), Takes the max intensity of conflict in the country so that it is coded 2 if there is at least one war (>=1000 deaths in intrastate conflict) during the year. Data from UCDP/PRIO Armed Conflict Dataset 17.1."))
+
 
 colnames(D8_0_Conflicts_table_info) <- c("Variable Name",
                                    "Explanation")
@@ -793,7 +810,6 @@ setdiff(list_country, list_country_free)
 
 # Turkey was missing but present in the initial database (it was a problem when stadardizing the country names of D1_0SDG_country_list that we corrected) and the other missing countries are:"AFG" "CUB" "MDV" "STP" "SSD" "TKM" "UZB" 
 D5_0_Human_freedom_index <- datatibble
-
 ```
 
 Then, we noticed that there were a lot of columns that were not important for us, as we had 141 variables taken into account. So we have decided to keep the ones that refers to the countries informations (such as code, year, ..) and their human freedom scores per category (pf for personnal freedom, ef for economical freedom).
@@ -1218,12 +1234,12 @@ data_question24 <- all_Merge %>%
 
 ```
 
-**For question 3**, we create 3 distinct databases according to the different type of event that we wwill analyse: disasters, COVID19 and conflicts. For the disasters, we only keep the years until 2021, because after this date, we don't have data. For the conflicts, we only keep the years until 2016, because after this date, we don't have data.
+**For question 3**, we create 3 distinct databases according to the different type of event that we will analyse: disasters, COVID19 and conflicts. For the disasters, we only keep the years until 2021, because after this date, we don't have data, moreover we decided to delete the country Bahrain, Brunei and Malta as we do not have any data concerning them. For the conflicts, we only keep the years until 2016, because after this date, we don't have data. Concerning the conflict dataset, we decided to erase Belarus because once again we do not have any data concerning this country.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 # Disasters
 data_question3_1 <- all_Merge %>%
-  filter(year<=2021) %>%
+  filter(year<=2021 & code!="BHR" & code!="BRN" & code!="MLT") %>%
   select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, total_deaths, no_injured, no_affected, no_homeless, total_affected, total_damages))
 
 # COVID
@@ -1232,7 +1248,7 @@ data_question3_2 <- all_Merge %>%
 
 # Conflicts 
 data_question3_3 <- all_Merge %>%
-  filter(year<=2016) %>%
+  filter(year<=2016 & code !="BLR") %>%
   select(c(code, year, country, continent, region, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal7, ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
 
 ```
@@ -1781,6 +1797,7 @@ ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Perce
 In this particular case, even if there are many missing values in our disaster dataset, we made the hypothesis that disaster events can not happen every year for every country given that these are uncontrollable and non-recurring events. Therefore the NAs that we encounter will become zeroes, implying that there have been no climatic disasters.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+
 data_question3_1[is.na(data_question3_1)] <- 0
 
 ```
@@ -1849,7 +1866,7 @@ see_missing3_3 <- data_question3_3 %>%
               mutate(num_missing = rowSums(across(everything()))) %>%
               filter(num_missing > 0))
 
-data_question3_3 <- data_question3_3 %>% filter(!code %in% c("MNE","SRB"))
+data_question3_3 <- data_question3_3 %>% filter(!code %in% c("MNE","SRB","SSD"))
 
 ##### EXPORT as CSV #####
 write.csv(data_question1, file = here("scripts","data","data_question1.csv"))
