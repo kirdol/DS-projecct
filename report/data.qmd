@@ -810,7 +810,6 @@ setdiff(list_country, list_country_free)
 
 # Turkey was missing but present in the initial database (it was a problem when stadardizing the country names of D1_0SDG_country_list that we corrected) and the other missing countries are:"AFG" "CUB" "MDV" "STP" "SSD" "TKM" "UZB" 
 D5_0_Human_freedom_index <- datatibble
-
 ```
 
 Then, we noticed that there were a lot of columns that were not important for us, as we had 141 variables taken into account. So we have decided to keep the ones that refers to the countries informations (such as code, year, ..) and their human freedom scores per category (pf for personnal freedom, ef for economical freedom).
