@@ -694,7 +694,7 @@ We notice various patterns, among them:
 
 -   Goal 9 (industry, innovation and infrastructure) has all of its 20 best improvements after 2015.
 
-Regarding the impact of the adoption of SDGs in 2015, we can not tell that it had a positive impact, because there are not more big improvements after 2015 than before, even a little bit less. In addition, the most impressive improvements mostly occurred before 2015. These conclusions are supported by the next graph: we fit two different regression lines (before and after 2015) to see if there is a jump after the adoption of the SDGs and if the the SDG scores increase faster.
+Regarding the impact of the adoption of SDGs in 2015, we can not tell that it had a positive impact, because there are not more big improvements after 2015 than before, even a little bit less. In addition, the most impressive improvements mostly occurred before 2015. These conclusions are supported by the next graph: we fit two different regression lines (before and after 2015) to see if there is a jump after the adoption of the SDGs and if the the SDG scores increase faster. We decided to cut the y-axis in order to have a better visual of the different scores. Since the regressions lines (taking into account all of the goals) go between 30% and 85% we only kept those values.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 # Graphs to show the jump (or not) in 2015
