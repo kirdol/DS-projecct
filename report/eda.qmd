@@ -30,8 +30,12 @@ long_df_hfi_distribution <- pivot_longer(Correlation_overall, cols = pf_law:ef_r
 
 ggplot(long_df_goal_distribution, aes(x = Value, y = Goal, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "Value", option = "C") +
-  labs(title = 'Distribution of Goals')
+  scale_fill_viridis_c(name = "", option = "C") +
+  theme(plot.title = element_text(hjust = 0.5), # Center the title
+        plot.title.position = "plot") + 
+  labs(x = 'Scores',
+       y = 'Goals',
+        title = 'SDG Goals Distribution')
 ```
 
 As we can see, most of our goals have a left-skewed distribution, which shows that for most of the country concerned implemented good strategies for targeting the goals objectives. Some distribution have a longer distribution than other, which could be a proof of inequality in the investments made for implementing solutions. In another hand, we notice that the only right-skewed distribution is concerning the observations of goal 9, which is promoting infrastructures, innovation and inclusive and sustainable industrialization. Again, that could show means inequalities. Wealthier countries are able to invest more on these sustainable development goals. 
@@ -40,8 +44,11 @@ As we can see, most of our goals have a left-skewed distribution, which shows th
 
 ggplot(long_df_hfi_distribution, aes(x = Value, y = Category, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "Value", option = "C") +
-  labs(title = 'Distribution of Human Freedom Index Scores')
+  scale_fill_viridis_c(name = "", option = "C") +
+  theme(plot.title = element_text(hjust = 0.5), # Center the title
+        plot.title.position = "plot") + 
+  labs(x = 'Scores',
+    title = 'Human Freedom Index Scores Distribution')
 ```
 
 The distribution of the Human Freedom Index Score follows the same trend. Most of the scores are left-skewed, which means that countries tend to have in general good scores. The only scores not folowing are pf_law and ef_legal, which tend to have lower scores in general. Legal system, for civilians and countries, is changing slowly because it has a lot of implications over the situation within a country/between countries and because of the divergence of opinions. Therefore, investing more money for raising these scores will take more time than raising the scores of other goals. 
@@ -54,27 +61,36 @@ These variables shows us even more the inequalities between the countries in our
 #now, same for the remaining variables. No need to reshape our data as only one variable.
 unempl_d <- ggplot(Correlation_overall, aes(x = unemployment.rate, y = 1, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "Unemployment Rate", option = "C") +
-  labs(title = 'Distribution of Unemployment Rate')
+  scale_fill_viridis_c(name = "", option = "C") +
+  theme(plot.title = element_text(hjust = 0.5, size = 10), # Center the title
+        plot.title.position = "plot") + 
+  labs(y = 'Density',
+  title = 'Distribution of Unemployment Rate')
 
 gdp_d <- ggplot(Correlation_overall, aes(x = GDPpercapita, y = 1, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "GDP per Capita", option = "C") +
-  labs(title = 'Distribution of GDP per Capita')
+  scale_fill_viridis_c(name = "", option = "C") +
+  theme(plot.title = element_text(hjust = 0.5, size = 10), # Center the title
+        plot.title.position = "plot") + 
+  labs(y = 'Density', title = 'Distribution of GDP per Capita')
 
 milit_d <- ggplot(Correlation_overall, aes(x = MilitaryExpenditurePercentGDP, y = 1, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "Military Expenditure (% of GDP)", option = "C") +
-  labs(title = 'Distribution of Military Expenditure (% of GDP)')
+  scale_fill_viridis_c(name = "", option = "C") +
+  theme(plot.title = element_text(hjust = 0.5, size = 10), # Center the title
+        plot.title.position = "plot") + 
+  labs(y = 'Density',title = 'Distribution of Military Expenditure (% of GDP)')
 
 internet_d <- ggplot(Correlation_overall, aes(x = internet_usage, y = 1, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "Internet Usage", option = "C") +
-  labs(title = 'Distribution of Internet Usage')
+  scale_fill_viridis_c(name = "", option = "C") +theme(plot.title = element_text(hjust = 0.5, size = 10),
+        plot.title.position = "plot") + 
+  labs(y = 'Density',title = 'Distribution of Internet Usage')
 
 grid.arrange(unempl_d,gdp_d,milit_d,internet_d, ncol = 2, nrow = 2)
 ```
 Now, let's display the distribution of the different SDG achievement scores per continent, using violin boxplots to have an overview of the mods, the range with most of the observations and the outliers.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 #### boxplots ####
 
@@ -143,8 +159,8 @@ data_Q1_Oceania_long <- data_Q1_Oceania_long %>%
 # merge all medians
 medians_all <- rbind(data_Q1_Oceania_long, data_Q1_Americas_long,data_Q1_Africa_long,data_Q1_Asia_long,data_Q1_Europe_long)
 
-medians_all$color <- ifelse(medians_all$median_value > 75, "lightblue",
-                        ifelse(medians_all$median_value < 25, "red", 'orange')) #assigning colors. If median for a goal is > 75 -> lightblue, if < 25 -> red, orange otherwise.
+medians_all$color <- ifelse(medians_all$median_value > 75, "lightgreen",
+                        ifelse(medians_all$median_value < 25, "red3", 'lightblue3')) #assigning colors. If median for a goal is > 75 -> lightblue, if < 25 -> red, orange otherwise.
 
 bandwidth_nrd <- bw.nrd(medians_all$value) #adapting the bandwidth
 
@@ -165,6 +181,7 @@ The goal 10 concerns the reduction of inequalities within/amongst countries. The
 In addition, some distributions are quite disparsed, such as goal 13 in Oceania and goal 10 in Africa. That could again show inequalities within countries or less investment made to raise the scores by different countriews of the same continent. 
 
 Now let's display boxplots for the different variables of the human freedom index.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 #for Human Freedom Index scores 
 
@@ -241,8 +258,8 @@ data_Q1_Oceania_HFI_long <- data_Q1_Oceania_HFI_long %>%
 # merge all medians 
 medians_all_HFI <- rbind(data_Q1_Oceania_HFI_long, data_Q1_Americas_HFI_long,data_Q1_Africa_HFI_long,data_Q1_Asia_HFI_long,data_Q1_Europe_HFI_long)
 
-medians_all_HFI$color <- ifelse(medians_all_HFI$median_value > 7.5, "lightblue", 
-                        ifelse(medians_all_HFI$median_value < 2.5, "red", 'orange'))
+medians_all_HFI$color <- ifelse(medians_all_HFI$median_value > 7.5, "lightgreen", 
+                        ifelse(medians_all_HFI$median_value < 2.5, "red3", 'lightblue3'))
 
 bandwidth_nrd_HFI <- bw.nrd(medians_all_HFI$value)
 
@@ -262,6 +279,7 @@ Here we can notice the same results as before concerning the SDG goals, except t
 For space reason because of the different scales, we have decided not to make violin boxplot per continent for the remaining variables. The distribution can be seen in the general distribution seen prior to that. 
 
 Now, let's have a closer look to the general correlation between our variables. Using our cleaned dataset, we will use a correlation heatmap to help us vizualising the informations. Given that most of our variables are not normally distributed, we will use the Spearman method to calculate the correlation.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### Correlations between variables Heatmap ####
 
@@ -331,7 +349,7 @@ lower.panel <- function(x, y, ...){
  # # Independent variables
  pairs(Correlation_overall[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of various variables")
  
- pairs(Correlation_overall[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly" ,"pf_expression" ,"pf_identity", "ef_government", "ef_legal", "ef_money", "ef_trade", "ef_regulation")], upper.panel=panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of HFI variables")
+ # pairs(Correlation_overall[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly" ,"pf_expression" ,"pf_identity", "ef_government", "ef_legal", "ef_money", "ef_trade", "ef_regulation")], upper.panel=panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of HFI variables")
 ```
 Meaning of the stars: *** : p_value < 0.001; ** : p_value < 0.01; *: p_value <0.05; no star if p_value is higher.
 
@@ -369,4 +387,360 @@ fviz_pca_biplot(myPCA_g,
   theme_minimal()
 ```
 
+<<<<<<< HEAD
 Concerning the SDG goals, we conclude that most of our variables are going along the 1st component, except the goals 10 and 15 that are rather uncorrelated with the dimension 1. In addition, as seen before, the goals 12 and 13 are negatively correlated to the other goals. With a eigenvalue bigger than 1 for the first two components, we conclude that there are only 2 dimensions to take into account, according to the Kaiser-Guttman's rule. Nevertheless, they are explaining less than 80% of cumulated variance.
+=======
+Concerning the SDG goals, we conclude that most of our variables are going along the 1st component, except the goals 10 and 15 that are rather uncorrelated with the dimension 1. In addition, as seen before, the goals 12 and 13 are negatively correlated to the other goals. With a eigenvalue bigger than 1 for the first two components, we conclude that there are only 2 dimensions to take into account, according to the Kaiser-Guttman's rule. Nevertheless, they are explaining less than 80% of cumulated variance.
+
+## Focus on the influence of events over the SDG scores
+
+In order to have an overview of the relationship between the different events variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+lower.panel <- function(x, y, ...){
+  points(x, y, pch = 20, col = "darkgreen", cex = 0.2)
+}
+# panel.cor_stars function with stars alongside correlation coefficients
+panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
+  usr <- par("usr"); on.exit(par(usr)) 
+  par(usr = c(0, 1, 0, 1)) 
+  r <- cor(x, y)
+  p_value <- cor.test (x,y)$p.value
+  
+  if (p_value < 0.001){
+    stars <- "***"
+  } else if (p_value < 0.01) {
+    stars <- "**"
+  } else if (p_value < 0.05) {
+    stars <- "*"
+  } else {
+    stars <- ""
+  }
+  txt <- paste0(format(c(r, 0.123456789), digits = digits)[1], " ", stars)
+  if(missing(cex.cor)) cex.cor <- 0.5/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor)
+}
+
+pairs(data_question3_1[, c("overallscore", "total_affected", "total_deaths")], upper.panel = panel.cor_stars,diag.panel = panel.hist,lower.panel = lower.panel, main = "Correlation table and distribution of Disaster variables")
+```
+Meaning of the stars: *** : p_value < 0.001; ** : p_value < 0.01; *: p_value <0.05; no star if p_value is higher.
+
+
+The different variables used to materialize the impact of climate disasters do not seem to have important influence on the overall score. Indeed, the overallscore and total_affected have a correlation coefficient that suggests a very weak negative linear relationship between this variables and which is not statistically significant (p ≥ 0.05), and the overallscore and total_deaths have a correlation that also indicates a weak negative linear relationship that is statistically significant at  p < 0.05. But we will further explore for the different SDGs, since we believe that such disasters have a specific influence on some SDGs.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+lower.panel <- function(x, y, ...){
+  points(x, y, pch = 20, col = "darkgreen", cex = 0.2)
+}
+
+# panel.cor_stars function with stars alongside correlation coefficients
+panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
+  usr <- par("usr"); on.exit(par(usr)) 
+  par(usr = c(0, 1, 0, 1)) 
+  r <- cor(x, y)
+  p_value <- cor.test (x,y)$p.value
+  
+  if (p_value < 0.001){
+    stars <- "***"
+  } else if (p_value < 0.01) {
+    stars <- "**"
+  } else if (p_value < 0.05) {
+    stars <- "*"
+  } else {
+    stars <- ""
+  }
+  txt <- paste0(format(c(r, 0.123456789), digits = digits)[1], " ", stars)
+  if(missing(cex.cor)) cex.cor <- 0.5/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor)
+}
+
+pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_million", "stringency")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel,main="Correlation table and distribution of COVID variables")
+```
+Meaning of the stars: *** : p_value < 0.001; ** : p_value < 0.01; *: p_value <0.05; no star if p_value is higher.
+
+
+The different variables used to materialize the impact of COVID19 do not seem to have important influence on the overall score, we can see that Overallscore and cases_per_million/deaths_per_million/stringency have a correlation coefficient indicating a weak positive linear relationship that is highly statistically significant at p < 0.001. But we will further explore for the different SDGs, since we believe that COVID19 had a specific influence on some SDGs, for instance "good health and well-being" or "decent work and economic growth".
+
+Concerning the correlation effect between the COVID19 variables, we could have no surprises, Cases_per_million and deaths_per_million have a moderate to strong positive correlation suggesting a stronger relationship where an increase in the number of COVID-19 cases per million is associated with a substantial increase in the number of deaths per million. This indicates a significant correlation between case prevalence and mortality rate. Cases_per_million and stringency have a moderate positive correlation indicates that higher levels of cases per million are associated with slightly higher severity of health measures. This could mean that in regions where cases are more numerous, stricter sanitary measures can be put in place to control the spread of the virus. Finally, Deaths_per_million and stringency have a strong positive correlation indicating a robust relationship where higher mortality rates are associated with higher severity of sanitary measures. This  suggest that in areas where deaths are higher, stricter sanitary measures are applied in an attempt to reduce the spread of the virus and mortality.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+lower.panel <- function(x, y, ...){
+  points(x, y, pch = 20, col = "darkgreen", cex = 0.5)
+}
+
+# panel.cor_stars function with stars alongside correlation coefficients
+panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
+  usr <- par("usr"); on.exit(par(usr)) 
+  par(usr = c(0, 1, 0, 1)) 
+  r <- cor(x, y)
+  p_value <- cor.test (x,y)$p.value
+  
+  if (p_value < 0.001){
+    stars <- "***"
+  } else if (p_value < 0.01) {
+    stars <- "**"
+  } else if (p_value < 0.05) {
+    stars <- "*"
+  } else {
+    stars <- ""
+  }
+  txt <- paste0(format(c(r, 0.123456789), digits = digits)[1], " ", stars)
+  if(missing(cex.cor)) cex.cor <- 0.5/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor)
+}
+
+pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of conflicts variables")
+```
+Meaning of the stars: *** : p_value < 0.001; ** : p_value < 0.01; *: p_value <0.05; no star if p_value is higher.
+
+
+Negative values (ranging from -0.17 to -0.28) with three stars (***) indicate a strong and statistically significant negative correlation between the overall index (Overallscore) and the various conflict-related variables (Ongoing, sum_deaths, pop_affected, area_affected, maxintensity). A strong negative correlation means that an increase in the Overallscore is associated with a decrease in the values of the other variables. But we have to take into account that correlation does not necessarily imply direct causation. Further analysis may be required to understand in depth the nature of the relationships between these variables.
+
+To explore our data on events such as disasters, covid-19 and conflicts we have to first see which countries are the most touched by these. To do so, we made time-series analysis on this three events each time depending on different variables.
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+# Converted 'year' column to date format
+Q3.1$year <- as.Date(as.character(Q3.1$year), format = "%Y")
+Q3.2$year <- as.Date(as.character(Q3.2$year), format = "%Y")
+Q3.3$year <- as.Date(as.character(Q3.3$year), format = "%Y")
+```
+
+These is our time-analysis concerning the COVID-19 cases per million by region between end 2018 and 2022.
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+covid_filtered <- Q3.2[Q3.2$year >= as.Date("2018-12-12"), ]
+
+ggplot(data = covid_filtered, aes(x = year, y = cases_per_million, group = region, color = region)) +
+  geom_smooth(method = "loess", se = FALSE, span = 0.8, size = 0.6) + 
+  labs(x = "Year", y = "Cases per Million") +
+  facet_wrap(~ region, ncol = 3, strip.position = "top") +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+        strip.text = element_text(size = 8),
+        plot.title = element_text(hjust = 0.5),
+        panel.spacing = unit(1, "lines"),
+        legend.position = "none"
+  ) +
+  ggtitle("Trend of COVID-19 Cases per Million Over Time")
+```
+
+These is our time-analysis concerning the COVID-19 deaths per million per region between end 2018 and 2022
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+
+ggplot(data = covid_filtered, aes(x = year, y = deaths_per_million, group = region, color = region)) +
+  geom_smooth(method = "loess", se = FALSE, span = 0.8, size = 0.6) + 
+  labs(x = "Year", y = "Deaths per Million") +
+  facet_wrap(~ region, nrow = 5, strip.position = "top") +
+  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+        strip.text = element_text(size = 8),
+        panel.spacing = unit(0.5, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none"
+  ) +
+  ggtitle("Trend of COVID-19 Deaths per Million Over Time")
+```
+
+These is our time-analysis concerning the COVID-19 stringency per region between end 2018 and 2022
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+ggplot(data = covid_filtered, aes(x = year, y = stringency, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.6) + 
+  labs(x = "Year", y = "Stringency") +
+  facet_wrap(~ region, nrow = 5) +
+  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+        strip.text = element_text(size = 8),
+        panel.spacing = unit(0.5, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none"
+  ) +
+  ggtitle("Trend of COVID-19 Stringency Over Time")
+```
+
+These is our time-analysis concerning climatic disasters with total affected per region
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+Q3.1[is.na(Q3.1)] <- 0
+ggplot(data = Q3.1, aes(x = year, y = total_affected, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
+  labs(x = "Year", y = "Total Affected") +
+  facet_wrap(~ region, nrow = 5) +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+        strip.text = element_text(size = 8),
+        panel.spacing = unit(0.5, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none"
+  ) +
+  ggtitle("Trend of Total Affected from Climatic Disasters Over Time")
+```
+
+These is our time-analysis concerning conflicts deaths per region between 2000 and 2016
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+conflicts_filtered <- Q3.3[Q3.3$year >= as.Date("2000-01-01") & Q3.3$year <= as.Date("2016-12-31"), ]
+
+ggplot(data = conflicts_filtered, aes(x = year, y = sum_deaths, group = region, color = region)) +
+  geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.6) +
+  labs(x = "Year", y = "Sum 0f Deaths") +
+  facet_wrap(~ region, nrow = 5) +
+  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+        strip.text = element_text(size = 8),
+        panel.spacing = unit(0.5, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none"
+  ) +
+  ggtitle("Trend of Deaths by Conflicts Over Time")
+```
+
+We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, then less America & the Caribbean and Eastern Europe
+
+These is our time-analysis concerning conflicts affected population per region between 2000 and 2016
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region, color = region)) +
+  geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.6) + 
+  labs(x = "Year", y = "Population affected") +
+  facet_wrap(~ region, nrow = 5) +
+  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+        strip.text = element_text(size = 8),
+        panel.spacing = unit(0.5, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none"
+  ) +
+  ggtitle("Trend of Population Affected by Conflicts Over Time")
+```
+
+We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, America & the Caribbean, Eastern Europe and sometimes Caucasus and Central Asia
+
+Now that we could visualize which regions are the most impacted by these three events we can do correlations analysis per region to see if this events have indeed an impact on the evolution of SDG goals.
+
+Here we want to analyse the correlation between the climate disasters and the SDG goals in South and East Asia.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+Q3.1[is.na(Q3.1)] <- 0
+
+selected_regions <- c("South Asia", "East Asia", "North America")
+disaster_selected <- Q3.1[Q3.3$region %in% selected_regions, ]
+
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "no_homeless")
+
+correlation_matrix_disaster <- cor(disaster_selected[, relevant_columns], use = "complete.obs")
+
+kable(correlation_matrix_disaster)
+
+cor_melted <- as.data.frame(as.table(correlation_matrix_disaster))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between the climate disasters and the SDG goals in South and East Asia')
+
+```
+
+We conclude that climate disasters do not really have a big impact on SDG goals.
+
+Here we want to analyse the correlation between the Covid-19 and the SDG goals only during Covid time.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+covid_filtered <- Q3.2[Q3.2$year >= as.Date("2019-01-01"), ]
+
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
+
+relevant_data <- covid_filtered[, relevant_columns]
+
+correlation_matrix_Covid <- cor(relevant_data, use = "complete.obs")
+
+kable(correlation_matrix_Covid)
+
+cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between COVID and the SDG goals')
+```
+
+Same conclusion, really weird.
+
+Here we want to analyse the correlation between conflicts deaths and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Eastern Europe regions.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+
+selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe")
+conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
+
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "sum_deaths", "maxintensity")
+
+correlation_matrix_Conflicts_Deaths <- cor(conflicts_selected[, relevant_columns], use = "complete.obs")
+
+kable(correlation_matrix_Conflicts_Deaths)
+
+cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between Conflicts deaths and the SDG goals')
+```
+
+Finally, we want to analyse the correlation between conflicts affected population and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean, Eastern Europe regions and Caucasus and Central Asia.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+
+# Filter data for specific regions (pop_affected)
+selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe","Caucasus and Central Asia")
+conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
+
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected")
+
+correlation_matrix_Conflicts_Pop_Affected <- cor(conflicts_selected[, relevant_columns], use = "complete.obs")
+
+kable(correlation_matrix_Conflicts_Pop_Affected)
+
+cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Affected))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
+        axis.text.y = element_text(size = 8)) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between Conflicts Affected Population and the SDG goals')
+```
+>>>>>>> 221795f980f97c6717e34d01ae241dea6b26e719
