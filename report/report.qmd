@@ -5,14 +5,18 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 format:
   html:
     toc: true
+    toc-depth: 3
+    toc-expand: 1
     embed-resources: true
     self-contained: true
     number-sections: true
     code-fold: true
     code-tools: true
-    theme: flatly3
+    theme: Flatly
+    code-block-bg: true
+    code-block-border-left: "#1ABC9C"
     link-external-icon: true
 ---
 
-```{r child = c('intro.qmd', 'data.qmd', 'eda.qmd', 'question1.qmd', 'question4.qmd', 'question3.qmd', 'question2.qmd', 'analysis.qmd', 'concl.qmd')}
+```{r child = c('intro.qmd', 'data.qmd', 'eda.qmd', 'question1.qmd', 'question4.qmd', 'question2.qmd', 'question3.qmd', 'analysis.qmd', 'concl.qmd')}
 ```

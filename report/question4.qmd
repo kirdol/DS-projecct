@@ -6,10 +6,10 @@ threashold_heatmap <- 0.5
 library(leaps)
 ```
 
-# Focus on relationship between SDGs
+## Focus on the relationships among the SDGs
 **How are the different SDGs linked? (We want to see if some SDGs are linked in the fact that a high score on one implies a high score on the other, and thus if we can make groups of SDGs that are comparable in that way).**
 
-## EDA: General visualization of the SDGs
+### EDA: General visualization of the SDGs
 
 We want now to explore and analyse how the SDGs scores are linked together. 
 We first, interest ourself to the correlation between the goals scores. To do that we chose to use a correlation heatmap. We set an arbitrary threashold to better concentrate our attention to the most corrolated goals. We fixed our threashold at `r threashold_heatmap` (indicating a strong positive relationship) and less than -`r threashold_heatmap` (signifying a strong negative relationship).
@@ -62,7 +62,7 @@ The correaltion can be read on the graph. The darker the color, the stronger the
 
 It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals appear to be less interrelated compared to others. Specifically, SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) demonstrate a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also exhibits a lesser degree of interconnection with the other SDGs. It is also interesting to note that some goals are negatively correlated with others. For instance, based on the Spearman correlation, goal 12 (Responsable Consumption and Production) and goal 13 (Climate Action) are negatively correlated with the others goals. This suggest that when the higher a goal other than goal 12 or 13 is, the lower the goals 12 and 13 are. Given their similar nature, it is not surprising that they are highly correlated with each other.
 
-## Analysis: Factor analysis and Stepwise regression of the SDGs
+### Analysis: Factor analysis and Stepwise regression applied to the SDGs
 
 At this point, we saw that the goals were mostly correlated. We now want to see if we can group them in a smaller number of factors. To do that, we will use a principal component analysis (PCA). We will first look at the scree plot to see how many factors we should keep. We will then look at the biplot to see how the goals are grouped together.
 
@@ -105,6 +105,8 @@ The biplot offers insightful visualization, clearly illustrating the relationshi
 
 Grouping Goal 12 (Responsible Consumption and Production) and Goal 13 (Climate Action) together is logical, as both pertain to environmental issues. It is, however, interesting to note the pairing of Goal 10 (Reduced Inequalities) with Goal 15 (Life on Land). This could be explained by the fact that Goal 10 (Reduced inequalities) is related to the reduction of inequalities within and among countries, while Goal 15 (Life on Land) is related to the protection, restoration and promotion of sustainable use of terrestrial ecosystems, sustainable manage forests, combat desertification, and halt and reverse land degradation and halt biodiversity loss. Therefore, it is possible that the respondents who are more concerned about the reduction of inequalities are also more concerned about the protection of the environment. But this is a stretched.
 
+/////////////////////////////////////////////////////////////////////////
+//////////////////////////////   WIP    /////////////////////////////////
 /////////////////////////////////////////////////////////////////////////
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}

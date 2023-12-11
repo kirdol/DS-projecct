@@ -1,4 +1,4 @@
-# Exploratory data analysis
+## Focus on the influence of events over the SDG scores
 
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 source(here::here("scripts","Clean","setup.R"))
@@ -15,8 +15,6 @@ data <- read.csv(here("scripts", "data", "all_Merge.csv"))
 Correlation_overall <- data_question1 %>% 
       dplyr::select(population:ef_regulation)
 ```
-
-## Focus on the influence of events over the SDG scores
 
 In order to have an overview of the relationship between the different events variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
 
@@ -333,7 +331,7 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
        title = 'Correlation between Conflicts Affected Population and the SDG goals')
 ```
 
-# Focus on the correlation between the SDG scores and the different events.
+## Focus on the correlation between the SDG scores and the different events.
 
 Starting from what we saw with our correlation maps, we concluded that they did not have any big impact on the SDG scores per region.
 
@@ -433,7 +431,7 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
 
 After looking at almost the same results, we asked ourselves if the fact that we do not see any correlations is because the consequences of this disasters arrive later on, so we decided to remake the same correlations with 1 year gap.
 
-# Correlations for each event with one year gap
+### Correlations for each event with one year gap
 
 Here you can see for example our correlation map between the climate disasters and the SDG goals in South and East Asia with one year gap.
 
@@ -476,7 +474,7 @@ ggplot(data = cor_melted_lagged, aes(Variable1, Variable2, fill = Correlation)) 
 
 Even with a year gap it doesn't seem that climate disaster with such consequences as the population that gets affected and dies has an impact on the SDG scores as we would have though. But we are still a little bit optimistic and though why not look at the correlations with a gap year over the years.
 
-# Interactive map of the correlation between the different events and the SDG goals with 1 year gap.
+### Interactive map of the correlation between the different events and the SDG goals with 1 year gap.
 
 Here you can see an interactive map of the correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019). results -\> nothing?
 
@@ -714,7 +712,7 @@ The results seems logic because if the SDG scores continue to go higher and the 
 
 Our last idea is to see the regressions between the SDG scores and the variables of each event that we thought interesting.
 
-# Regressions between the SDG scores and the events variables.
+### Regressions between the SDG scores and the events variables.
 
 Let's see the regressions for each score depending of each variable in the disasters dataset (total_affected and total_deaths)
 
