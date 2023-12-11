@@ -166,13 +166,15 @@ bandwidth_nrd <- bw.nrd(medians_all$value) #adapting the bandwidth
 
 ggplot(medians_all, aes(x = variable, y = value, fill = color)) +
   geom_violin(trim = FALSE, bw = bandwidth_nrd) +
-  #geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +
-  scale_fill_identity() +
-  labs(title = "SDG Goals by Region", x = "Goals", y = "Score") +
+  scale_fill_manual(values = c("lightgreen" = "lightgreen", "red3" = "red3", "lightblue3" = "lightblue3"),
+                    labels = c("between", ">75", "<25")) + 
+  labs(title = "SDG Goals Distribution by Continent", x = "Goals", y = "Scores", fill = "Score Category") +
   facet_grid(continent ~ ., scales = "free_y") +
   scale_y_continuous(labels = scales::label_number()) +
   theme_classic() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  theme(plot.title = element_text(hjust = 0.5), # Center the title
+        plot.title.position = "plot", axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+    
 ```
 Here is the distribution of the goals per continent. We notice that Europe the continent with most of its goals having a median superior to 75 (represented by the lightblue color. We notice that only two goals have a median score lower than 25, which is for goal 9 for Africa and goal 10 for America. As seen before, goal 9 is generally having lower scores than the other goals. That could mean that the access to technology and sustainable/resilient infrastructures/industrialization is harder in Africa, because of various reasons such as less wealthy countries, corruption,... 
 
@@ -266,13 +268,14 @@ bandwidth_nrd_HFI <- bw.nrd(medians_all_HFI$value)
 # Create the plot
 ggplot(medians_all_HFI, aes(x = variable, y = value, fill = color)) +
   geom_violin(trim = FALSE, bw = bandwidth_nrd_HFI) +
-  #geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +
-  scale_fill_identity() +
-  labs(title = "Human Freedom Index Scores by Region", x = "Variables", y = "Score") +
+  scale_fill_manual(values = c("lightgreen" = "lightgreen", "red3" = "red3", "lightblue3" = "lightblue3"),
+                    labels = c("between", ">7.5", "<2.5")) + 
+  labs(title = "Human Freedom Index Scores Distribution by Continent", x = "Variables", y = "Scores", fill = "Score Category") +
   facet_grid(continent ~ ., scales = "free_y") +
   scale_y_continuous(labels = scales::label_number()) +
   theme_classic() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  theme(plot.title = element_text(hjust = 0.5), # Center the title
+        plot.title.position = "plot", axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 Here we can notice the same results as before concerning the SDG goals, except that no score has a median below 25%. Again, Europe is the continent with most of its median scores superior to 75 (lightblue color)
 
@@ -299,7 +302,8 @@ ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
                        name="Spearman\nCorrelation") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
-        axis.text.y = element_text(size = 8)) +
+        axis.text.y = element_text(size = 8),
+        plot.title = element_text(hjust = 0.5)) +
   coord_fixed() +
   labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
 ```
