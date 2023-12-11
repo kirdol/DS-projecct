@@ -3,6 +3,10 @@
 source(here::here("scripts/Clean/setup.R"))
 ```
 
-* Take home message
-* Limitations
-* Future work?
+## Take home message
+
+* R.I.P Shiny
+
+## Limitations
+
+## Future work?
