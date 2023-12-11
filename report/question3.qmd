@@ -467,7 +467,8 @@ ggplot(data = cor_melted_lagged, aes(Variable1, Variable2, fill = Correlation)) 
   ) +
   coord_fixed() +
   labs(x = '', y = '',
-       title = 'Correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap')
+       title = 'Correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap')+
+    theme(plot.title = element_text(size = 8, vjust =12))
 ```
 
 Even with a year gap it doesn't seem that climate disaster with such consequences as the population that gets affected and dies has an impact on the SDG scores as we would have though. But we are still a little bit optimistic and though why not look at the correlations with a gap year over the years.
