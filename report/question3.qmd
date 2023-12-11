@@ -545,6 +545,13 @@ server <- function(input, output) {
 
 shinyApp(ui, server)
 ```
+For all objectives (from objective 1 to objective 16), the predictor variables (stringency, number of cases per million and number of deaths per million) show statistically significant relationships. However, when assessed individually, these predictors explain only a marginal fraction of the variance of the respective objectives, with explanatory percentages ranging from around 0.141% to 6.99%.
+Adjusted R-squared values consistently indicate limited explanatory power for these relationships, implying the influence of other factors not accounted for in the variations observed for each objective. 
+Relying solely on rigor, cases per million and deaths per million results in modest predictive capabilities for each objective.
+
+In summary, the statistical significance of stringency, cases per million and deaths per million in relation to each objective is clear. However, these predictive variables individually fail to explain the variations observed, highlighting the need to explore additional variables or unexplored factors in order to significantly improve predictive ability for each respective objective.
+
+
 Now, let's see the regressions for each SDG score depending of each variable in the Conflicts dataset (pop_affected and sum_deaths).
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}

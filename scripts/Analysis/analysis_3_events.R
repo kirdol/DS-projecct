@@ -747,8 +747,34 @@ shinyApp(ui, server)
 
 
 
+#disaster
+# List of goals to analyze
+disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", " North America"), ]
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "total_deaths")
+subset_data <- disaster_data[, relevant_columns]
+selected_goals <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16")  # Add more goals as needed
 
-
+# Loop through each selected goal
+for (goal in selected_goals) {
+  # Formula for regression against total_affected and no_homeless
+  formula_affected <- as.formula(paste(goal, "~ total_affected"))
+  formula_deaths <- as.formula(paste(goal, "~ total_deaths"))
+  
+  # Perform linear regression for total_affected and no_homeless
+  lm_total_affected <- lm(formula_affected, data = subset_data)
+  lm_deaths <- lm(formula_deaths, data = subset_data)
+  
+  # Create summary output for the regression results
+  summary_total_affected <- summary(lm_total_affected)
+  summary_deaths <- summary(lm_deaths)
+  
+  # Print or save the regression summaries
+  cat("\nRegression Summary for", goal, "vs Total Affected:\n")
+  print(summary_total_affected)
+  
+  cat("\nRegression Summary for", goal, "vs No Deaths:\n")
+  print(summary_deaths)
+}
 #Model 1 :
 #Regression of Goal 1 vs total affected: The coefficient for 'total_affected' is -3.41e-08 with a standard error of 4.19e-08. This indicates a very small negative relationship between 'total_affected' and 'Goal 1.' However, the p-value (0.42) is larger than the typical significance level of 0.05, suggesting that the relationship between 'total_affected' and 'Goal 1' is not statistically significant.
 #Regression of Goal 1 vs Total Deaths: The coefficient for 'total_deaths' is -0.000117 with a standard error of 0.000165. This indicates a negative relationship between 'total_deaths' and 'Goal 1,' but the p-value (0.32) is larger than 0.05, suggesting that the relationship between 'total_deaths' and 'Goal 1' is not statistically significant.
@@ -812,10 +838,6 @@ shinyApp(ui, server)
 #Model 16:
 #Regression of Goal 7 vs total affected: The coefficient for 'total_affected' is 1.85e-07 with a standard error of 1.24e-07. This indicates a moderate positive relationship between 'total_affected' and 'Goal 16.' However, the p-value (0.140) is larger than 0.05, suggesting that the relationship between 'total_affected' and 'Goal 16' is not statistically significant.
 #Regression of Goal 16 vs Total Deaths: The coefficient for 'total_deaths' is -0.000093 with a standard error of 0.000131. This indicates a weak negative relationship between 'total_deaths' and 'Goal 16.' Furthermore, the p-value (0.475) is larger than 0.05, indicating that the relationship between 'total_deaths' and 'Goal 16' is not statistically significant.
-
-
-
-
 
 
 
@@ -936,6 +958,214 @@ server <- function(input, output) {
 
 # Run the application
 shinyApp(ui, server)
+
+
+
+
+
+
+Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+covid_filtered <- Q3.2
+
+# Select relevant columns for correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8",
+                      "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16",
+                      "stringency", "cases_per_million", "deaths_per_million")
+
+subset_data <- covid_filtered[, relevant_columns]
+
+# Define the specific goal columns you want to include in regression
+selected_goals <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8",
+                    "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16")
+
+# Loop through each selected goal
+for (goal in selected_goals) {
+  # Formulas for regression against COVID-19 variables
+  formula_stringency <- as.formula(paste(goal, "~ stringency"))
+  formula_cases <- as.formula(paste(goal, "~ cases_per_million"))
+  formula_deaths <- as.formula(paste(goal, "~ deaths_per_million"))
+  
+  # Perform linear regression for stringency
+  lm_stringency <- lm(formula_stringency, data = subset_data)
+  lm_cases <- lm(formula_cases, data = subset_data)
+  lm_deaths <- lm(formula_deaths, data = subset_data)
+  
+  
+  summary_stringency <- summary(lm_stringency)
+  summary_cases <- summary(lm_cases)
+  summary_deaths <- summary(lm_deaths)
+  
+  # Print or save the regression summaries
+  cat("\nRegression Summary for", goal, "vs Stringency:\n")
+  print(summary_stringency)
+  
+  cat("\nRegression Summary for", goal, "vs Cases per Million:\n")
+  print(summary_cases)
+  
+  cat("\nRegression Summary for", goal, "vs Deaths per Million:\n")
+  print(summary_deaths)
+}
+### Regression Summary for 'Goal 1' vs Stringency: The regression analysis indicates a statistically significant positive relationship between 'Goal 1' and 'Stringency.' For every unit increase in 'Stringency,' 'Goal 1' tends to increase by 0.1088 units, on average. However, the relationship's explanatory power is limited, as only around 0.25% of the variation in 'Goal 1' can be explained by changes in 'Stringency.' This low adjusted R-squared value suggests that 'Stringency' alone might not be a strong predictor of 'Goal 1.' Other unaccounted-for factors likely contribute to variations in 'Goal 1.'
+### Regression Summary for 'Goal 1' vs Cases per Million:The regression analysis shows a statistically significant positive relationship between 'Goal 1' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 1' tends to increase by 1.25e-04 units, on average. The adjusted R-squared value of approximately 1.95% indicates that 'Cases per Million' explains a slightly larger proportion of the variance in 'Goal 1' compared to 'Stringency.' However, similar to 'Stringency,' 'Cases per Million' alone might not comprehensively predict 'Goal 1.'
+### Regression Summary for 'Goal 1' vs Deaths per Million:The regression analysis reveals a statistically significant positive relationship between 'Goal 1' and 'Deaths per Million.' For every unit increase in 'Deaths per Million,' 'Goal 1' tends to increase by 0.01863 units, on average. The adjusted R-squared value of approximately 2.12% suggests that 'Deaths per Million' explains a slightly higher proportion of the variance in 'Goal 1' compared to both 'Stringency' and 'Cases per Million.' Yet, similar to the other variables, 'Deaths per Million' alone might not fully account for variations in 'Goal 1.'
+### Overall Summary:Each of the predictors (Stringency, Cases per Million, Deaths per Million) exhibits statistically significant relationships with 'Goal 1.' However, individually, they explain only a small fraction of the variance in 'Goal 1.' Their limited explanatory power, as indicated by the low adjusted R-squared values (ranging from 0.25% to 2.12%), suggests that other unaccounted-for factors or a combination of variables not included in the analysis might play crucial roles in determining 'Goal 1.' Therefore, while these variables show significance, their individual impacts on 'Goal 1' are modest, and a more comprehensive model incorporating additional factors may better predict 'Goal 1.'
+
+
+### Regression Summary for 'Goal 2' vs Stringency: The regression analysis shows a statistically significant positive relationship between 'Goal 2' and 'Stringency.' For every unit increase in 'Stringency,' 'Goal 2' tends to increase by 0.0555 units, on average. The t-value (4.77) associated with the coefficient indicates its statistical significance. Additionally, the p-value (1.9e-06) is much smaller than the typical significance level of 0.05, providing strong evidence to reject the null hypothesis. This suggests that the relationship between 'Stringency' and 'Goal 2' is statistically significant. The adjusted R-squared value of approximately 0.00587 implies that only about 0.59% of the variance in 'Goal 2' can be explained by changes in 'Stringency.' Therefore, while statistically significant, 'Stringency' alone might not be a robust predictor of 'Goal 2.'
+### Regression Summary for 'Goal 2' vs Cases per Million: The regression analysis indicates a statistically significant positive relationship between 'Goal 2' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 2' tends to increase by 3.10e-05 units, on average. The t-value (6.38) and the associated p-value (2.0e-10) both suggest the statistical significance of this relationship, providing strong evidence to reject the null hypothesis. The adjusted R-squared value of approximately 0.0107 implies that about 1.07% of the variance in 'Goal 2' can be explained by changes in 'Cases per Million.' Similar to 'Stringency,' 'Cases per Million' alone might not comprehensively predict 'Goal 2.'
+### Regression Summary for 'Goal 2' vs Deaths per Million: The regression analysis reveals a statistically significant positive relationship between 'Goal 2' and 'Deaths per Million.' For every unit increase in 'Deaths per Million,' 'Goal 2' tends to increase by 5.50e-03 units, on average. Both the t-value (7.49) and the associated p-value (8.3e-14) indicate the statistical significance of this relationship. The adjusted R-squared value of approximately 0.0148 implies that about 1.48% of the variance in 'Goal 2' can be explained by changes in 'Deaths per Million.' Similar to the other predictors, 'Deaths per Million' alone might not fully explain variations in 'Goal 2.'
+### Overall Summary: Each predictor (Stringency, Cases per Million, Deaths per Million) shows statistically significant relationships with 'Goal 2.' However, individually, they explain only a small portion of the variance in 'Goal 2.' The adjusted R-squared values ranging from approximately 0.59% to 1.48% indicate that these variables alone might not be robust predictors of 'Goal 2.' Other unaccounted-for factors likely contribute to variations in 'Goal 2.' A more comprehensive model incorporating additional variables could better predict 'Goal 2.'
+
+
+### Regression Summary for 'Goal 3' vs Stringency:The regression analysis reveals a statistically significant positive relationship between 'Goal 3' and 'Stringency.' For every unit increase in 'Stringency,' 'Goal 3' tends to increase by 0.1376 units, on average. The t-value (5.79) associated with the coefficient indicates its statistical significance. Additionally, the p-value (7.7e-09) is much smaller than the typical significance level of 0.05, providing strong evidence to reject the null hypothesis. This suggests that the relationship between 'Stringency' and 'Goal 3' is statistically significant.
+#The adjusted R-squared value of approximately 0.00876 implies that only about 0.88% of the variance in 'Goal 3' can be explained by changes in 'Stringency.' Therefore, while statistically significant, 'Stringency' alone might not be a robust predictor of 'Goal 3.'
+### Regression Summary for 'Goal 3' vs Cases per Million:The regression analysis indicates a statistically significant positive relationship between 'Goal 3' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 3' tends to increase by 1.07e-04 units, on average. The t-value (10.9) and the associated p-value (less than 2e-16) both suggest the statistical significance of this relationship, providing strong evidence to reject the null hypothesis.
+#The adjusted R-squared value of approximately 0.031 implies that about 3.1% of the variance in 'Goal 3' can be explained by changes in 'Cases per Million.' Similar to 'Stringency,' 'Cases per Million' alone might not comprehensively predict 'Goal 3.'
+### Regression Summary for 'Goal 3' vs Deaths per Million:The regression analysis shows a statistically significant positive relationship between 'Goal 3' and 'Deaths per Million.' For every unit increase in 'Deaths per Million,' 'Goal 3' tends to increase by 0.01522 units, on average. Both the t-value (10.2) and the associated p-value (less than 2e-16) indicate the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0272 implies that about 2.72% of the variance in 'Goal 3' can be explained by changes in 'Deaths per Million.' Similar to the other predictors, 'Deaths per Million' alone might not fully explain variations in 'Goal 3.'
+### Overall Summary:Each predictor (Stringency, Cases per Million, Deaths per Million) demonstrates statistically significant relationships with 'Goal 3.' However, individually, they explain only a small portion of the variance in 'Goal 3.' The adjusted R-squared values ranging from approximately 0.88% to 3.1% indicate that these variables alone might not be robust predictors of 'Goal 3.' Other unaccounted-for factors likely contribute to variations in 'Goal 3.' A more comprehensive model including additional variables could better predict 'Goal 3.'
+
+
+
+### Regression Summary for 'Goal 4' vs Stringency:The regression analysis indicates a statistically significant positive relationship between 'Goal 4' and 'Stringency.' For every unit increase in 'Stringency,' 'Goal 4' tends to increase by 0.1359 units, on average. The t-value (4.81) associated with the coefficient indicates its statistical significance. Additionally, the p-value (1.6e-06) is much smaller than the typical significance level of 0.05, providing strong evidence to reject the null hypothesis. This suggests that the relationship between 'Stringency' and 'Goal 4' is statistically significant.
+#The adjusted R-squared value of approximately 0.00597 implies that only about 0.60% of the variance in 'Goal 4' can be explained by changes in 'Stringency.' Therefore, while statistically significant, 'Stringency' alone might not be a robust predictor of 'Goal 4.'
+### Regression Summary for 'Goal 4' vs Cases per Million:The regression analysis indicates a statistically significant positive relationship between 'Goal 4' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 4' tends to increase by 9.89e-05 units, on average. The t-value (8.39) and the associated p-value (less than 2e-16) both suggest the statistical significance of this relationship, providing strong evidence to reject the null hypothesis.
+#The adjusted R-squared value of approximately 0.0185 implies that about 1.85% of the variance in 'Goal 4' can be explained by changes in 'Cases per Million.' Similar to 'Stringency,' 'Cases per Million' alone might not comprehensively predict 'Goal 4.'
+### Regression Summary for 'Goal 4' vs Deaths per Million:The regression analysis reveals a statistically significant positive relationship between 'Goal 4' and 'Deaths per Million.' For every unit increase in 'Deaths per Million,' 'Goal 4' tends to increase by 0.01502 units, on average. Both the t-value (8.43) and the associated p-value (less than 2e-16) indicate the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0187 implies that about 1.87% of the variance in 'Goal 4' can be explained by changes in 'Deaths per Million.' Similar to the other predictors, 'Deaths per Million' alone might not fully explain variations in 'Goal 4.'
+### Overall Summary:Each predictor (Stringency, Cases per Million, Deaths per Million) shows statistically significant relationships with 'Goal 4.' However, individually, they explain only a small portion of the variance in 'Goal 4.' The adjusted R-squared values ranging from approximately 0.60% to 1.87% indicate that these variables alone might not be robust predictors of 'Goal 4.' Other unaccounted-for factors likely contribute to variations in 'Goal 4.' A more comprehensive model including additional variables could better predict 'Goal 4.'
+
+
+
+### Regression Summary for 'Goal 5' vs Stringency:The regression analysis reveals a statistically significant positive relationship between 'Goal 5' and 'Stringency.' For every unit increase in 'Stringency,' 'Goal 5' tends to increase by 0.1602 units, on average. The t-value (8.8) associated with the coefficient indicates its statistical significance. Additionally, the p-value (less than 2e-16) is much smaller than the typical significance level of 0.05, providing strong evidence to reject the null hypothesis. This suggests that the relationship between 'Stringency' and 'Goal 5' is statistically significant.
+#The adjusted R-squared value of approximately 0.0204 implies that only about 2.04% of the variance in 'Goal 5' can be explained by changes in 'Stringency.' Therefore, while statistically significant, 'Stringency' alone might not be a robust predictor of 'Goal 5.'
+### Regression Summary for 'Goal 5' vs Cases per Million:The regression analysis indicates a statistically significant positive relationship between 'Goal 5' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 5' tends to increase by 8.19e-05 units, on average. The t-value (10.8) and the associated p-value (less than 2e-16) both suggest the statistical significance of this relationship, providing strong evidence to reject the null hypothesis.
+#The adjusted R-squared value of approximately 0.0304 implies that about 3.04% of the variance in 'Goal 5' can be explained by changes in 'Cases per Million.' Similar to 'Stringency,' 'Cases per Million' alone might not comprehensively predict 'Goal 5.'
+### Regression Summary for 'Goal 5' vs Deaths per Million:The regression analysis shows a statistically significant positive relationship between 'Goal 5' and 'Deaths per Million.' For every unit increase in 'Deaths per Million,' 'Goal 5' tends to increase by 0.01198 units, on average. Both the t-value (10.4) and the associated p-value (less than 2e-16) indicate the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0284 implies that about 2.84% of the variance in 'Goal 5' can be explained by changes in 'Deaths per Million.' Similar to the other predictors, 'Deaths per Million' alone might not fully explain variations in 'Goal 5.'
+### Overall Summary:Each predictor (Stringency, Cases per Million, Deaths per Million) demonstrates statistically significant relationships with 'Goal 5.' However, individually, they explain only a small portion of the variance in 'Goal 5.' The adjusted R-squared values ranging from approximately 2.04% to 3.04% indicate that these variables alone might not be robust predictors of 'Goal 5.' Other unaccounted-for factors likely contribute to variations in 'Goal 5.' A more comprehensive model including additional variables could better predict 'Goal 5.'
+
+
+
+### Regression Summary for 'Goal 6' vs Stringency:The regression analysis shows a statistically significant positive relationship between 'Goal 6' and 'Stringency.' For every unit increase in 'Stringency,' 'Goal 6' tends to increase by 0.0586 units, on average. The t-value (3.7) associated with the coefficient indicates its statistical significance. Additionally, the p-value (0.000221) is much smaller than the typical significance level of 0.05, providing strong evidence to reject the null hypothesis. This suggests that the relationship between 'Stringency' and 'Goal 6' is statistically significant.
+#The adjusted R-squared value of approximately 0.00343 implies that only about 0.343% of the variance in 'Goal 6' can be explained by changes in 'Stringency.' Therefore, while statistically significant, 'Stringency' alone might not be a robust predictor of 'Goal 6.'
+### Regression Summary for 'Goal 6' vs Cases per Million:The regression analysis indicates a statistically significant positive relationship between 'Goal 6' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 6' tends to increase by 6.08e-05 units, on average. The t-value (9.25) and the associated p-value (less than 2e-16) both suggest the statistical significance of this relationship, providing strong evidence to reject the null hypothesis.
+#The adjusted R-squared value of approximately 0.0225 implies that about 2.25% of the variance in 'Goal 6' can be explained by changes in 'Cases per Million.' Similar to 'Stringency,' 'Cases per Million' alone might not comprehensively predict 'Goal 6.'
+### Regression Summary for 'Goal 6' vs Deaths per Million:The regression analysis shows a statistically significant positive relationship between 'Goal 6' and 'Deaths per Million.' For every unit increase in 'Deaths per Million,' 'Goal 6' tends to increase by 9.99e-03 units, on average. Both the t-value (10.1) and the associated p-value (less than 2e-16) indicate the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0265 implies that about 2.65% of the variance in 'Goal 6' can be explained by changes in 'Deaths per Million.' Similar to the other predictors, 'Deaths per Million' alone might not fully explain variations in 'Goal 6.'
+### Overall Summary:Each predictor (Stringency, Cases per Million, Deaths per Million) demonstrates statistically significant relationships with 'Goal 6.' However, individually, they explain only a small portion of the variance in 'Goal 6.' The adjusted R-squared values ranging from approximately 0.343% to 2.65% indicate that these variables alone might not be robust predictors of 'Goal 6.' Other unaccounted-for factors likely contribute to variations in 'Goal 6.' A more comprehensive model including additional variables could better predict 'Goal 6.'
+
+
+
+### Regression Summary for 'Goal 7' vs Stringency:The regression analysis shows a statistically significant positive relationship between 'Goal 7' and 'Stringency.' For every unit increase in 'Stringency,' 'Goal 7' tends to increase by 0.1052 units, on average. The t-value (4.62) associated with the coefficient indicates its statistical significance. Additionally, the p-value (3.91e-06) is much smaller than the typical significance level of 0.05, providing strong evidence to reject the null hypothesis. This suggests that the relationship between 'Stringency' and 'Goal 7' is statistically significant.
+#The adjusted R-squared value of approximately 0.00551 implies that only about 0.551% of the variance in 'Goal 7' can be explained by changes in 'Stringency.' Therefore, while statistically significant, 'Stringency' alone might not be a robust predictor of 'Goal 7.'
+### Regression Summary for 'Goal 7' vs Cases per Million:The regression analysis indicates a statistically significant positive relationship between 'Goal 7' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 7' tends to increase by 8.39e-05 units, on average. The t-value (8.87) and the associated p-value (less than 2e-16) both suggest the statistical significance of this relationship, providing strong evidence to reject the null hypothesis.
+#The adjusted R-squared value of approximately 0.0207 implies that about 2.07% of the variance in 'Goal 7' can be explained by changes in 'Cases per Million.' Similar to 'Stringency,' 'Cases per Million' alone might not comprehensively predict 'Goal 7.'
+### Regression Summary for 'Goal 7' vs Deaths per Million:The regression analysis shows a statistically significant positive relationship between 'Goal 7' and 'Deaths per Million.' For every unit increase in 'Deaths per Million,' 'Goal 7' tends to increase by 0.01387 units, on average. Both the t-value (9.71) and the associated p-value (less than 2e-16) indicate the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0247 implies that about 2.47% of the variance in 'Goal 7' can be explained by changes in 'Deaths per Million.' Similar to the other predictors, 'Deaths per Million' alone might not fully explain variations in 'Goal 7.'
+### Overall Summary:Each predictor (Stringency, Cases per Million, Deaths per Million) demonstrates statistically significant relationships with 'Goal 7.' However, individually, they explain only a small portion of the variance in 'Goal 7.' The adjusted R-squared values ranging from approximately 0.551% to 2.47% indicate that these variables alone might not be robust predictors of 'Goal 7.' Other unaccounted-for factors likely contribute to variations in 'Goal 7.' A more comprehensive model including additional variables could better predict 'Goal 7.'
+
+
+### Regression Summary for 'Goal 8' vs Stringency:The regression analysis reveals a statistically significant positive relationship between 'Goal 8' and 'Stringency.' For every unit increase in 'Stringency,' 'Goal 8' tends to increase by 0.0336 units, on average. The associated t-value (3.23) and the small p-value (0.0013) both indicate the statistical significance of this relationship, providing evidence to reject the null hypothesis. 
+#However, the adjusted R-squared value of approximately 0.00256 implies that only about 0.256% of the variance in 'Goal 8' can be explained by changes in 'Stringency.' This suggests that while statistically significant, 'Stringency' alone might not be a robust predictor of 'Goal 8.'
+### Regression Summary for 'Goal 8' vs Cases per Million:The regression analysis demonstrates a statistically significant positive relationship between 'Goal 8' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 8' tends to increase by 4.15e-05 units, on average. Both the t-value (9.62) and the extremely small p-value (much less than 0.001) indicate the statistical significance of this relationship, providing strong evidence to reject the null hypothesis.
+#The adjusted R-squared value of approximately 0.0243 implies that about 2.43% of the variance in 'Goal 8' can be explained by changes in 'Cases per Million.' Similar to 'Stringency,' 'Cases per Million' alone might not comprehensively predict 'Goal 8.'
+### Regression Summary for 'Goal 8' vs Deaths per Million:The regression analysis indicates a statistically significant positive relationship between 'Goal 8' and 'Deaths per Million.' For every unit increase in 'Deaths per Million,' 'Goal 8' tends to increase by 5.43e-03 units, on average. Both the t-value (8.28) and the associated p-value (much less than 0.001) indicate the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0181 implies that about 1.81% of the variance in 'Goal 8' can be explained by changes in 'Deaths per Million.' Similar to the other predictors, 'Deaths per Million' alone might not fully explain variations in 'Goal 8.'
+### Overall Summary:Each predictor (Stringency, Cases per Million, Deaths per Million) demonstrates statistically significant relationships with 'Goal 8.' However, individually, they explain only a small portion of the variance in 'Goal 8.' The adjusted R-squared values ranging from approximately 0.256% to 2.43% indicate that these variables alone might not be robust predictors of 'Goal 8.' Other unaccounted-for factors likely contribute to variations in 'Goal 8.' A more comprehensive model including additional variables could better predict 'Goal 8.'
+
+
+
+### Regression Summary for 'Goal 9' vs Stringency: The regression analysis indicates a statistically significant positive relationship between 'Goal 9' and 'Stringency.' For every unit increase in 'Stringency,' 'Goal 9' tends to increase by 0.3291 units, on average. Both the t-value (12.2) and the extremely small p-value (much less than 0.001) indicate the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0388 implies that about 3.88% of the variance in 'Goal 9' can be explained by changes in 'Stringency.' Although statistically significant, 'Stringency' alone might not be a comprehensive predictor of 'Goal 9.'
+### Regression Summary for 'Goal 9' vs Cases per Million:The regression analysis reveals a statistically significant positive relationship between 'Goal 9' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 9' tends to increase by 1.85e-04 units, on average. Both the t-value (16.7) and the associated p-value (much less than 0.001) indicate the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0699 implies that about 6.99% of the variance in 'Goal 9' can be explained by changes in 'Cases per Million.' Similar to 'Stringency,' 'Cases per Million' might not be a comprehensive predictor of 'Goal 9.'
+### Regression Summary for 'Goal 9' vs Deaths per Million:The regression analysis indicates a statistically significant positive relationship between 'Goal 9' and 'Deaths per Million.' For every unit increase in 'Deaths per Million,' 'Goal 9' tends to increase by 0.0249 units, on average. Both the t-value (14.7) and the extremely small p-value (much less than 0.001) indicate the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0553 implies that about 5.53% of the variance in 'Goal 9' can be explained by changes in 'Deaths per Million.' However, similar to the other predictors, 'Deaths per Million' alone might not be a comprehensive predictor of 'Goal 9.'
+### Overall Summary:#Each predictor (Stringency, Cases per Million, Deaths per Million) demonstrates statistically significant relationships with 'Goal 9.' However, individually, they explain only a small portion of the variance in 'Goal 9.' The adjusted R-squared values ranging from approximately 3.88% to 6.99% indicate that these variables alone might not comprehensively predict 'Goal 9.' Other unaccounted-for factors likely contribute to variations in 'Goal 9.' A more comprehensive model including additional variables could better predict 'Goal 9.'
+
+
+
+### Regression Summary for 'Goal 10' vs Stringency:The regression analysis shows a statistically significant positive relationship between 'Goal 10' and 'Stringency.' For every unit increase in 'Stringency,' 'Goal 10' tends to increase by 0.0746 units, on average. The t-value (2.37) and associated p-value (0.018) indicate that this relationship is statistically significant at a moderate level.
+#The adjusted R-squared value of approximately 0.00141 implies that only about 0.141% of the variance in 'Goal 10' can be explained by changes in 'Stringency.' It suggests that 'Stringency' alone might not be a robust predictor of 'Goal 10.'
+### Regression Summary for 'Goal 10' vs Cases per Million:The regression analysis indicates a statistically significant positive relationship between 'Goal 10' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 10' tends to increase by 8.90e-05 units, on average. Both the t-value (6.78) and the extremely small p-value (1.4e-11) suggest the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0135 implies that about 1.35% of the variance in 'Goal 10' can be explained by changes in 'Cases per Million.' This suggests that while statistically significant, 'Cases per Million' might not be a comprehensive predictor of 'Goal 10.'
+### Regression Summary for 'Goal 10' vs Deaths per Million:The regression analysis reveals a statistically significant positive relationship between 'Goal 10' and 'Deaths per Million.' For every unit increase in 'Deaths per Million,' 'Goal 10' tends to increase by 0.00817 units, on average. The t-value (4.24) and the extremely small p-value (2.3e-05) indicate the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.00513 implies that about 0.513% of the variance in 'Goal 10' can be explained by changes in 'Deaths per Million.' However, similar to the other predictors, 'Deaths per Million' alone might not be a comprehensive predictor of 'Goal 10.'
+### Overall Summary:Each predictor (Stringency, Cases per Million, Deaths per Million) shows statistically significant relationships with 'Goal 10.' However, individually, they explain only a small portion of the variance in 'Goal 10.' The adjusted R-squared values ranging from approximately 0.141% to 1.35% indicate that these variables alone might not comprehensively predict 'Goal 10.' Other unaccounted-for factors likely contribute to variations in 'Goal 10.' A more comprehensive model including additional variables could better predict 'Goal 10.'
+
+
+### Regression Summary for 'Goal 11' vs Stringency:The regression analysis indicates a statistically significant positive relationship between 'Goal 11' and 'Stringency.' For every unit increase in 'Stringency,' 'Goal 11' tends to increase by 0.0592 units, on average. The t-value (3.05) and associated p-value (0.0023) indicate that this relationship is statistically significant at a moderate level.
+#The adjusted R-squared value of approximately 0.00225 suggests that only about 0.225% of the variance in 'Goal 11' can be explained by changes in 'Stringency.' It implies that 'Stringency' alone might not be a robust predictor of 'Goal 11.'
+### Regression Summary for 'Goal 11' vs Cases per Million:The regression analysis shows a statistically significant positive relationship between 'Goal 11' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 11' tends to increase by 7.13e-05 units, on average. Both the t-value (8.83) and the extremely small p-value (<2e-16) suggest the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0205 implies that about 2.05% of the variance in 'Goal 11' can be explained by changes in 'Cases per Million.' This suggests that while statistically significant, 'Cases per Million' might not be a comprehensive predictor of 'Goal 11.'
+### Regression Summary for 'Goal 11' vs Deaths per Million:The regression analysis reveals a statistically significant positive relationship between 'Goal 11' and 'Deaths per Million.' For every unit increase in 'Deaths per Million,' 'Goal 11' tends to increase by 0.01061 units, on average. The t-value (8.68) and the extremely small p-value (<2e-16) indicate the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0198 suggests that about 1.98% of the variance in 'Goal 11' can be explained by changes in 'Deaths per Million.' However, similar to the other predictors, 'Deaths per Million' alone might not be a comprehensive predictor of 'Goal 11.'
+### Overall Summary:Each predictor (Stringency, Cases per Million, Deaths per Million) shows statistically significant relationships with 'Goal 11.' However, individually, they explain only a small portion of the variance in 'Goal 11.' The adjusted R-squared values ranging from approximately 0.225% to 2.05% indicate that these variables alone might not comprehensively predict 'Goal 11.' Other unaccounted-for factors likely contribute to variations in 'Goal 11.' A more comprehensive model including additional variables could better predict 'Goal 11.'
+
+
+### Regression Summary for 'Goal 12' vs Stringency:The regression analysis indicates that there is no statistically significant relationship between 'Goal 12' and 'Stringency.' The coefficient for 'Stringency' is 0.00975, and the associated p-value (0.59) is much higher than the commonly accepted significance level of 0.05. This result suggests that there is insufficient evidence to conclude that 'Stringency' significantly predicts 'Goal 12.'
+#The adjusted R-squared value being close to zero (-0.000191) suggests that 'Stringency' does not explain any noticeable variance in 'Goal 12.' Therefore, 'Stringency' might not be a relevant predictor for 'Goal 12' based on this analysis.
+### Regression Summary for 'Goal 12' vs Cases per Million:The regression analysis indicates a statistically significant negative relationship between 'Goal 12' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 12' tends to decrease by 7.19e-05 units, on average. Both the t-value (-9.71) and the extremely small p-value (<2e-16) suggest the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0247 implies that about 2.47% of the variance in 'Goal 12' can be explained by changes in 'Cases per Million.' However, it's important to note that even though this relationship is statistically significant, 'Cases per Million' alone might not comprehensively predict 'Goal 12.'
+### Regression Summary for 'Goal 12' vs Deaths per Million:The regression analysis reveals a statistically significant negative relationship between 'Goal 12' and 'Deaths per Million.' For every unit increase in 'Deaths per Million,' 'Goal 12' tends to decrease by 0.00611 units, on average. The t-value (-5.4) and the very small p-value (<2e-16) indicate the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0076 suggests that about 0.76% of the variance in 'Goal 12' can be explained by changes in 'Deaths per Million.' Similar to the other predictors, 'Deaths per Million' alone might not be a comprehensive predictor of 'Goal 12.'
+### Overall Summary:Among the predictors ('Stringency,' 'Cases per Million,' 'Deaths per Million'), only 'Cases per Million' and 'Deaths per Million' show statistically significant relationships with 'Goal 12.' However, individually, they explain only a small portion of the variance in 'Goal 12.' Other unaccounted-for factors are likely contributing to variations in 'Goal 12.' A more comprehensive model including additional variables could better predict 'Goal 12.'
+
+
+### Regression Summary for 'Goal 13' vs Stringency:The regression analysis suggests that there is no statistically significant relationship between 'Goal 13' and 'Stringency.' The coefficient for 'Stringency' is 0.0110, and the associated p-value (0.63) is notably higher than the commonly accepted significance level of 0.05. This result suggests that there is insufficient evidence to conclude that 'Stringency' significantly predicts 'Goal 13.'
+#The adjusted R-squared value being close to zero (-0.00021) indicates that 'Stringency' does not explain any substantial variance in 'Goal 13.' Therefore, 'Stringency' might not be a relevant predictor for 'Goal 13' based on this analysis.
+### Regression Summary for 'Goal 13' vs Cases per Million:The regression analysis indicates a statistically significant negative relationship between 'Goal 13' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 13' tends to decrease by 6.47e-05 units, on average. Both the t-value (-6.74) and the extremely small p-value (<2e-16) suggest the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0119 implies that about 1.19% of the variance in 'Goal 13' can be explained by changes in 'Cases per Million.' However, it's important to note that even though this relationship is statistically significant, 'Cases per Million' alone might not comprehensively predict 'Goal 13.'
+### Regression Summary for 'Goal 13' vs Deaths per Million:The regression analysis suggests that there might be a marginal relationship between 'Goal 13' and 'Deaths per Million,' but it is not statistically significant at the conventional significance level of 0.05. The coefficient for 'Deaths per Million' is -0.00277, and the associated p-value (0.059) is slightly higher than 0.05.
+#The adjusted R-squared value of approximately 0.000701 implies that less than 1% of the variance in 'Goal 13' can be explained by changes in 'Deaths per Million.' This predictor alone might not sufficiently predict 'Goal 13' based on the observed data.
+### Overall Summary:Among the predictors ('Stringency,' 'Cases per Million,' 'Deaths per Million'), only 'Cases per Million' shows a statistically significant relationship with 'Goal 13.' However, it explains only a small portion of the variance in 'Goal 13.' Other unaccounted-for factors are likely contributing to variations in 'Goal 13.' A more comprehensive model including additional variables could better predict 'Goal 13.'
+
+
+
+### Regression Summary for 'Goal 15' vs Stringency: The regression analysis indicates that there's no statistically significant relationship between 'Goal 15' and 'Stringency.' The coefficient for 'Stringency' is 0.00953, and the associated p-value (0.5) is notably higher than the commonly accepted significance level of 0.05. This suggests that there isn't enough evidence to conclude that 'Stringency' significantly predicts 'Goal 15.'
+#The adjusted R-squared value being close to zero (-0.000151) indicates that 'Stringency' does not explain any substantial variance in 'Goal 15.' Therefore, 'Stringency' might not be a relevant predictor for 'Goal 15' based on this analysis.
+### Regression Summary for 'Goal 15' vs Cases per Million:The regression analysis shows a statistically significant but relatively weak positive relationship between 'Goal 15' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 15' tends to increase by 2.45e-05 units, on average. Both the t-value (4.1) and the small p-value (4.3e-05) suggest the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.00427 implies that about 0.427% of the variance in 'Goal 15' can be explained by changes in 'Cases per Million.' However, even though this relationship is statistically significant, 'Cases per Million' alone might not comprehensively predict 'Goal 15.'
+### Regression Summary for 'Goal 15' vs Deaths per Million:The regression analysis suggests a statistically significant positive relationship between 'Goal 15' and 'Deaths per Million.' For every unit increase in 'Deaths per Million,' 'Goal 15' tends to increase by 0.00574 units, on average. Both the t-value (6.37) and the very small p-value (2.1e-10) indicate the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0107 implies that about 1.07% of the variance in 'Goal 15' can be explained by changes in 'Deaths per Million.' However, it's important to note that while this relationship is statistically significant, 'Deaths per Million' alone might not sufficiently predict 'Goal 15.'
+### Overall Summary:Among the predictors ('Stringency,' 'Cases per Million,' 'Deaths per Million'), 'Cases per Million' and 'Deaths per Million' show statistically significant relationships with 'Goal 15.' However, both predictors individually explain only a small portion of the variance in 'Goal 15.' Other unaccounted-for factors are likely contributing to variations in 'Goal 15.' A more comprehensive model including additional variables could better predict 'Goal 15.'
+
+
+
+### Regression Summary for 'Goal 16' vs Stringency:The regression analysis indicates that there's no statistically significant relationship between 'Goal 16' and 'Stringency.' The coefficient for 'Stringency' is 0.00461, and the associated p-value (0.77) is notably higher than the commonly accepted significance level of 0.05. This suggests that there isn't enough evidence to conclude that 'Stringency' significantly predicts 'Goal 16.'
+#The adjusted R-squared value being close to zero (-0.000248) indicates that 'Stringency' does not explain any substantial variance in 'Goal 16.' Therefore, 'Stringency' might not be a relevant predictor for 'Goal 16' based on this analysis.
+### Regression Summary for 'Goal 16' vs Cases per Million:The regression analysis shows a statistically significant but relatively weak positive relationship between 'Goal 16' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 16' tends to increase by 6.19e-05 units, on average. Both the t-value (9.6) and the small p-value (<2e-16) suggest the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0242 implies that about 2.42% of the variance in 'Goal 16' can be explained by changes in 'Cases per Million.' However, even though this relationship is statistically significant, 'Cases per Million' alone might not comprehensively predict 'Goal 16.'
+### Regression Summary for 'Goal 16' vs Deaths per Million:The regression analysis suggests a statistically significant positive relationship between 'Goal 16' and 'Deaths per Million.' For every unit increase in 'Deaths per Million,' 'Goal 16' tends to increase by 6.37e-03 units, on average. Both the t-value (6.49) and the very small p-value (<2e-16) indicate the statistical significance of this relationship.
+#The adjusted R-squared value of approximately 0.0111 implies that about 1.11% of the variance in 'Goal 16' can be explained by changes in 'Deaths per Million.' However, while this relationship is statistically significant, 'Deaths per Million' alone might not sufficiently predict 'Goal 16.'
+### Overall Summary:Among the predictors ('Stringency,' 'Cases per Million,' 'Deaths per Million'), 'Cases per Million' and 'Deaths per Million' show statistically significant relationships with 'Goal 16.' However, both predictors individually explain only a small portion of the variance in 'Goal 16.' Other unaccounted-for factors are likely contributing to variations in 'Goal 16.' A more comprehensive model including additional variables could better predict 'Goal 16.'
+
+
+
+
+### General Overview:
+#- For each goal (Goal 1 to Goal 9), multiple predictors (Stringency, Cases per Million, Deaths per Million) exhibit statistically significant relationships.
+#- However, individually, these predictors explain only a small fraction of the variance in each goal, ranging from 0.25% to 6.99%.
+#- The adjusted R-squared values for these relationships indicate limited explanatory power, suggesting that other unaccounted-for factors significantly influence the variation in each goal.
+#- Each goal's prediction based solely on the given predictors (Stringency, Cases per Million, Deaths per Million) is modest.
+#- To enhance prediction accuracy for each goal, a more comprehensive model that incorporates additional variables or unexplored factors is recommended.
+
+#In summary, while Stringency, Cases per Million, and Deaths per Million show statistically significant relationships with each goal, their individual impacts are limited in explaining the variations observed. Therefore, incorporating further variables or exploring additional factors beyond the current predictors might significantly improve the predictive capability for each respective goal.
+
+
+
+#Certainly, here's an amalgamated overall summary:
+
+### Overall Summary:
+#- Across all goals (from Goal 1 to Goal 16), the predictors (Stringency, Cases per Million, and Deaths per Million) exhibit statistically significant relationships.
+#- However, when individually assessed, these predictors explain only a marginal fraction of the variance in the respective goals, with explanatory percentages ranging from approximately 0.141% to 6.99%.
+#- The adjusted R-squared values consistently indicate limited explanatory power for these relationships, implying the influence of other unaccounted-for factors in driving the variations observed in each goal.
+#- Solely relying on Stringency, Cases per Million, and Deaths per Million results in modest predictive capabilities for each goal.
+#- To significantly enhance predictive accuracy for each goal, it is recommended to develop more comprehensive models that encompass additional variables or explore unexplored factors beyond the current predictors.
+
+### In Summary: The statistical significance of Stringency, Cases per Million, and Deaths per Million in relation to each goal is evident. However, these predictors individually fall short in explaining the observed variations, emphasizing the necessity of exploring additional variables or unexplored factors to meaningfully enhance predictive capability for each respective goal.
+
 
 
 #___________________
