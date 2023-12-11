@@ -182,7 +182,8 @@ names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
 ui <- fluidPage(
   titlePanel("Interactive Correlation Heatmap between the climate disasters and the SDG goals in South and East Asia with 1 year gap"),
   plotlyOutput("heatmap"),
-  sliderInput("year", "Select Year", min = 2000, max = 2021, value = 2012, step = 1)
+  sliderInput("year", "Select Year", min = 2000, max = 2021, value = 2012, step = 1),
+  verbatimTextOutput("correlation_output") 
 )
 
 server <- function(input, output) {
@@ -231,7 +232,7 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 ```
 
-here you can see an interactive map of the correlation between COVID-19 and the SDG goals with 1 year gap. And strangely, instead of having a negative correlation, we expected that the more cases and deaths happened because of CPVOD-19, the scores of the SDG would be negatively affected,but with the gap year we can see that the scores of the Goal3, Goal6, Goal9 and Goal16 are quite positively impacted by the COVID-19.
+here you can see an interactive map of the correlation between COVID-19 and the SDG goals with 1 year gap. And strangely, instead of having a negative correlation, we expected that the more cases and deaths happened because of COVID-19, the scores of the SDG would be negatively affected,but with the gap year we can see that the scores of the Goal3, Goal6, Goal9 and Goal16 are quite positively impacted by the COVID-19.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
@@ -381,11 +382,11 @@ library(dplyr)
 library(ggplot2)
 library(scales)
 
-south_east_asia_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia"), ]
+disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
 
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "total_deaths")
 
-subset_data <- south_east_asia_data[, relevant_columns]
+subset_data <- disaster_data[, relevant_columns]
 
 goal_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16")
 
@@ -447,6 +448,15 @@ server <- function(input, output) {
 }
 shinyApp(ui, server)
 ```
+Most relationships between the goals and the variables ('total_affected' and 'total_deaths') are not statistically significant (indicated by p-values > 0.05).
+More specifically, in several models, the coefficients for 'total_affected' and 'total_deaths' are small, indicating weak or negligible relationships with the respective goals.
+Some models have marginally significant p-values (close to 0.05) but still lack statistical significance.
+Goals 7, 8, 10, 13, 14, and 15 exhibit statistically significant relationships with 'total_affected,' indicating small to moderate positive relationships.
+Goals 7 and 8 also show statistically significant relationships with 'total_deaths,' indicating moderate negative relationships.
+
+These findings suggest that, in most cases, the relationships between the specified goals and COVID-19 variables (total affected and total deaths) are not statistically significant. However, some goals do indicate small to moderate associations with these variables.
+
+
 Let's see the regressions for each score depending of each variable in the COVID-19 dataset (stringency, cases_per_million and deaths_per_million).
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
@@ -535,6 +545,13 @@ server <- function(input, output) {
 
 shinyApp(ui, server)
 ```
+For all objectives (from objective 1 to objective 16), the predictor variables (stringency, number of cases per million and number of deaths per million) show statistically significant relationships. However, when assessed individually, these predictors explain only a marginal fraction of the variance of the respective objectives, with explanatory percentages ranging from around 0.141% to 6.99%.
+Adjusted R-squared values consistently indicate limited explanatory power for these relationships, implying the influence of other factors not accounted for in the variations observed for each objective. 
+Relying solely on rigor, cases per million and deaths per million results in modest predictive capabilities for each objective.
+
+In summary, the statistical significance of stringency, cases per million and deaths per million in relation to each objective is clear. However, these predictive variables individually fail to explain the variations observed, highlighting the need to explore additional variables or unexplored factors in order to significantly improve predictive ability for each respective objective.
+
+
 Now, let's see the regressions for each SDG score depending of each variable in the Conflicts dataset (pop_affected and sum_deaths).
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
@@ -622,7 +639,8 @@ server <- function(input, output) {
 shinyApp(ui, server)
 ```
 
-
+All three predictors exhibited statistically significant relationships with the respective goals across the board. 'Maxintensity' generally demonstrated a relatively stronger association compared to 'Population Affected' and 'Deaths' in most analyses. But collectively, these predictors explained only a small to moderate portion of the variability observed in the different goals (adjusted R-squared ranging from approximately 1% to 9.48%). This suggests that there are other unaccounted factors not included in the analysis that significantly influence the outcomes of these goals.
+To conclude, while 'Population Affected,' 'Deaths,' and 'Maxintensity' consistently showed significant associations with the various goals analyzed, their combined effect explained only a fraction of the variance observed in these goals. Therefore, there are likely additional crucial factors beyond these predictors that play substantial roles in influencing the outcomes of the respective goals.
 
 
 
