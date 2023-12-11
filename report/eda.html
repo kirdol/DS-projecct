@@ -168,7 +168,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Now, let’s display the distribution of the different SDG achievement scores per continent, using violin boxplots to have an overview of the mods, the range with most of the observations and the outliers.</p>
-<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-4_0479e9dd3b005146a453382a6f55b733">
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-4_9bad887a86dfa0d24a31c5c5099b1957">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### boxplots ####</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#For sdg goals per continent </span></span>
@@ -243,13 +243,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(medians_all, <span class="fu">aes</span>(<span class="at">x =</span> variable, <span class="at">y =</span> value, <span class="at">fill =</span> color)) <span class="sc">+</span></span>
 <span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">trim =</span> <span class="cn">FALSE</span>, <span class="at">bw =</span> bandwidth_nrd) <span class="sc">+</span></span>
-<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +</span></span>
-<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_identity</span>() <span class="sc">+</span></span>
-<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"SDG Goals by Region"</span>, <span class="at">x =</span> <span class="st">"Goals"</span>, <span class="at">y =</span> <span class="st">"Score"</span>) <span class="sc">+</span></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"lightgreen"</span> <span class="ot">=</span> <span class="st">"lightgreen"</span>, <span class="st">"red3"</span> <span class="ot">=</span> <span class="st">"red3"</span>, <span class="st">"lightblue3"</span> <span class="ot">=</span> <span class="st">"lightblue3"</span>),</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"between"</span>, <span class="st">"&gt;75"</span>, <span class="st">"&lt;25"</span>)) <span class="sc">+</span> </span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"SDG Goals Distribution by Continent"</span>, <span class="at">x =</span> <span class="st">"Goals"</span>, <span class="at">y =</span> <span class="st">"Scores"</span>, <span class="at">fill =</span> <span class="st">"Score Category"</span>) <span class="sc">+</span></span>
 <span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(continent <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
 <span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_number</span>()) <span class="sc">+</span></span>
 <span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># Center the title</span></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>, <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>))</span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -262,7 +264,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The goal 10 concerns the reduction of inequalities within/amongst countries. Therefore, we presume that less effort and investissement has been made on this goal in America.</p>
 <p>In addition, some distributions are quite disparsed, such as goal 13 in Oceania and goal 10 in Africa. That could again show inequalities within countries or less investment made to raise the scores by different countriews of the same continent.</p>
 <p>Now let’s display boxplots for the different variables of the human freedom index.</p>
-<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-5_7dbb3c268bfca82efaf11ce84e62487e">
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-5_45814363b829100e958d15ffd792c5fe">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#for Human Freedom Index scores </span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Africa</span></span>
@@ -346,13 +348,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot</span></span>
 <span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(medians_all_HFI, <span class="fu">aes</span>(<span class="at">x =</span> variable, <span class="at">y =</span> value, <span class="at">fill =</span> color)) <span class="sc">+</span></span>
 <span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">trim =</span> <span class="cn">FALSE</span>, <span class="at">bw =</span> bandwidth_nrd_HFI) <span class="sc">+</span></span>
-<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_boxplot(width = 0.1, outlier.size = 1, fill = 'white') +</span></span>
-<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_identity</span>() <span class="sc">+</span></span>
-<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Human Freedom Index Scores by Region"</span>, <span class="at">x =</span> <span class="st">"Variables"</span>, <span class="at">y =</span> <span class="st">"Score"</span>) <span class="sc">+</span></span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"lightgreen"</span> <span class="ot">=</span> <span class="st">"lightgreen"</span>, <span class="st">"red3"</span> <span class="ot">=</span> <span class="st">"red3"</span>, <span class="st">"lightblue3"</span> <span class="ot">=</span> <span class="st">"lightblue3"</span>),</span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"between"</span>, <span class="st">"&gt;7.5"</span>, <span class="st">"&lt;2.5"</span>)) <span class="sc">+</span> </span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Human Freedom Index Scores Distribution by Continent"</span>, <span class="at">x =</span> <span class="st">"Variables"</span>, <span class="at">y =</span> <span class="st">"Scores"</span>, <span class="at">fill =</span> <span class="st">"Score Category"</span>) <span class="sc">+</span></span>
 <span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(continent <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
 <span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_number</span>()) <span class="sc">+</span></span>
 <span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># Center the title</span></span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>, <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -364,7 +367,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Here we can notice the same results as before concerning the SDG goals, except that no score has a median below 25%. Again, Europe is the continent with most of its median scores superior to 75 (lightblue color)</p>
 <p>For space reason because of the different scales, we have decided not to make violin boxplot per continent for the remaining variables. The distribution can be seen in the general distribution seen prior to that.</p>
 <p>Now, let’s have a closer look to the general correlation between our variables. Using our cleaned dataset, we will use a correlation heatmap to help us vizualising the informations. Given that most of our variables are not normally distributed, we will use the Spearman method to calculate the correlation.</p>
-<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-6_cedb1d17fe882db8d4dc27c53d571c48">
+<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-6_c72d843f255ef642c6ba64266167334f">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Correlations between variables Heatmap ####</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>Correlation_overall <span class="ot">&lt;-</span>data_question1 <span class="sc">%&gt;%</span> <span class="co"># selection of the numerical data</span></span>
@@ -383,9 +386,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                       <span class="at">name=</span><span class="st">"Spearman</span><span class="sc">\n</span><span class="st">Correlation"</span>) <span class="sc">+</span></span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>)) <span class="sc">+</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">''</span>, <span class="at">y =</span> <span class="st">''</span>, <span class="at">title =</span> <span class="st">'Correlation Matrix Heatmap'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">''</span>, <span class="at">y =</span> <span class="st">''</span>, <span class="at">title =</span> <span class="st">'Correlation Matrix Heatmap'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -450,45 +454,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score.</p>
 <p>The overall SDG achievement score is highly correlated with “personal freedom: law” (p=.69) and “personal freedom: identity” (p=.62). The other dimensions of personal freedom do not seem to have important influence. Regarding the distribution of the personal freedom variables, we notice that except for law, all have right-skewed distributions meaning that most of the countries have high scores.</p>
 <p>The overall SDG achievement score is highly correlated with “economical freedom: legal” (p=.77), “economical trade: legal” (p=.67) and “economical freedom: money” (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom.</p>
-<section id="looking-at-sdgs" class="level3">
-<h3 class="anchored" data-anchor-id="looking-at-sdgs">Looking at SDGs</h3>
-<p>As we can see in the graph, most of our goals are correlated toghether. We will nown perform a PCA analysis to see how our variables are explained. You can see below the Scree plot of our PCA analysis.</p>
-<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-8_5d0dea1edf5fd4c5769568ab3fea47c7">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### PCA and PCA Scree plot####</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>myPCA_g <span class="ot">&lt;-</span> <span class="fu">PCA</span>(data_question1[,<span class="dv">9</span><span class="sc">:</span><span class="dv">24</span>], <span class="at">graph =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(myPCA_g,</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">addlabels =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="eda_files/figure-html/unnamed-chunk-8-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>As we can see, Dimension 1 explain already more than 60% of the variations in our data. With Dimension 2, it goes up to around 70%. We can now plot our data with our two firsts dimensions.</p>
-<div class="cell" data-layout-align="center" data-hash="eda_cache/html/unnamed-chunk-9_a38386c783a3a52dadc1e50cc3965d95">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### PCA Biplot ####</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(myPCA_g,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">label=</span><span class="st">"var"</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">col.var=</span><span class="st">"dodgerblue3"</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">geom=</span><span class="st">"point"</span>,</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">pointsize =</span> <span class="fl">0.1</span>,</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">labelsize =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="eda_files/figure-html/unnamed-chunk-9-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD Concerning the SDG goals, we conclude that most of our variables are going along the 1st component, except the goals 10 and 15 that are rather uncorrelated with the dimension 1. In addition, as seen before, the goals 12 and 13 are negatively correlated to the other goals. With a eigenvalue bigger than 1 for the first two components, we conclude that there are only 2 dimensions to take into account, according to the Kaiser-Guttman’s rule. Nevertheless, they are explaining less than 80% of cumulated variance. ======= Concerning the SDG goals, we conclude that most of our variables are going along the 1st component, except the goals 10 and 15 that are rather uncorrelated with the dimension 1. In addition, as seen before, the goals 12 and 13 are negatively correlated to the other goals. With a eigenvalue bigger than 1 for the first two components, we conclude that there are only 2 dimensions to take into account, according to the Kaiser-Guttman’s rule. Nevertheless, they are explaining less than 80% of cumulated variance.</p>
-</section>
 </section>
 </section>
 

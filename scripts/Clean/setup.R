@@ -43,7 +43,8 @@ packages <- c(
   "car",
   "naniar",
   "ggridges",
-  "shiny"
+  "shiny",
+  "leaps"
 )
 
 for (pkg in packages) {
