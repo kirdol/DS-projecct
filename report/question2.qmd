@@ -301,7 +301,7 @@ for (year in unique_years) {
     labs(title = paste(year), x = NULL, y = NULL) +
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size= 6), axis.text.y = element_text(size= 6), legend.position = "none", plot.title = element_text(size = 10)) + 
-    scale_y_continuous(limits = c(0, 3))
+    scale_y_continuous(limits = c(0, 3.7))
   
   plots[[as.character(year)]] <- plot
 }
