@@ -463,7 +463,8 @@ ggplot(data = cor_melted_lagged, aes(Variable1, Variable2, fill = Correlation)) 
   theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
          axis.text.y = element_text(vjust = 1, size = 8, hjust = 2),
          plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
-                                   vjust = 6, lineheight = 1.5)
+                                   vjust = 6, lineheight = 1.5),
+         legend.title = element_text(size = 8)
   ) +
   coord_fixed() +
   labs(x = '', y = '',
