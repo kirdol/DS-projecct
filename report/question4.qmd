@@ -138,7 +138,7 @@ goals_data <- data_4 %>%
 fit <- lm(overallscore ~ ., data = goals_data)
 # plot(fit)
 library(leaps)
-leaps<-regsubsets(overallscore ~ .,data=goals_data,nbest=10)
+leaps <- regsubsets(overallscore ~ .,data=goals_data,nbest=10)
 # summary(leaps)
 plot(leaps,scale="r2") + theme_minimal()
 ```
