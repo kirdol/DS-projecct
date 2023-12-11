@@ -159,8 +159,8 @@ data_Q1_Oceania_long <- data_Q1_Oceania_long %>%
 # merge all medians
 medians_all <- rbind(data_Q1_Oceania_long, data_Q1_Americas_long,data_Q1_Africa_long,data_Q1_Asia_long,data_Q1_Europe_long)
 
-medians_all$color <- ifelse(medians_all$median_value > 75, "lightblue",
-                        ifelse(medians_all$median_value < 25, "red", 'orange')) #assigning colors. If median for a goal is > 75 -> lightblue, if < 25 -> red, orange otherwise.
+medians_all$color <- ifelse(medians_all$median_value > 75, "lightgreen",
+                        ifelse(medians_all$median_value < 25, "red3", 'lightblue3')) #assigning colors. If median for a goal is > 75 -> lightblue, if < 25 -> red, orange otherwise.
 
 bandwidth_nrd <- bw.nrd(medians_all$value) #adapting the bandwidth
 
@@ -258,8 +258,8 @@ data_Q1_Oceania_HFI_long <- data_Q1_Oceania_HFI_long %>%
 # merge all medians 
 medians_all_HFI <- rbind(data_Q1_Oceania_HFI_long, data_Q1_Americas_HFI_long,data_Q1_Africa_HFI_long,data_Q1_Asia_HFI_long,data_Q1_Europe_HFI_long)
 
-medians_all_HFI$color <- ifelse(medians_all_HFI$median_value > 7.5, "lightblue", 
-                        ifelse(medians_all_HFI$median_value < 2.5, "red", 'orange'))
+medians_all_HFI$color <- ifelse(medians_all_HFI$median_value > 7.5, "lightgreen", 
+                        ifelse(medians_all_HFI$median_value < 2.5, "red3", 'lightblue3'))
 
 bandwidth_nrd_HFI <- bw.nrd(medians_all_HFI$value)
 
