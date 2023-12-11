@@ -3,7 +3,9 @@ title: "My presentation"
 author: "John Doe"
 execute:
   echo: true
-format: revealjs
+format:
+  revealjs:
+    footer: "Comparative Analysis of SDG Implementation Evolution Worldwide"
 #format: beamer
 #format: pptx
 ---
@@ -77,8 +79,65 @@ plot_ly(
 
 ## Data wrangling
 
+# EDA / Analysis
 
-## Factors
+## Q1
+
+## Q4
+
+```{r echo = FALSE, message = FALSE}
+#### Setup ####
+source(here::here("scripts","Clean","setup.R"))
+data_4 <- read.csv(here::here("scripts", "data", "data_question24.csv"))
+threashold_heatmap <- 0.5
+```
+
+
+::: {.column width="35%"}
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+#### Scree Plot ####
+
+# Selecting only the goals
+goals_data <- data_4 %>%
+  dplyr::select(goal1, goal2, goal3, goal4, goal5,
+                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
+                goal13, goal15, goal16, goal17)
+goals_data_scaled <- scale(goals_data) # Scaling the data
+pca_result <- prcomp(goals_data_scaled) # Running PCA
+
+# Plotting Scree plot to visualize the importance of each principal component
+fviz_eig(pca_result,
+         addlabels = TRUE) +
+  theme_minimal()
+```
+:::
+
+::: {.column width="50%"}
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+#### Scree Plot ####
+
+# Selecting only the goals
+goals_data <- data_4 %>%
+  dplyr::select(goal1, goal2, goal3, goal4, goal5,
+                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
+                goal13, goal15, goal16, goal17)
+goals_data_scaled <- scale(goals_data) # Scaling the data
+pca_result <- prcomp(goals_data_scaled) # Running PCA
+
+# Plotting Scree plot to visualize the importance of each principal component
+fviz_eig(pca_result,
+         addlabels = TRUE) +
+  theme_minimal()
+```
+:::
+
+
+
+
+
+## Q2
+
+## Q3
 
 
 ## Evolution over time
