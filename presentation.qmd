@@ -1,0 +1,345 @@
+---
+title: "My presentation"
+author: "John Doe"
+execute:
+  echo: true
+format: revealjs
+#format: beamer
+#format: pptx
+---
+## Introduction
+
+## Main dataset
+
+```{r, message = FALSE, warning=FALSE}
+#| echo: false
+source(here::here("scripts/Clean/setup.R"))
+data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"))
+data_question2 <- data_question2 %>% dplyr::select(-X)
+
+data_question2 <- data_question2 %>% 
+  group_by(code) %>%
+  mutate(across(5:21, ~ . - dplyr::lag(.), .names = "diff_{.col}")) %>%
+  ungroup()
+```
+
+```{r, message = FALSE, warning=FALSE, fig.height=2}
+#| echo: false
+# Load world map data
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Merge data with the world map data
+data0 <- merge(world, data_question2, by.x = "iso_a3", by.y = "code", all.x = TRUE)
+
+data0 <- data0 %>%
+  filter(!is.na(overallscore))
+
+unique_years <- unique(data0$year)
+
+plot_ly(
+  type = "choropleth",
+  z = ~data0$overallscore[data0$year == 2000],
+  locations = ~data0$iso_a3[data0$year == 2000],
+  text = ~paste("Country: ", data0$name[data0$year == 2000], "<br>Overall Score: ", data0$overallscore[data0$year == 2000]),
+  colors = c("darkred", "orange", "yellow", "darkgreen"),
+  colorbar = list(title = "Overall Score", cmin = 40, cmax = 87),
+  zmin = 40,
+  zmax = 87,
+  hoverinfo = "text"
+) %>%
+  layout(
+    title = "SDG overall score evolution",
+    sliders = list(
+      list(
+        active = 0,
+        currentvalue = list(prefix = "Year: "),
+        steps = lapply(seq_along(unique_years), function(i) {
+          year <- unique_years[i]
+          list(
+            label = as.character(year),
+            method = "restyle",
+            args = list(
+              list(
+                z = list(data0$overallscore[data0$year == year]),
+                locations = list(data0$iso_a3[data0$year == year]),
+                text = list(~paste("Country: ", data0$name[data0$year == year], "<br>Overall Score: ", data0$overallscore[data0$year == year]))
+              )
+            )
+          )
+        })
+      )
+    )
+  )
+```
+
+## Complementary datasets
+
+
+## Data wrangling
+
+
+## Factors
+
+
+## Evolution over time
+
+```{r, message = FALSE, warning=FALSE, out.width="100%", fig.height=3}
+#| echo: false
+data1 <- data_question2 %>% group_by(year, continent) %>%
+  mutate(mean_overall_score_by_year=mean(overallscore))
+
+plot1 <- ggplot(data1) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=0.6) +
+  #geom_point(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=1) +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Mean overall SDG \nachievement score",
+       y = "Mean Overall SDG Score",
+       x = "Year"
+       ) +
+  theme(legend.position = "none", plot.title = element_text(size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8))
+
+data2 <- data_question2 %>% group_by(year, continent) %>%
+  mutate(mean_diff_overall_score_by_year=mean(diff_overallscore))
+
+plot2 <- ggplot(data2) +
+  geom_line(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=continent), lwd=0.6) +
+  #geom_point(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=continent), lwd=1.5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") + 
+  scale_y_continuous(limits = c(-0.3, 1.2)) +
+  labs(title = "Score difference",
+       y = "Mean Overall SDG Score difference",
+       x = "Year"
+       )+
+  theme(legend.position = "right", plot.title = element_text(size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8), legend.text = element_text(size= 8),legend.title = element_text(size= 10))
+
+(plot1 + plot2)
+```
+
+## Evolution over time
+
+```{r, message = FALSE, warning=FALSE, fig.height=2}
+#| echo: false
+
+binary2015 <- data_question2 %>% 
+  mutate(after2015 = ifelse(year > 2015, 1, 0)) %>%
+  filter(as.numeric(year)>=2009)
+data_after_2015 <- filter(binary2015, as.numeric(year) >= 2015)
+data_before_2016 <- filter(binary2015, as.numeric(year) <= 2015)
+
+plotly::plot_ly() %>%
+  plotly::add_trace(data = data_after_2015, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_after_2015)), type = 'scatter', mode = 'lines', line = list(color = 'blue'), name = "After 2015") %>%
+  plotly::add_trace(data = data_before_2016, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_before_2016)), type = 'scatter', mode = 'lines', line = list(color = 'red'), name = "Before 2015") %>%
+  plotly::layout(title = "Different patterns across SDGs before and after 2015",
+         xaxis = list(title = "Year"),
+         yaxis = list(title = "SDG achievement score", range = c(30, 90)),
+         shapes = list(
+           list(
+             type = 'line',
+             x0 = 2015,
+             x1 = 2015,
+             y0 = 0,
+             y1 = 1,
+             yref = 'paper',
+             line = list(color = 'grey', width = 2, dash = 'dot')
+           )
+         ),
+         updatemenus = list(
+           list(
+             buttons = list(
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(overallscore ~ year, data = data_after_2015)),
+                   ~fitted(lm(overallscore ~ year, data = data_before_2016))
+                 )),
+                 label = "Overall score",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal1 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal1 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 1: \nno poverty",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal2 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal2 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 2: \nzero hunger",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal3 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal3 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 3: good health \nand well-being",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal4 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal4 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 4: \nquality education",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal5 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal5 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 5: \ngender equality",
+                 method = "restyle"
+               ), 
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal6 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal6 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 6: clean water \nand sanitation",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal7 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal7 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 7: affordable \nand clean energy",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal8 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal8 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 8: decent work \nand economic growth",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal9 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal9 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 9: industry, innovation \nand infrastructure",
+                 method = "restyle"
+               ), 
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal10 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal10 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 10: \nreduced inequalities",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal11 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal11 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 11: sustainable \ncities and communities",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal12 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal12 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 12: responsible \nconsumption and production",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal13 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal13 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 13: \nclimate action",
+                 method = "restyle"
+               ), 
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal15 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal15 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 15: \nlife on earth",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal16 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal16 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 16: peace, justice \nand strong institutions",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal17 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal17 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 17: partnerships \nfor the goals",
+                 method = "restyle"
+               )
+             )
+           )
+         )
+  )
+```
+
+## Influence of events
+
+## Conclusion
+
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
+
+## Bullets
+
+When you click the **Render** button a document will be generated that includes:
+
+-   Content authored with markdown
+-   Output from executable code
+
+## Code
+
+When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like [this](https://quarto.org/docs/computations/r.html):
+
+```{r}
+1 + 1
+```
+
+
+This chunk will not show code, but only the results. See [this website](https://quarto.org/docs/computations/execution-options.html) for more options.
+```{r}
+#| echo: false
+#| layout-ncol: 2
+library(ggplot2)
+ggplot(mpg, aes(displ, hwy)) + geom_point()
+ggplot(mpg, aes(displ, hwy)) + geom_smooth()
+```
+
+## Columns
+
+You can create multiple columns like this:
+
+:::: {.columns}
+
+::: {.column width="35%"}
+Here I put a list with
+
+* First bullet
+* Second bullet
+:::
+
+::: {.column width="55%"}
+And here some code:
+```{r}
+my_function <- function(x) x + 1
+my_function(41)
+```
+:::
+
