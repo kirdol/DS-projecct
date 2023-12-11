@@ -1,6 +1,10 @@
 
 #### Distribution of Goals  per years ####
 
+As we have seen previously, our Goals are not normally ditributed.
+First, let's look at how our goals are distributed. To do that, it is important to show the distribution at a year level since showing it a once would be impacted by the change over the year. We created below a shiny app that allows us to select the year we want to look at and see the distribution of the goals for that year. Since shiny apps are not well supported with quarto, we show here only scrrenshots. We chose to show year 2000 and year 2023 to see both extreme in terms of distribution. it is interesting to see how the goals tended to be skewed in the past, well representing the developing countries lagging behind. But the ditribution beeing more normaly ditributed in recent years.
+
+
 data <- read.csv(here("scripts","data","data_question24.csv"))
 
 data_long <- data %>% 
@@ -62,6 +66,75 @@ ggplot(step_results, aes(x = step)) +
 
 
 ##############################################################################
+
+
+
+install.packages("plotly")
+install.packages("htmlwidgets")
+
+library(plotly)
+library(htmlwidgets)
+
+set.seed(123)
+df1 <- data.frame(x = rnorm(100), y = rnorm(100))
+df2 <- data.frame(x = rnorm(100, 1), y = rnorm(100, 2))
+
+
+p1 <- plot_ly(df1, x = ~x, y = ~y, type = 'scatter', mode = 'markers')
+p2 <- plot_ly(df2, x = ~x, y = ~y, type = 'scatter', mode = 'markers')
+
+saveWidget(p1, "plot1.html", selfcontained = TRUE)
+saveWidget(p2, "plot2.html", selfcontained = TRUE)
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Interactive Plots</title>
+</head>
+<body>
+  <button onclick="showPlot('plot1.html')">Show Plot 1</button>
+  <button onclick="showPlot('plot2.html')">Show Plot 2</button>
+  
+  <div id="plot"></div>
+  
+  <script>
+    function showPlot(plotFile) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("plot").innerHTML = this.responseText;
+        }
+      };
+      xhttp.open("GET", plotFile, true);
+      xhttp.send();
+    }
+  </script>
+</body>
+</html>
+  
+  
+  
+  
+set.seed(123)
+df1 <- data.frame(x = rnorm(100), y = rnorm(100))
+df2 <- data.frame(x = rnorm(100, 1), y = rnorm(100, 2))
+
+p1 <- plot_ly(df1, x = ~x, y = ~y, type = 'scatter', mode = 'markers')
+p2 <- plot_ly(df2, x = ~x, y = ~y, type = 'scatter', mode = 'markers')
+
+
+  
+selectInput("graphType", "Choose Graph:", choices = c("Graph 1", "Graph 2"))
+
+output$plot <- renderPlotly({
+  if(input$graphType == "Graph 1") {
+    p1
+  } else {
+    p2
+  }
+})
+
+plotlyOutput("plot")
 
 # # Drop unnecessary columns
 # 
