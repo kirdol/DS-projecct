@@ -1,6 +1,6 @@
 ---
-title: "My presentation"
-author: "John Doe"
+title: "Comparative Analysis of SDG Implementation Evolution Worldwide"
+author: "Lodrik, Stefan, Sofia and Delia"
 execute:
   echo: true
 format:
@@ -11,7 +11,9 @@ format:
 ---
 ## Introduction
 
-## Main dataset
+## Main dataset {.smaller}
+
+1. **SDG achievement scores**, source: Sustainable Developement Report 2023
 
 ```{r, message = FALSE, warning=FALSE}
 #| echo: false
@@ -25,7 +27,7 @@ data_question2 <- data_question2 %>%
   ungroup()
 ```
 
-```{r, message = FALSE, warning=FALSE, fig.height=2}
+```{r, message = FALSE, warning=FALSE, fig.height=1.75}
 #| echo: false
 # Load world map data
 world <- ne_countries(scale = "medium", returnclass = "sf")
@@ -74,10 +76,57 @@ plot_ly(
   )
 ```
 
-## Complementary datasets
+## Complementary datasets {.smaller}
 
+2. **Unemployment rate**, source: ILOSTAT
+3. **GDP per capita and military expenditure in % of GDP**, source: World Bank
+4. **Internet usage**, source: Our World in Data
+5. **Human freedom index (personal and economic)**, source: CATO
 
-## Data wrangling
+6. **Disasters**, source: Kaggle
+7. **COVID**, source: GitHub
+8. **Conflicts**, source: World Bank
+
+## Data wrangling {.smaller}
+
+:::: {.columns}
+
+::: {.column width="28%"}
+
+* Match datasets by key = (country, year)
+* Delete columns then rows with too much NAs
+* Fill in remaining NAs with linear interpolation or median/mean based on region
+* COVID and disasters: replace NAs by zeros 
+:::
+
+::: {.column width="72%"}
+
+```{r, message = FALSE, warning=FALSE, fig.height=4}
+#| echo: false
+all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
+
+# Remove unnecessary column
+all_Merge <- all_Merge %>% select(-c(X))
+
+# Create a dataframe with the goals without NAs summarize in one column to simplify the visualization
+goal_vars <- all_Merge %>%
+  select(starts_with("goal")) %>%
+  filter_all(all_vars(!is.na(.))) %>%
+  colnames()
+to_plot_missing <- all_Merge %>%
+  mutate(Goals_without_NAs = rowSums(!is.na(select(., all_of(goal_vars))))) %>%
+  select(-c(goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal11, goal12, goal13, goal15, goal16, goal17))
+
+vis_dat(to_plot_missing, warn_large_data = FALSE) + scale_fill_brewer(palette = "Paired") +
+  theme(
+    axis.text.x = element_text(angle = 90, size = 6),
+    legend.text = element_text(size = 8),  # Adjust the size of legend text
+    legend.title = element_text(size = 10) 
+  )
+```
+:::
+
+::::
 
 # EDA / Analysis
 
