@@ -639,7 +639,8 @@ server <- function(input, output) {
 shinyApp(ui, server)
 ```
 
-
+All three predictors exhibited statistically significant relationships with the respective goals across the board. 'Maxintensity' generally demonstrated a relatively stronger association compared to 'Population Affected' and 'Deaths' in most analyses. But collectively, these predictors explained only a small to moderate portion of the variability observed in the different goals (adjusted R-squared ranging from approximately 1% to 9.48%). This suggests that there are other unaccounted factors not included in the analysis that significantly influence the outcomes of these goals.
+To conclude, while 'Population Affected,' 'Deaths,' and 'Maxintensity' consistently showed significant associations with the various goals analyzed, their combined effect explained only a fraction of the variance observed in these goals. Therefore, there are likely additional crucial factors beyond these predictors that play substantial roles in influencing the outcomes of the respective goals.
 
 
 
