@@ -2,7 +2,6 @@
 
 ```{r setup, echo = FALSE, message = FALSE, warning=FALSE}
 source(here::here("scripts","Clean","setup.R"))
-source(here:here("scripts","EDA","EDA_4_SDG.R"))
 data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
 data_question24 <- read.csv(here("scripts", "data", "data_question24.csv"))
 data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"))
@@ -482,12 +481,11 @@ Even with a year gap it doesn't seem that climate disaster with such consequence
 Here you can see an interactive map of the correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019). results -\> nothing?
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
-
 library(shiny)
 library(plotly)
 
 Q3.1 <- Q3.1 %>%
-  arrange(code,year)%>%
+  arrange(code, year) %>%
   group_by(code)
 
 disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
@@ -511,10 +509,11 @@ ui <- fluidPage(
   titlePanel("Interactive Correlation Heatmap between the climate disasters and the SDG goals in South and East Asia with 1 year gap"),
   plotlyOutput("heatmap"),
   sliderInput("year", "Select Year", min = 2000, max = 2021, value = 2012, step = 1),
-  verbatimTextOutput("correlation_output") 
+  verbatimTextOutput("correlation_output"),
+  actionButton("stopButton", "Stop application")
 )
 
-server <- function(input, output) {
+server <- function(input, output, session) {
   selected_data <- reactive({
     filtered_data <- disaster_data[disaster_data$year == input$year, ]
     subset_data <- filtered_data[, relevant_columns]
@@ -556,7 +555,12 @@ server <- function(input, output) {
     )
     return(p)
   })
+  
+  observeEvent(input$stopButton, {
+    stopApp() 
+  })
 }
+
 shinyApp(ui = ui, server = server)
 ```
 
@@ -586,10 +590,11 @@ names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 ui <- fluidPage(
   titlePanel("Interactive Correlation Heatmap between COVID and the SDG goal with one year gap"),
   plotlyOutput("heatmap"),
-  sliderInput("year", "Select Year", min = 2020, max = 2022, value = 2020, step = 1)
+  sliderInput("year", "Select Year", min = 2020, max = 2022, value = 2020, step = 1),
+  actionButton("stopButton", "Stop application")
 )
 
-server <- function(input, output) {
+server <- function(input, output, session) {
   selected_covid_data <- reactive({
     filtered_data <- covid_filtered[covid_filtered$year == input$year, ]
     subset_data <- filtered_data[, relevant_columns]
@@ -624,6 +629,10 @@ server <- function(input, output) {
     )
     return(p)
   })
+  
+  observeEvent(input$stopButton, {
+    stopApp()  
+  })
 }
 shinyApp(ui = ui, server = server)
 ```
@@ -653,10 +662,11 @@ names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 ui <- fluidPage(
   titlePanel("Interactive Correlation Heatmap between Conflicts in selected regions and the SDG goal with one year gap"),
   plotlyOutput("heatmap"),
-  sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1)
+  sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1),
+  actionButton("stopButton", "Stop application")
 )
 
-server <- function(input, output) {
+server <- function(input, output, session) {
   selected_conflicts_data <- reactive({
     filtered_data <- conflicts_filtered[conflicts_filtered$year == input$year, ]
     subset_data <- filtered_data[, relevant_columns]
@@ -690,6 +700,10 @@ server <- function(input, output) {
       )
     )
     return(p)
+  })
+  
+  observeEvent(input$stopButton, {
+    stopApp() 
   })
 }
 shinyApp(ui = ui, server = server)
