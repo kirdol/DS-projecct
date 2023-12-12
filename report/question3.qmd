@@ -555,10 +555,9 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$stopButton, {
-    stopApp() 
+    stopApp()  
   })
 }
-
 shinyApp(ui = ui, server = server)
 ```
 
