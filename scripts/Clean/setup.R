@@ -44,7 +44,8 @@ packages <- c(
   "naniar",
   "ggridges",
   "shiny",
-  "leaps"
+  "leaps",
+  "shinydashboard"
 )
 
 for (pkg in packages) {

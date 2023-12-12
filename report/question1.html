@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>question1</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="question1_files/libs/clipboard/clipboard.min.js"></script>
+<script src="question1_files/libs/quarto-html/quarto.js"></script>
+<script src="question1_files/libs/quarto-html/popper.min.js"></script>
+<script src="question1_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="question1_files/libs/quarto-html/anchor.min.js"></script>
+<link href="question1_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="question1_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="question1_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="question1_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="question1_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="question1_files/libs/htmlwidgets-1.6.3/htmlwidgets.js"></script>
+<script src="question1_files/libs/plotly-binding-4.10.3/plotly.js"></script>
+<script src="question1_files/libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="question1_files/libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="question1_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="question1_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="question1_files/libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="question1_files/libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="focus-on-the-influence-of-the-factors-over-the-sdg-scores" class="level2">
+<h2 class="anchored" data-anchor-id="focus-on-the-influence-of-the-factors-over-the-sdg-scores">Focus on the influence of the factors over the SDG scores</h2>
+<p>For this first part of our EDA, let’s try to check first the distribution of the variables selected for answering our 1st question.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data from wide to long format for our sdg goals and our human freedom index scores</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>long_df_goal_distribution <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(Correlation_overall, <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"goal"</span>), <span class="at">names_to =</span> <span class="st">"Goal"</span>, <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>long_df_goal_distribution<span class="sc">$</span>Goal <span class="ot">&lt;-</span> <span class="fu">with</span>(long_df_goal_distribution, <span class="fu">reorder</span>(Goal, Value, <span class="at">FUN =</span> mean))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>long_df_hfi_distribution <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(Correlation_overall, <span class="at">cols =</span> pf_law<span class="sc">:</span>ef_regulation, <span class="at">names_to =</span> <span class="st">"Category"</span>, <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>long_df_hfi_distribution<span class="sc">$</span>Goal <span class="ot">&lt;-</span> <span class="fu">with</span>(long_df_hfi_distribution, <span class="fu">reorder</span>(Category, Value, <span class="at">FUN =</span> mean))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(long_df_goal_distribution, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> Goal, <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>, <span class="at">size =</span> <span class="fl">0.3</span>, <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>, <span class="at">option =</span> <span class="st">"C"</span>) <span class="sc">+</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># Center the title</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Scores'</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Goals'</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">'SDG Goals Distribution'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-1-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As we can see, most of our goals have a left-skewed distribution, which shows that for most of the country concerned implemented good strategies for targeting the goals objectives. Some distribution have a longer distribution than other, which could be a proof of inequality in the investments made for implementing solutions. In another hand, we notice that the only right-skewed distribution is concerning the observations of goal 9, which is promoting infrastructures, innovation and inclusive and sustainable industrialization. Again, that could show means inequalities. Wealthier countries are able to invest more on these sustainable development goals.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(long_df_hfi_distribution, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> Category, <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>, <span class="at">size =</span> <span class="fl">0.3</span>, <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>, <span class="at">option =</span> <span class="st">"C"</span>) <span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># Center the title</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Scores'</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">'Human Freedom Index Scores Distribution'</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the ggplot objects</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(long_df_goal_distribution, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> Goal, <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>, <span class="at">size =</span> <span class="fl">0.3</span>, <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>, <span class="at">option =</span> <span class="st">"C"</span>) <span class="sc">+</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>)) <span class="sc">+</span> </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Scores'</span>, <span class="at">y =</span> <span class="st">'Goals'</span>, <span class="at">title =</span> <span class="st">'SDG Goals Distribution'</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(long_df_hfi_distribution, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> Category, <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>, <span class="at">size =</span> <span class="fl">0.3</span>, <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>, <span class="at">option =</span> <span class="st">"C"</span>) <span class="sc">+</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>)) <span class="sc">+</span> </span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Scores'</span>, <span class="at">title =</span> <span class="st">'Human Freedom Index Scores Distribution'</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to plotly objects</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>p1_ly <span class="ot">&lt;-</span> <span class="fu">ggplotly</span>(p1)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>p2_ly <span class="ot">&lt;-</span> <span class="fu">ggplotly</span>(p2)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine using subplot (hide the second plot initially)</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="fu">subplot</span>(p1_ly, p2_ly, <span class="at">nrows =</span> <span class="dv">1</span>, <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>), <span class="at">margin =</span> <span class="fl">0.05</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout</span>(</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">updatemenus =</span> <span class="fu">list</span>(</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>(</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">type =</span> <span class="st">"buttons"</span>,</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">direction =</span> <span class="st">"left"</span>,</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fl">0.1</span>,</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">xanchor =</span> <span class="st">"left"</span>,</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="fl">1.1</span>,</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">yanchor =</span> <span class="st">"top"</span>,</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">pad =</span> <span class="fu">c</span>(<span class="at">r =</span> <span class="dv">10</span>, <span class="at">t =</span> <span class="dv">10</span>),</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        <span class="at">showactive =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        <span class="at">buttons =</span> <span class="fu">list</span>(</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>          <span class="fu">list</span>(</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>            <span class="at">label =</span> <span class="st">"SDG Goals Distribution"</span>,</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>            <span class="at">method =</span> <span class="st">"relayout"</span>,</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>            <span class="at">args =</span> <span class="fu">list</span>(<span class="st">"subplot"</span>, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>          ),</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>          <span class="fu">list</span>(</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>            <span class="at">label =</span> <span class="st">"Human Freedom Index Scores"</span>,</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>            <span class="at">method =</span> <span class="st">"relayout"</span>,</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>            <span class="at">args =</span> <span class="fu">list</span>(<span class="st">"subplot"</span>, <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>          )</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-c7ba64aea1a56f3d3970" style="width:100%;height:100%;"></div>
+<script type="application/json" data-for="htmlwidget-c7ba64aea1a56f3d3970">{"x":{"data":[{"showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0],"y":[0.99999999999999989],"name":"99_da4a1f7e690d41ac4c87c1a42cba271c","type":"scatter","mode":"markers","opacity":0,"hoverinfo":"skip","showlegend":false,"marker":{"color":[0,1],"colorscale":[[0,"#0D0887"],[0.0033444816053511731,"#110888"],[0.0066889632107023462,"#140888"],[0.010033444816053519,"#170889"],[0.013377926421404679,"#190889"],[0.016722408026755852,"#1C088A"],[0.020066889632107024,"#1E078A"],[0.023411371237458196,"#20078B"],[0.026755852842809364,"#22078B"],[0.030100334448160529,"#24078C"],[0.033444816053511704,"#26078C"],[0.036789297658862873,"#28078D"],[0.040133779264214048,"#2A078E"],[0.043478260869565216,"#2C078E"],[0.046822742474916385,"#2D078F"],[0.050167224080267553,"#2F078F"],[0.053511705685618728,"#310690"],[0.056856187290969896,"#320690"],[0.060200668896321065,"#340691"],[0.06354515050167224,"#350691"],[0.066889632107023408,"#370692"],[0.070234113712374577,"#380692"],[0.073578595317725745,"#3A0693"],[0.076923076923076927,"#3B0694"],[0.080267558528428096,"#3D0694"],[0.08361204013377925,"#3E0595"],[0.086956521739130432,"#3F0595"],[0.090301003344481601,"#410596"],[0.093645484949832769,"#420596"],[0.096989966555183951,"#440597"],[0.10033444816053511,"#450597"],[0.10367892976588627,"#460598"],[0.10702341137123746,"#480499"],[0.11036789297658862,"#490499"],[0.11371237458193979,"#4A049A"],[0.11705685618729096,"#4C049A"],[0.12040133779264213,"#4D049B"],[0.1237458193979933,"#4E049B"],[0.12709030100334448,"#4F049C"],[0.13043478260869565,"#51039C"],[0.13377926421404682,"#52039D"],[0.13712374581939799,"#53039E"],[0.14046822742474915,"#54039E"],[0.14381270903010032,"#56039F"],[0.14715719063545149,"#57039F"],[0.15050167224080269,"#5803A0"],[0.15384615384615385,"#5902A0"],[0.15719063545150502,"#5B02A1"],[0.16053511705685619,"#5C02A1"],[0.16387959866220733,"#5D02A2"],[0.1672240802675585,"#5E02A3"],[0.1705685618729097,"#6002A3"],[0.17391304347826086,"#6101A4"],[0.17725752508361203,"#6201A4"],[0.1806020066889632,"#6301A5"],[0.18394648829431437,"#6401A5"],[0.18729096989966554,"#6601A6"],[0.19063545150501673,"#6701A6"],[0.1939799331103679,"#6800A7"],[0.19732441471571904,"#6900A8"],[0.20066889632107021,"#6A00A8"],[0.20401337792642138,"#6C01A8"],[0.20735785953177255,"#6D01A7"],[0.21070234113712374,"#6F02A7"],[0.21404682274247491,"#7003A6"],[0.21739130434782608,"#7203A6"],[0.22073578595317725,"#7304A6"],[0.22408026755852842,"#7405A5"],[0.22742474916387959,"#7605A5"],[0.23076923076923078,"#7706A4"],[0.23411371237458192,"#7807A4"],[0.23745819397993309,"#7A08A4"],[0.24080267558528426,"#7B08A3"],[0.24414715719063543,"#7C09A3"],[0.2474916387959866,"#7E0AA2"],[0.25083612040133779,"#7F0BA2"],[0.25418060200668896,"#800CA2"],[0.25752508361204013,"#810DA1"],[0.2608695652173913,"#830DA1"],[0.26421404682274247,"#840EA0"],[0.26755852842809363,"#850FA0"],[0.2709030100334448,"#8610A0"],[0.27424749163879597,"#88119F"],[0.27759197324414714,"#89119F"],[0.28093645484949831,"#8A129E"],[0.28428093645484948,"#8B139E"],[0.28762541806020064,"#8C149E"],[0.29096989966555181,"#8E149D"],[0.29431438127090298,"#8F159D"],[0.29765886287625415,"#90169C"],[0.30100334448160537,"#91169C"],[0.30434782608695654,"#92179C"],[0.30769230769230771,"#93189B"],[0.31103678929765888,"#95199B"],[0.31438127090301005,"#96199A"],[0.31772575250836121,"#971A9A"],[0.32107023411371238,"#981B9A"],[0.3244147157190635,"#991B99"],[0.32775919732441466,"#9A1C99"],[0.33110367892976583,"#9B1D98"],[0.334448160535117,"#9C1D98"],[0.33779264214046817,"#9D1E98"],[0.34113712374581939,"#9F1F97"],[0.34448160535117056,"#A01F97"],[0.34782608695652173,"#A12096"],[0.3511705685618729,"#A22196"],[0.35451505016722412,"#A32196"],[0.35785953177257523,"#A42295"],[0.36120401337792646,"#A52395"],[0.36454849498327757,"#A62394"],[0.3678929765886288,"#A72494"],[0.37123745819397991,"#A82494"],[0.37458193979933113,"#A92593"],[0.37792642140468224,"#AA2693"],[0.38127090301003352,"#AB2692"],[0.38461538461538464,"#AC2792"],[0.38795986622073586,"#AD2891"],[0.39130434782608697,"#AE2891"],[0.39464882943143809,"#AF2991"],[0.39799331103678931,"#B02A90"],[0.40133779264214042,"#B12A90"],[0.40468227424749165,"#B22C8F"],[0.40802675585284276,"#B32D8E"],[0.41137123745819398,"#B42E8E"],[0.4147157190635451,"#B52F8D"],[0.41806020066889632,"#B6308C"],[0.42140468227424749,"#B7318B"],[0.42474916387959871,"#B8328B"],[0.42809364548494983,"#B9338A"],[0.43143812709030105,"#B93489"],[0.43478260869565216,"#BA3588"],[0.43812709030100339,"#BB3688"],[0.4414715719063545,"#BC3887"],[0.44481605351170572,"#BD3986"],[0.44816053511705684,"#BE3A86"],[0.45150501672240806,"#BF3B85"],[0.45484949832775917,"#BF3C84"],[0.45819397993311045,"#C03D83"],[0.46153846153846156,"#C13E83"],[0.46488294314381268,"#C23F82"],[0.4682274247491639,"#C34081"],[0.47157190635451501,"#C44180"],[0.47491638795986624,"#C44280"],[0.47826086956521735,"#C5437F"],[0.48160535117056857,"#C6437E"],[0.48494983277591969,"#C7447D"],[0.48829431438127091,"#C8457D"],[0.49163879598662202,"#C9467C"],[0.49498327759197325,"#C9477B"],[0.49832775919732436,"#CA487A"],[0.50167224080267558,"#CB497A"],[0.50501672240802675,"#CC4A79"],[0.50836120401337792,"#CD4B78"],[0.51170568561872909,"#CD4C77"],[0.51505016722408026,"#CE4D77"],[0.51839464882943143,"#CF4E76"],[0.52173913043478271,"#D04F75"],[0.52508361204013376,"#D05074"],[0.52842809364548493,"#D15173"],[0.5317725752508361,"#D25273"],[0.53511705685618727,"#D35372"],[0.53846153846153844,"#D35371"],[0.5418060200668896,"#D45470"],[0.54515050167224077,"#D5556F"],[0.54849498327759194,"#D6566F"],[0.55183946488294311,"#D6576E"],[0.55518394648829428,"#D7586D"],[0.55852842809364545,"#D8596C"],[0.56187290969899661,"#D95A6B"],[0.56521739130434789,"#D95B6B"],[0.56856187290969895,"#DA5C6A"],[0.57190635451505012,"#DB5C69"],[0.57525083612040129,"#DC5D68"],[0.57859531772575246,"#DC5E67"],[0.58193979933110362,"#DD5F67"],[0.58528428093645479,"#DE6066"],[0.58862876254180596,"#DF6165"],[0.59197324414715713,"#DF6264"],[0.5953177257525083,"#E06363"],[0.59866220735785947,"#E16462"],[0.60200668896321075,"#E16562"],[0.6053511705685618,"#E26661"],[0.60869565217391308,"#E26761"],[0.61204013377926414,"#E36860"],[0.61538461538461542,"#E3695F"],[0.61872909698996648,"#E46B5F"],[0.62207357859531776,"#E46C5E"],[0.62541806020066881,"#E56D5E"],[0.62876254180602009,"#E56E5D"],[0.63210702341137115,"#E66F5D"],[0.63545150501672243,"#E6705C"],[0.63879598662207349,"#E7715C"],[0.64214046822742477,"#E7735B"],[0.64548494983277593,"#E8745A"],[0.64882943143812699,"#E8755A"],[0.65217391304347827,"#E97659"],[0.65551839464882933,"#E97759"],[0.65886287625418061,"#EA7858"],[0.66220735785953166,"#EA7957"],[0.66555183946488294,"#EB7A57"],[0.668896321070234,"#EB7C56"],[0.67224080267558528,"#EB7D55"],[0.67558528428093634,"#EC7E55"],[0.67892976588628762,"#EC7F54"],[0.68227424749163879,"#ED8053"],[0.68561872909698995,"#ED8153"],[0.68896321070234112,"#EE8252"],[0.69230769230769229,"#EE8351"],[0.69565217391304346,"#EF8451"],[0.69899665551839463,"#EF8650"],[0.7023411371237458,"#F0874F"],[0.70568561872909696,"#F0884F"],[0.70903010033444813,"#F0894E"],[0.7123745819397993,"#F18A4D"],[0.71571906354515047,"#F18B4D"],[0.71906354515050153,"#F28C4C"],[0.72240802675585281,"#F28D4B"],[0.72575250836120397,"#F38E4A"],[0.72909698996655514,"#F38F4A"],[0.73244147157190631,"#F49049"],[0.73578595317725748,"#F49148"],[0.73913043478260865,"#F49347"],[0.74247491638795982,"#F59446"],[0.74581939799331098,"#F59546"],[0.74916387959866215,"#F69645"],[0.75250836120401332,"#F69744"],[0.75585284280936449,"#F79843"],[0.75919732441471566,"#F79942"],[0.76254180602006694,"#F79A41"],[0.76588628762541799,"#F89B40"],[0.76923076923076927,"#F89C3F"],[0.77257525083612033,"#F99D3E"],[0.77591973244147161,"#F99E3D"],[0.77926421404682267,"#F99F3D"],[0.78260869565217395,"#FAA03C"],[0.785953177257525,"#FAA23B"],[0.78929765886287617,"#FBA339"],[0.79264214046822734,"#FBA438"],[0.79598662207357851,"#FCA537"],[0.79933110367892968,"#FCA636"],[0.80267558528428085,"#FCA736"],[0.80602006688963213,"#FCA936"],[0.80936454849498318,"#FCAA35"],[0.81270903010033446,"#FCAC35"],[0.81605351170568552,"#FCAD35"],[0.8193979933110368,"#FCAE35"],[0.82274247491638786,"#FBB035"],[0.82608695652173914,"#FBB135"],[0.82943143812709019,"#FBB334"],[0.83277591973244147,"#FBB434"],[0.83612040133779253,"#FBB634"],[0.83946488294314381,"#FBB734"],[0.84280936454849498,"#FBB833"],[0.84615384615384615,"#FBBA33"],[0.84949832775919731,"#FBBB33"],[0.85284280936454848,"#FBBD33"],[0.85618729096989965,"#FABE32"],[0.85953177257525071,"#FABF32"],[0.86287625418060199,"#FAC132"],[0.86622073578595304,"#FAC232"],[0.86956521739130432,"#FAC431"],[0.87290969899665538,"#FAC531"],[0.87625418060200666,"#FAC631"],[0.87959866220735772,"#F9C831"],[0.882943143812709,"#F9C930"],[0.88628762541806017,"#F9CB30"],[0.88963210702341133,"#F9CC30"],[0.8929765886287625,"#F9CD2F"],[0.89632107023411367,"#F8CF2F"],[0.89966555183946484,"#F8D02F"],[0.90301003344481601,"#F8D22E"],[0.90635451505016718,"#F8D32E"],[0.90969899665551834,"#F8D42E"],[0.91304347826086951,"#F7D62D"],[0.91638795986622068,"#F7D72D"],[0.91973244147157185,"#F7D82D"],[0.92307692307692313,"#F7DA2C"],[0.92642140468227419,"#F7DB2C"],[0.92976588628762535,"#F6DD2C"],[0.93311036789297652,"#F6DE2B"],[0.93645484949832769,"#F6DF2B"],[0.93979933110367886,"#F6E12A"],[0.94314381270903003,"#F5E22A"],[0.9464882943143812,"#F5E32A"],[0.94983277591973236,"#F5E529"],[0.95317725752508353,"#F4E629"],[0.9565217391304347,"#F4E728"],[0.95986622073578587,"#F4E928"],[0.96321070234113704,"#F4EA27"],[0.96655518394648832,"#F3EB27"],[0.96989966555183937,"#F3ED26"],[0.97324414715719065,"#F3EE26"],[0.97658862876254171,"#F2F025"],[0.97993311036789299,"#F2F125"],[0.98327759197324405,"#F2F224"],[0.98662207357859533,"#F1F423"],[0.98996655518394638,"#F1F523"],[0.99331103678929766,"#F1F622"],[0.99665551839464872,"#F0F822"],[1,"#F0F921"]],"colorbar":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"thickness":23.039999999999996,"title":"","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"tickmode":"array","ticktext":["0","25","50","75","100"],"tickvals":[0.090080154204388585,0.29504007710219432,0.5,0.70495992289780574,0.90991984579561136],"tickfont":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"ticklen":2,"len":0.5}},"xaxis":"x","yaxis":"y","frame":null},{"showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[0],"y":[1],"name":"99_31de8aafcc362933cfe8fd459482f86d","type":"scatter","mode":"markers","opacity":0,"hoverinfo":"skip","showlegend":false,"marker":{"color":[0,1],"colorscale":[[0,"#0D0887"],[0.0033444816053511675,"#110888"],[0.0066889632107023445,"#140888"],[0.010033444816053512,"#170889"],[0.013377926421404679,"#190889"],[0.016722408026755845,"#1C088A"],[0.020066889632107024,"#1E078A"],[0.023411371237458192,"#20078B"],[0.026755852842809357,"#22078B"],[0.030100334448160536,"#24078C"],[0.033444816053511704,"#26078C"],[0.036789297658862873,"#28078D"],[0.040133779264214048,"#2A078E"],[0.043478260869565216,"#2C078E"],[0.046822742474916385,"#2D078F"],[0.05016722408026756,"#2F078F"],[0.053511705685618728,"#310690"],[0.056856187290969896,"#320690"],[0.060200668896321072,"#340691"],[0.06354515050167224,"#350691"],[0.066889632107023408,"#370692"],[0.070234113712374577,"#380692"],[0.073578595317725745,"#3A0693"],[0.076923076923076913,"#3B0694"],[0.080267558528428096,"#3D0694"],[0.083612040133779264,"#3E0595"],[0.086956521739130432,"#3F0595"],[0.090301003344481601,"#410596"],[0.093645484949832769,"#420596"],[0.096989966555183937,"#440597"],[0.10033444816053512,"#450597"],[0.10367892976588627,"#460598"],[0.10702341137123746,"#480499"],[0.11036789297658862,"#490499"],[0.11371237458193979,"#4A049A"],[0.11705685618729096,"#4C049A"],[0.12040133779264214,"#4D049B"],[0.1237458193979933,"#4E049B"],[0.12709030100334448,"#4F049C"],[0.13043478260869565,"#51039C"],[0.13377926421404682,"#52039D"],[0.13712374581939799,"#53039E"],[0.14046822742474915,"#54039E"],[0.14381270903010032,"#56039F"],[0.14715719063545149,"#57039F"],[0.15050167224080269,"#5803A0"],[0.15384615384615383,"#5902A0"],[0.15719063545150502,"#5B02A1"],[0.16053511705685619,"#5C02A1"],[0.16387959866220736,"#5D02A2"],[0.16722408026755853,"#5E02A3"],[0.17056856187290967,"#6002A3"],[0.17391304347826086,"#6101A4"],[0.17725752508361203,"#6201A4"],[0.1806020066889632,"#6301A5"],[0.1839464882943144,"#6401A5"],[0.18729096989966554,"#6601A6"],[0.19063545150501671,"#6701A6"],[0.19397993311036787,"#6800A7"],[0.19732441471571907,"#6900A8"],[0.20066889632107024,"#6A00A8"],[0.20401337792642141,"#6C01A8"],[0.20735785953177255,"#6D01A7"],[0.21070234113712372,"#6F02A7"],[0.21404682274247491,"#7003A6"],[0.21739130434782608,"#7203A6"],[0.22073578595317725,"#7304A6"],[0.22408026755852839,"#7405A5"],[0.22742474916387959,"#7605A5"],[0.23076923076923075,"#7706A4"],[0.23411371237458192,"#7807A4"],[0.23745819397993312,"#7A08A4"],[0.24080267558528429,"#7B08A3"],[0.24414715719063543,"#7C09A3"],[0.24749163879598662,"#7E0AA2"],[0.25083612040133779,"#7F0BA2"],[0.25418060200668902,"#800CA2"],[0.25752508361204018,"#810DA1"],[0.26086956521739135,"#830DA1"],[0.26421404682274247,"#840EA0"],[0.26755852842809363,"#850FA0"],[0.2709030100334448,"#8610A0"],[0.27424749163879597,"#88119F"],[0.27759197324414714,"#89119F"],[0.28093645484949831,"#8A129E"],[0.28428093645484953,"#8B139E"],[0.2876254180602007,"#8C149E"],[0.29096989966555187,"#8E149D"],[0.29431438127090304,"#8F159D"],[0.2976588628762542,"#90169C"],[0.30100334448160537,"#91169C"],[0.30434782608695649,"#92179C"],[0.30769230769230765,"#93189B"],[0.31103678929765882,"#95199B"],[0.31438127090301005,"#96199A"],[0.31772575250836121,"#971A9A"],[0.32107023411371238,"#981B9A"],[0.32441471571906355,"#991B99"],[0.32775919732441472,"#9A1C99"],[0.33110367892976589,"#9B1D98"],[0.33444816053511711,"#9C1D98"],[0.33779264214046817,"#9D1E98"],[0.34113712374581934,"#9F1F97"],[0.34448160535117056,"#A01F97"],[0.34782608695652173,"#A12096"],[0.3511705685618729,"#A22196"],[0.35451505016722407,"#A32196"],[0.35785953177257523,"#A42295"],[0.3612040133779264,"#A52395"],[0.36454849498327763,"#A62394"],[0.3678929765886288,"#A72494"],[0.37123745819397985,"#A82494"],[0.37458193979933108,"#A92593"],[0.37792642140468224,"#AA2693"],[0.38127090301003341,"#AB2692"],[0.38461538461538458,"#AC2792"],[0.38795986622073575,"#AD2891"],[0.39130434782608692,"#AE2891"],[0.39464882943143814,"#AF2991"],[0.39799331103678931,"#B02A90"],[0.40133779264214048,"#B12A90"],[0.40468227424749165,"#B22C8F"],[0.40802675585284282,"#B32D8E"],[0.41137123745819393,"#B42E8E"],[0.4147157190635451,"#B52F8D"],[0.41806020066889626,"#B6308C"],[0.42140468227424743,"#B7318B"],[0.42474916387959866,"#B8328B"],[0.42809364548494983,"#B9338A"],[0.43143812709030099,"#B93489"],[0.43478260869565216,"#BA3588"],[0.43812709030100333,"#BB3688"],[0.4414715719063545,"#BC3887"],[0.44481605351170572,"#BD3986"],[0.44816053511705678,"#BE3A86"],[0.45150501672240795,"#BF3B85"],[0.45484949832775917,"#BF3C84"],[0.45819397993311034,"#C03D83"],[0.46153846153846151,"#C13E83"],[0.46488294314381268,"#C23F82"],[0.46822742474916385,"#C34081"],[0.47157190635451501,"#C44180"],[0.47491638795986624,"#C44280"],[0.47826086956521741,"#C5437F"],[0.48160535117056857,"#C6437E"],[0.48494983277591974,"#C7447D"],[0.48829431438127086,"#C8457D"],[0.49163879598662202,"#C9467C"],[0.49498327759197319,"#C9477B"],[0.49832775919732436,"#CA487A"],[0.50167224080267558,"#CB497A"],[0.50501672240802675,"#CC4A79"],[0.50836120401337792,"#CD4B78"],[0.51170568561872909,"#CD4C77"],[0.51505016722408026,"#CE4D77"],[0.51839464882943143,"#CF4E76"],[0.52173913043478259,"#D04F75"],[0.52508361204013376,"#D05074"],[0.52842809364548493,"#D15173"],[0.5317725752508361,"#D25273"],[0.53511705685618727,"#D35372"],[0.53846153846153844,"#D35371"],[0.5418060200668896,"#D45470"],[0.54515050167224077,"#D5556F"],[0.54849498327759194,"#D6566F"],[0.55183946488294311,"#D6576E"],[0.55518394648829428,"#D7586D"],[0.55852842809364545,"#D8596C"],[0.56187290969899661,"#D95A6B"],[0.56521739130434778,"#D95B6B"],[0.56856187290969895,"#DA5C6A"],[0.57190635451505012,"#DB5C69"],[0.57525083612040129,"#DC5D68"],[0.57859531772575246,"#DC5E67"],[0.58193979933110362,"#DD5F67"],[0.58528428093645479,"#DE6066"],[0.58862876254180596,"#DF6165"],[0.59197324414715713,"#DF6264"],[0.5953177257525083,"#E06363"],[0.59866220735785958,"#E16462"],[0.60200668896321075,"#E16562"],[0.6053511705685618,"#E26661"],[0.60869565217391297,"#E26761"],[0.61204013377926414,"#E36860"],[0.61538461538461531,"#E3695F"],[0.61872909698996648,"#E46B5F"],[0.62207357859531764,"#E46C5E"],[0.62541806020066892,"#E56D5E"],[0.62876254180602009,"#E56E5D"],[0.63210702341137126,"#E66F5D"],[0.63545150501672243,"#E6705C"],[0.6387959866220736,"#E7715C"],[0.64214046822742477,"#E7735B"],[0.64548494983277582,"#E8745A"],[0.64882943143812699,"#E8755A"],[0.65217391304347816,"#E97659"],[0.65551839464882944,"#E97759"],[0.65886287625418061,"#EA7858"],[0.66220735785953178,"#EA7957"],[0.66555183946488294,"#EB7A57"],[0.66889632107023411,"#EB7C56"],[0.67224080267558528,"#EB7D55"],[0.67558528428093634,"#EC7E55"],[0.67892976588628762,"#EC7F54"],[0.68227424749163867,"#ED8053"],[0.68561872909698995,"#ED8153"],[0.68896321070234112,"#EE8252"],[0.69230769230769229,"#EE8351"],[0.69565217391304346,"#EF8451"],[0.69899665551839474,"#EF8650"],[0.7023411371237458,"#F0874F"],[0.70568561872909685,"#F0884F"],[0.70903010033444813,"#F0894E"],[0.71237458193979919,"#F18A4D"],[0.71571906354515047,"#F18B4D"],[0.71906354515050164,"#F28C4C"],[0.72240802675585281,"#F28D4B"],[0.72575250836120397,"#F38E4A"],[0.72909698996655525,"#F38F4A"],[0.73244147157190631,"#F49049"],[0.73578595317725759,"#F49148"],[0.73913043478260865,"#F49347"],[0.7424749163879597,"#F59446"],[0.74581939799331098,"#F59546"],[0.74916387959866215,"#F69645"],[0.75250836120401332,"#F69744"],[0.75585284280936449,"#F79843"],[0.75919732441471577,"#F79942"],[0.76254180602006683,"#F79A41"],[0.76588628762541811,"#F89B40"],[0.76923076923076916,"#F89C3F"],[0.77257525083612044,"#F99D3E"],[0.7759197324414715,"#F99E3D"],[0.77926421404682267,"#F99F3D"],[0.78260869565217384,"#FAA03C"],[0.785953177257525,"#FAA23B"],[0.78929765886287628,"#FBA339"],[0.79264214046822734,"#FBA438"],[0.79598662207357862,"#FCA537"],[0.79933110367892968,"#FCA636"],[0.80267558528428096,"#FCA736"],[0.80602006688963201,"#FCA936"],[0.80936454849498329,"#FCAA35"],[0.81270903010033435,"#FCAC35"],[0.81605351170568563,"#FCAD35"],[0.8193979933110368,"#FCAE35"],[0.82274247491638786,"#FBB035"],[0.82608695652173914,"#FBB135"],[0.82943143812709019,"#FBB334"],[0.83277591973244147,"#FBB434"],[0.83612040133779253,"#FBB634"],[0.83946488294314381,"#FBB734"],[0.84280936454849487,"#FBB833"],[0.84615384615384615,"#FBBA33"],[0.84949832775919731,"#FBBB33"],[0.85284280936454848,"#FBBD33"],[0.85618729096989965,"#FABE32"],[0.85953177257525071,"#FABF32"],[0.86287625418060199,"#FAC132"],[0.86622073578595304,"#FAC232"],[0.86956521739130432,"#FAC431"],[0.87290969899665538,"#FAC531"],[0.87625418060200666,"#FAC631"],[0.87959866220735783,"#F9C831"],[0.882943143812709,"#F9C930"],[0.88628762541806017,"#F9CB30"],[0.88963210702341144,"#F9CC30"],[0.8929765886287625,"#F9CD2F"],[0.89632107023411356,"#F8CF2F"],[0.89966555183946484,"#F8D02F"],[0.9030100334448159,"#F8D22E"],[0.90635451505016718,"#F8D32E"],[0.90969899665551834,"#F8D42E"],[0.91304347826086951,"#F7D62D"],[0.91638795986622068,"#F7D72D"],[0.91973244147157196,"#F7D82D"],[0.92307692307692302,"#F7DA2C"],[0.9264214046822743,"#F7DB2C"],[0.92976588628762535,"#F6DD2C"],[0.93311036789297663,"#F6DE2B"],[0.93645484949832769,"#F6DF2B"],[0.93979933110367886,"#F6E12A"],[0.94314381270903003,"#F5E22A"],[0.9464882943143812,"#F5E32A"],[0.94983277591973247,"#F5E529"],[0.95317725752508353,"#F4E629"],[0.95652173913043481,"#F4E728"],[0.95986622073578587,"#F4E928"],[0.96321070234113715,"#F4EA27"],[0.96655518394648821,"#F3EB27"],[0.96989966555183948,"#F3ED26"],[0.97324414715719054,"#F3EE26"],[0.97658862876254171,"#F2F025"],[0.97993311036789299,"#F2F125"],[0.98327759197324405,"#F2F224"],[0.98662207357859533,"#F1F423"],[0.98996655518394638,"#F1F523"],[0.99331103678929766,"#F1F622"],[0.99665551839464872,"#F0F822"],[1,"#F0F921"]],"colorbar":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"thickness":23.039999999999996,"title":"","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"tickmode":"array","ticktext":["0.0","2.5","5.0","7.5","10.0"],"tickvals":[0.07813891877924399,0.28906945938962203,0.5,0.71093054061037797,0.92186108122075594],"tickfont":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"ticklen":2,"len":0.5}},"xaxis":"x2","yaxis":"y2","frame":null}],"layout":{"xaxis":{"domain":[0,0.94999999999999996],"automargin":true,"type":"linear","autorange":false,"range":[-17.086285970432552,117.08628597043256],"tickmode":"array","ticktext":["0","40","80"],"tickvals":[0,40,80],"categoryorder":"array","categoryarray":["0","40","80"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.6529680365296811,"tickwidth":0.33208800332088001,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0.33208800332088001,"zeroline":false,"anchor":"y","hoverformat":".2f"},"xaxis2":{"domain":[1,1.05],"automargin":true,"type":"linear","autorange":false,"range":[-1.5187335888919091,11.518733588891909],"tickmode":"array","ticktext":["0","4","8"],"tickvals":[0,3.9999999999999996,8],"categoryorder":"array","categoryarray":["0","4","8"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.6529680365296811,"tickwidth":0.33208800332088001,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0.33208800332088001,"zeroline":false,"anchor":"y2","hoverformat":".2f"},"yaxis2":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,14.22100848812498],"tickmode":"array","ticktext":["ef_government","ef_legal","ef_money","ef_regulation","ef_trade","pf_assembly","pf_expression","pf_identity","pf_law","pf_movement","pf_religion","pf_security"],"tickvals":[1,2,3,4,5,6,7,8,9,10,11,12],"categoryorder":"array","categoryarray":["ef_government","ef_legal","ef_money","ef_regulation","ef_trade","pf_assembly","pf_expression","pf_identity","pf_law","pf_movement","pf_religion","pf_security"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.6529680365296811,"tickwidth":0.33208800332088001,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0.33208800332088001,"zeroline":false,"anchor":"x2","hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,18.565987055868924],"tickmode":"array","ticktext":["goal9","goal17","goal10","goal5","goal7","goal2","goal16","goal3","goal15","goal6","goal11","goal8","goal1","goal4","goal12","goal13"],"tickvals":[0.99999999999999989,2,3,4,5,6,7,8,9,9.9999999999999982,11,11.999999999999998,13,13.999999999999998,15,16],"categoryorder":"array","categoryarray":["goal9","goal17","goal10","goal5","goal7","goal2","goal16","goal3","goal15","goal6","goal11","goal8","goal1","goal4","goal12","goal13"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.6529680365296811,"tickwidth":0.33208800332088001,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0.33208800332088001,"zeroline":false,"anchor":"x","hoverformat":".2f"},"annotations":[],"shapes":[{"type":"rect","fillcolor":"transparent","line":{"color":"rgba(179,179,179,1)","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":0.94999999999999996,"y0":0,"y1":1},{"type":"rect","fillcolor":"transparent","line":{"color":"rgba(179,179,179,1)","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","x0":1.05,"x1":1,"y0":0,"y1":1}],"images":[],"margin":{"t":42.301369863013697,"r":7.3059360730593621,"b":38.721461187214615,"l":101.55251141552515},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Human Freedom Index Scores Distribution","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0.5,"xref":"paper"},"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative","updatemenus":[{"type":"buttons","direction":"left","x":0.10000000000000001,"xanchor":"left","y":1.1000000000000001,"yanchor":"top","pad":[10,10],"showactive":false,"buttons":[{"label":"SDG Goals Distribution","method":"relayout","args":["subplot",[1,0]]},{"label":"Human Freedom Index Scores","method":"relayout","args":["subplot",[0,1]]}]}]},"attrs":{"eed94d8fd803":{"x":{},"y":{},"fill":{},"type":"scatter"},"eed928d04cf1":{"x":{},"y":{},"fill":{},"type":"scatter"}},"source":"A","config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"subplot":true,"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-2-2.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The distribution of the Human Freedom Index Score follows the same trend. Most of the scores are left-skewed, which means that countries tend to have in general good scores. The only scores not folowing are pf_law and ef_legal, which tend to have lower scores in general. Legal system, for civilians and countries, is changing slowly because it has a lot of implications over the situation within a country/between countries and because of the divergence of opinions. Therefore, investing more money for raising these scores will take more time than raising the scores of other goals.</p>
+<p>Now let’s consider the remaining variables of the dataset dedicated to answering the influence of factors over our SDG goals scores. All these variables have right-skewed distribution. Taking the mode into account, most of the concerned countries in our data have an unemployment rate between 2 to 7%, a distribution of GDP per capita between $3’000-$10’000, a distribution of military expenditure in percentage of the GDP 10% to 20% and finally a internet usage between 0 and 10%.</p>
+<p>These variables shows us even more the inequalities between the countries in our dataset. While most of our countries have low internet usage or/and a low GDP per capita, few countries are more developed, then mostly wealthier, and thus having better chances to get higher scores.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#now, same for the remaining variables. No need to reshape our data as only one variable.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>unempl_d <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Correlation_overall, <span class="fu">aes</span>(<span class="at">x =</span> unemployment.rate, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>, <span class="at">size =</span> <span class="fl">0.3</span>, <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>, <span class="at">option =</span> <span class="st">"C"</span>) <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">10</span>), <span class="co"># Center the title</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'Density'</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">'Distribution of Unemployment Rate'</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>gdp_d <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Correlation_overall, <span class="fu">aes</span>(<span class="at">x =</span> GDPpercapita, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>, <span class="at">size =</span> <span class="fl">0.3</span>, <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>, <span class="at">option =</span> <span class="st">"C"</span>) <span class="sc">+</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">10</span>), <span class="co"># Center the title</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'Density'</span>, <span class="at">title =</span> <span class="st">'Distribution of GDP per Capita'</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>milit_d <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Correlation_overall, <span class="fu">aes</span>(<span class="at">x =</span> MilitaryExpenditurePercentGDP, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>, <span class="at">size =</span> <span class="fl">0.3</span>, <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>, <span class="at">option =</span> <span class="st">"C"</span>) <span class="sc">+</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">10</span>), <span class="co"># Center the title</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'Density'</span>,<span class="at">title =</span> <span class="st">'Distribution of Military Expenditure (% of GDP)'</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>internet_d <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Correlation_overall, <span class="fu">aes</span>(<span class="at">x =</span> internet_usage, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>, <span class="at">size =</span> <span class="fl">0.3</span>, <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>, <span class="at">option =</span> <span class="st">"C"</span>) <span class="sc">+</span><span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'Density'</span>,<span class="at">title =</span> <span class="st">'Distribution of Internet Usage'</span>)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(unempl_d,gdp_d,milit_d,internet_d, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-3-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, let’s display the distribution of the different SDG achievement scores per continent, using violin boxplots to have an overview of the mods, the range with most of the observations and the outliers.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### boxplots ####</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#For sdg goals per continent </span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Africa</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>data_Q1_Africa <span class="ot">&lt;-</span> data_question1 <span class="sc">%&gt;%</span> <span class="co">#filtering Africa as continent</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(data_question1<span class="sc">$</span>continent <span class="sc">==</span> <span class="st">'Africa'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>data_Q1_Africa_long <span class="ot">&lt;-</span> <span class="fu">melt</span>(data_Q1_Africa)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>medians_AF <span class="ot">&lt;-</span> data_Q1_Africa_long <span class="sc">%&gt;%</span> <span class="co">#median per variable</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(variable) <span class="sc">%&gt;%</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_value =</span> <span class="fu">median</span>(value))</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>data_Q1_Africa_long <span class="ot">&lt;-</span> data_Q1_Africa_long <span class="sc">%&gt;%</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">left_join</span>(medians_AF, <span class="at">by =</span> <span class="st">"variable"</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#America</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>data_Q1_Americas <span class="ot">&lt;-</span> data_question1 <span class="sc">%&gt;%</span><span class="co">#filtering Americas as continent</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(data_question1<span class="sc">$</span>continent <span class="sc">==</span> <span class="st">'Americas'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>data_Q1_Americas_long <span class="ot">&lt;-</span> <span class="fu">melt</span>(data_Q1_Americas)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>medians_AM <span class="ot">&lt;-</span> data_Q1_Americas_long <span class="sc">%&gt;%</span> <span class="co">#median per variable</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(variable) <span class="sc">%&gt;%</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_value =</span> <span class="fu">median</span>(value))</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>data_Q1_Americas_long <span class="ot">&lt;-</span> data_Q1_Americas_long <span class="sc">%&gt;%</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">left_join</span>(medians_AM, <span class="at">by =</span> <span class="st">"variable"</span>)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#Asia</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>data_Q1_Asia <span class="ot">&lt;-</span> data_question1 <span class="sc">%&gt;%</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(data_question1<span class="sc">$</span>continent <span class="sc">==</span> <span class="st">'Asia'</span>) <span class="sc">%&gt;%</span><span class="co">#filtering Asia as continent</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>data_Q1_Asia_long <span class="ot">&lt;-</span> <span class="fu">melt</span>(data_Q1_Asia)</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>medians_AS <span class="ot">&lt;-</span> data_Q1_Asia_long <span class="sc">%&gt;%</span> <span class="co">#median per variable</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(variable) <span class="sc">%&gt;%</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_value =</span> <span class="fu">median</span>(value))</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>data_Q1_Asia_long <span class="ot">&lt;-</span> data_Q1_Asia_long <span class="sc">%&gt;%</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">left_join</span>(medians_AS, <span class="at">by =</span> <span class="st">"variable"</span>)</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="co">#Europe</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>data_Q1_Europe <span class="ot">&lt;-</span> data_question1 <span class="sc">%&gt;%</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(data_question1<span class="sc">$</span>continent <span class="sc">==</span> <span class="st">'Europe'</span>) <span class="sc">%&gt;%</span> <span class="co">#filtering Europe as continent</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>data_Q1_Europe_long <span class="ot">&lt;-</span> <span class="fu">melt</span>(data_Q1_Europe)</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>medians_EU <span class="ot">&lt;-</span> data_Q1_Europe_long <span class="sc">%&gt;%</span> <span class="co">#median per variable</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(variable) <span class="sc">%&gt;%</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_value =</span> <span class="fu">median</span>(value))</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>data_Q1_Europe_long <span class="ot">&lt;-</span> data_Q1_Europe_long <span class="sc">%&gt;%</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">left_join</span>(medians_EU, <span class="at">by =</span> <span class="st">"variable"</span>)</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="co">#Oceania</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>data_Q1_Oceania <span class="ot">&lt;-</span> data_question1 <span class="sc">%&gt;%</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(data_question1<span class="sc">$</span>continent <span class="sc">==</span> <span class="st">'Oceania'</span>) <span class="sc">%&gt;%</span> <span class="co">#filtering Oceania as continent</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>data_Q1_Oceania_long <span class="ot">&lt;-</span> <span class="fu">melt</span>(data_Q1_Oceania)</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>medians_OC <span class="ot">&lt;-</span> data_Q1_Oceania_long <span class="sc">%&gt;%</span> <span class="co">#median per variable</span></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(variable) <span class="sc">%&gt;%</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_value =</span> <span class="fu">median</span>(value))</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>data_Q1_Oceania_long <span class="ot">&lt;-</span> data_Q1_Oceania_long <span class="sc">%&gt;%</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">left_join</span>(medians_OC, <span class="at">by =</span> <span class="st">"variable"</span>)</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="co"># merge all medians</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>medians_all <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data_Q1_Oceania_long, data_Q1_Americas_long,data_Q1_Africa_long,data_Q1_Asia_long,data_Q1_Europe_long)</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>medians_all<span class="sc">$</span>color <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(medians_all<span class="sc">$</span>median_value <span class="sc">&gt;</span> <span class="dv">75</span>, <span class="st">"lightgreen"</span>,</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">ifelse</span>(medians_all<span class="sc">$</span>median_value <span class="sc">&lt;</span> <span class="dv">25</span>, <span class="st">"red3"</span>, <span class="st">'lightblue3'</span>)) <span class="co">#assigning colors. If median for a goal is &gt; 75 -&gt; lightblue, if &lt; 25 -&gt; red, orange otherwise.</span></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>bandwidth_nrd <span class="ot">&lt;-</span> <span class="fu">bw.nrd</span>(medians_all<span class="sc">$</span>value) <span class="co">#adapting the bandwidth</span></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(medians_all, <span class="fu">aes</span>(<span class="at">x =</span> variable, <span class="at">y =</span> value, <span class="at">fill =</span> color)) <span class="sc">+</span></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">trim =</span> <span class="cn">FALSE</span>, <span class="at">bw =</span> bandwidth_nrd) <span class="sc">+</span></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"lightgreen"</span> <span class="ot">=</span> <span class="st">"lightgreen"</span>, <span class="st">"red3"</span> <span class="ot">=</span> <span class="st">"red3"</span>, <span class="st">"lightblue3"</span> <span class="ot">=</span> <span class="st">"lightblue3"</span>),</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"between"</span>, <span class="st">"&gt;75"</span>, <span class="st">"&lt;25"</span>)) <span class="sc">+</span> </span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"SDG Goals Distribution by Continent"</span>, <span class="at">x =</span> <span class="st">"Goals"</span>, <span class="at">y =</span> <span class="st">"Scores"</span>, <span class="at">fill =</span> <span class="st">"Score Category"</span>) <span class="sc">+</span></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(continent <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_number</span>()) <span class="sc">+</span></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># Center the title</span></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>, <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>))</span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-4-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Here is the distribution of the goals per continent. We notice that Europe the continent with most of its goals having a median superior to 75 (represented by the lightblue color. We notice that only two goals have a median score lower than 25, which is for goal 9 for Africa and goal 10 for America. As seen before, goal 9 is generally having lower scores than the other goals. That could mean that the access to technology and sustainable/resilient infrastructures/industrialization is harder in Africa, because of various reasons such as less wealthy countries, corruption,…</p>
+<p>The goal 10 concerns the reduction of inequalities within/amongst countries. Therefore, we presume that less effort and investment has been made on this goal in America.</p>
+<p>In addition, some distributions are quite disparsed, such as goal 13 in Oceania and goal 10 in Africa. That could again show inequalities within countries or less investment made to raise the scores by different countries of the same continent.</p>
+<p>Now let’s display boxplots for the different variables of the human freedom index.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#for Human Freedom Index scores </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Africa</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>data_Q1_Africa_HFI <span class="ot">&lt;-</span> data_question1 <span class="sc">%&gt;%</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(data_question1<span class="sc">$</span>continent <span class="sc">==</span> <span class="st">'Africa'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>data_Q1_Africa_HFI_long <span class="ot">&lt;-</span> <span class="fu">melt</span>(data_Q1_Africa_HFI)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>medians_AF_HFI <span class="ot">&lt;-</span> data_Q1_Africa_HFI_long <span class="sc">%&gt;%</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(variable) <span class="sc">%&gt;%</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_value =</span> <span class="fu">median</span>(value))</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>data_Q1_Africa_HFI_long <span class="ot">&lt;-</span> data_Q1_Africa_HFI_long <span class="sc">%&gt;%</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">left_join</span>(medians_AF_HFI, <span class="at">by =</span> <span class="st">"variable"</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#America</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>data_Q1_Americas_HFI <span class="ot">&lt;-</span> data_question1 <span class="sc">%&gt;%</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(data_question1<span class="sc">$</span>continent <span class="sc">==</span> <span class="st">'Americas'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>data_Q1_Americas_HFI_long <span class="ot">&lt;-</span> <span class="fu">melt</span>(data_Q1_Americas_HFI)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>medians_AM_HFI <span class="ot">&lt;-</span> data_Q1_Americas_HFI_long <span class="sc">%&gt;%</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(variable) <span class="sc">%&gt;%</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_value =</span> <span class="fu">median</span>(value))</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>data_Q1_Americas_HFI_long <span class="ot">&lt;-</span> data_Q1_Americas_HFI_long <span class="sc">%&gt;%</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">left_join</span>(medians_AM_HFI, <span class="at">by =</span> <span class="st">"variable"</span>)</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">#Asia</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>data_Q1_Asia_HFI <span class="ot">&lt;-</span> data_question1 <span class="sc">%&gt;%</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(data_question1<span class="sc">$</span>continent <span class="sc">==</span> <span class="st">'Asia'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>data_Q1_Asia_HFI_long <span class="ot">&lt;-</span> <span class="fu">melt</span>(data_Q1_Asia_HFI)</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>medians_AS_HFI <span class="ot">&lt;-</span> data_Q1_Asia_HFI_long <span class="sc">%&gt;%</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(variable) <span class="sc">%&gt;%</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_value =</span> <span class="fu">median</span>(value))</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>data_Q1_Asia_HFI_long <span class="ot">&lt;-</span> data_Q1_Asia_HFI_long <span class="sc">%&gt;%</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">left_join</span>(medians_AS_HFI, <span class="at">by =</span> <span class="st">"variable"</span>)</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="co">#Europe</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>data_Q1_Europe_HFI <span class="ot">&lt;-</span> data_question1 <span class="sc">%&gt;%</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(data_question1<span class="sc">$</span>continent <span class="sc">==</span> <span class="st">'Europe'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>data_Q1_Europe_HFI_long <span class="ot">&lt;-</span> <span class="fu">melt</span>(data_Q1_Europe_HFI)</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>medians_EU_HFI <span class="ot">&lt;-</span> data_Q1_Europe_HFI_long <span class="sc">%&gt;%</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(variable) <span class="sc">%&gt;%</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_value =</span> <span class="fu">median</span>(value))</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>data_Q1_Europe_HFI_long <span class="ot">&lt;-</span> data_Q1_Europe_HFI_long <span class="sc">%&gt;%</span></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">left_join</span>(medians_EU_HFI, <span class="at">by =</span> <span class="st">"variable"</span>)</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a><span class="co">#Oceania </span></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>data_Q1_Oceania_HFI <span class="ot">&lt;-</span> data_question1 <span class="sc">%&gt;%</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(data_question1<span class="sc">$</span>continent <span class="sc">==</span> <span class="st">'Oceania'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>data_Q1_Oceania_HFI_long <span class="ot">&lt;-</span> <span class="fu">melt</span>(data_Q1_Oceania_HFI)</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>medians_OC_HFI <span class="ot">&lt;-</span> data_Q1_Oceania_HFI_long <span class="sc">%&gt;%</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(variable) <span class="sc">%&gt;%</span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">median_value =</span> <span class="fu">median</span>(value))</span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>data_Q1_Oceania_HFI_long <span class="ot">&lt;-</span> data_Q1_Oceania_HFI_long <span class="sc">%&gt;%</span></span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">left_join</span>(medians_OC_HFI, <span class="at">by =</span> <span class="st">"variable"</span>)</span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a><span class="co"># merge all medians </span></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>medians_all_HFI <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data_Q1_Oceania_HFI_long, data_Q1_Americas_HFI_long,data_Q1_Africa_HFI_long,data_Q1_Asia_HFI_long,data_Q1_Europe_HFI_long)</span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>medians_all_HFI<span class="sc">$</span>color <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(medians_all_HFI<span class="sc">$</span>median_value <span class="sc">&gt;</span> <span class="fl">7.5</span>, <span class="st">"lightgreen"</span>, </span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">ifelse</span>(medians_all_HFI<span class="sc">$</span>median_value <span class="sc">&lt;</span> <span class="fl">2.5</span>, <span class="st">"red3"</span>, <span class="st">'lightblue3'</span>))</span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>bandwidth_nrd_HFI <span class="ot">&lt;-</span> <span class="fu">bw.nrd</span>(medians_all_HFI<span class="sc">$</span>value)</span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot</span></span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(medians_all_HFI, <span class="fu">aes</span>(<span class="at">x =</span> variable, <span class="at">y =</span> value, <span class="at">fill =</span> color)) <span class="sc">+</span></span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">trim =</span> <span class="cn">FALSE</span>, <span class="at">bw =</span> bandwidth_nrd_HFI) <span class="sc">+</span></span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"lightgreen"</span> <span class="ot">=</span> <span class="st">"lightgreen"</span>, <span class="st">"red3"</span> <span class="ot">=</span> <span class="st">"red3"</span>, <span class="st">"lightblue3"</span> <span class="ot">=</span> <span class="st">"lightblue3"</span>),</span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"between"</span>, <span class="st">"&gt;7.5"</span>, <span class="st">"&lt;2.5"</span>)) <span class="sc">+</span> </span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Human Freedom Index Scores Distribution by Continent"</span>, <span class="at">x =</span> <span class="st">"Variables"</span>, <span class="at">y =</span> <span class="st">"Scores"</span>, <span class="at">fill =</span> <span class="st">"Score Category"</span>) <span class="sc">+</span></span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(continent <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_number</span>()) <span class="sc">+</span></span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># Center the title</span></span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>, <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-5-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Here we can notice the same results as before concerning the SDG goals, except that no score has a median below 25%. Again, Europe is the continent with most of its median scores superior to 75 (lightblue color)</p>
+<p>For space reason because of the different scales, we have decided not to make violin boxplot per continent for the remaining variables. The distribution can be seen in the general distribution seen prior to that.</p>
+<p>Now, let’s have a closer look to the general correlation between our variables. Using our cleaned dataset, we will use a correlation heatmap to help us vizualising the informations. Given that most of our variables are not normally distributed, we will use the Spearman method to calculate the correlation.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Correlations between variables Heatmap ####</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>Correlation_overall <span class="ot">&lt;-</span>data_question1 <span class="sc">%&gt;%</span> <span class="co"># selection of the numerical data</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">select</span>(population<span class="sc">:</span>ef_regulation)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>cor_matrix_sper <span class="ot">&lt;-</span> <span class="co"># calculation of the correlation matrix</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(Correlation_overall, <span class="at">method =</span> <span class="st">"spearman"</span>, <span class="at">use =</span> <span class="st">"everything"</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>cor_melted <span class="ot">&lt;-</span> <span class="co"># wide to long transformation</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">melt</span>(cor_matrix_sper)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> cor_melted, <span class="fu">aes</span>(Var1, Var2, <span class="at">fill =</span> value)) <span class="sc">+</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>                       <span class="at">midpoint =</span> <span class="dv">0</span>, <span class="at">limit =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="at">space =</span> <span class="st">"Lab"</span>, </span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                       <span class="at">name=</span><span class="st">"Spearman</span><span class="sc">\n</span><span class="st">Correlation"</span>) <span class="sc">+</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">6</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>),</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">''</span>, <span class="at">y =</span> <span class="st">''</span>, <span class="at">title =</span> <span class="st">'Correlation Matrix Heatmap'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>By looking at our heatmap, we notice that most of our goals are strongely correlated together and that some variables amongst the Human Freedom Index scores too (strong correlation among personal freedom variables (pf), reflecting scores from the Human Freedom Index on movement, religion, assembly, and expression). This could be explained by the fact that some of these goals/scores share partially similar objectifs, which could mean that a raise in the score of one of these goals will raise positively the score of another/some other goals. In addition, we notice that goals 12 and 13 (respectively “responsible consumption &amp; production” and “climate action”) are strongely negatively correlated with most of our variables, except between themself.</p>
+<p>We will see more in detail the correlations between our goals and variables in the analysis part of the influence of the factors over the Sustainable Development Goals.</p>
+<p>In order to have an overview of the relationship between our independent variables and the SDG overall score, we make several graphs containing the Spearman correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable. –&gt;</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Spearman's correlation coeff ####</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>lower.panel <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, ...){</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">points</span>(x, y, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">"darkgreen"</span>, <span class="at">cex =</span> <span class="fl">0.2</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a> panel.hist <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ...){</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>   usr <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="st">"usr"</span>); <span class="fu">on.exit</span>(<span class="fu">par</span>(usr))</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">par</span>(<span class="at">usr =</span> <span class="fu">c</span>(usr[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="dv">0</span>, <span class="fl">1.5</span>) )</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>   h <span class="ot">&lt;-</span> <span class="fu">hist</span>(x, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>   breaks <span class="ot">&lt;-</span> h<span class="sc">$</span>breaks; nB <span class="ot">&lt;-</span> <span class="fu">length</span>(breaks)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>   y <span class="ot">&lt;-</span> h<span class="sc">$</span>counts; y <span class="ot">&lt;-</span> y<span class="sc">/</span><span class="fu">max</span>(y)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>   <span class="fu">rect</span>(breaks[<span class="sc">-</span>nB], <span class="dv">0</span>, breaks[<span class="sc">-</span><span class="dv">1</span>], y, <span class="at">col =</span> <span class="st">"lightgreen"</span>, ...)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a> }</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a> <span class="co"># panel.cor_stars function with stars alongside correlation coefficients</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a> panel.cor_stars <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">prefix =</span> <span class="st">""</span>, cex.cor, ...) {</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>   usr <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="st">"usr"</span>); <span class="fu">on.exit</span>(<span class="fu">par</span>(usr))</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>   <span class="fu">par</span>(<span class="at">usr =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>   r <span class="ot">&lt;-</span> <span class="fu">cor</span>(x, y)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>   p_value <span class="ot">&lt;-</span> <span class="fu">cor.test</span> (x,y)<span class="sc">$</span>p.value</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span> (p_value <span class="sc">&lt;</span> <span class="fl">0.001</span>){</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>     stars <span class="ot">&lt;-</span> <span class="st">"***"</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>   } <span class="cf">else</span> <span class="cf">if</span> (p_value <span class="sc">&lt;</span> <span class="fl">0.01</span>) {</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>     stars <span class="ot">&lt;-</span> <span class="st">"**"</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>   } <span class="cf">else</span> <span class="cf">if</span> (p_value <span class="sc">&lt;</span> <span class="fl">0.05</span>) {</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>     stars <span class="ot">&lt;-</span> <span class="st">"*"</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>   } <span class="cf">else</span> {</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>     stars <span class="ot">&lt;-</span> <span class="st">""</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>   }</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>   txt <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">format</span>(<span class="fu">c</span>(r, <span class="fl">0.123456789</span>), <span class="at">digits =</span> digits)[<span class="dv">1</span>], <span class="st">" "</span>, stars)</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span>(<span class="fu">missing</span>(cex.cor)) cex.cor <span class="ot">&lt;-</span> <span class="fl">0.5</span><span class="sc">/</span><span class="fu">strwidth</span>(txt)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>   <span class="fu">text</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>, txt, <span class="at">cex =</span> cex.cor)</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a> }</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a> <span class="co"># # Independent variables</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a> <span class="fu">pairs</span>(Correlation_overall[,<span class="fu">c</span>(<span class="st">"overallscore"</span>, <span class="st">"unemployment.rate"</span>, <span class="st">"GDPpercapita"</span>, <span class="st">"MilitaryExpenditurePercentGDP"</span>, <span class="st">"internet_usage"</span>)], <span class="at">upper.panel=</span>panel.cor_stars, <span class="at">diag.panel=</span>panel.hist, <span class="at">lower.panel =</span> lower.panel, <span class="at">main=</span><span class="st">"Correlation table and distribution of various variables"</span>)</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a> <span class="co"># pairs(Correlation_overall[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly" ,"pf_expression" ,"pf_identity", "ef_government", "ef_legal", "ef_money", "ef_trade", "ef_regulation")], upper.panel=panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of HFI variables")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-7-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Meaning of the stars: *** : p_value &lt; 0.001; ** : p_value &lt; 0.01; *: p_value &lt;0.05; no star if p_value is higher.</p>
+<p>The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score.</p>
+<p>The overall SDG achievement score is highly correlated with “personal freedom: law” (p=.69) and “personal freedom: identity” (p=.62). The other dimensions of personal freedom do not seem to have important influence. Regarding the distribution of the personal freedom variables, we notice that except for law, all have right-skewed distributions meaning that most of the countries have high scores.</p>
+<p>The overall SDG achievement score is highly correlated with “economical freedom: legal” (p=.77), “economical trade: legal” (p=.67) and “economical freedom: money” (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
