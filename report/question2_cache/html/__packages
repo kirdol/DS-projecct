@@ -35,10 +35,11 @@ visdat
 huxtable
 plm
 plotly
-shiny
 e1071
 carData
 car
 naniar
 ggridges
+shiny
 leaps
+shinydashboard

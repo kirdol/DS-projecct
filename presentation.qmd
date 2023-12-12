@@ -11,12 +11,15 @@ format:
 ---
 ## Introduction
 
+![Source: <a href="https://www.un.org/sustainabledevelopment/news/communications-material/">UN Communication materials</a>](E_SDG_poster_UN_emblem_WEB%202020.png)
+
 ## Main dataset {.smaller}
 
-1. **SDG achievement scores**, source: Sustainable Developement Report 2023
+1. **SDG achievement scores**, source: Sustainable Development Report 2023
 
-```{r, message = FALSE, warning=FALSE}
+```{r, message = FALSE, warning=FALSE, results='hide'}
 #| echo: false
+options(repos = "https://stat.ethz.ch/CRAN/")
 source(here::here("scripts/Clean/setup.R"))
 data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"))
 data_question2 <- data_question2 %>% dplyr::select(-X)
@@ -78,52 +81,150 @@ plot_ly(
 
 ## Complementary datasets {.smaller}
 
-2. **Unemployment rate**, source: ILOSTAT
-3. **GDP per capita and military expenditure in % of GDP**, source: World Bank
-4. **Internet usage**, source: Our World in Data
-5. **Human freedom index (personal and economic)**, source: CATO
+::: {.incremental}
 
-6. **Disasters**, source: Kaggle
-7. **COVID**, source: GitHub
-8. **Conflicts**, source: World Bank
+2. **Unemployment rate**
+3. **GDP per capita and military expenditure in % of GDP**
+4. **Internet usage**, % of the population using internet
+5. **Human freedom index (personal and economic)**, movement, religion, trade...
+
+6. **Disasters**, deaths, injured...
+7. **COVID**, deaths, cases and stringency 
+8. **Conflicts**, deaths, population and area affected
+
+:::
+
+## Test1
+
+- Match datasets by key = (country, year)
+
+## Test 2
+
+- Match datasets by key = (country, year)
+- Delete columns then rows with too much NAs
+
+```{r, message = FALSE, warning=FALSE, fig.height=4}
+#| echo: false
+all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
+data_question1 <- all_Merge %>%
+  filter(year<=2020) %>%
+  select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected,
+            total_damages, cases_per_million, deaths_per_million, stringency,
+            ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
+data_question1 <- data_question1 %>% select(-c(MiliratyExpenditurePercentGovExp,
+                                               hf_score, pf_score, ef_score))
+variable_names <- names(data_question1)
+missing_percentages <-
+  sapply(data_question1, function(col) mean(is.na(col)) * 100)
+
+missing_data_summary <- data.frame(
+  Variable = variable_names,
+  Missing_Percentage = missing_percentages
+)
+
+missing_data_summary <- missing_data_summary %>%
+  mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))
+
+ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Percentage), y = Missing_Percentage, fill = Missing_Percentage)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = ifelse(Missing_Percentage > 1, sprintf("%.1f%%", Missing_Percentage), ""),
+                y = Missing_Percentage),
+            position = position_stack(vjust = 1),  # Adjust vertical position
+            color = "white",  # Text color
+            size = 2,          # Text size
+            hjust = 1.05) +
+  labs(title = "Percentage of Missing Values by Variable",
+       x = "Variable",
+       y = "Missing Percentage") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 1, size=6 ),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10)) +
+  labs(fill = "% NAs") +
+  coord_flip()
+
+
+```
+
+## Test 3
+
+- Match datasets by key = (country, year)
+- Delete columns then rows with too much NAs
+
+```{r, message = FALSE, warning=FALSE, fig.height=3}
+#| echo: false
+#3
+data_question1 <- all_Merge %>%
+  filter(year<=2020) %>%
+  select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected,
+            total_damages, cases_per_million, deaths_per_million, stringency,
+            ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
+data_question1 <- data_question1 %>% select(-c(MiliratyExpenditurePercentGovExp,
+                                               hf_score, pf_score, ef_score))
+see_missing1_1 <- data_question1 %>%
+  group_by(code) %>%
+  summarise(across(-c(year, country, continent, region, population,
+                      overallscore, goal1, goal2, goal3, goal4, goal5, goal6,
+                      goal7, goal8, goal9, goal10, goal11, goal12, goal13,
+                      goal15, goal16, goal17), 
+                   ~ sum(is.na(.))) %>%
+              mutate(num_missing = rowSums(across(everything()))) %>%
+              filter(num_missing > 50))
+
+data_question1 <- data_question1 %>% filter(!code %in% see_missing1_1$code)
+naniar::gg_miss_upset(data_question1, nsets=10, nintersects=11)
+```
+
+## Test 4
+
+- Match datasets by key = (country, year)
+- Delete columns then rows with too much NAs
+- Fill in remaining NAs with linear interpolation or median/mean based on region
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+<img src="data1.png" alt="Image Alt Text" height="300" />
+
+:::
+
+::: {.column width="50%"}
+
+![](data2.png)
+
+:::
+
+::::
+
+## Test 5
+
+- Match datasets by key = (country, year)
+- Delete columns then rows with too much NAs
+- Fill in remaining NAs with linear interpolation or median/mean based on region
+- COVID and disasters: replace NAs by zeros 
+
 
 ## Data wrangling {.smaller}
 
 :::: {.columns}
 
-::: {.column width="28%"}
+::: {.column width="60%"}
 
-* Match datasets by key = (country, year)
-* Delete columns then rows with too much NAs
-* Fill in remaining NAs with linear interpolation or median/mean based on region
-* COVID and disasters: replace NAs by zeros 
+- Match datasets by key = (country, year)
+- Delete columns then rows with too much NAs
+- Fill in remaining NAs with linear interpolation or median/mean based on region
+- COVID and disasters: replace NAs by zeros 
+
 :::
 
-::: {.column width="72%"}
+:::
 
-```{r, message = FALSE, warning=FALSE, fig.height=4}
-#| echo: false
-all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
+::: {.column width="40%"}
 
-# Remove unnecessary column
-all_Merge <- all_Merge %>% select(-c(X))
 
-# Create a dataframe with the goals without NAs summarize in one column to simplify the visualization
-goal_vars <- all_Merge %>%
-  select(starts_with("goal")) %>%
-  filter_all(all_vars(!is.na(.))) %>%
-  colnames()
-to_plot_missing <- all_Merge %>%
-  mutate(Goals_without_NAs = rowSums(!is.na(select(., all_of(goal_vars))))) %>%
-  select(-c(goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal11, goal12, goal13, goal15, goal16, goal17))
+:::
 
-vis_dat(to_plot_missing, warn_large_data = FALSE) + scale_fill_brewer(palette = "Paired") +
-  theme(
-    axis.text.x = element_text(angle = 90, size = 6),
-    legend.text = element_text(size = 8),  # Adjust the size of legend text
-    legend.title = element_text(size = 10) 
-  )
-```
 :::
 
 ::::
@@ -261,15 +362,6 @@ fviz_pca_biplot(pca_result,
   theme_minimal()
 ```
 :::
-
-
-
-
-
-## Q2
-
-## Q3
-
 
 ## Evolution over time
 
@@ -481,55 +573,3 @@ plotly::plot_ly() %>%
 ## Influence of events
 
 ## Conclusion
-
-
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
-
-## Bullets
-
-When you click the **Render** button a document will be generated that includes:
-
--   Content authored with markdown
--   Output from executable code
-
-## Code
-
-When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like [this](https://quarto.org/docs/computations/r.html):
-
-```{r}
-1 + 1
-```
-
-
-This chunk will not show code, but only the results. See [this website](https://quarto.org/docs/computations/execution-options.html) for more options.
-```{r}
-#| echo: false
-#| layout-ncol: 2
-library(ggplot2)
-ggplot(mpg, aes(displ, hwy)) + geom_point()
-ggplot(mpg, aes(displ, hwy)) + geom_smooth()
-```
-
-## Columns
-
-You can create multiple columns like this:
-
-:::: {.columns}
-
-::: {.column width="35%"}
-Here I put a list with
-
-* First bullet
-* Second bullet
-:::
-
-::: {.column width="55%"}
-And here some code:
-```{r}
-my_function <- function(x) x + 1
-my_function(41)
-```
-:::
-

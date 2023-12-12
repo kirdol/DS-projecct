@@ -1612,7 +1612,7 @@ data_question1 <- data_question1 %>% filter(code!="VEN")
 For MilitaryExpenditurePercentGDP, We plot the evolution of MilitaryExpenditurePercentGDP along the years for each country containing missing values and distinguish the percentage of missing values with colors.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE, fig.height=4}
-#### Evolution of MilitaryExpenditurePercentGDP oveer the time ####
+#### Evolution of MilitaryExpenditurePercentGDP over the time ####
 
 MilitaryExpenditurePercentGDP1 <- data_question1 %>%
   group_by(code) %>%
