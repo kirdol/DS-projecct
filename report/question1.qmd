@@ -15,7 +15,7 @@ Q3.3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
 data <- read.csv(here("scripts", "data", "all_Merge.csv"))
 Correlation_overall <- data_question1 %>%
       dplyr::select(population:ef_regulation)
-```
+``` 
 
 ### EDA: general exploratory data analysis on factors influencing the sdg goals
 
