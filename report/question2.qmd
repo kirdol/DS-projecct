@@ -23,7 +23,7 @@ data_question2 <- data_question2 %>%
 
 First, we look at the evolution of SDG achievement overall score over time by continent and by region and we see that the general evolution of SDG scores around the world is increasing over the years, but very slowly. Looking at the continents, we see that Europe is above the others, while Africa is below, but in general, all have increasing overall scores.
 
-```{r, echo = FALSE, message = FALSE, warning=FALSE, cache = TRUE, out.height="50%"}
+```{r, echo = FALSE, message = FALSE, warning=FALSE, cache = TRUE, fig.height=2.5}
 data1 <- data_question2 %>% group_by(year, continent) %>%
   mutate(mean_overall_score_by_year=mean(overallscore))
 
@@ -51,7 +51,7 @@ plot2 <- ggplot(data2) +
        )+
   theme(legend.position = "right", plot.title = element_text(size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8), legend.text = element_text(size= 8),legend.title = element_text(size= 10))
 
-(plot1 + plot2) / plot_spacer() 
+plot1 + plot2
 ```
 
 This view that groups the countries by region gives us precision about the previous information. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below.
@@ -174,7 +174,7 @@ We observe that most of the time, Europe is at the top of the graph and Africa a
 
 Third we create an interactive map of the world to be able to navigate from year 2000 to 2022, seeing the level of achievement of the SDGs (overall score) for each country.
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.height=1.5}
 # Load world map data
 world <- ne_countries(scale = "medium", returnclass = "sf")
 
@@ -237,7 +237,7 @@ binary2015 <- data_question2 %>%
 
 We begin by looking at the distribution of the difference in SDG scores from one year to the next (improvement if it is above zero and deterioration if it is below zero).
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+```{r, echo = FALSE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 # histogram of difference in scores between years
 unique_years <- unique(binary2015$year)
 plot_ly() %>%
@@ -696,7 +696,7 @@ We notice various patterns, among them:
 
 Regarding the impact of the adoption of SDGs in 2015, we can not tell that it had a positive impact, because there are not more big improvements after 2015 than before, even a little bit less. In addition, the most impressive improvements mostly occurred before 2015. These conclusions are supported by the next graph: we fit two different regression lines (before and after 2015) to see if there is a jump after the adoption of the SDGs and if the the SDG scores increase faster. We decided to cut the y-axis in order to have a better visual of the different scores. Since the regressions lines (taking into account all of the goals) go between 30% and 85% we only kept those values.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+```{r, echo = FALSE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 # Graphs to show the jump (or not) in 2015
 
 # Filter data
