@@ -165,6 +165,7 @@ ggplot(data = Q3.1, aes(x = year, y = total_affected, group = region, color = re
   ) +
   ggtitle("Trend of Total Affected from Climatic Disasters Over Time")
 ```
+We can see that the regions the most affected by the conflicts are East Asia, North America and South Asia. We weill concetrate more in this regions. 
 
 These is our time-analysis concerning conflicts deaths per region between 2000 and 2016
 
@@ -185,9 +186,9 @@ ggplot(data = conflicts_filtered, aes(x = year, y = sum_deaths, group = region, 
   ggtitle("Trend of Deaths by Conflicts Over Time")
 ```
 
-We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, then less America & the Caribbean and Eastern Europe
+We can see that the regions the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, then very less America & the Caribbean and Eastern Europe.
 
-These is our time-analysis concerning conflicts affected population per region between 2000 and 2016
+These is our time-analysis concerning conflicts affected population per region between 2000 and 2016.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region, color = region)) +
@@ -204,138 +205,32 @@ ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region
   ggtitle("Trend of Population Affected by Conflicts Over Time")
 ```
 
-We can see that the regions' the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, America & the Caribbean, Eastern Europe and sometimes Caucasus and Central Asia
+We can see that the regions the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Caucasus and Central Asia.
+
+Finally, these is our time-analysis concerning maxintensity conflicts per region between 2000 and 2016.
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+ggplot(data = conflicts_filtered, aes(x = year, y = maxintensity, group = region, color = region)) +
+  geom_smooth(method = "loess", se = FALSE, span = 0.3, size = 0.6) + 
+  labs(x = "Year", y = "Maxintensity") +
+  facet_wrap(~ region, nrow = 5) +
+  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+        strip.text = element_text(size = 8),
+        panel.spacing = unit(0.5, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none"
+  ) +
+  ggtitle("Trend of Maxintensity by Conflicts Over Time")
+```
+We can see that the regions having a maxintensity in conflicts are : Caucasus and Central Asia, Eastern Europe, Middle east and north Africa, Sub-Saharan Africa, North America, South Asia, East Asia just at one precise moment, Latin America & the Caribbean less.
 
 Now that we could visualize which regions are the most impacted by these three events we can do correlations analysis per region to see if this events have indeed an impact on the evolution of SDG goals.
 
-Here we want to analyse the correlation between the climate disasters and the SDG goals in South and East Asia.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-Q3.1[is.na(Q3.1)] <- 0
-
-selected_regions <- c("South Asia", "East Asia", "North America")
-disaster_selected <- Q3.1[Q3.3$region %in% selected_regions, ]
-
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "no_homeless")
-
-correlation_matrix_disaster <- cor(disaster_selected[, relevant_columns], use = "complete.obs")
-
-kable(correlation_matrix_disaster)
-
-cor_melted <- as.data.frame(as.table(correlation_matrix_disaster))
-names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-
-ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
-  geom_tile() +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
-                       midpoint = 0, limit = c(-1, 1), space = "Lab",
-                       name = "Correlation") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
-        axis.text.y = element_text(size = 8)) +
-  coord_fixed() +
-  labs(x = '', y = '',
-       title = 'Correlation between the climate disasters and the SDG goals in South and East Asia')
-
-```
-
-We conclude that climate disasters do not really have a big impact on SDG goals.
-
-Here we want to analyse the correlation between the Covid-19 and the SDG goals only during Covid time.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-covid_filtered <- Q3.2[Q3.2$year >= as.Date("2019-01-01"), ]
-
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
-
-relevant_data <- covid_filtered[, relevant_columns]
-
-correlation_matrix_Covid <- cor(relevant_data, use = "complete.obs")
-
-kable(correlation_matrix_Covid)
-
-cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
-names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-
-ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
-  geom_tile() +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
-                       midpoint = 0, limit = c(-1, 1), space = "Lab",
-                       name = "Correlation") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
-        axis.text.y = element_text(size = 8)) +
-  coord_fixed() +
-  labs(x = '', y = '',
-       title = 'Correlation between COVID and the SDG goals')
-```
-
-Same conclusion, really weird.
-
-Here we want to analyse the correlation between conflicts deaths and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Eastern Europe regions.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-
-selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe")
-conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
-
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "sum_deaths", "maxintensity")
-
-correlation_matrix_Conflicts_Deaths <- cor(conflicts_selected[, relevant_columns], use = "complete.obs")
-
-kable(correlation_matrix_Conflicts_Deaths)
-
-cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
-names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-
-ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
-  geom_tile() +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
-                       midpoint = 0, limit = c(-1, 1), space = "Lab",
-                       name = "Correlation") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
-        axis.text.y = element_text(size = 8)) +
-  coord_fixed() +
-  labs(x = '', y = '',
-       title = 'Correlation between Conflicts deaths and the SDG goals')
-```
-
-Finally, we want to analyse the correlation between conflicts affected population and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean, Eastern Europe regions and Caucasus and Central Asia.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-
-# Filter data for specific regions (pop_affected)
-selected_regions <- c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe","Caucasus and Central Asia")
-conflicts_selected <- Q3.3[Q3.3$region %in% selected_regions, ]
-
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected")
-
-correlation_matrix_Conflicts_Pop_Affected <- cor(conflicts_selected[, relevant_columns], use = "complete.obs")
-
-kable(correlation_matrix_Conflicts_Pop_Affected)
-
-cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Affected))
-names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-
-ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
-  geom_tile() +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
-                       midpoint = 0, limit = c(-1, 1), space = "Lab",
-                       name = "Correlation") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
-        axis.text.y = element_text(size = 8)) +
-  coord_fixed() +
-  labs(x = '', y = '',
-       title = 'Correlation between Conflicts Affected Population and the SDG goals')
-```
 
 ## Focus on the correlation between the SDG scores and the different events.
 
-Starting from what we saw with our correlation maps, we concluded that they did not have any big impact on the SDG scores per region.
-
-Here you can see an extract of our correlation map between the climate disasters and the SDG goals in South and East Asia as it was the regions that where the most impacted.
+Here you can see an extract of our correlation map between the climate disasters and the SDG goals in South and East Asia and North America as it was the regions that where the most impacted.
+We conclude that climate disasters do not really have a big impact on SDG scores per region.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 
@@ -365,8 +260,8 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
   labs(x = '', y = '',
        title = 'Correlation between the climate disasters and the SDG goals in South and East Asia and North America')
 ```
-
-Here you can see an extract of our correlation map between the COVID-19 and the SDG goals.
+Here you can see an extract of our correlation map between the COVID-19 and the SDG goals only during COVID-19 time.
+We have the same conclusions, it is still not significant, and that's surprising. 
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="65%"}
 
@@ -397,18 +292,47 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
   labs(x = '', y = '',
        title = 'Correlation between COVID and the SDG goals')
 ```
-
-Here you can see an extract of our correlation map between the conflicts and the SDG goals in Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean, Eastern Europe, Caucasus and Central Asia as it was the regions that where the most impacted. We analysed this regions also for sum_deaths because it has the same touched regions than affected population.
+Here you can see an extract of our correlation map between the conflicts deaths and the SDG goals in Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean as it was the regions that where the most impacted. 
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="65%"}
 
-conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe", "Caucasus and Central Asia"), ]
+conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean"), ]
 
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected", "sum_deaths", "maxintensity")
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "sum_deaths")
 
 subset_data <- conflicts_filtered[, relevant_columns]
 
-correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected", "sum_deaths", "maxintensity")])
+correlation_matrix_Conflicts_Deaths <- cor(subset_data, subset_data[, c("sum_deaths")])
+
+cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+         plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
+                                   vjust = 8, lineheight = 2)
+  ) +
+  coord_fixed() +
+  labs(x = '', y = 'Deaths',
+       title = 'Correlation between Conflicts Deaths and the SDG goals')
+```
+Here we want to analyse the correlation between conflicts affected population and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Caucasus & Central Asia.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="65%"}
+
+conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Caucasus & Central Asia"), ]
+
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected")
+
+subset_data <- conflicts_filtered[, relevant_columns]
+
+correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected")])
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
@@ -425,15 +349,44 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
                                    vjust = 8, lineheight = 2)
   ) +
   coord_fixed() +
-  labs(x = '', y = '',
-       title = 'Correlation between Conflicts Affected Population & Deths and the SDG goals')
+  labs(x = '', y = 'Affected Population',
+       title = 'Correlation between Conflicts Affected Population and the SDG goals')
 ```
+Here we want to analyse the correlation between the regions having a maxintensity in conflicts  and the SDG goals only for Caucasus & Central Asia, Eastern Europe, Middle east & north Africa, Sub-Saharan Africa, North America, South Asia, East Asia, Latin America & the Caribbean.
 
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="65%"}
+
+conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Caucasus & Central Asia", "Eastern Europe", "North America", "East Asia"), ]
+
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "maxintensity")
+
+subset_data <- conflicts_filtered[, relevant_columns]
+
+correlation_matrix_Conflicts_Maxintensity <- cor(subset_data, subset_data[, c("maxintensity")])
+
+cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Maxintensity))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation") +
+  theme_minimal() +
+  theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+         plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
+                                   vjust = 8, lineheight = 2)
+  ) +
+  coord_fixed() +
+  labs(x = '', y = 'Maxintensity',
+       title = 'Correlation between Maxintensity in Conflicts and the SDG goals')
+```
 After looking at almost the same results, we asked ourselves if the fact that we do not see any correlations is because the consequences of this disasters arrive later on, so we decided to remake the same correlations with 1 year gap.
 
 ### Correlations for each event with one year gap
 
-Here you can see for example our correlation map between the climate disasters and the SDG goals in South and East Asia with one year gap.
+Here you can see for example our correlation map between the climate disasters and the SDG goals in South and East Asia and North America with one year gap.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 
@@ -476,7 +429,7 @@ Even with a year gap it doesn't seem that climate disaster with such consequence
 
 ### Interactive map of the correlation between the different events and the SDG goals with 1 year gap.
 
-Here you can see an interactive map of the correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019). results -\> nothing?
+Here you can see an interactive map of the correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019).
 
 ```{r, eval = TRUE, echo = FALSE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 library(shiny)
@@ -634,7 +587,7 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 ```
 
-Finally, here you can see an interactive map of the correlation between Conflict and the SDG goals with 1 year gap. Nothing?
+Finally, here you can see an interactive map of the correlation between Conflict and the SDG goals with 1 year gap.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
