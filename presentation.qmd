@@ -304,29 +304,39 @@ grid.arrange(unempl_d,gdp_d,milit_d,internet_d, ncol = 2, nrow = 2)
 ## Focus on the relationships between the SDGs
 
 ```{r echo = FALSE, message = FALSE}
-#### Setup ####
-source(here::here("scripts","Clean","setup.R"))
-data_4 <- read.csv(here::here("scripts", "data", "data_question24.csv"))
+data_4 <- read.csv(here("scripts", "data", "data_question24.csv"))
 threashold_heatmap <- 0.5
-```
+data_4_goals <- data_4 %>%
+  dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
+                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
+                goal13, goal15, goal16, goal17)
+spearman_corr_4 <-cor(data_4_goals, method = "spearman", use = "everything")
+spearman_corr_4[abs(spearman_corr_4) < threashold_heatmap] <- NA
+melted_corr_4 <- melt(spearman_corr_4, na.rm = TRUE)
 
-
-::: {.column width="49%"}
-```{r echo = FALSE, message = FALSE, warning=FALSE}
-#### Scree Plot ####
-
-# Selecting only the goals
+# Selecting only the goals columns
 goals_data <- data_4 %>%
   dplyr::select(goal1, goal2, goal3, goal4, goal5,
                 goal6,goal7, goal8, goal9, goal10, goal11, goal12,
                 goal13, goal15, goal16, goal17)
 goals_data_scaled <- scale(goals_data) # Scaling the data
 pca_result <- prcomp(goals_data_scaled) # Running PCA
+```
 
-# Plotting Scree plot to visualize the importance of each principal component
-fviz_eig(pca_result,
-         addlabels = TRUE) +
-  theme_minimal()
+
+::: {.column width="49%"}
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
+    geom_tile() +
+    geom_text(aes(label = sprintf("%.2f", value)), vjust = 0.5, size=2.5) + # Adding text
+    scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                         midpoint = 0, limit = c(-1,1), space = "Lab", 
+                         name="Spearman\nCorrelation",
+                         na.value = "grey") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(title = "Heatmap of Spearman Correlations for Goals", 
+         x = "", y = "")
 ```
 :::
 
