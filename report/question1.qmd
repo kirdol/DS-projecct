@@ -17,6 +17,8 @@ Correlation_overall <- data_question1 %>%
       dplyr::select(population:ef_regulation)
 ```
 
+### EDA: general exploratory data analysis on factors influencing the sdg goals
+
 For this first part of our EDA, let's try to check first the distribution of the variables selected for answering our 1st question. 
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
@@ -24,7 +26,11 @@ For this first part of our EDA, let's try to check first the distribution of the
 # Reshape the data from wide to long format for our sdg goals and our human freedom index scores
 long_df_goal_distribution <- pivot_longer(Correlation_overall, cols = starts_with("goal"), names_to = "Goal", values_to = "Value")
 
+long_df_goal_distribution$Goal <- with(long_df_goal_distribution, reorder(Goal, Value, FUN = mean))
+
 long_df_hfi_distribution <- pivot_longer(Correlation_overall, cols = pf_law:ef_regulation, names_to = "Category", values_to = "Value")
+
+long_df_hfi_distribution$Goal <- with(long_df_hfi_distribution, reorder(Category, Value, FUN = mean))
 
 ggplot(long_df_goal_distribution, aes(x = Value, y = Goal, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
@@ -86,6 +92,54 @@ internet_d <- ggplot(Correlation_overall, aes(x = internet_usage, y = 1, fill = 
   labs(y = 'Density',title = 'Distribution of Internet Usage')
 
 grid.arrange(unempl_d,gdp_d,milit_d,internet_d, ncol = 2, nrow = 2)
+
+# Define UI for application
+ui <- dashboardPage(
+   dashboardHeader(title = "Interactive Plots"),
+   dashboardSidebar(
+      actionButton("switchPlot", "Switch to Next Plot")
+   ),
+   dashboardBody(
+      plotOutput("distPlot")
+   )
+)
+
+# Define server logic
+server <- function(input, output) {
+   # Reactive value to store which plot is currently active
+   currentPlot <- reactiveVal("goal")
+
+   observeEvent(input$switchPlot, {
+      # Cycle through the plots
+      currentPlot(switch(currentPlot(),
+                         "goal" = "hfi",
+                         "hfi" = "grid",
+                         "grid" = "goal"))
+   })
+
+   # Render the appropriate plot
+   output$distPlot <- renderPlot({
+      if (currentPlot() == "goal") {
+         ggplot(long_df_goal_distribution, aes(x = Value, y = Goal, fill = stat(x))) +
+            geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
+            scale_fill_viridis_c(name = "", option = "C") +
+            theme(plot.title = element_text(hjust = 0.5), plot.title.position = "plot") + 
+            labs(x = 'Scores', y = 'Goals', title = 'SDG Goals Distribution')
+      } else if (currentPlot() == "hfi") {
+         ggplot(long_df_hfi_distribution, aes(x = Value, y = Category, fill = stat(x))) +
+            geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
+            scale_fill_viridis_c(name = "", option = "C") +
+            theme(plot.title = element_text(hjust = 0.5), plot.title.position = "plot") + 
+            labs(x = 'Scores', title = 'Human Freedom Index Scores Distribution')
+      } else {
+         # Replace unempl_d, gdp_d, milit_d, internet_d with your ggplot objects
+         grid.arrange(unempl_d, gdp_d, milit_d, internet_d, ncol = 2, nrow = 2)
+      }
+   })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
 ```
 
 Now, let's display the distribution of the different SDG achievement scores per continent, using violin boxplots to have an overview of the mods, the range with most of the observations and the outliers.
@@ -302,8 +356,8 @@ ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
                        midpoint = 0, limit = c(-1, 1), space = "Lab", 
                        name="Spearman\nCorrelation") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 8, hjust = 1),
-        axis.text.y = element_text(size = 8),
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 6, hjust = 1),
+        axis.text.y = element_text(size = 6),
         plot.title = element_text(hjust = 0.5)) +
   coord_fixed() +
   labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
@@ -366,3 +420,238 @@ The overall SDG achievement score is highly correlated with the percentage of pe
 The overall SDG achievement score is highly correlated with "personal freedom: law" (p=.69) and "personal freedom: identity" (p=.62). The other dimensions of personal freedom do not seem to have important influence. Regarding the distribution of the personal freedom variables, we notice that except for law, all have right-skewed distributions meaning that most of the countries have high scores.
 
 The overall SDG achievement score is highly correlated with "economical freedom: legal" (p=.77), "economical trade: legal" (p=.67) and "economical freedom: money" (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom.
+
+### Analysis: analysis of the Influence of the factors over the Sustainable Development Goals 
+
+In order to answer the first question of our work, let's start by zooming on the correlation matrix heatmap made in our EDA part. Here are the correlations between the SDG goals and all the other variables except the SDG goals.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+
+### Correlation Matrix Heatmap SDG/Other variables ###
+
+#computing pvals of our interested variables
+corr_matrix <- cor(data_question1[7:40], method = "spearman", use = "everything")
+p_matrix2 <- matrix(nrow = ncol(data_question1[7:40]), ncol = ncol(data_question1[7:40]))
+for (i in 1:ncol(data_question1[7:40])) {
+  for (j in 1:ncol(data_question1[7:40])) {
+    test_result <- cor.test(data_question1[7:40][, i], data_question1[7:40][, j])
+    p_matrix2[i, j] <- test_result$p.value
+  }
+}
+
+corr_matrix[which(p_matrix2 > 0.05)] <- NA #only keeping significant pval alpha = 0.05
+
+melted_corr_matrix_GVar <- melt(corr_matrix[19:34,1:18])
+
+ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = ifelse(!is.na(value) & abs(value) > 0.75, sprintf("%.2f", value), '')),
+            color = "black", size = 2) +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Spearman\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(angle = 45, hjust = 1)) +
+  labs(x = 'Goals', y = 'Goals',
+       title = 'Correlations Heatmap between goals and our other variables')
+```
+
+The numbers are representing the significant pval between our variables. The grey parts are the non significant pvals. 
+
+GDP per capita, internet_usage, pf_law or ef_legal are strongely correlated with most of our SDG goals. This is mostly due to the large scope englobed in these variables. That makes them influence various sectors of our economies and thus, mostly impacting all our SDG goals. Therefore, we can think that these variables have a strong impact on the scores. Nevertheless, as correlation doesn't mean causality, we cannot jump to conclusions.
+
+As we can see, our SDG goals 12 & 13 (responsible consumption & production and climate action) are negatively correlated with most of our variables, as is the economic freedom government variable to our SDG goals. Nevertheless, goals 12 & 13 and ef_government are positively correlated together.
+
+<!-- ((In that sens, we could understand it as having a higher Human Freedom Index Score would influence more negatively the SDG scores of these two goals, i.e. the more people in a country can access and afford civil justice, the more it impact negatively the score of these two SDG goals.)) but correlation doesn't implie causality --> 
+
+Now let's zoom on the correlations between all our variables except the SDG goals:
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+melted_corr_matrix_Var <- melt(corr_matrix[19:34,19:34])
+ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = ifelse(!is.na(value) & abs(value) > 0.75, sprintf("%.2f", value), '')),
+            color = "black", size = 1.7) +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Spearman\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(angle = 45, hjust = 1)) +
+  labs(x = 'Goals', y = 'Goals',
+       title = 'Correlations Heatmap between other variables than SDG goals')
+```
+
+As noticed earlier, there is a strong correlation among personal freedom variables (pf), reflecting scores from the Human Freedom Index on movement, religion, assembly, and expression.
+
+Again, we can see that GDP per capita, pf_law, ef_legal are highly correlated with some other variables. On another hand, we notice that pf_movement, pf_assembly, pf_expression are now also higly correlated with some of the other variables. 
+
+In order to have a look at the influence of some factors over our dependent variables, let's conduct a 
+Principal Component Analysis over the Human Freedom Index Scores.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+#### PCA and PCA Scree plot####
+
+myPCA_s <- PCA(data_question1[,29:40], graph = FALSE)
+fviz_eig(myPCA_s,
+         addlabels = TRUE) +
+  theme_minimal()
+
+summary(myPCA_s)
+```
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+#### PCA Biplot ####
+fviz_pca_biplot(myPCA_s,
+                label="var",
+                col.var="dodgerblue3",
+                geom="point",
+                pointsize = 0.1,
+                labelsize = 5) +
+  theme_minimal()
+```
+
+Now concerning the Human Freedom Index scores, most of the variables are positively correlated to the dimension 1, slightly less for the PF religion, and finally the EF government variable is slighlty incorrelated to the dimension 1. With a eigenvalue bigger than 1 for the three first components, we conclude that there are 3 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance. Therefore, the rule of thumb would suggest us to take 4 dimensions into account. 
+
+Let's try now to conduct a cluster analysis, using the Kmean method.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+data_kmean_country <- data_question1 %>% dplyr::select(-c(X,code,year,continent,region, population))
+
+#filter data different than 0 and dropping observations 
+filtered_data <- data_kmean_country %>%
+  group_by(country) %>%
+  filter_if(is.numeric, all_vars(sd(.) != 0)) %>%
+  ungroup()
+
+scale_by_country <- filtered_data %>% #scale data
+  group_by(country) %>% 
+  summarise_all(~ scale(.))
+
+means_by_country <- scale_by_country %>% #mean by country
+  group_by(country) %>%
+  summarise_all(~ mean(., na.rm = TRUE))
+
+rownames(means_by_country) <- seq_along(row.names(means_by_country))
+
+# Your existing elbow plot
+elbow_plot <- fviz_nbclust(means_by_country[,-1], kmeans, method="wss", linecolor = "steelblue")
+
+# Add a vertical line at the elbow point (4 clusters)
+elbow_plot_with_line <- elbow_plot + 
+  geom_vline(xintercept=4, linetype="dashed", color="red")
+
+print(elbow_plot_with_line)
+```
+
+After adapting the data for conducting our cluster analysis, we can see that according the the elbow method that we would only need 4 clusters in our analysis.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+kmean <- kmeans(means_by_country[,-1], 4, nstart = 25)
+fviz_cluster(kmean, data=means_by_country[,-1], repel=FALSE, depth =NULL, ellipse.type = "norm", labelsize = 10, pointsize = 0.5)
+```
+
+Our cluster analysis gives us one principal cluster (here in purple) --> CENTERED ON 0 BECAUSE AFTER DATA SCALED-> REALLY SMALL VALUES --> HOW TO DEAL WITH IT? I TRIED TO TAKE ONLY HFI INTO ACCOUNT BUT NOT WORKING NEITHER. STILL CENTERED ON 0.
+
+<!-- Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough. -->
+
+While considering our regressions, we have noticed that we had high multicolinearity between our dependent variables in our models. This is due to the numerous variables that we tried to take into account while computing our regressions. Let's find a model that could explain the overall SDG score without having severe multicollinearity (VIF > 5)
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+goals_data <- data_question1 %>%
+  dplyr::select(overallscore, unemployment.rate, GDPpercapita, MilitaryExpenditurePercentGDP, internet_usage, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+
+fit <- lm(overallscore ~ ., data = goals_data)
+# plot(fit)
+library(leaps)
+leaps<-regsubsets(overallscore ~ .,data=goals_data,nbest=10)
+# summary(leaps)
+plot(leaps,scale="r2") + theme_minimal()
+```
+
+The model found is taking into account the following dependent variables: unemployment rate, military expenditure percentage of GDP, internet_usage, pf_security, pf_religion, pf_identity, ef_legal, ef_trade. We notice here that the previous variables highly correlated to the SDG goals (GDP per capita, pf_law, internet_usage and ef_legal), we dropped the first two ones.
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+#### Forward selection ####
+
+library(MASS)
+Forward_data1 <- data_question1 %>% dplyr::select(overallscore, unemployment.rate, GDPpercapita, MilitaryExpenditurePercentGDP, internet_usage, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+# Initialize variables to store the results
+step_results <- data.frame(step = integer(), aic = numeric(), adjusted_r_squared = numeric())
+
+# Initial model (null model)
+current_model <- lm(overallscore ~ 1, data = Forward_data1)
+
+# Record initial metrics
+step_results <- rbind(step_results, data.frame(step = 0, aic = AIC(current_model), adjusted_r_squared = summary(current_model)$adj.r.squared))
+
+# Perform forward selection
+for (variable in colnames(Forward_data1)[grepl("goal", colnames(Forward_data1))]) {
+    current_model <- update(current_model, paste(". ~ . +", variable))
+    current_step <- nrow(step_results) + 1
+    step_results <- rbind(step_results, data.frame(step = current_step, aic = AIC(current_model), adjusted_r_squared = summary(current_model)$adj.r.squared))
+}
+
+ggplot(step_results, aes(x = step)) +
+    geom_line(aes(y = aic, color = "AIC")) +
+    geom_line(aes(y = adjusted_r_squared * 100, color = "Adjusted R-squared")) +
+    labs(title = "Forward Selection Process", x = "Step", y = "Metric Value") +
+    scale_color_manual("", breaks = c("AIC", "Adjusted R-squared"), values = c("blue", "red"))
+```
+
+Now let's compute our regression model with the variables selected by our stepwise methode
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+# Your R code for the regression and stargazer output goes here
+reg_overall_Q1 <- lm(overallscore ~ unemployment.rate + MilitaryExpenditurePercentGDP + internet_usage + pf_security + pf_religion + pf_identity + ef_legal + ef_trade, data = data_question1)
+
+sg1 <- stargazer(reg_overall_Q1,
+          title="Impact of variables over Overallscore SDG goals",
+          type='text',
+          digits=3)
+```
+
+As we can see, all of the variables above are significantly impacting the overall score of our Sustainable Development Goals. In addition, our Radjusted is high enough, which means that our model is well explained. 
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+##### geom point #####
+
+geom1 <- ggplot(data_question1, aes(internet_usage, overallscore)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and internet usage")
+
+geom2 <- ggplot(data_question1, aes(unemployment.rate, overallscore)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and unemployment rate")
+
+geom3 <- ggplot(data_question1, aes(MilitaryExpenditurePercentGDP,overallscore)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and military expenditure")
+
+geom4 <- ggplot(data_question1, aes(pf_security,overallscore)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and pf_security")
+
+geom5 <-ggplot(data_question1, aes(pf_religion, overallscore)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and pf_religion")
+
+geom7 <-ggplot(data_question1, aes(pf_identity, overallscore)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and pf_identity")
+
+geom8 <-ggplot(data_question1, aes(ef_legal, overallscore)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and ef_legal")
+
+geom9 <-ggplot(data_question1, aes(ef_trade, overallscore)) +
+  geom_point()+ geom_smooth(se = FALSE) +
+  labs(title = "Scarplot overallscore and ef_trade")
+
+grid.arrange(geom1, geom2, geom3, geom4, geom5, geom7, geom8, geom9, nrow=3, ncol=3)
+```
+
+By checking the influence of the chosen variables over the overallscore, we can see that the functions are not linear. For some, such as internet_usage and ef_legal, we notice that the more the variable increase, the more it influence positively the overall score. For the others, the relations are more complex. I.e.: Unemployment.rate increase mostly the overallscore between 0 and 10%. pf_identity is slowly reducing the overallscore before going back up.
+
+In conclusion, after reviewing which variables are correlating between themself, after taking care of multicollinearity problems and doing our regressions on our overall SDG score and finally seeing the influence of these dependent variables depending on their range, we notice that most of our variables taken into account in our model is significant in explaining their influence (positive or negative) over the overall SDG goals. As our goals are mostly correlated between eachother, we can presume that taking the overall score as our dependent variable is giving us the same conclusion. Nevertheless, we still need to go deeper and check the influence of the scores between themself. 

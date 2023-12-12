@@ -51,6 +51,7 @@ As we can see, our SDG goals 12 & 13 (responsible consumption & production and c
 <!-- ((In that sens, we could understand it as having a higher Human Freedom Index Score would influence more negatively the SDG scores of these two goals, i.e. the more people in a country can access and afford civil justice, the more it impact negatively the score of these two SDG goals.)) but correlation doesn't implie causality --> 
 
 Now let's zoom on the correlations between all our variables except the SDG goals:
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 melted_corr_matrix_Var <- melt(corr_matrix[19:34,19:34])
 ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
@@ -81,6 +82,7 @@ myPCA_s <- PCA(data_question1[,29:40], graph = FALSE)
 fviz_eig(myPCA_s,
          addlabels = TRUE) +
   theme_minimal()
+
 summary(myPCA_s)
 ```
 
@@ -118,7 +120,14 @@ means_by_country <- scale_by_country %>% #mean by country
 
 rownames(means_by_country) <- seq_along(row.names(means_by_country))
 
-fviz_nbclust(means_by_country[,-1], kmeans, method="wss")
+# Your existing elbow plot
+elbow_plot <- fviz_nbclust(means_by_country[,-1], kmeans, method="wss", linecolor = "steelblue")
+
+# Add a vertical line at the elbow point (4 clusters)
+elbow_plot_with_line <- elbow_plot + 
+  geom_vline(xintercept=4, linetype="dashed", color="red")
+
+print(elbow_plot_with_line)
 ```
 
 After adapting the data for conducting our cluster analysis, we can see that according the the elbow method that we would only need 4 clusters in our analysis.
