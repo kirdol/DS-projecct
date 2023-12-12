@@ -1,6 +1,9 @@
 ---
 title: "Comparative Analysis of SDG Implementation Evolution Worldwide"
 author: "Lodrik, Stefan, Sofia and Delia"
+title-slide-attributes:
+  data-background-image: /title.jpg
+  data-background-opacity: "0.3"
 execute:
   echo: true
 format:
@@ -15,7 +18,7 @@ format:
 
 ## Main dataset {.smaller}
 
-1. **SDG achievement scores**, source: Sustainable Development Report 2023
+1. **SDG achievement scores**, overall & individual scores (except goal 14: life under water)
 
 ```{r, message = FALSE, warning=FALSE, results='hide'}
 #| echo: false
@@ -94,16 +97,16 @@ plot_ly(
 
 :::
 
-## Test1
+## Test1 {.smaller}
 
 - Match datasets by key = (country, year)
 
-## Test 2
+## Test 2 {.smaller}
 
 - Match datasets by key = (country, year)
-- Delete columns then rows with too much NAs
+- Delete columns, then rows with too much NAs
 
-```{r, message = FALSE, warning=FALSE, fig.height=4}
+```{r, message = FALSE, warning=FALSE, fig.height=3, out.width="100%"}
 #| echo: false
 all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
 data_question1 <- all_Merge %>%
@@ -111,8 +114,7 @@ data_question1 <- all_Merge %>%
   select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected,
             total_damages, cases_per_million, deaths_per_million, stringency,
             ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
-data_question1 <- data_question1 %>% select(-c(MiliratyExpenditurePercentGovExp,
-                                               hf_score, pf_score, ef_score))
+
 variable_names <- names(data_question1)
 missing_percentages <-
   sapply(data_question1, function(col) mean(is.na(col)) * 100)
@@ -123,7 +125,8 @@ missing_data_summary <- data.frame(
 )
 
 missing_data_summary <- missing_data_summary %>%
-  mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))
+  mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))%>%
+  filter(missing_percentages!=0)
 
 ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Percentage), y = Missing_Percentage, fill = Missing_Percentage)) +
   geom_bar(stat = "identity") +
@@ -138,29 +141,24 @@ ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Perce
        y = "Missing Percentage") +
   theme_minimal() +
   theme(axis.text.y = element_text(hjust = 1, size=6 ),
-        legend.text = element_text(size = 8),
-        legend.title = element_text(size = 10)) +
+        legend.position="none") +
   labs(fill = "% NAs") +
   coord_flip()
 
 
 ```
 
-## Test 3
+## Test 3 {.smaller}
 
 - Match datasets by key = (country, year)
 - Delete columns then rows with too much NAs
 
-```{r, message = FALSE, warning=FALSE, fig.height=3}
+```{r, message = FALSE, warning=FALSE, fig.height=4, out.width="75%"}
 #| echo: false
 #3
-data_question1 <- all_Merge %>%
-  filter(year<=2020) %>%
-  select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected,
-            total_damages, cases_per_million, deaths_per_million, stringency,
-            ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
 data_question1 <- data_question1 %>% select(-c(MiliratyExpenditurePercentGovExp,
                                                hf_score, pf_score, ef_score))
+
 see_missing1_1 <- data_question1 %>%
   group_by(code) %>%
   summarise(across(-c(year, country, continent, region, population,
@@ -172,32 +170,16 @@ see_missing1_1 <- data_question1 %>%
               filter(num_missing > 50))
 
 data_question1 <- data_question1 %>% filter(!code %in% see_missing1_1$code)
-naniar::gg_miss_upset(data_question1, nsets=10, nintersects=11)
+naniar::gg_miss_upset(data_question1, nsets=6, nintersects=11)
 ```
 
-## Test 4
+## Test 4 {.smaller}
 
 - Match datasets by key = (country, year)
 - Delete columns then rows with too much NAs
 - Fill in remaining NAs with linear interpolation or median/mean based on region
 
-:::: {.columns}
-
-::: {.column width="50%"}
-
-<img src="data1.png" alt="Image Alt Text" height="300" />
-
-:::
-
-::: {.column width="50%"}
-
-![](data2.png)
-
-:::
-
-::::
-
-## Test 5
+## Test 5 {.smaller}
 
 - Match datasets by key = (country, year)
 - Delete columns then rows with too much NAs
