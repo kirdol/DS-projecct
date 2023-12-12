@@ -587,7 +587,7 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 ```
 
-Finally, here you can see an interactive map of the correlation between Conflict and the SDG goals with 1 year gap.
+Finally, here you can see an interactive map of the correlation between respectively for the 3 different variables of the Conflict and the SDG goals with 1 year gap.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
@@ -598,19 +598,19 @@ Q3.3 <- Q3.3 %>%
   arrange(code,year)%>%
   group_by(code)
 
-conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe", "Caucasus and Central Asia"), ]
+conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean"), ]
 
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected", "sum_deaths", "maxintensity")
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "sum_deaths")
 
 subset_data <- conflicts_filtered[, relevant_columns]
 
-correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected", "sum_deaths", "maxintensity")])
+correlation_matrix_Conflicts_Deaths <- cor(subset_data, subset_data[, c("sum_deaths")])
 
-cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
+cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 
 ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap between Conflicts in selected regions and the SDG goal with one year gap"),
+  titlePanel("Interactive Correlation Heatmap between Conflicts Deaths in selected regions and the SDG goal with one year gap"),
   plotlyOutput("heatmap"),
   sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1),
   actionButton("stopButton", "Stop application")
@@ -624,7 +624,79 @@ server <- function(input, output, session) {
   })
   
   output$heatmap <- renderPlotly({
-    correlation_matrix_Conflicts_Pop_Aff <- cor(selected_conflicts_data(), selected_conflicts_data()[, c("pop_affected", "sum_deaths", "maxintensity")])
+    correlation_matrix_Conflicts_Deaths <- cor(selected_conflicts_data(), selected_conflicts_data()[, c("sum_deaths")])
+    cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
+    names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+    
+    p <- plot_ly(data = cor_melted, x = ~Variable1, y = ~Variable2, z = ~Correlation,
+                 type = "heatmap", colorscale = list(c(-1, "blue"), c(0, "white"), c(1, "red")),
+                 zmin = -1, zmax = 1)
+    
+    p <- p %>% layout(
+      title = "",
+      xaxis = list(title = ""),
+      yaxis = list(title = ""),
+      coloraxis = list(
+        colorbar = list(
+          title = "Correlation",
+          tickvals = c(-1, 0, 1), 
+          ticktext = c("-1", "0", "1"), 
+          len = 5,  
+          thickness = 20,  
+          x = 0,  
+          xanchor = "left", 
+          ticks = "outside" 
+        )
+      )
+    )
+    return(p)
+  })
+  
+  observeEvent(input$stopButton, {
+    stopApp() 
+  })
+}
+shinyApp(ui = ui, server = server)
+```
+
+Here's the interactive map of the correlation between the affected population in conflicts and the SDG goals with 1 year gap.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
+
+library(shiny)
+library(plotly)
+
+Q3.3 <- Q3.3 %>%
+  arrange(code,year)%>%
+  group_by(code)
+
+conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Caucasus & Central Asia"), ]
+
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected")
+
+subset_data <- conflicts_filtered[, relevant_columns]
+
+correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected")])
+
+cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+ui <- fluidPage(
+  titlePanel("Interactive Correlation Heatmap between population affected in conflicts in selected regions and the SDG goal with one year gap"),
+  plotlyOutput("heatmap"),
+  sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1),
+  actionButton("stopButton", "Stop application")
+)
+
+server <- function(input, output, session) {
+  selected_conflicts_data <- reactive({
+    filtered_data <- conflicts_filtered[conflicts_filtered$year == input$year, ]
+    subset_data <- filtered_data[, relevant_columns]
+    return(subset_data)
+  })
+  
+  output$heatmap <- renderPlotly({
+    correlation_matrix_Conflicts_Pop_Aff <- cor(selected_conflicts_data(), selected_conflicts_data()[, c("pop_affected")])
     cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
     names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
     
@@ -659,6 +731,79 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 ```
 
+Here's the interactive map of the correlation between the Maxintensity in conflicts and the SDG goals with 1 year gap.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
+
+library(shiny)
+library(plotly)
+
+Q3.3 <- Q3.3 %>%
+  arrange(code,year)%>%
+  group_by(code)
+
+conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Caucasus & Central Asia", "Eastern Europe", "North America", "East Asia"), ]
+
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "maxintensity")
+
+subset_data <- conflicts_filtered[, relevant_columns]
+
+correlation_matrix_Conflicts_Max <- cor(subset_data, subset_data[, c("maxintensity")])
+
+cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Max))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+ui <- fluidPage(
+  titlePanel("Interactive Correlation Heatmap between population affected in conflicts in selected regions and the SDG goal with one year gap"),
+  plotlyOutput("heatmap"),
+  sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1),
+  actionButton("stopButton", "Stop application")
+)
+
+server <- function(input, output, session) {
+  selected_conflicts_data <- reactive({
+    filtered_data <- conflicts_filtered[conflicts_filtered$year == input$year, ]
+    subset_data <- filtered_data[, relevant_columns]
+    return(subset_data)
+  })
+  
+  output$heatmap <- renderPlotly({
+    correlation_matrix_Conflicts_Max <- cor(selected_conflicts_data(), selected_conflicts_data()[, c("maxintensity")])
+    cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Max))
+    names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+    
+    p <- plot_ly(data = cor_melted, x = ~Variable1, y = ~Variable2, z = ~Correlation,
+                 type = "heatmap", colorscale = list(c(-1, "blue"), c(0, "white"), c(1, "red")),
+                 zmin = -1, zmax = 1)
+    
+    p <- p %>% layout(
+      title = "",
+      xaxis = list(title = ""),
+      yaxis = list(title = ""),
+      coloraxis = list(
+        colorbar = list(
+          title = "Correlation",
+          tickvals = c(-1, 0, 1), 
+          ticktext = c("-1", "0", "1"), 
+          len = 5,  
+          thickness = 20,  
+          x = 0,  
+          xanchor = "left", 
+          ticks = "outside" 
+        )
+      )
+    )
+    return(p)
+  })
+  
+  observeEvent(input$stopButton, {
+    stopApp() 
+  })
+}
+shinyApp(ui = ui, server = server)
+```
+
+
 The results seems logic because if the SDG scores continue to go higher and the conflicts remains the same or finishes we get a negative correlation
 
 
@@ -691,6 +836,7 @@ ui <- fluidPage(
       selectInput("sdg", "Select SDG Goal:",
                   choices = goal_columns,
                   selected = goal_columns[1]),
+      actionButton("stopButton", "Stop Rendering"),
       width = 3
     ),
     mainPanel(
@@ -701,7 +847,12 @@ ui <- fluidPage(
   )
 )
 
-server <- function(input, output) {
+server <- function(input, output, session) {
+  observeEvent(input$stopButton, {
+    output$regression_plot_affected <- NULL
+    output$regression_plot_deaths <- NULL
+  })
+  
   generate_regression_plot <- function(selected_goal) {
     formula_affected <- as.formula(paste(selected_goal, "~ total_affected"))
     formula_deaths <- as.formula(paste(selected_goal, "~ total_deaths"))
@@ -728,15 +879,19 @@ server <- function(input, output) {
   }
   
   output$regression_plot_affected <- renderPlot({
-    selected_goal <- input$sdg
-    regression_plots <- generate_regression_plot(selected_goal)
-    print(regression_plots[[1]])
+    req(input$sdg)
+    isolate({
+      selected_goal <- input$sdg
+      generate_regression_plot(selected_goal)[[1]]
+    })
   })
   
   output$regression_plot_deaths <- renderPlot({
-    selected_goal <- input$sdg
-    regression_plots <- generate_regression_plot(selected_goal)
-    print(regression_plots[[2]])
+    req(input$sdg)
+    isolate({
+      selected_goal <- input$sdg
+      generate_regression_plot(selected_goal)[[2]]
+    })
   })
 }
 shinyApp(ui, server)
@@ -773,6 +928,7 @@ ui <- fluidPage(
       selectInput("sdg", "Select SDG Goal:",
                   choices = goal_columns,
                   selected = goal_columns[1]),
+      actionButton("stopButton", "Stop Rendering"),
       width = 3
     ),
     mainPanel(
@@ -784,7 +940,13 @@ ui <- fluidPage(
   )
 )
 
-server <- function(input, output) {
+server <- function(input, output, session) {
+  observeEvent(input$stopButton, {
+    output$regression_plot_stringency <- NULL
+    output$regression_plot_cases <- NULL
+    output$regression_plot_deaths <- NULL
+  })
+  
   generate_regression_plot <- function(selected_goal) {
     formula_stringency <- as.formula(paste(selected_goal, "~ stringency"))
     formula_cases <- as.formula(paste(selected_goal, "~ cases_per_million"))
@@ -819,21 +981,27 @@ server <- function(input, output) {
   }
   
   output$regression_plot_stringency <- renderPlot({
-    selected_goal <- input$sdg
-    regression_plots <- generate_regression_plot(selected_goal)
-    print(regression_plots[[1]])  # Display plot for stringency vs selected_goal
+    req(input$sdg)
+    isolate({
+      selected_goal <- input$sdg
+      generate_regression_plot(selected_goal)[[1]]
+    })
   })
   
   output$regression_plot_cases <- renderPlot({
-    selected_goal <- input$sdg
-    regression_plots <- generate_regression_plot(selected_goal)
-    print(regression_plots[[2]])  # Display plot for cases_per_million vs selected_goal
+    req(input$sdg)
+    isolate({
+      selected_goal <- input$sdg
+      generate_regression_plot(selected_goal)[[2]]
+    })
   })
   
   output$regression_plot_deaths <- renderPlot({
-    selected_goal <- input$sdg
-    regression_plots <- generate_regression_plot(selected_goal)
-    print(regression_plots[[3]])  # Display plot for deaths_per_million vs selected_goal
+    req(input$sdg)
+    isolate({
+      selected_goal <- input$sdg
+      generate_regression_plot(selected_goal)[[3]]
+    })
   })
 }
 
@@ -851,7 +1019,7 @@ Now, let's see the regressions for each SDG score depending of each variable in 
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
-conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Eastern Europe", "Caucasus and Central Asia"), ]
+conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Caucasus and Central Asia"), ]
 
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected", "sum_deaths", "maxintensity")
 
@@ -861,24 +1029,31 @@ goal_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7",
 )
 
 ui <- fluidPage(
-  titlePanel("SDG - Conflicts Regression Analysis"),
+  titlePanel("SDG - COVID Regression Analysis"),
   sidebarLayout(
     sidebarPanel(
       selectInput("sdg", "Select SDG Goal:",
                   choices = goal_columns,
                   selected = goal_columns[1]),
+      actionButton("stopButton", "Stop Rendering"),  # Adding a Stop button
       width = 3
     ),
     mainPanel(
       width = 9,
-      plotOutput("regression_plot_pop_affected"),
-      plotOutput("regression_plot_sum_deaths"),
-      plotOutput("regression_plot_maxintensity")
+      plotOutput("regression_plot_stringency"),
+      plotOutput("regression_plot_cases"),
+      plotOutput("regression_plot_deaths")
     )
   )
 )
 
-server <- function(input, output) {
+server <- function(input, output, session) {
+  observeEvent(input$stopButton, {
+    output$regression_plot_stringency <- NULL
+    output$regression_plot_cases <- NULL
+    output$regression_plot_deaths <- NULL
+  })
+  
   generate_regression_plot <- function(selected_goal) {
     formula_pop_affected <- as.formula(paste(selected_goal, "~ pop_affected"))
     formula_sum_deaths <- as.formula(paste(selected_goal, "~ sum_deaths"))
@@ -912,22 +1087,28 @@ server <- function(input, output) {
     list(plot_pop_affected, plot_sum_deaths, plot_maxintensity)
   }
   
-  output$regression_plot_pop_affected <- renderPlot({
-    selected_goal <- input$sdg
-    regression_plots <- generate_regression_plot(selected_goal)
-    print(regression_plots[[1]])  
+  output$regression_plot_stringency <- renderPlot({
+    req(input$sdg)
+    isolate({
+      selected_goal <- input$sdg
+      generate_regression_plot(selected_goal)[[1]]
+    })
   })
   
-  output$regression_plot_sum_deaths <- renderPlot({
-    selected_goal <- input$sdg
-    regression_plots <- generate_regression_plot(selected_goal)
-    print(regression_plots[[2]])  
+  output$regression_plot_cases <- renderPlot({
+    req(input$sdg)
+    isolate({
+      selected_goal <- input$sdg
+      generate_regression_plot(selected_goal)[[2]]
+    })
   })
   
-    output$regression_plot_maxintensity <- renderPlot({
-    selected_goal <- input$sdg
-    regression_plots <- generate_regression_plot(selected_goal)
-    print(regression_plots[[3]])  
+  output$regression_plot_deaths <- renderPlot({
+    req(input$sdg)
+    isolate({
+      selected_goal <- input$sdg
+      generate_regression_plot(selected_goal)[[3]]
+    })
   })
 }
 
