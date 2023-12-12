@@ -3,75 +3,48 @@
 source(here::here("scripts","Clean","setup.R"))
 data_4 <- read.csv(here::here("scripts", "data", "data_question24.csv"))
 threashold_heatmap <- 0.5
+library(leaps)
 ```
 
-# Focus on relationship between SDGs
+## Focus on the relationships among the SDGs
 **How are the different SDGs linked? (We want to see if some SDGs are linked in the fact that a high score on one implies a high score on the other, and thus if we can make groups of SDGs that are comparable in that way).**
 
-## EDA: General visualization of the SDGs
+### EDA: General visualization of the SDGs
 
-First, let's look at how our goals are ditributed. To do that, it is important to show the distribution at a year level since showing it a once would be impacted by the change over the year. We created below a shiny app that allows us to select the year we want to look at and see the distribution of the goals for that year. Since shiny apps are not well supported with quarto, we show here only scrrenshots. We chose to show year 2000 and year 2023 to see both extreme in terms of ditribution. it is interesting to see how the goals tended to be skewed in the past, well representing the developping countries lagging behind. But the ditribution beeing more normaly ditributed in recent years.
+We want now to explore and analyse how the SDGs scores are linked together. 
+We first, interest ourself to the correlation between the goals scores. To do that we chose to use a correlation heatmap. We set an arbitrary threashold to better concentrate our attention to the most corrolated goals. We fixed our threashold at `r threashold_heatmap` (indicating a strong positive relationship) and less than -`r threashold_heatmap` (signifying a strong negative relationship).
 
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-data_long <- data_4 %>% 
-  gather(key = "goal", value = "score", goal1:goal17) %>%
-  mutate(goal = factor(goal, levels = paste0("goal", 1:17)))
-
-ui <- fluidPage(
-  titlePanel("Goals Score Distribution"),
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("year", "Year", choices = unique(data_long$year))
-    ),
-    mainPanel(
-      plotOutput("ridgePlot")
-    )
-  )
-)
-
-server <- function(input, output) {
-  output$ridgePlot <- renderPlot({
-    filteredData <- filter(data_long, year == input$year)
-    ggplot(filteredData, aes(x = score, y = goal, fill = stat(x))) +
-      geom_density_ridges_gradient(scale = 3, rel_min_height = 0.01) +
-      geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-      scale_fill_viridis_c(name = "Value", option = "C") +
-      labs(title = paste("Goal Score Distribution in", input$year))
-  })
-}
-
-shinyApp(ui = ui, server = server)
-```
-
-We now interest ourself to the correlation between the goals scores To do that we chose to use a correlation heatmap. We set an arbitrary threashold to better concentrate our attention to the most corrolated goals. We fixed our threashold at `r threashold_heatmap` (indicating a strong positive relationship) and less than -`r threashold_heatmap` (signifying a strong negative relationship).
-
-Given that our variables, as seen previously, do not follow a normal distribution, employing the Pearson correlation method is not suitable in our analysis since it requires observations to be normaly distributed. We attempted to normalize the data through logarithmic or square root transformations, but these adjustments were insufficiently effective. Consequently, we will resort to computing the Spearman correlation. While not ideal, this method does not necessitate the normal distribution of our data. In our analysis, particularly for the heatmap visualization, we will focus on correlations that exceed the threshold of `r threashold_heatmap` or fall below -`r threashold_heatmap`. This selective approach will enhance the readability and interpretability of the heatmap.
+Given that, as seen previously, our variables do not follow a normal distribution, employing the Pearson correlation method is not suitable in our analysis since it requires observations to be normaly distributed. We attempted to normalize the data through logarithmic or square root transformations, but these adjustments were insufficiently effective. Consequently, we will resort to computing the Spearman correlation. While not ideal, this method does not necessitate the normal distribution of our data. In our analysis, particularly for the heatmap visualization, we will focus on correlations that exceed the threshold of `r threashold_heatmap` or fall below -`r threashold_heatmap`. This selective approach will enhance the readability and interpretability of the heatmap.
 
 To do that, we select only the colums of interest and compute the correlation matrix using Spearman correlation. We then melt the matrix to be able to plot it. We then plot the heatmap using `ggplot2`.
 
-```{r echo = TRUE, message = FALSE, warning=FALSE}
+```{r echo = TRUE, message = FALSE}
 #### Preparation of the data ####
 
+# Keeping only the columns of interest for the correlation calcluation
 data_4_goals <- data_4 %>%
   dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
                 goal6,goal7, goal8, goal9, goal10, goal11, goal12,
                 goal13, goal15, goal16, goal17)
 ```
 
-```{r echo = TRUE, message = FALSE, warning=FALSE}
+```{r echo = TRUE, message = FALSE}
 #### Spearman Correlation ####
 
-spearman_corr_4 <- cor(data_4_goals, method = "spearman", use = "everything")
+# Calculate Spearman correlation
+spearman_corr_4 <-cor(data_4_goals, method = "spearman", use = "everything")
+
+# Apply threshold and replace values below it with NA
 spearman_corr_4[abs(spearman_corr_4) < threashold_heatmap] <- NA
 ```
 
-```{r echo = TRUE, message = FALSE, warning=FALSE}
+```{r echo = TRUE, message = FALSE}
 #### Spearman Correlation Heatmap ####
 
 # Melting the data
 melted_corr_4 <- melt(spearman_corr_4, na.rm = TRUE)
 
-# Creating the heatmap
+# Creation of the heatmap
 ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
     geom_tile() +
     geom_text(aes(label = sprintf("%.2f", value)), vjust = 0.5, size=2.5) + # Adding text
@@ -85,18 +58,18 @@ ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
          x = "", y = "")
 ```
 
-The correaltion can be read on the graph. The darker the color, the stronger the correlation. If there is not colors, it means that the gaols correlation those not exceed our threashold of ±`r threashold_heatmap`.
+The correaltion can be read on the graph. The darker the color, the stronger the correlation. If there is not colors, it means that the gaols correlation does not exceed our threashold of ±`r threashold_heatmap`.
 
-It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals appear to be less interrelated compared to others. Specifically, SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) demonstrate a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also exhibits a lesser degree of interconnection with the other SDGs.
+It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals appear to be less interrelated compared to others. Specifically, SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) demonstrate a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also exhibits a lesser degree of interconnection with the other SDGs. It is also interesting to note that some goals are negatively correlated with others. For instance, based on the Spearman correlation, goal 12 (Responsable Consumption and Production) and goal 13 (Climate Action) are negatively correlated with the others goals. This suggest that when the higher a goal other than goal 12 or 13 is, the lower the goals 12 and 13 are. Given their similar nature, it is not surprising that they are highly correlated with each other.
 
-## Analysis: Factor analysis and Stepwise regression of the SDGs
+### Analysis: Factor analysis and Stepwise regression applied to the SDGs
 
 At this point, we saw that the goals were mostly correlated. We now want to see if we can group them in a smaller number of factors. To do that, we will use a principal component analysis (PCA). We will first look at the scree plot to see how many factors we should keep. We will then look at the biplot to see how the goals are grouped together.
 
-```{r echo = TRUE, message = FALSE, warning=FALSE}
+```{r echo = TRUE, message = FALSE}
 #### Scree Plot ####
 
-# Selecting only the goals
+# Selecting only the goals columns
 goals_data <- data_4 %>%
   dplyr::select(goal1, goal2, goal3, goal4, goal5,
                 goal6,goal7, goal8, goal9, goal10, goal11, goal12,
@@ -106,11 +79,16 @@ pca_result <- prcomp(goals_data_scaled) # Running PCA
 
 # Plotting Scree plot to visualize the importance of each principal component
 fviz_eig(pca_result,
-         addlabels = TRUE) +
+         addlabels = TRUE,
+         col.var="dodgerblue3") +
   theme_minimal()
+
+eigenvalues <- pca_result$sdev^2 # getting the eigenvalues
 ```
 
-```{r echo = TRUE, message = FALSE, warning=FALSE}
+We see clearly that the first component is the most important one. Guided by the Kaiser criterion, which advises retaining only those components with eigenvalues exceeding 1, the initial three components emerge as candidates. However, considering the third component's eigenvalue of `r eigenvalues[3]`, we opted for simplification by focusing exclusively on the first two components. This decision also enhances clarity in the biplot representation, as it reduces the dimensions to just two, making interpretation more straightforward.
+
+```{r echo = TRUE, message = FALSE}
 #### Biplot ####
 
 # Plotting Biplot to visualize the two main dimensions
@@ -123,10 +101,12 @@ fviz_pca_biplot(pca_result,
   theme_minimal()
 ```
 
-In our EDA on the focus on the influence of the factors over the SDG scores, we had made a correlation matrix heatmap that took into account every variable of our dataset. Here, we tried to zoom on certain parts of the heatmap. We have decided to add on our graphs the correlations between variables when our pvalue was significant (alpha = 0.05). The grey zones are concerning our non-significant pvalues.
+The biplot offers insightful visualization, clearly illustrating the relationship between the various goals and the first two components. Notably, Dimension 2 exhibits a strong correlation with Goals 10 (Reduced inequalities) and 15 (Life on Land), whereas the remaining goals show a moderate to high correlation with Dimension 1. Furthermore, an interesting pattern emerges, revealing three distinct groups of variables, each playing a unique role. One group comprises Goals 12 (Responsible Consumption and Production) and 13 (Climate Action), another encompasses Goals 10 (Reduced inequalities) and 15 (Life on Land), and the third group includes all other variables. This categorization aids in understanding the distinct influences and interactions among the goals.
 
+Grouping Goal 12 (Responsible Consumption and Production) and Goal 13 (Climate Action) together is logical, as both pertain to environmental issues. It is, however, interesting to note the pairing of Goal 10 (Reduced Inequalities) with Goal 15 (Life on Land). This could be explained by the fact that Goal 10 (Reduced inequalities) is related to the reduction of inequalities within and among countries, while Goal 15 (Life on Land) is related to the protection, restoration and promotion of sustainable use of terrestrial ecosystems, sustainable manage forests, combat desertification, and halt and reverse land degradation and halt biodiversity loss. Therefore, it is possible that the respondents who are more concerned about the reduction of inequalities are also more concerned about the protection of the environment. But this is a stretched.
 
-
+/////////////////////////////////////////////////////////////////////////
+//////////////////////////////   WIP    /////////////////////////////////
 /////////////////////////////////////////////////////////////////////////
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
@@ -134,12 +114,65 @@ goals_data <- data_4 %>%
   dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
                 goal6,goal7, goal8, goal9, goal10, goal11, goal12,
                 goal13, goal15, goal16, goal17)
-
-fit <- lm(overallscore ~ ., data = goals_data)
-# plot(fit)
-library(leaps)
-leaps<-regsubsets(overallscore ~ .,data=goals_data,nbest=10)
-# summary(leaps)
-plot(leaps,scale="r2") + theme_minimal()
 ```
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+lm_o_n <- lm(overallscore ~ 1, data = goals_data)
+lm_o_f <- lm(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5
+                      + goal6 + goal7 + goal8 + goal9 + goal10 + goal11
+                      + goal12 + goal13 + goal15 + goal16 + goal17,
+             data = goals_data)
+step_o <- step(lm_o_n, scope = list(lower = lm_o_n, upper = lm_o_f))
+leaps_o <- regsubsets(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5
+                      + goal6 + goal7 + goal8 + goal9 + goal10 + goal11
+                      + goal12 + goal13 + goal15 + goal16 + goal17,
+                      data=goals_data, nbest=16, method="backward")
+plot(leaps_o,scale="adjr2") + theme_minimal()
+summary(leaps_o)$adjr2
+```
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+
+
+lm_1_n <- lm(goal1 ~ 1, data = goals_data)
+lm_1_f <- lm(goal1 ~ goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data)
+step_1 <- step(lm_1_n, scope = list(lower = lm_1_n, upper = lm_1_f), direction = "forward")
+plot(step_1)
+summary(step_1)
+```
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+goals_data <- data_4 %>%
+  dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
+                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
+                goal13, goal15, goal16, goal17)
+
+```
+
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+
+
+
+leaps_O <- regsubsets(overallscore ~ .,data=goals_data,nbest=20, method="backward")
+plot(leaps_O,scale="adjr2") + theme_minimal()
+```
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+
+library(leaps)
+leaps_1 <- regsubsets(goal1 ~ goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17,data=goals_data,nbest=17, method="backward")
+plot(leaps_1,scale="r2") + theme_minimal()
+```
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+
+fit_2 <- lm(goal2 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data)
+plot(fit_2)
+
+leaps_2 <- regsubsets(goal2 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17,data=goals_data, nbest=10, method="backward")
+plot(leaps_2,scale="adjr2")
+```
+
+
 

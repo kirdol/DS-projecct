@@ -142,7 +142,7 @@ threashold_heatmap <- 0.5
 ```
 
 
-::: {.column width="35%"}
+::: {.column width="49%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 #### Scree Plot ####
 
@@ -161,21 +161,17 @@ fviz_eig(pca_result,
 ```
 :::
 
-::: {.column width="50%"}
+::: {.column width="49%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
-#### Scree Plot ####
+#### Biplot ####
 
-# Selecting only the goals
-goals_data <- data_4 %>%
-  dplyr::select(goal1, goal2, goal3, goal4, goal5,
-                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
-                goal13, goal15, goal16, goal17)
-goals_data_scaled <- scale(goals_data) # Scaling the data
-pca_result <- prcomp(goals_data_scaled) # Running PCA
-
-# Plotting Scree plot to visualize the importance of each principal component
-fviz_eig(pca_result,
-         addlabels = TRUE) +
+# Plotting Biplot to visualize the two main dimensions
+fviz_pca_biplot(pca_result,
+                label="var",
+                col.var="dodgerblue3",
+                geom="point",
+                pointsize = 0.1,
+                labelsize = 4) +
   theme_minimal()
 ```
 :::

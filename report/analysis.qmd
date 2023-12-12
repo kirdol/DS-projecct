@@ -41,6 +41,7 @@ ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
   labs(x = 'Goals', y = 'Goals',
        title = 'Correlations Heatmap between goals and our other variables')
 ```
+
 The numbers are representing the significant pval between our variables. The grey parts are the non significant pvals. 
 
 GDP per capita, internet_usage, pf_law or ef_legal are strongely correlated with most of our SDG goals. This is mostly due to the large scope englobed in these variables. That makes them influence various sectors of our economies and thus, mostly impacting all our SDG goals. Therefore, we can think that these variables have a strong impact on the scores. Nevertheless, as correlation doesn't mean causality, we cannot jump to conclusions.
@@ -65,11 +66,14 @@ ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
   labs(x = 'Goals', y = 'Goals',
        title = 'Correlations Heatmap between other variables than SDG goals')
 ```
+
 As noticed earlier, there is a strong correlation among personal freedom variables (pf), reflecting scores from the Human Freedom Index on movement, religion, assembly, and expression.
 
 Again, we can see that GDP per capita, pf_law, ef_legal are highly correlated with some other variables. On another hand, we notice that pf_movement, pf_assembly, pf_expression are now also higly correlated with some of the other variables. 
 
-In order to have a look at the influence of some factors over our dependent variables, let's conduct a Principal Component Analysis over the Human Freedom Index Scores. 
+In order to have a look at the influence of some factors over our dependent variables, let's conduct a 
+Principal Component Analysis over the Human Freedom Index Scores.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### PCA and PCA Scree plot####
 
@@ -93,7 +97,8 @@ fviz_pca_biplot(myPCA_s,
 
 Now concerning the Human Freedom Index scores, most of the variables are positively correlated to the dimension 1, slightly less for the PF religion, and finally the EF government variable is slighlty incorrelated to the dimension 1. With a eigenvalue bigger than 1 for the three first components, we conclude that there are 3 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance. Therefore, the rule of thumb would suggest us to take 4 dimensions into account. 
 
-Let's try now to conduct a cluster analysis, using the Kmean method. 
+Let's try now to conduct a cluster analysis, using the Kmean method.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 data_kmean_country <- data_question1 %>% dplyr::select(-c(X,code,year,continent,region, population))
 
@@ -115,17 +120,22 @@ rownames(means_by_country) <- seq_along(row.names(means_by_country))
 
 fviz_nbclust(means_by_country[,-1], kmeans, method="wss")
 ```
+
 After adapting the data for conducting our cluster analysis, we can see that according the the elbow method that we would only need 4 clusters in our analysis.
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 kmean <- kmeans(means_by_country[,-1], 4, nstart = 25)
 fviz_cluster(kmean, data=means_by_country[,-1], repel=FALSE, depth =NULL, ellipse.type = "norm", labelsize = 10, pointsize = 0.5)
 ```
+
 Our cluster analysis gives us one principal cluster (here in purple) --> CENTERED ON 0 BECAUSE AFTER DATA SCALED-> REALLY SMALL VALUES --> HOW TO DEAL WITH IT? I TRIED TO TAKE ONLY HFI INTO ACCOUNT BUT NOT WORKING NEITHER. STILL CENTERED ON 0.
 
 <!-- Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough. -->
 
 ##Regressions
+
 While considering our regressions, we have noticed that we had high multicolinearity between our dependent variables in our models. This is due to the numerous variables that we tried to take into account while computing our regressions. Let's find a model that could explain the overall SDG score without having severe multicollinearity (VIF > 5)
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 goals_data <- data_question1 %>%
   dplyr::select(overallscore, unemployment.rate, GDPpercapita, MilitaryExpenditurePercentGDP, internet_usage, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
@@ -137,7 +147,9 @@ leaps<-regsubsets(overallscore ~ .,data=goals_data,nbest=10)
 # summary(leaps)
 plot(leaps,scale="r2") + theme_minimal()
 ```
-The model found is taking into account the following dependent variables: unmeployment rate, military expenditure percentage of GDP, internet_usage, pf_security, pf_religion, pf_identity, ef_legal, ef_trade. We notice here that the previous variables highly correlated to the SDG goals (GDP per capita, pf_law, internet_usage and ef_legal), we dropped the first two ones. 
+
+The model found is taking into account the following dependent variables: unemployment rate, military expenditure percentage of GDP, internet_usage, pf_security, pf_religion, pf_identity, ef_legal, ef_trade. We notice here that the previous variables highly correlated to the SDG goals (GDP per capita, pf_law, internet_usage and ef_legal), we dropped the first two ones.
+
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 #### Forward selection ####
 
@@ -165,7 +177,9 @@ ggplot(step_results, aes(x = step)) +
     labs(title = "Forward Selection Process", x = "Step", y = "Metric Value") +
     scale_color_manual("", breaks = c("AIC", "Adjusted R-squared"), values = c("blue", "red"))
 ```
+
 Now let's compute our regression model with the variables selected by our stepwise methode
+
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 # Your R code for the regression and stargazer output goes here
 reg_overall_Q1 <- lm(overallscore ~ unemployment.rate + MilitaryExpenditurePercentGDP + internet_usage + pf_security + pf_religion + pf_identity + ef_legal + ef_trade, data = data_question1)
@@ -175,8 +189,8 @@ sg1 <- stargazer(reg_overall_Q1,
           type='text',
           digits=3)
 ```
-As we can see, all of the variables above are significantly impacting the overall score of our Sustainable Development Goals. In addition, our Radjusted is high enough, which means that our model is well explained. 
 
+As we can see, all of the variables above are significantly impacting the overall score of our Sustainable Development Goals. In addition, our Radjusted is high enough, which means that our model is well explained. 
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 ##### geom point #####
@@ -215,6 +229,7 @@ geom9 <-ggplot(data_question1, aes(ef_trade, overallscore)) +
 
 grid.arrange(geom1, geom2, geom3, geom4, geom5, geom7, geom8, geom9, nrow=3, ncol=3)
 ```
+
 By checking the influence of the chosen variables over the overallscore, we can see that the functions are not linear. For some, such as internet_usage and ef_legal, we notice that the more the variable increase, the more it influence positively the overall score. For the others, the relations are more complex. I.e.: Unemployment.rate increase mostly the overallscore between 0 and 10%. pf_identity is slowly reducing the overallscore before going back up.
 
 In conclusion, after reviewing which variables are correlating between themself, after taking care of multicollinearity problems and doing our regressions on our overall SDG score and finally seeing the influence of these dependent variables depending on their range, we notice that most of our variables taken into account in our model is significant in explaining their influence (positive or negative) over the overall SDG goals. As our goals are mostly correlated between eachother, we can presume that taking the overall score as our dependent variable is giving us the same conclusion. Nevertheless, we still need to go deeper and check the influence of the scores between themself. 

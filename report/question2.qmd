@@ -2,7 +2,7 @@
 source(here::here("scripts/Clean/setup.R"))
 ```
 
-# Focus on the evolution of SDG scores over time
+## Focus on the evolution of SDG scores over time
 
 **How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?**
 
@@ -16,10 +16,9 @@ data_question2 <- data_question2 %>%
   group_by(code) %>%
   mutate(across(5:21, ~ . - dplyr::lag(.), .names = "diff_{.col}")) %>%
   ungroup()
-
 ```
 
-## EDA: General time evolution of SDG socres
+### EDA: General time evolution of SDG socres
 
 First, we look at the evolution of SDG achievement overall score over time by continent and by region and we see that the general evolution of SDG scores around the world is increasing over the years, but very slowly. Looking at the continents, we see that Europe is above the others, while Africa is below, but in general, all have increasing overall scores.
 
@@ -224,7 +223,7 @@ plot_ly(
 
 Again, we see that the overall achievement score of the SDGs is increasing and that the countries that have the most red (bad score) are in Africa. However it is also there that it increases more rapidly. Our hypothesis is that when a score is very low, it is easier to make it better than when it becomes very high (around 90%) it may be hard to increase it, because it would mean perfection. In the next section, we will further investigate this idea.
 
-## Analysis: SDG adoption in 2015
+### Analysis: SDG adoption in 2015
 
 Preparing for the specific question around 2015, we only keep the years from 2009 to 2022 (7 years before and after 2015).In addition, we create a binary variable that take the value 1 if the observation occurred after 2015 and zero otherwise.
 
