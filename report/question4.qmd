@@ -1,7 +1,7 @@
 ```{r echo = FALSE, message = FALSE}
 #### Setup ####
 source(here::here("scripts","Clean","setup.R"))
-data_4 <- read.csv(here::here("scripts", "data", "data_question24.csv"))
+data_4 <- read.csv(here("scripts", "data", "data_question24.csv"))
 threashold_heatmap <- 0.5
 library(leaps)
 ```
