@@ -218,7 +218,7 @@ grid.arrange(unempl_d,gdp_d,milit_d,internet_d, ncol = 2, nrow = 2)
 
 
 
-## Q4
+## Focus on the relationships between the SDGs
 
 ```{r echo = FALSE, message = FALSE}
 #### Setup ####
