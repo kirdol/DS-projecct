@@ -35,14 +35,12 @@ visdat
 huxtable
 plm
 plotly
-viridisLite
-viridis
 e1071
 carData
 car
-shiny
 naniar
-MASS
 ggridges
+shiny
 leaps
 shinydashboard
+MASS
