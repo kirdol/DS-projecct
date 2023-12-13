@@ -567,7 +567,7 @@ fit <- lm(overallscore ~ ., data = goals_data)
 library(leaps)
 leaps<-regsubsets(overallscore ~ .,data=goals_data,nbest=10)
 # summary(leaps)
-plot(leaps,scale="r2") + theme_minimal()
+plot(leaps,scale="r2") + theme_minimal() + title("Stepwise Regression : Forward method - adjusted R^2")
 ```
 
 The model found is taking into account the following dependent variables: unemployment rate, military expenditure percentage of GDP, internet_usage, pf_security, pf_religion, pf_identity, ef_legal, ef_trade. We notice here that the previous variables highly correlated to the SDG goals (GDP per capita, pf_law, internet_usage and ef_legal), we dropped the first two ones.
