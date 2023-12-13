@@ -108,6 +108,7 @@ plot_ly(
 8. **Conflicts**, deaths, population and area affected
 
 - Continents, Regions
+- Match datasets by key = (country, year)
 
 :::
 
