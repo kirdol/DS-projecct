@@ -12,25 +12,24 @@ format:
 #format: beamer
 #format: pptx
 ---
+
 ## Introduction {.smaller}
 
-::: {.incremental}
+::: incremental
+<img src="SDG.png" height="350px" width="520" style="display: block; margin: 0 auto;"/>
 
-<img src="SDG.png" height="350px" width="520" style="display: block; margin: 0 auto;" />
+1.  What can explain the state of the countries regarding sustainable development?
 
-1. What can explain the state of the countries regarding sustainable development?
+2.  How are the different SDGs linked?
 
-2. How are the different SDGs linked? 
+3.  How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
 
-3. How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
-
-4. Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crises and natural disasters?
-
+4.  Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crises and natural disasters?
 :::
 
 ## Main dataset {.smaller}
 
-1. **SDG achievement scores**, overall & individual scores (except goal 14: life under water)
+1.  **SDG achievement scores**, overall & individual scores (except goal 14: life under water)
 
 ```{r, message = FALSE, warning=FALSE, results='hide'}
 #| echo: false
@@ -96,39 +95,40 @@ plot_ly(
 
 ## Complementary datasets {.smaller}
 
-::: {.incremental}
+::: incremental
+2.  **Unemployment rate**
 
-2. **Unemployment rate**
-3. **GDP per capita and military expenditure in % of GDP**
-4. **Internet usage**, % of the population using internet
-5. **Human freedom index (personal and economic)**, movement, religion, trade...
+3.  **GDP per capita and military expenditure in % of GDP**
 
-6. **Disasters**, deaths, injured...
-7. **COVID**, deaths, cases and stringency 
-8. **Conflicts**, deaths, population and area affected
+4.  **Internet usage**, % of the population using internet
 
+5.  **Human freedom index (personal and economic)**, movement, religion, trade...
+
+6.  **Disasters**, deaths, injured...
+
+7.  **COVID**, deaths, cases and stringency
+
+8.  **Conflicts**, deaths, population and area affected
 :::
 
-## {.smaller}
+##  {.smaller}
+
 ### Data wrangling
 
-::: {.incremental}
-
-- Match datasets by key = (country, year)
-- Delete columns, then rows with too much NAs
-
+::: incremental
+-   Match datasets by key = (country, year)
+-   Delete columns, then rows with too much NAs
 :::
 
-## {.smaller}
+##  {.smaller}
+
 ### Data wrangling
 
-- Match datasets by key = (country, year)
-- Delete columns, then rows with too much NAs
+-   Match datasets by key = (country, year)
+-   Delete columns, then rows with too much NAs
 
-:::: {.columns style="margin-bottom: 0px;"}
-
+::: {.columns style="margin-bottom: 0px;"}
 ::: {.column width="55%" style="margin-bottom: 0px;"}
-
 ```{r, message = FALSE, warning=FALSE, fig.height=4.2}
 #| echo: false
 all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
@@ -173,21 +173,18 @@ ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Perce
 :::
 
 ::: {.column width="45%" style="margin-bottom: 0px;"}
-
+:::
 :::
 
-::::
+##  {.smaller}
 
-## {.smaller}
 ### Data wrangling
 
-- Match datasets by key = (country, year)
-- Delete columns, then rows with too much NAs
+-   Match datasets by key = (country, year)
+-   Delete columns, then rows with too much NAs
 
-:::: {.columns style="margin-bottom: 0px;"}
-
+::: {.columns style="margin-bottom: 0px;"}
 ::: {.column width="55%" style="margin-bottom: 0px;"}
-
 ```{r, message = FALSE, warning=FALSE, fig.height=4.2}
 #| echo: false
 all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
@@ -232,23 +229,19 @@ ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Perce
 :::
 
 ::: {.column width="45%" style="margin-bottom: 0px;"}
-
-<img src="data1.png" height="320" />
-
+<img src="data1.png" height="320"/>
+:::
 :::
 
-::::
+##  {.smaller}
 
-## {.smaller}
 ### Data wrangling
 
-- Match datasets by key = (country, year)
-- Delete columns, then rows with too much NAs
+-   Match datasets by key = (country, year)
+-   Delete columns, then rows with too much NAs
 
-:::: {.columns style="margin-bottom: 0px;"}
-
+::: {.columns style="margin-bottom: 0px;"}
 ::: {.column width="55%" style="margin-bottom: 0px;"}
-
 ```{r, message = FALSE, warning=FALSE, fig.height=4.2}
 #| echo: false
 all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
@@ -293,15 +286,12 @@ ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Perce
 :::
 
 ::: {.column width="45%" style="margin-bottom: 0px;"}
-
-<img src="data1.png" height="320" />
-
+<img src="data1.png" height="320"/>
+:::
 :::
 
-::::
-
-- Fill in remaining NAs with linear interpolation,      
-median/mean based on region or zeros when appropriate
+-   Fill in remaining NAs with linear interpolation,\
+    median/mean based on region or zeros when appropriate
 
 # EDA / Analysis
 
@@ -315,7 +305,7 @@ Correlation_overall <- data_question1 %>%
       dplyr::select(population:ef_regulation)
 ```
 
-:::: {.columns}
+::: columns
 ::: {.column width="35%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 long_df_goal_distribution <- pivot_longer(Correlation_overall, cols = starts_with("goal"), names_to = "Goal", values_to = "Value")
@@ -335,7 +325,8 @@ ggplot(long_df_goal_distribution, aes(x = Value, y = Goal, fill = stat(x))) +
        y = 'Goals',
         title = 'SDG Goals Distribution')
 ```
-::: 
+:::
+
 ::: {.column width="35%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 ggplot(long_df_hfi_distribution, aes(x = Value, y = Category, fill = stat(x))) +
@@ -347,6 +338,7 @@ ggplot(long_df_hfi_distribution, aes(x = Value, y = Category, fill = stat(x))) +
     title = 'Human Freedom Index Scores Distribution')
 ```
 :::
+
 ::: {.column width="30%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 ggplot(Correlation_overall, aes(x = unemployment.rate, y = 1, fill = stat(x))) +
@@ -357,7 +349,8 @@ ggplot(Correlation_overall, aes(x = unemployment.rate, y = 1, fill = stat(x))) +
   labs(y = 'Density',
   title = 'Distribution of Unemployment Rate')
 ```
-::: 
+:::
+
 ::: {.column width="33%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 ggplot(Correlation_overall, aes(x = GDPpercapita, y = 1, fill = stat(x))) +
@@ -368,6 +361,7 @@ ggplot(Correlation_overall, aes(x = GDPpercapita, y = 1, fill = stat(x))) +
   labs(y = 'Density', title = 'Distribution of GDP per Capita')
 ```
 :::
+
 ::: {.column width="33%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 ggplot(Correlation_overall, aes(x = MilitaryExpenditurePercentGDP, y = 1, fill = stat(x))) +
@@ -378,6 +372,7 @@ ggplot(Correlation_overall, aes(x = MilitaryExpenditurePercentGDP, y = 1, fill =
   labs(y = 'Density',title = 'Distribution of Military Expenditure (% of GDP)')
 ```
 :::
+
 ::: {.column width="33%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 ggplot(Correlation_overall, aes(x = internet_usage, y = 1, fill = stat(x))) +
@@ -387,12 +382,11 @@ ggplot(Correlation_overall, aes(x = internet_usage, y = 1, fill = stat(x))) +
   labs(y = 'Density',title = 'Distribution of Internet Usage')
 ```
 :::
-::::
+:::
 
 ## Distribution per continent, per goal
 
-:::: {.columns}
-
+::: columns
 ::: {.column width="50%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 #### boxplots ####
@@ -478,11 +472,9 @@ ggplot(medians_all, aes(x = variable, y = value, fill = color)) +
   theme(plot.title = element_text(hjust = 0.5), # Center the title
         plot.title.position = "plot", axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
-
 :::
 
 ::: {.column width="50%"}
-
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 #Africa
 data_Q1_Africa_HFI <- data_question1 %>%
@@ -574,14 +566,12 @@ ggplot(medians_all_HFI, aes(x = variable, y = value, fill = color)) +
   theme(plot.title = element_text(hjust = 0.5), # Center the title
         plot.title.position = "plot", axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
-
-::: 
-
-:::: 
+:::
+:::
 
 ## Analysis : correlations
 
-:::: {.columns}
+::: columns
 ::: {.column width="35%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 ### Correlation Matrix Heatmap SDG/Other variables ###
@@ -613,10 +603,9 @@ ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
   labs(x = 'Goals', y = 'Goals',
        title = 'Correlations Heatmap between goals and our other variables')
 ```
-
 :::
-::: {.column width="35%"}
 
+::: {.column width="35%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE, results='hide'}
 goals_data <- data_question1 %>%
   dplyr::select(overallscore, unemployment.rate, GDPpercapita, MilitaryExpenditurePercentGDP, internet_usage, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
@@ -628,6 +617,7 @@ leaps<-regsubsets(overallscore ~ .,data=goals_data,nbest=10)
 plot(leaps,scale="r2") + theme_minimal() + title("Stepwise Regression : Forward method - adjusted R^2")
 ```
 :::
+
 ::: {.column width="40%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 #### PCA Biplot ####
@@ -641,7 +631,7 @@ fviz_pca_biplot(myPCA_s,
   theme_minimal()
 ```
 :::
-::::
+:::
 
 ## fixing multicollinearity problem and model selection
 
@@ -666,7 +656,6 @@ goals_data <- data_4 %>%
 goals_data_scaled <- scale(goals_data) # Scaling the data
 pca_result <- prcomp(goals_data_scaled) # Running PCA
 ```
-
 
 ::: {.column width="64%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
@@ -697,9 +686,9 @@ fviz_pca_biplot(pca_result,
                 labelsize = 4) +
   theme_minimal()
 ```
-* Interconnection of the goals
-* Negative correlation between goals 12 (Responsible Consumption and Production) and 13 (Climate Action) and the other goals.
 
+-   Interconnection of the goals
+-   Negative correlation between goals 12 (Responsible Consumption and Production) and 13 (Climate Action) and the other goals.
 :::
 
 ## How are the different SDGs linked? {.smaller}
@@ -724,7 +713,6 @@ goals_data_scaled <- scale(goals_data) # Scaling the data
 pca_result <- prcomp(goals_data_scaled) # Running PCA
 ```
 
-
 ::: {.column width="35%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
@@ -739,12 +727,12 @@ ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
     labs(title = "Heatmap of Spearman Correlations for Goals", 
          x = "", y = "")
 ```
+
 3 groups of goals
 
-* Goal 12 and Goal 13
-* Goal 10 and Goal 15
-* The rest of the Goals
-
+-   Goal 12 and Goal 13
+-   Goal 10 and Goal 15
+-   The rest of the Goals
 :::
 
 ::: {.column width="64%"}
@@ -969,6 +957,157 @@ plotly::plot_ly() %>%
   )
 ```
 
-## Influence of events
+## Influence of events- Influence of events over the SDG scores
+
+```{r, message=FALSE, warning=FALSE, fig.width=3, fig.height=3}
+
+source(here::here("scripts","Clean","setup.R"))
+data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
+data_question3_1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
+data_question3_2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+data_question3_3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
+Q3.1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
+Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+Q3.3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
+data <- read.csv(here("scripts", "data", "all_Merge.csv"))
+Correlation_overall <- data_question1 %>% 
+      dplyr::select(population:ef_regulation)
+
+lower.panel <- function(x, y, ...){
+   points(x, y, pch = 20, col = "darkgreen", cex = 0.2)
+}
+ 
+ panel.hist <- function(x, ...){
+   usr <- par("usr"); on.exit(par(usr))
+   par(usr = c(usr[1:2], 0, 1.5) )
+   h <- hist(x, plot = FALSE)
+   breaks <- h$breaks; nB <- length(breaks)
+   y <- h$counts; y <- y/max(y)
+   rect(breaks[-nB], 0, breaks[-1], y, col = "lightgreen", ...)
+   text(0.3, 0.3, cex = 0.2)
+ }
+ 
+ # panel.cor_stars function with stars alongside correlation coefficients
+ panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
+   usr <- par("usr"); on.exit(par(usr))
+   par(usr = c(0, 1, 0, 1))
+   r <- cor(x, y)
+   p_value <- cor.test (x,y)$p.value
+ 
+   if (p_value < 0.001){
+     stars <- "***"
+   } else if (p_value < 0.01) {
+     stars <- "**"
+   } else if (p_value < 0.05) {
+     stars <- "*"
+   } else {
+     stars <- ""
+   }
+   txt <- paste0(format(c(r, 0.123456789), digits = digits)[1], " ", stars)
+   if(missing(cex.cor)) cex.cor <- 0.6/strwidth(txt)
+   text(0.6, 0.6, txt, cex = cex.cor)
+ }
+```
+
+::: columns
+::: {.column width="33%"}
+```{r, message=FALSE, warning=FALSE, fig.width=7, fig.height=8}
+pairs(data_question3_1[, c("overallscore", "total_affected", "total_deaths")], upper.panel = panel.cor_stars,diag.panel = panel.hist,lower.panel = lower.panel, main = "Correlation table and distribution of Disaster variables", cex.main = 1.5)
+```
+:::
+
+::: {.column width="33%"}
+```{r, message=FALSE, warning=FALSE, fig.width=7, fig.height=8}
+
+pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_million", "stringency")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel,main="Correlation table and distribution of COVID variables", cex.main = 1.5)
+```
+:::
+
+::: {.column width="33%"}
+```{r, message=FALSE, warning=FALSE, fig.width=7, fig.height=8}
+
+pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of conflicts variables", cex.main = 1.5)
+```
+:::
+:::
+
+## Influence of events- Influence of events over the SDG scores
+
+::: columns 
+::: {.column width="70%" style="margin-top: -35px;"}
+```{r, message=FALSE, warning=FALSE, fig.width=6, fig.height=4}
+
+library(ggplot2)
+
+disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "total_deaths")
+subset_data <- disaster_data[, relevant_columns]
+
+correlation_matrix_subset <- cor(subset_data[, c("total_affected", "total_deaths")], subset_data)
+
+cor_melted <- reshape2::melt(correlation_matrix_subset)
+names(cor_melted) <- c("Variable2", "Variable1", "Correlation")
+
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation", guide = guide_colorbar(title.position = "top", title.vjust = 0.5, title.theme = element_text(size = 7), label.theme = element_text(size = 5), key.height = unit(0.1, "cm"))) +
+  
+  theme_minimal() +
+  theme( axis.text.x = element_text(angle = 45, size = 7, hjust = 1),
+         axis.text.y = element_text(vjust = 1, size = 7, hjust = 1),
+         plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
+                                   vjust = 8, lineheight = 1.5, size = 8)
+  ) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between the climate disasters and the SDG goals in South and East Asia and North America')
+```
+:::
+
+::: {.column width="70%" style="margin-top: -35px;"}
+```{r, message=FALSE, warning=FALSE, fig.width=6, fig.height=4}
+
+covid_filtered <- Q3.2
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
+subset_data <- covid_filtered[, relevant_columns]
+
+correlation_matrix_Covid <- cor(subset_data, subset_data[, c("stringency", "cases_per_million", "deaths_per_million")])
+
+cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+# Create the heatmap
+library(ggplot2)
+
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation", guide = guide_colorbar(title.position = "top", title.vjust = 0.5, title.theme = element_text(size = 7), label.theme = element_text(size = 5))) +
+  
+  theme_minimal() +
+  theme( axis.text.x = element_text(angle = 45, size = 7, hjust = 1),
+         axis.text.y = element_text(vjust = 1, size = 7, hjust = 1),
+         plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
+                                   vjust = 5, lineheight = 1.5, size = 8)
+  ) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between COVID and the SDG goals')
+```
+:::
+
+::: {.column width="70%" style="margin-top: -130px;"}
+<img src="Covid-2022-gap-year.png" height="200px" width="520" style="display: block; margin: 20px auto 0;"/>
+<h2 style="font-size: 24px;">Correlation between COVID-19 variables and the SDG goals with 1 year gap</h2>
+:::
+
+::: {.column width="70%" style="margin-top: -130px;"}
+<img src="Covid-Goal-9-Cases.png" height="200px" width="520" style="display: block; margin: 10px auto 0;"/>
+<h2 style="font-size: 24px;">Regressions for the Goal 9 depending on the Cases per million variable in the COVID-19 dataset</h2>
+:::
+:::
 
 ## Conclusion

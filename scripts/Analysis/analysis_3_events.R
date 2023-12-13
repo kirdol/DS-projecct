@@ -778,6 +778,16 @@ for (goal in selected_goals) {
 #Model 1 :
 #Regression of Goal 1 vs total affected: The coefficient for 'total_affected' is -3.41e-08 with a standard error of 4.19e-08. This indicates a very small negative relationship between 'total_affected' and 'Goal 1.' However, the p-value (0.42) is larger than the typical significance level of 0.05, suggesting that the relationship between 'total_affected' and 'Goal 1' is not statistically significant.
 #Regression of Goal 1 vs Total Deaths: The coefficient for 'total_deaths' is -0.000117 with a standard error of 0.000165. This indicates a negative relationship between 'total_deaths' and 'Goal 1,' but the p-value (0.32) is larger than 0.05, suggesting that the relationship between 'total_deaths' and 'Goal 1' is not statistically significant.
+# Scatterplot for goal1 vs Total Affected with Regression Line
+plot(subset_data$total_affected, subset_data$goal1, main = "Goal1 vs Total Affected")
+abline(lm_total_affected, col = "red")  # Adding regression line
+
+# Scatterplot for goal1 vs No Deaths with Regression Line
+plot(subset_data$total_deaths, subset_data$goal1, main = "Goal1 vs No Deaths")
+abline(lm_deaths, col = "blue")  # Adding regression line
+
+# If the plot shows that almost all the points are aligned horizontally and the line is sloping slightly downward, it suggests a weak or negligible relationship between the variables.  The horizontal alignment of most points indicates that there's little variation in the independent variable (x-axis, possibly 'total_affected' or 'total_deaths' in your case) across the dataset. This lack of variation implies that changes in the independent variable are not causing significant changes in the dependent variable (y-axis, represented by the different 'goal' variables).
+# The slight downward slope of the line in such a scenario indicates a minimal negative relationship between the variables. However, since the points are primarily horizontal, this relationship is likely very weak or almost non-existent. In simpler terms, changes in the independent variable are not substantially affecting the dependent variable based on the observed data pattern. In statistical terms, the regression analysis might show a very low R-squared value and coefficients that are close to zero or statistically insignificant. This pattern suggests that the independent variable (e.g., 'total_affected' or 'total_deaths') might not be a significant predictor or explanatory factor for the 'goal' variables you are investigating.
 
 #Model 2: 
 #Regression of Goal 2 vs total affected:The coefficient for 'total_affected' is 3.60e-08 with a standard error of 1.68e-08. This suggests a slight positive relationship between 'total_affected' and 'Goal 2.' The p-value (0.044) is marginally significant, indicating a potential relationship between 'total_affected' and 'Goal 2.'
@@ -1009,6 +1019,87 @@ for (goal in selected_goals) {
 ### Regression Summary for 'Goal 1' vs Cases per Million:The regression analysis shows a statistically significant positive relationship between 'Goal 1' and 'Cases per Million.' For every unit increase in 'Cases per Million,' 'Goal 1' tends to increase by 1.25e-04 units, on average. The adjusted R-squared value of approximately 1.95% indicates that 'Cases per Million' explains a slightly larger proportion of the variance in 'Goal 1' compared to 'Stringency.' However, similar to 'Stringency,' 'Cases per Million' alone might not comprehensively predict 'Goal 1.'
 ### Regression Summary for 'Goal 1' vs Deaths per Million:The regression analysis reveals a statistically significant positive relationship between 'Goal 1' and 'Deaths per Million.' For every unit increase in 'Deaths per Million,' 'Goal 1' tends to increase by 0.01863 units, on average. The adjusted R-squared value of approximately 2.12% suggests that 'Deaths per Million' explains a slightly higher proportion of the variance in 'Goal 1' compared to both 'Stringency' and 'Cases per Million.' Yet, similar to the other variables, 'Deaths per Million' alone might not fully account for variations in 'Goal 1.'
 ### Overall Summary:Each of the predictors (Stringency, Cases per Million, Deaths per Million) exhibits statistically significant relationships with 'Goal 1.' However, individually, they explain only a small fraction of the variance in 'Goal 1.' Their limited explanatory power, as indicated by the low adjusted R-squared values (ranging from 0.25% to 2.12%), suggests that other unaccounted-for factors or a combination of variables not included in the analysis might play crucial roles in determining 'Goal 1.' Therefore, while these variables show significance, their individual impacts on 'Goal 1' are modest, and a more comprehensive model incorporating additional factors may better predict 'Goal 1.'
+
+# Load required libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# Read the CSV data
+Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+covid_filtered <- Q3.2
+
+# Select relevant columns for correlation analysis
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8",
+                      "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16",
+                      "stringency", "cases_per_million", "deaths_per_million")
+
+subset_data <- covid_filtered[, relevant_columns]
+
+# Define the specific goal columns you want to include in regression
+selected_goals <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8",
+                    "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16")
+
+# Create empty data frames to store coefficients and R-squared values
+coefficients_df <- data.frame(Goal = character(),
+                              Variable = character(),
+                              Coefficient = numeric(),
+                              stringsAsFactors = FALSE)
+
+r_squared_df <- data.frame(Goal = character(),
+                           Variable = character(),
+                           R_squared = numeric(),
+                           stringsAsFactors = FALSE)
+
+# Loop through each selected goal
+for (goal in selected_goals) {
+  # Formulas for regression against COVID-19 variables
+  formula_stringency <- as.formula(paste(goal, "~ stringency"))
+  formula_cases <- as.formula(paste(goal, "~ cases_per_million"))
+  formula_deaths <- as.formula(paste(goal, "~ deaths_per_million"))
+  
+  # Perform linear regression for stringency, cases, and deaths
+  lm_stringency <- lm(formula_stringency, data = subset_data)
+  lm_cases <- lm(formula_cases, data = subset_data)
+  lm_deaths <- lm(formula_deaths, data = subset_data)
+  
+  # Obtain coefficients and R-squared values
+  summary_stringency <- summary(lm_stringency)
+  summary_cases <- summary(lm_cases)
+  summary_deaths <- summary(lm_deaths)
+  
+  # Extract coefficients and R-squared values for each variable
+  coefficients_df <- coefficients_df %>%
+    bind_rows(data.frame(Goal = goal,
+                         Variable = c("Stringency", "Cases per Million", "Deaths per Million"),
+                         Coefficient = c(summary_stringency$coefficients[2],
+                                         summary_cases$coefficients[2],
+                                         summary_deaths$coefficients[2])))
+
+  r_squared_df <- r_squared_df %>%
+    bind_rows(data.frame(Goal = goal,
+                         Variable = c("Stringency", "Cases per Million", "Deaths per Million"),
+                         R_squared = c(summary_stringency$adj.r.squared,
+                                       summary_cases$adj.r.squared,
+                                       summary_deaths$adj.r.squared)))
+}
+
+# Plotting coefficients for each goal against variables
+ggplot(coefficients_df, aes(x = Variable, y = Coefficient, fill = Goal)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Coefficients for Each Goal against Variables",
+       x = "Variables", y = "Coefficient") +
+  scale_fill_discrete(name = "Goals") +
+  theme_minimal()
+
+# Plotting R-squared values for each goal against variables
+ggplot(r_squared_df, aes(x = Variable, y = R_squared, fill = Goal)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "R-squared for Each Goal against Variables",
+       x = "Variables", y = "R-squared") +
+  scale_fill_discrete(name = "Goals") +
+  theme_minimal()
+
 
 
 ### Regression Summary for 'Goal 2' vs Stringency: The regression analysis shows a statistically significant positive relationship between 'Goal 2' and 'Stringency.' For every unit increase in 'Stringency,' 'Goal 2' tends to increase by 0.0555 units, on average. The t-value (4.77) associated with the coefficient indicates its statistical significance. Additionally, the p-value (1.9e-06) is much smaller than the typical significance level of 0.05, providing strong evidence to reject the null hypothesis. This suggests that the relationship between 'Stringency' and 'Goal 2' is statistically significant. The adjusted R-squared value of approximately 0.00587 implies that only about 0.59% of the variance in 'Goal 2' can be explained by changes in 'Stringency.' Therefore, while statistically significant, 'Stringency' alone might not be a robust predictor of 'Goal 2.'
