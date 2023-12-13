@@ -432,6 +432,7 @@ Even with a year gap it doesn't seem that climate disaster with such consequence
 Here you can see an interactive map of the correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019).
 
 ```{r, eval = TRUE, echo = FALSE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
+
 library(shiny)
 library(plotly)
 
