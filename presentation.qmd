@@ -22,7 +22,15 @@ format:
 
 2.  How are the different SDGs linked?
 
+<<<<<<< HEAD
 3.  How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
+=======
+2. How are the different SDGs linked? 
+
+3. How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
+
+4. Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crisis and natural disasters?
+>>>>>>> 8b0d0abe7135b01192556b79b673afe68c44dc13
 
 4.  Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crises and natural disasters?
 :::
@@ -102,6 +110,7 @@ plot_ly(
 
 4.  **Internet usage**, % of the population using internet
 
+<<<<<<< HEAD
 5.  **Human freedom index (personal and economic)**, movement, religion, trade...
 
 6.  **Disasters**, deaths, injured...
@@ -109,6 +118,11 @@ plot_ly(
 7.  **COVID**, deaths, cases and stringency
 
 8.  **Conflicts**, deaths, population and area affected
+=======
+- Continents, Regions
+- Match datasets by key = (country, year)
+
+>>>>>>> 8b0d0abe7135b01192556b79b673afe68c44dc13
 :::
 
 ##  {.smaller}
