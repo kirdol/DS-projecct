@@ -725,19 +725,176 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Our cluster analysis gives us one principal cluster (here in purple) –&gt; CENTERED ON 0 BECAUSE AFTER DATA SCALED-&gt; REALLY SMALL VALUES –&gt; HOW TO DEAL WITH IT? I TRIED TO TAKE ONLY HFI INTO ACCOUNT BUT NOT WORKING NEITHER. STILL CENTERED ON 0.</p>
 <!-- Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough. -->
 <p>While considering our regressions, we have noticed that we had high multicolinearity between our dependent variables in our models. This is due to the numerous variables that we tried to take into account while computing our regressions. Let’s find a model that could explain the overall SDG score without having severe multicollinearity (VIF &gt; 5)</p>
-<div class="cell" data-layout-align="center" data-hash="question1_cache/html/unnamed-chunk-14_314acbdf222eb12c46b42234596d9395">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>goals_data <span class="ot">&lt;-</span> data_question1 <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(overallscore, unemployment.rate, GDPpercapita, MilitaryExpenditurePercentGDP, internet_usage, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)</span>
+<div class="cell" data-layout-align="center" data-hash="question1_cache/html/unnamed-chunk-14_dc3480ceaa80b0c59e0043839a954b7a">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># goals_data &lt;- data_question1 %&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   dplyr::select(overallscore, unemployment.rate, GDPpercapita, MilitaryExpenditurePercentGDP, internet_usage, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(overallscore <span class="sc">~</span> ., <span class="at">data =</span> goals_data)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># fit &lt;- lm(overallscore ~ ., data = goals_data)</span></span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(fit)</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>leaps<span class="ot">&lt;-</span><span class="fu">regsubsets</span>(overallscore <span class="sc">~</span> .,<span class="at">data=</span>goals_data,<span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression : Forward method - adjusted R^2"</span>)</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># leaps&lt;-regsubsets(overallscore ~ .,data=goals_data,nbest=10, method="forward")</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(leaps,scale="r2") + theme_minimal() + title("Stepwise Regression : Forward method - adjusted R^2")</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>reg_goal1 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal1 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>reg_goal2 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal2 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>reg_goal3 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal3 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>reg_goal4 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal4 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>reg_goal5 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal5 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>reg_goal6 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal6 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>reg_goal7 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal7 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>reg_goal8 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal8 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>reg_goal9 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal9 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>reg_goal10 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal10 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>reg_goal11 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal11 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>reg_goal12 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal12 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>reg_goal13 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal13 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>reg_goal15 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal15 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>reg_goal16 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal16 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>reg_goal17 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal17 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal1,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal1 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal2,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal2 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal3,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal3 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal4,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal4 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal5,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal5 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal6,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal6 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal7,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal7 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal8,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal8 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal9,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal9 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal10,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal10 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal11,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal11 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal12,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal12 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal13,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal13 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal15,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal15 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal16,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal16 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal17,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal17 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="question1_files/figure-html/unnamed-chunk-14-1.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-14-2.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-14-3.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-14-4.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-14-5.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-14-6.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-14-7.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-14-8.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-14-9.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-14-10.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-14-11.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-14-12.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-14-13.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-14-14.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-14-15.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-14-16.png" style="width:100.0%;height:100.0%" class="figure-img"></p>
 </figure>
 </div>
 </div>
