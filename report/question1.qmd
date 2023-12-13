@@ -138,8 +138,7 @@ server <- function(input, output) {
    })
 }
 
-# Run the application 
-shinyApp(ui = ui, server = server)
+# shinyApp(ui = ui, server = server)
 ```
 
 Now, let's display the distribution of the different SDG achievement scores per continent, using violin boxplots to have an overview of the mods, the range with most of the observations and the outliers.
@@ -564,9 +563,7 @@ goals_data <- data_question1 %>%
 
 fit <- lm(overallscore ~ ., data = goals_data)
 # plot(fit)
-library(leaps)
 leaps<-regsubsets(overallscore ~ .,data=goals_data,nbest=10)
-# summary(leaps)
 plot(leaps,scale="r2") + theme_minimal() + title("Stepwise Regression : Forward method - adjusted R^2")
 ```
 

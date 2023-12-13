@@ -305,7 +305,7 @@ median/mean based on region or zeros when appropriate
 
 # EDA / Analysis
 
-## Q1: EDA - distribution 
+## Q1: EDA - distribution test 1
 
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 source(here::here("scripts/Clean/setup.R"))
@@ -315,11 +315,8 @@ Correlation_overall <- data_question1 %>%
       dplyr::select(population:ef_regulation)
 ```
 
-
 :::: {.columns}
-
-::: {.column width="50%"}
-
+::: {.column width="35%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 long_df_goal_distribution <- pivot_longer(Correlation_overall, cols = starts_with("goal"), names_to = "Goal", values_to = "Value")
 
@@ -332,66 +329,65 @@ long_df_hfi_distribution$Goal <- with(long_df_hfi_distribution, reorder(Category
 ggplot(long_df_goal_distribution, aes(x = Value, y = Goal, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
   scale_fill_viridis_c(name = "", option = "C") +
-  theme(plot.title = element_text(hjust = 0.5), # Center the title
+  theme(plot.title = element_text(hjust = 0.5, size = 20), # Center the title
         plot.title.position = "plot") + 
   labs(x = 'Scores',
        y = 'Goals',
         title = 'SDG Goals Distribution')
 ```
-
-:::
-
-::: {.column width="50%"}
-
+::: 
+::: {.column width="35%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 ggplot(long_df_hfi_distribution, aes(x = Value, y = Category, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
   scale_fill_viridis_c(name = "", option = "C") +
-  theme(plot.title = element_text(hjust = 0.5), # Center the title
+  theme(plot.title = element_text(hjust = 0.5, size = 20), # Center the title
         plot.title.position = "plot") + 
   labs(x = 'Scores',
     title = 'Human Freedom Index Scores Distribution')
 ```
-
 :::
-
-:::: 
-
-**Test**, source
-
-## Q1: EDA - distribution 
-
+::: {.column width="30%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
-unempl_d <- ggplot(Correlation_overall, aes(x = unemployment.rate, y = 1, fill = stat(x))) +
+ggplot(Correlation_overall, aes(x = unemployment.rate, y = 1, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
   scale_fill_viridis_c(name = "", option = "C") +
-  theme(plot.title = element_text(hjust = 0.5, size = 10), # Center the title
+  theme(plot.title = element_text(hjust = 0.5, size = 20), # Center the title
         plot.title.position = "plot") + 
   labs(y = 'Density',
   title = 'Distribution of Unemployment Rate')
-
-gdp_d <- ggplot(Correlation_overall, aes(x = GDPpercapita, y = 1, fill = stat(x))) +
+```
+::: 
+::: {.column width="33%"}
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+ggplot(Correlation_overall, aes(x = GDPpercapita, y = 1, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
   scale_fill_viridis_c(name = "", option = "C") +
-  theme(plot.title = element_text(hjust = 0.5, size = 10), # Center the title
+  theme(plot.title = element_text(hjust = 0.5, size = 20), # Center the title
         plot.title.position = "plot") + 
   labs(y = 'Density', title = 'Distribution of GDP per Capita')
-
-milit_d <- ggplot(Correlation_overall, aes(x = MilitaryExpenditurePercentGDP, y = 1, fill = stat(x))) +
+```
+:::
+::: {.column width="33%"}
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+ggplot(Correlation_overall, aes(x = MilitaryExpenditurePercentGDP, y = 1, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
   scale_fill_viridis_c(name = "", option = "C") +
-  theme(plot.title = element_text(hjust = 0.5, size = 10), # Center the title
+  theme(plot.title = element_text(hjust = 0.5, size = 20), # Center the title
         plot.title.position = "plot") + 
   labs(y = 'Density',title = 'Distribution of Military Expenditure (% of GDP)')
-
-internet_d <- ggplot(Correlation_overall, aes(x = internet_usage, y = 1, fill = stat(x))) +
+```
+:::
+::: {.column width="33%"}
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+ggplot(Correlation_overall, aes(x = internet_usage, y = 1, fill = stat(x))) +
   geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "", option = "C") +theme(plot.title = element_text(hjust = 0.5, size = 10),
+  scale_fill_viridis_c(name = "", option = "C") +theme(plot.title = element_text(hjust = 0.5, size = 20),
         plot.title.position = "plot") + 
   labs(y = 'Density',title = 'Distribution of Internet Usage')
-
-grid.arrange(unempl_d,gdp_d,milit_d,internet_d, ncol = 2, nrow = 2)
 ```
+:::
+::::
 
 ## Distribution per continent, per goal
 
@@ -482,9 +478,11 @@ ggplot(medians_all, aes(x = variable, y = value, fill = color)) +
   theme(plot.title = element_text(hjust = 0.5), # Center the title
         plot.title.position = "plot", axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
+
 :::
 
 ::: {.column width="50%"}
+
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 #Africa
 data_Q1_Africa_HFI <- data_question1 %>%
@@ -576,12 +574,15 @@ ggplot(medians_all_HFI, aes(x = variable, y = value, fill = color)) +
   theme(plot.title = element_text(hjust = 0.5), # Center the title
         plot.title.position = "plot", axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
+
 ::: 
 
 :::: 
 
 ## Analysis : correlations
 
+:::: {.columns}
+::: {.column width="35%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 ### Correlation Matrix Heatmap SDG/Other variables ###
 
@@ -612,30 +613,37 @@ ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
   labs(x = 'Goals', y = 'Goals',
        title = 'Correlations Heatmap between goals and our other variables')
 ```
-## fixing multicollinearity problem and model selection
-```{r echo = FALSE, message = FALSE, warning=FALSE}
+
+:::
+::: {.column width="35%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE, results='hide'}
 goals_data <- data_question1 %>%
   dplyr::select(overallscore, unemployment.rate, GDPpercapita, MilitaryExpenditurePercentGDP, internet_usage, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
 
 fit <- lm(overallscore ~ ., data = goals_data)
 # plot(fit)
-library(leaps)
 leaps<-regsubsets(overallscore ~ .,data=goals_data,nbest=10)
 # summary(leaps)
 plot(leaps,scale="r2") + theme_minimal() + title("Stepwise Regression : Forward method - adjusted R^2")
 ```
-## regression
-
+:::
+::: {.column width="40%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
-reg_overall_Q1 <- lm(overallscore ~ unemployment.rate + MilitaryExpenditurePercentGDP + internet_usage + pf_security + pf_religion + pf_identity + ef_legal + ef_trade, data = data_question1)
-
-sg1 <- stargazer(reg_overall_Q1,
-          title="Impact of variables over Overallscore SDG goals",
-          type='text',
-          digits=3)
+#### PCA Biplot ####
+myPCA_s <- PCA(data_question1[,29:40], graph = FALSE)
+fviz_pca_biplot(myPCA_s,
+                label="var",
+                col.var="dodgerblue3",
+                geom="point",
+                pointsize = 0.1,
+                labelsize = 5) +
+  theme_minimal()
 ```
+:::
+::::
 
-**put pca after stargazer regression?** 
+## fixing multicollinearity problem and model selection
 
 ## Focus on the relationships between the SDGs
 
