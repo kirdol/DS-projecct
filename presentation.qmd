@@ -22,17 +22,14 @@ format:
 
 2.  How are the different SDGs linked?
 
-<<<<<<< HEAD
 3.  How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
-=======
+
 2. How are the different SDGs linked? 
 
 3. How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
 
 4. Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crisis and natural disasters?
->>>>>>> 8b0d0abe7135b01192556b79b673afe68c44dc13
 
-4.  Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crises and natural disasters?
 :::
 
 ## Main dataset {.smaller}
@@ -110,7 +107,6 @@ plot_ly(
 
 4.  **Internet usage**, % of the population using internet
 
-<<<<<<< HEAD
 5.  **Human freedom index (personal and economic)**, movement, religion, trade...
 
 6.  **Disasters**, deaths, injured...
@@ -118,11 +114,10 @@ plot_ly(
 7.  **COVID**, deaths, cases and stringency
 
 8.  **Conflicts**, deaths, population and area affected
-=======
+
 - Continents, Regions
 - Match datasets by key = (country, year)
 
->>>>>>> 8b0d0abe7135b01192556b79b673afe68c44dc13
 :::
 
 ##  {.smaller}
@@ -1048,7 +1043,7 @@ pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected
 ## Influence of events- Influence of events over the SDG scores
 
 ::: columns 
-::: {.column width="70%" style="margin-top: -35px;"}
+::: {.column width="70%" style="margin-top: -40px;"}
 ```{r, message=FALSE, warning=FALSE, fig.width=6, fig.height=4}
 
 library(ggplot2)
@@ -1080,7 +1075,7 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
 ```
 :::
 
-::: {.column width="70%" style="margin-top: -35px;"}
+::: {.column width="70%" style="margin-top: -40px;"}
 ```{r, message=FALSE, warning=FALSE, fig.width=6, fig.height=4}
 
 covid_filtered <- Q3.2
@@ -1113,12 +1108,12 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
 ```
 :::
 
-::: {.column width="70%" style="margin-top: -130px;"}
+::: {.column width="70%" style="margin-top: -118px;"}
 <img src="Covid-2022-gap-year.png" height="200px" width="520" style="display: block; margin: 20px auto 0;"/>
 <h2 style="font-size: 24px;">Correlation between COVID-19 variables and the SDG goals with 1 year gap</h2>
 :::
 
-::: {.column width="70%" style="margin-top: -130px;"}
+::: {.column width="70%" style="margin-top: -118px;"}
 <img src="Covid-Goal-9-Cases.png" height="200px" width="520" style="display: block; margin: 10px auto 0;"/>
 <h2 style="font-size: 24px;">Regressions for the Goal 9 depending on the Cases per million variable in the COVID-19 dataset</h2>
 :::
