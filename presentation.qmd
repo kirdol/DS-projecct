@@ -764,7 +764,7 @@ fviz_pca_biplot(pca_result,
 
 ## Evolution over time
 
-```{r, message = FALSE, warning=FALSE, out.width="100%", fig.height=3}
+```{r, message = FALSE, warning=FALSE, out.width="100%", fig.height=2.75}
 #| echo: false
 data1 <- data_question2 %>% group_by(year, continent) %>%
   mutate(mean_overall_score_by_year=mean(overallscore))
@@ -786,7 +786,7 @@ plot2 <- ggplot(data2) +
   geom_line(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=continent), lwd=0.6) +
   #geom_point(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=continent), lwd=1.5) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") + 
-  scale_y_continuous(limits = c(-0.3, 1.2)) +
+  scale_y_continuous(limits = c(-0.4, 1.2)) +
   labs(title = "Score difference",
        y = "Mean Overall SDG Score difference",
        x = "Year"

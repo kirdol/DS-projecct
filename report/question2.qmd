@@ -20,7 +20,7 @@ data_question2 <- data_question2 %>%
 
 ### EDA: General time evolution of SDG socres
 
-First, we look at the evolution of SDG achievement overall score over time by continent and by region and we see that the general evolution of SDG scores around the world is increasing over the years, but very slowly. Looking at the continents, we see that Europe is above the others, while Africa is below, but in general, all have increasing overall scores.
+First, we look at the evolution of SDG achievement overall score over time by continent and by region and we see that the general evolution of SDG scores around the world is increasing over the years, but very slowly. We also plot the average improvements/decrease in overall score acros the years. Looking at the continents, we see that Europe is above the others, while Africa is below, but in general, all have increasing overall scores. In addition, we see that the different continent have quite steady score difference between the years, except Oceania that has greater fluctuations and has sometimes score decrease, for instance in 2010. But it also comes with the higher average increase in 2014. We also observe that toward the latest years (2021-2022), the improvements are smaller and that decrease are more frequent. However, we must keep in mind that all are very small differences, indeed, the higher improvement is a little above 1 point of percentage of the overall score in one year. 
 
 ```{r, echo = FALSE, message = FALSE, warning=FALSE, cache = TRUE, fig.height=2.5}
 data1 <- data_question2 %>% group_by(year, continent) %>%
@@ -43,7 +43,7 @@ plot2 <- ggplot(data2) +
   geom_line(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=continent), lwd=0.6) +
   #geom_point(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=continent), lwd=1.5) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") + 
-  scale_y_continuous(limits = c(-0.3, 1.2)) +
+  scale_y_continuous(limits = c(-0.4, 1.2)) +
   labs(title = "Score difference",
        y = "Mean Overall SDG Score difference",
        x = "Year"
@@ -53,7 +53,7 @@ plot2 <- ggplot(data2) +
 plot1 + plot2
 ```
 
-This view that groups the countries by region gives us precision about the previous information. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below.
+This view that groups the countries by region gives us precision about the previous information. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below. Regarding the score difference from one year to another, we still see Oceania having the greater fluctuations, but Caucasus & Central Asia as well as Eastern Europe show a pick in the early two thousand's that we could not see before. South Asia also has a relatively high improvement in 2017. 
 
 ```{r, echo = FALSE, message = FALSE, warning=FALSE, cache = TRUE}
 data3 <- data_question2 %>% group_by(year, region) %>%
@@ -76,7 +76,7 @@ plot4 <- ggplot(data4) +
   geom_line(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=region), lwd=0.5) +
   #geom_point(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=region), lwd=0.8) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
-  scale_y_continuous(limits = c(-0.3,1.2)) +
+  scale_y_continuous(limits = c(-0.4,1.2)) +
   labs(title = "Score difference",
        y = "Mean Overall SDG Score difference",
        x = "Year"
@@ -94,6 +94,7 @@ legend <- cowplot::get_legend(legend)
 ```
 
 Second, we look at the evolution of SDG achievement scores(16) over time for the whole world and by continent. We notice that all SDGs except from goal 9 (industry innovation and infrastructure) are close to one another in terms of level and growth. Goal 9 starts far below the others in 2000 and growths faster until exceeding 50%. In addition, some goals did not increase their scores much in the last two decades, for example goal 13 (climate action) and goal 12 (responsible consumption and production).
+The score differences are mostly contained between 0 and 0.5 point of percentage increase by year. Some of the goals have picks, these are goals 15, 3, 5, 17 and goal 9 has the highest of all average improvements in 2017 with an improvement of 4 points of percentage, which is almost two times higher than the other good improvements. Some goals have bad years, like goal 10 or goal 15, but never under -0.5, except goal 16 in 2022 that goes a little below. Finaly, some goals are very steady, for example goal 12 that stays around zero and goal 6 that is always a little above the zero (no change) line. 
 
 ```{r, echo = FALSE, message = FALSE, cache = TRUE, warning = FALSE, out.height="200%"}
 data5 <- data_question2 %>%
@@ -124,7 +125,7 @@ plot6 <- ggplot(data = data6) +
   #geom_point(mapping = aes(x = year, y = mean_diff_value, color = goal), size = 1) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
   scale_color_manual(values = color_palette) +
-  scale_y_continuous(limits = c(-1.5, 2.5)) +
+  scale_y_continuous(limits = c(-1.5, 4)) +
   labs(title = "Score difference",
        y = "Mean SDG Scores difference",
        x = "Year"
