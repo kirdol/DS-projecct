@@ -24,7 +24,7 @@ format:
 
 3. How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
 
-4. Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crises and natural disasters?
+4. Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crisis and natural disasters?
 
 :::
 
@@ -106,6 +106,8 @@ plot_ly(
 6. **Disasters**, deaths, injured...
 7. **COVID**, deaths, cases and stringency 
 8. **Conflicts**, deaths, population and area affected
+
+- Continents, Regions
 
 :::
 
