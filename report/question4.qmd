@@ -86,7 +86,7 @@ fviz_eig(pca_result,
 eigenvalues <- pca_result$sdev^2 # getting the eigenvalues
 ```
 
-We see clearly that the first component is the most important one. Guided by the Kaiser criterion, which advises retaining only those components with eigenvalues exceeding 1, the initial three components emerge as candidates. However, considering the third component's eigenvalue of `r eigenvalues[3]`, we opted for simplification by focusing exclusively on the first two components. This decision also enhances clarity in the biplot representation, as it reduces the dimensions to just two, making interpretation more straightforward.
+We see clearly that the first component is the most important one. Guided by the Kaiser criterion, which advises retaining only those components with eigenvalues exceeding 1, the initial three components emerge as candidates. However, considering the third component's eigenvalue of `r eigenvalues[3]`, we opted for simplification by focusing exclusively on the first two components even though the third eigenvalue is technically higher than 1. This decision also enhances clarity in the biplot representation, as it reduces the dimensions to just two, making interpretation more straightforward.
 
 ```{r echo = TRUE, message = FALSE}
 #### Biplot ####

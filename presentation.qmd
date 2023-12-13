@@ -645,7 +645,7 @@ fviz_pca_biplot(myPCA_s,
 
 ## fixing multicollinearity problem and model selection
 
-## Focus on the relationships between the SDGs
+## How are the different SDGs linked? {.smaller}
 
 ```{r echo = FALSE, message = FALSE}
 data_4 <- read.csv(here("scripts", "data", "data_question24.csv"))
@@ -668,7 +668,7 @@ pca_result <- prcomp(goals_data_scaled) # Running PCA
 ```
 
 
-::: {.column width="49%"}
+::: {.column width="64%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
     geom_tile() +
@@ -684,7 +684,70 @@ ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
 ```
 :::
 
-::: {.column width="49%"}
+::: {.column width="35%"}
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+#### Biplot ####
+
+# Plotting Biplot to visualize the two main dimensions
+fviz_pca_biplot(pca_result,
+                label="var",
+                col.var="dodgerblue3",
+                geom="point",
+                pointsize = 0.1,
+                labelsize = 4) +
+  theme_minimal()
+```
+* Interconnection of the goals
+* Negative correlation between goals 12 (Responsible Consumption and Production) and 13 (Climate Action) and the other goals.
+
+:::
+
+## How are the different SDGs linked? {.smaller}
+
+```{r echo = FALSE, message = FALSE}
+data_4 <- read.csv(here("scripts", "data", "data_question24.csv"))
+threashold_heatmap <- 0.5
+data_4_goals <- data_4 %>%
+  dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
+                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
+                goal13, goal15, goal16, goal17)
+spearman_corr_4 <-cor(data_4_goals, method = "spearman", use = "everything")
+spearman_corr_4[abs(spearman_corr_4) < threashold_heatmap] <- NA
+melted_corr_4 <- melt(spearman_corr_4, na.rm = TRUE)
+
+# Selecting only the goals columns
+goals_data <- data_4 %>%
+  dplyr::select(goal1, goal2, goal3, goal4, goal5,
+                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
+                goal13, goal15, goal16, goal17)
+goals_data_scaled <- scale(goals_data) # Scaling the data
+pca_result <- prcomp(goals_data_scaled) # Running PCA
+```
+
+
+::: {.column width="35%"}
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
+    geom_tile() +
+    geom_text(aes(label = sprintf("%.2f", value)), vjust = 0.5, size=2.5) + # Adding text
+    scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                         midpoint = 0, limit = c(-1,1), space = "Lab", 
+                         name="Spearman\nCorrelation",
+                         na.value = "grey") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(title = "Heatmap of Spearman Correlations for Goals", 
+         x = "", y = "")
+```
+3 groups of goals
+
+* Goal 12 and Goal 13
+* Goal 10 and Goal 15
+* The rest of the Goals
+
+:::
+
+::: {.column width="64%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 #### Biplot ####
 
