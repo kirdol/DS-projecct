@@ -937,6 +937,10 @@ pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected
 :::
 :::
 
+<h2 style="font-size: 16px;">Disaster variables correlation coefficients suggests a weak insignificant negative relationship.</h2>
+<h2 style="font-size: 16px;">Covid-19 variables they have a weak positive relationship but are highly significant.</h2>
+<h2 style="font-size: 16px;">Conflicts variables indicate a strong significant negative correlation with the overall score.</h2>
+
 ## Influence of events- Influence of events over the SDG scores
 
 ::: columns 
