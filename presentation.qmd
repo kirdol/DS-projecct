@@ -308,15 +308,6 @@ ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Perce
 
 ### Factors influence over SDG goals
 
-::: incremental
-
--  **distribution results:** EU best performance. 
--  Africa: lack of resilient/sustainable industries and tech. 
--  Americas: lack of reduction of inequalities within/between countries
--  **Correlations results:** negative correlations between goals12 & 13 and the factors
-
-:::
-
 ::: {.column width="45%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 source(here::here("scripts/Clean/setup.R"))
@@ -407,12 +398,13 @@ ggplot(medians_all, aes(x = variable, y = value, fill = color)) +
   facet_grid(continent ~ ., scales = "free_y") +
   scale_y_continuous(labels = scales::label_number()) +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5), # Center the title
-        plot.title.position = "plot", axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  theme(plot.title = element_text(hjust = 0.25, size=17),
+        plot.title.position = "plot", 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 :::
 
-::: {.column width="40%"}
+::: {.column width="45%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 ### Correlation Matrix Heatmap SDG/Other variables ###
 
@@ -439,23 +431,39 @@ ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
                        name = "Spearman\nCorrelation") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.y = element_text(angle = 45, hjust = 1)) +
+        axis.text.y = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.15, size = 17),
+        plot.title.position = "plot") +
   labs(x = 'Goals', y = 'Goals',
-       title = 'Correlations Heatmap between goals and our other variables')
+       title = 'Correlations Heatmap between goals/other variables')
 ```
 
 :::
 
+::: incremental
 
+-  **distribution results:** EU best performance. 
+-  Africa: lack of resilient/sustainable industries and tech. 
+-  Americas: lack of reduction of inequalities within/between countries
+-  **Correlations results:** negative correlations between goals12 & 13 and the factors
 
-## Factors influence over SDG goals: Analysis 
+:::
 
-::: {.column width="35%"}
+##  {.smaller}
+
+### Factors influence over SDG goals 
+
+::: {.column width="40%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE, results='hide'}
 reg_goal1 <- regsubsets(goal1 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
 
-plot(reg_goal1,scale="r2") + theme_minimal() + title("Stepwise Regression Goal1 : Forward method - adjusted R^2")
+plot(reg_goal1,scale="r2") + theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.2, size = 20),
+        plot.title.position = "plot") + 
+        title("Stepwise Regression Goal1 : Forward method")
 ```
+
 :::
 
 ::: {.column width="50%"}
@@ -516,19 +524,22 @@ df_tidy_significant <- df_tidy[df_tidy$p.value < significance_level, ]
 ggplot(df_tidy_significant, aes(x = Model, y = estimate, color = term)) +
   geom_point() +
   geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error), width = 0.2) +
+  scale_y_continuous(limits = c(-90, 85)) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.3),
+        plot.title.position = "plot",
         legend.position = "right", # You can change the position if needed
         legend.text = element_text(size = 6), # Adjust text size
         legend.title = element_text(size = 8), # Adjust title size
         legend.key.size = unit(0.4, "cm")) +  # Adjust key size) +
   labs(title = "Coefficient Plot of Regression Models", x = "Models", y = "Estimates")
 ```
-
 :::
 
-
-## Regression factors coefficients influence
-
+::: incremental
+-  **global regression results**: Factors influencing positively and negatively the goals (i.e unemployment.rate)
+-  Some variables such as internet_usage or ef_legal only influencing positively goals 
+:::
 
 ## How are the different SDGs linked? {.smaller}
 
