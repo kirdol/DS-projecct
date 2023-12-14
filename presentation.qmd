@@ -1042,7 +1042,7 @@ Regressions for the Goal 9 with Cases per million variable in the COVID-19 datas
 
 <p style="font-size: 19px;"><strong>Influential Factors:</strong></p>
 <ul style="font-size: 17px;">
-    <li>Higher Internet usage tends to correlate with higher scores in SDGs. Other influencing factors exhibit diverse effects on SDG achievement; for example, unemployment rates impact varies across different goals.</li>
+    <li>Higher Internet usage and ef_legal tends to correlate with higher scores in SDGs. Other influencing factors exhibit diverse effects on SDG achievement; for example, unemployment rates impact varies across different goals.</li>
     <li>Climate disasters display weak or negligible relationships with SDGs. Limited associations exist between climate-related variables and specific goals, with no significant overall impact.</li>
     <li>Variables related to Covid-19 and conflicts show significance in SDG achievement but explain limited variance for each objective.</li>
 </ul>
