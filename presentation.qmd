@@ -9,6 +9,7 @@ execute:
 format:
   revealjs:
     footer: "Comparative Analysis of SDG Implementation Evolution Worldwide"
+    transition: fade
 #format: beamer
 #format: pptx
 ---
@@ -24,12 +25,11 @@ format:
 
 3.  How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
 
-2. How are the different SDGs linked? 
+4.  How are the different SDGs linked?
 
-3. How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
+5.  How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
 
-4. Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crisis and natural disasters?
-
+6.  Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crisis and natural disasters?
 :::
 
 ## Main dataset {.smaller}
@@ -73,6 +73,7 @@ plot_ly(
   zmax = 87,
   hoverinfo = "text"
 ) %>%
+  config(plot_ly, displayModeBar = FALSE) %>%
   layout(
     title = "SDG overall score evolution",
     sliders = list(
@@ -115,9 +116,8 @@ plot_ly(
 
 8.  **Conflicts**, deaths, population and area affected
 
-- Continents, Regions
-- Match datasets by key = (country, year)
-
+-   Continents, Regions
+-   Match datasets by key = (country, year)
 :::
 
 ##  {.smaller}
@@ -697,7 +697,7 @@ fviz_pca_biplot(pca_result,
 ```
 
 -   Interconnection of the goals
--   Negative correlation between goals 12 (Responsible Consumption and Production) and 13 (Climate Action) and the other goals.
+-   Negative correlation between "Responsible Consumption and Production" / "Climate Action" and the other goals.
 :::
 
 ## How are the different SDGs linked? {.smaller}
@@ -736,12 +736,6 @@ ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
     labs(title = "Heatmap of Spearman Correlations for Goals", 
          x = "", y = "")
 ```
-
-3 groups of goals
-
--   Goal 12 and Goal 13
--   Goal 10 and Goal 15
--   The rest of the Goals
 :::
 
 ::: {.column width="64%"}
@@ -807,6 +801,7 @@ data_before_2016 <- filter(binary2015, as.numeric(year) <= 2015)
 plotly::plot_ly() %>%
   plotly::add_trace(data = data_after_2015, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_after_2015)), type = 'scatter', mode = 'lines', line = list(color = 'blue'), name = "After 2015") %>%
   plotly::add_trace(data = data_before_2016, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_before_2016)), type = 'scatter', mode = 'lines', line = list(color = 'red'), name = "Before 2015") %>%
+  plotly::config(plot_ly, displayModeBar = FALSE) %>%
   plotly::layout(title = "Different patterns across SDGs before and after 2015",
          xaxis = list(title = "Year"),
          yaxis = list(title = "SDG achievement score", range = c(30, 90)),
@@ -1042,7 +1037,7 @@ pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected
 
 ## Influence of events- Influence of events over the SDG scores
 
-::: columns 
+::: columns
 ::: {.column width="70%" style="margin-top: -35px;"}
 ```{r, message=FALSE, warning=FALSE, fig.width=6, fig.height=2.5}
 
@@ -1110,12 +1105,22 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
 
 ::: {.column width="100%" style="margin-top: -60px;"}
 <img src="Covid-2022-gap-year.png" height="190px" width="520" style="display: block; margin: 60px auto 0;"/>
-<h2 style="font-size: 16px;">Correlation between COVID-19 variables and the SDG goals with 1 year gap</h2>
+
+<h2 style="font-size: 16px;">
+
+Correlation between COVID-19 variables and the SDG goals with 1 year gap
+
+</h2>
 :::
 
 ::: {.column width="100%" style="margin-top: -60px;"}
 <img src="Covid-Goal-9-Cases.png" height="180px" width="520" style="display: block; margin: 65px auto 0;"/>
-<h2 style="font-size: 16px;">Regressions for the Goal 9 with Cases per million variable in the COVID-19 dataset</h2>
+
+<h2 style="font-size: 16px;">
+
+Regressions for the Goal 9 with Cases per million variable in the COVID-19 dataset
+
+</h2>
 :::
 :::
 

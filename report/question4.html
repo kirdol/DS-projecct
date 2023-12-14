@@ -154,11 +154,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">col.var=</span><span class="st">"dodgerblue3"</span>) <span class="sc">+</span></span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>eigenvalues <span class="ot">&lt;-</span> pca_result<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span> <span class="co"># getting the eigenvalues</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>eigenvalues <span class="ot">&lt;-</span> pca_result<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span> <span class="co"># getting the eigenvalues</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecting only the goals columns</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>goals_data <span class="ot">&lt;-</span> data_4 <span class="sc">%&gt;%</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(goal1, goal2, goal3, goal4, goal5,</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>                goal6, goal7, goal8, goal9, goal10, goal11, goal12,</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                goal13, goal15, goal16, goal17)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>goals_data_scaled <span class="ot">&lt;-</span> <span class="fu">scale</span>(goals_data) <span class="co"># Scaling the data</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Running PCA</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>pca_result <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(goals_data_scaled)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Applying Varimax rotation</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>rotation_result <span class="ot">&lt;-</span> <span class="fu">varimax</span>(pca_result<span class="sc">$</span>rotation)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Since fviz_eig is designed to work with objects of class 'prcomp', </span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co"># we need to replace the original rotation with the varimax rotation</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>pca_result<span class="sc">$</span>rotation <span class="ot">&lt;-</span> rotation_result<span class="sc">$</span>loadings</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting Scree plot to visualize the importance of each principal component</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(pca_result,</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>         <span class="at">addlabels =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>         <span class="at">col.var=</span><span class="st">"dodgerblue3"</span>) <span class="sc">+</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="question4_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -380,24 +410,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_o, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_1, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_2, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_3, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_4, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_5, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_6, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_7, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_8, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_9, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_10, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_11, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_12, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_13, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_15, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_16, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_17, <span class="at">which =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_o, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_1, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_2, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_3, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_4, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_5, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_6, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_7, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_8, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_9, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_10, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_11, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_12, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_13, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_15, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_16, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_17, <span class="at">which =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
