@@ -555,7 +555,7 @@ Our cluster analysis gives us one principal cluster (here in purple) --\> CENTER
 
 While considering our regressions, we have noticed that we had high multicolinearity between our dependent variables in our models. This is due to the numerous variables that we tried to take into account while computing our regressions. Let's find a model that could explain the overall SDG score without having severe multicollinearity (VIF > 5)
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 # goals_data <- data_question1 %>%
 #   dplyr::select(overallscore, unemployment.rate, GDPpercapita, MilitaryExpenditurePercentGDP, internet_usage, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
 
