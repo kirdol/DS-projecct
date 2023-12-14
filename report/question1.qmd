@@ -633,6 +633,11 @@ Goal16lm <- lm(goal16 ~ pf_law + pf_security + pf_religion + pf_expression + pf_
 
 Goal17lm <- lm(goal17 ~ unemployment.rate + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_movement + ef_government + ef_legal + population, data = data_question1)
 
+
+
+#coefficient plot
+
+library('broom')
 # Create a dataframe of tidy models
 model_list <- list(Goal1lm, Goal2lm, Goal3lm, Goal4lm, Goal5lm, Goal6lm, Goal7lm, Goal8lm, Goal9lm, Goal10lm, Goal11lm, Goal12lm, Goal13lm, Goal15lm, Goal16lm, Goal17lm)
 
@@ -642,12 +647,22 @@ names(models_tidy) <- paste("Goal", c(1:13, 15:17), "lm", sep="")
 # Combine into a single dataframe
 df_tidy <- do.call(rbind, lapply(names(models_tidy), function(x) cbind(models_tidy[[x]], Model=x)))
 
+# Assuming 'p.value' is the column name for p-values in your dataframe
+significance_level <- 0.05
+
+# Filter for significant p-values
+df_tidy_significant <- df_tidy[df_tidy$p.value < significance_level, ]
+
 # Plot
-ggplot(df_tidy, aes(x = term, y = estimate, color = Model)) +
+ggplot(df_tidy_significant, aes(x = Model, y = estimate, color = term)) +
   geom_point() +
   geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error), width = 0.2) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(title = "Coefficient Plot of Regression Models", x = "Terms", y = "Estimates")
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "right", # You can change the position if needed
+        legend.text = element_text(size = 5), # Adjust text size
+        legend.title = element_text(size = 7), # Adjust title size
+        legend.key.size = unit(0.3, "cm")) +  # Adjust key size) +
+  labs(title = "Coefficient Plot of Regression Models", x = "Models", y = "Estimates")
 ```
 
 The model found is taking into account the following dependent variables: unemployment rate, military expenditure percentage of GDP, internet_usage, pf_security, pf_religion, pf_identity, ef_legal, ef_trade. We notice here that the previous variables highly correlated to the SDG goals (GDP per capita, pf_law, internet_usage and ef_legal), we dropped the first two ones.
