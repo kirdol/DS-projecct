@@ -556,18 +556,7 @@ Our cluster analysis gives us one principal cluster (here in purple) --\> CENTER
 While considering our regressions, we have noticed that we had high multicolinearity between our dependent variables in our models. This is due to the numerous variables that we tried to take into account while computing our regressions. Let's find a model that could explain the overall SDG score without having severe multicollinearity (VIF > 5)
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-# goals_data <- data_question1 %>%
-#   dplyr::select(overallscore, unemployment.rate, GDPpercapita, MilitaryExpenditurePercentGDP, internet_usage, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
-
-# fit <- lm(overallscore ~ ., data = goals_data)
-# plot(fit)
-# leaps<-regsubsets(overallscore ~ .,data=goals_data,nbest=10, method="forward")
-# plot(leaps,scale="r2") + theme_minimal() + title("Stepwise Regression : Forward method - adjusted R^2")
-
-
-
 reg_goal1 <- regsubsets(goal1 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-
 reg_goal2 <- regsubsets(goal2 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
 reg_goal3 <- regsubsets(goal3 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
 reg_goal4 <- regsubsets(goal4 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
@@ -659,9 +648,9 @@ ggplot(df_tidy_significant, aes(x = Model, y = estimate, color = term)) +
   geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error), width = 0.2) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = "right", # You can change the position if needed
-        legend.text = element_text(size = 5), # Adjust text size
-        legend.title = element_text(size = 7), # Adjust title size
-        legend.key.size = unit(0.3, "cm")) +  # Adjust key size) +
+        legend.text = element_text(size = 6), # Adjust text size
+        legend.title = element_text(size = 8), # Adjust title size
+        legend.key.size = unit(0.4, "cm")) +  # Adjust key size) +
   labs(title = "Coefficient Plot of Regression Models", x = "Models", y = "Estimates")
 ```
 
