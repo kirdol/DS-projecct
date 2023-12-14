@@ -1082,7 +1082,7 @@ covid_filtered <- Q3.2
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
 subset_data <- covid_filtered[, relevant_columns]
 
-correlation_matrix_Covid <- cor(subset_data, subset_data[, c("stringency", "cases_per_million", "deaths_per_million")])
+correlation_matrix_Covid <- cor(subset_data, subset_data[, c("stringency", "cases_per_million", "deaths_per_million")], method = "spearman")
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")

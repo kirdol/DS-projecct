@@ -16,6 +16,40 @@ Correlation_overall <- data_question1 %>%
       dplyr::select(population:ef_regulation)
 ```
 
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+variables_to_test <- data_question3_1[, c("overallscore", "total_affected", "total_deaths")]
+
+shapiro_test_overallscore <- shapiro.test(variables_to_test$overallscore)
+shapiro_test_total_affected <- shapiro.test(variables_to_test$total_affected)
+shapiro_test_total_deaths <- shapiro.test(variables_to_test$total_deaths)
+
+shapiro_test_overallscore
+shapiro_test_total_affected
+shapiro_test_total_deaths
+
+```
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+
+variables_to_test <- data_question3_2[, c("cases_per_million", "deaths_per_million", "stringency")]
+
+shapiro_test_cases_per_million <- shapiro.test(variables_to_test$cases_per_million)
+shapiro_test_deaths_per_million <- shapiro.test(variables_to_test$deaths_per_million)
+shapiro_test_stringency <- shapiro.test(variables_to_test$stringency)
+
+shapiro_test_cases_per_million
+shapiro_test_deaths_per_million
+shapiro_test_stringency
+```
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+variables_to_test <- data_question3_2[, c("cases_per_million", "deaths_per_million", "stringency")]
+
+shapiro_results <- lapply(variables_to_test, shapiro.test)
+
+names(shapiro_results) <- c("cases_per_million", "deaths_per_million", "stringency")
+shapiro_results
+```
+
 In order to have an overview of the relationship between the different events variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
@@ -240,7 +274,7 @@ disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North Ameri
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "total_deaths")
 subset_data <- disaster_data[, relevant_columns]
 
-correlation_matrix_subset <- cor(subset_data[, c("total_affected", "total_deaths")], subset_data)
+correlation_matrix_subset <- cor(subset_data[, c("total_affected", "total_deaths")], subset_data, method = "spearman")
 
 cor_melted <- reshape2::melt(correlation_matrix_subset)
 names(cor_melted) <- c("Variable2", "Variable1", "Correlation")
@@ -269,7 +303,7 @@ covid_filtered <- Q3.2
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
 subset_data <- covid_filtered[, relevant_columns]
 
-correlation_matrix_Covid <- cor(subset_data, subset_data[, c("stringency", "cases_per_million", "deaths_per_million")])
+correlation_matrix_Covid <- cor(subset_data, subset_data[, c("stringency", "cases_per_million", "deaths_per_million")], method = "spearman")
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
@@ -302,7 +336,7 @@ relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goa
 
 subset_data <- conflicts_filtered[, relevant_columns]
 
-correlation_matrix_Conflicts_Deaths <- cor(subset_data, subset_data[, c("sum_deaths")])
+correlation_matrix_Conflicts_Deaths <- cor(subset_data, subset_data[, c("sum_deaths")], method = "spearman")
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
@@ -332,7 +366,7 @@ relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goa
 
 subset_data <- conflicts_filtered[, relevant_columns]
 
-correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected")])
+correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected")], method = "spearman")
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
@@ -362,7 +396,7 @@ relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goa
 
 subset_data <- conflicts_filtered[, relevant_columns]
 
-correlation_matrix_Conflicts_Maxintensity <- cor(subset_data, subset_data[, c("maxintensity")])
+correlation_matrix_Conflicts_Maxintensity <- cor(subset_data, subset_data[, c("maxintensity")], method = "spearman")
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Maxintensity))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
@@ -402,7 +436,7 @@ lagged_subset_data <- subset_data %>%
     lagged_total_deaths = lag(total_deaths, default = NA)
   )
 
-correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_total_affected", "lagged_total_deaths")], subset_data)
+correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_total_affected", "lagged_total_deaths")], subset_data, method = "spearman")
 
 cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
 names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
@@ -452,7 +486,7 @@ lagged_subset_data <- subset_data %>%
     lagged_total_deaths = lag(total_deaths, default = NA)
   )
 
-correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_total_affected", "lagged_total_deaths")], subset_data)
+correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_total_affected", "lagged_total_deaths")], subset_data, method = "spearman")
 
 cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
 names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
