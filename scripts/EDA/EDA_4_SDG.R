@@ -2,7 +2,6 @@
 ## Question 4 ##
 ################
 
-
 # Can we explain the scores of certain SDGs using the scores of other SDGs?
 # Can we predict a high score for one SDG using the
 # high score of one or some others?

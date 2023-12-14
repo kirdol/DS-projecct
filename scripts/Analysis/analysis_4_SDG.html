@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>analysis_4_sdg</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="analysis_4_SDG_files/libs/clipboard/clipboard.min.js"></script>
+<script src="analysis_4_SDG_files/libs/quarto-html/quarto.js"></script>
+<script src="analysis_4_SDG_files/libs/quarto-html/popper.min.js"></script>
+<script src="analysis_4_SDG_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="analysis_4_SDG_files/libs/quarto-html/anchor.min.js"></script>
+<link href="analysis_4_SDG_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="analysis_4_SDG_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="analysis_4_SDG_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="analysis_4_SDG_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="analysis_4_SDG_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<p>///////////////////////////////////////////////////////////////////////// ////////////////////////////// WIP ///////////////////////////////// /////////////////////////////////////////////////////////////////////////</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Preparation of the data ####</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"scripts"</span>,<span class="st">"Clean"</span>,<span class="st">"setup.R"</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>data_4 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"scripts"</span>, <span class="st">"data"</span>, <span class="st">"data_question24.csv"</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaps)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>goals_data <span class="ot">&lt;-</span> data_4 <span class="sc">%&gt;%</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(overallscore, goal1, goal2, goal3, goal4, goal5,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                goal6,goal7, goal8, goal9, goal10, goal11, goal12,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>                goal13, goal15, goal16, goal17)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Overallscore ~ others ####</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>leaps_o <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(overallscore <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_o, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>mod_o <span class="ot">&lt;-</span> <span class="fu">lm</span>(overallscore <span class="sc">~</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal10 <span class="sc">+</span> goal15 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_o, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_o)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal2  goal3  goal4  goal6  goal7 goal10 goal15 goal17 </span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1.77   7.11   4.00   4.20   4.56   1.34   1.16   1.48</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal1 ~ others ####</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>leaps_1 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal1 <span class="sc">~</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_1, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>mod_1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal1 <span class="sc">~</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal9 <span class="sc">+</span> goal13 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_1, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_1)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal3  goal4  goal5  goal6  goal7  goal9 goal13 goal17 </span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   8.02   4.25   2.28   4.05   4.68   4.34   2.32   1.52</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal2 ~ others ####</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>leaps_2 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal2 <span class="sc">~</span> goal1 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_2, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>mod_2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal2 <span class="sc">~</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal12 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_2, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_2)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal4  goal5  goal6  goal8  goal9 goal12 goal16 goal17 </span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   2.80   2.26   3.78   2.56   4.54   4.21   3.08   1.64</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal3 ~ others ####</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>leaps_3 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal3 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_3, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>mod_3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal3 <span class="sc">~</span> goal1 <span class="sc">+</span> goal4 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal11 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16, <span class="at">data =</span> goals_data)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_3)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal1  goal4  goal7  goal8  goal9 goal11 goal15 goal16 </span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   4.30   4.11   4.83   2.35   3.47   4.41   1.11   2.87</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal4 ~ others ####</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>leaps_4 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal4 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_4, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>mod_4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal4 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal5 <span class="sc">+</span> goal7 <span class="sc">+</span> goal11 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_4)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal1  goal2  goal3  goal5  goal7 goal11 goal16 goal17 </span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   5.97   1.68   9.33   2.22   5.07   4.56   2.63   1.61</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal5 ~ others ####</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>leaps_5 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal5 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_5, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>mod_5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal5 <span class="sc">~</span> goal1 <span class="sc">+</span> goal4 <span class="sc">+</span> goal6 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal15 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_5)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal1  goal4  goal6  goal9 goal10 goal11 goal15 goal17 </span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   4.31   3.85   4.28   3.17   1.50   3.74   1.16   1.55</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal6 ~ others ####</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>leaps_6 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal6 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_6, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>mod_6 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal6 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal5 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal11 <span class="sc">+</span> goal15, <span class="at">data =</span> goals_data)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_6)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal1  goal2  goal3  goal5  goal8  goal9 goal11 goal15 </span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   5.27   1.86   9.78   2.30   2.56   3.82   3.99   1.12</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal7 ~ others ####</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>leaps_7 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal7 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_7, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>mod_7 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal7 <span class="sc">~</span> goal1 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal8 <span class="sc">+</span> goal11 <span class="sc">+</span> goal13, <span class="at">data =</span> goals_data)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_7)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal1  goal3  goal4  goal5  goal6  goal8 goal11 goal13 </span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   6.27   8.97   4.55   2.56   4.37   2.32   4.12   1.95</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal8 ~ others ####</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>leaps_8 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal8 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_8, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>mod_8 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal8 <span class="sc">~</span> goal2 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal12 <span class="sc">+</span> goal15 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_8)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal2  goal5  goal6  goal9 goal10 goal12 goal15 goal17 </span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1.98   2.32   3.44   4.79   1.53   3.89   1.11   1.48</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal9 ~ others ####</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>leaps_9 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal9 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_9, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>mod_9 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal9 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal8 <span class="sc">+</span> goal10 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_9)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal1  goal2  goal3  goal8 goal10 goal12 goal13 goal17 </span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   5.04   1.88   7.54   2.54   1.41   6.98   4.64   1.45</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal10 ~ others ####</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>leaps_10 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal10 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_10, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>mod_10 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal10 <span class="sc">~</span> goal1 <span class="sc">+</span> goal5 <span class="sc">+</span> goal9 <span class="sc">+</span> goal11 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_10)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal1  goal5  goal9 goal11 goal13 goal15 goal16 goal17 </span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   3.06   2.32   3.80   3.89   2.42   1.13   2.97   1.62</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal11 ~ others ####</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>leaps_11 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal11 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_11, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>mod_11 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal11 <span class="sc">~</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal10 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16, <span class="at">data =</span> goals_data)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_11)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal3  goal4  goal5  goal6  goal7 goal10 goal15 goal16 </span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   8.09   4.38   2.21   4.05   4.50   1.47   1.22   2.81</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal12 ~ others ####</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>leaps_12 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal12 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_12, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>mod_12 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal12 <span class="sc">~</span> goal2 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_12)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal2  goal7  goal8  goal9 goal13 goal15 goal16 goal17 </span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1.91   2.40   2.60   4.34   2.48   1.10   2.69   1.53</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal13 ~ others ####</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>leaps_13 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal13 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_13, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>mod_13 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal13 <span class="sc">~</span> goal1 <span class="sc">+</span> goal5 <span class="sc">+</span> goal7 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal12 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16, <span class="at">data =</span> goals_data)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_13)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal1  goal5  goal7  goal9 goal10 goal12 goal15 goal16 </span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   4.14   2.30   4.19   4.13   1.58   4.24   1.15   3.05</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal15 ~ others ####</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>leaps_15 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal15 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_15, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>mod_15 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal15 <span class="sc">~</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13, <span class="at">data =</span> goals_data)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_15)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal3  goal4  goal5  goal6 goal10 goal11 goal12 goal13 </span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   7.20   4.09   2.23   3.90   1.50   4.22   6.94   4.66</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal16 ~ others ####</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>leaps_16 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal16 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_16, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>mod_16 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal16 <span class="sc">~</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_16)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal2  goal3  goal4 goal10 goal11 goal12 goal13 goal17 </span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1.64   6.74   3.86   1.45   4.19   6.82   4.65   1.46</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal17 ~ others ####</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>leaps_17 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal17 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_17, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>mod_17 <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal17 <span class="sc">~</span> goal1 <span class="sc">+</span> goal5 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal16, <span class="at">data =</span> goals_data)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_17)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal1  goal5  goal8  goal9 goal10 goal11 goal12 goal16 </span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   3.09   2.27   2.36   4.47   1.62   3.92   4.23   3.33</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">'broom'</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a dataframe of tidy models</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>model_list <span class="ot">&lt;-</span> <span class="fu">list</span>(mod_o, mod_1, mod_2, mod_3, mod_4, mod_5, mod_6, mod_7, mod_8, mod_9, mod_10, mod_11, mod_12, mod_13, mod_15, mod_16, mod_17)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>models_tidy <span class="ot">&lt;-</span> <span class="fu">lapply</span>(model_list, tidy)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>models_tidy</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic   p.value</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept)  16.5      0.201        81.9 0        </span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal2         0.119    0.00316      37.7 8.29e-260</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal3         0.131    0.00311      42.1 1.89e-311</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal4         0.0827   0.00197      42.0 1.48e-309</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal6         0.105    0.00359      29.4 1.03e-168</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal7         0.0949   0.00256      37.1 7.86e-253</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal10        0.0616   0.00112      55.2 0        </span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal15        0.0736   0.00215      34.2 3.23e-220</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal17        0.103    0.00262      39.3 4.71e-278</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic   p.value</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept)   1.21      2.33       0.520 6.03e-  1</span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal3         0.709     0.0258    27.5   1.60e-150</span></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal4         0.273     0.0159    17.2   1.44e- 63</span></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal5        -0.494     0.0181   -27.2   1.61e-147</span></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal6         0.320     0.0275    11.6   9.21e- 31</span></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal7         0.294     0.0202    14.6   1.51e- 46</span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal9        -0.0949    0.0167    -5.68  1.44e-  8</span></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal13       -0.161     0.0173    -9.32  2.03e- 20</span></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal17        0.230     0.0207    11.1   3.35e- 28</span></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic  p.value</span></span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept) -24.2      2.49        -9.71 5.50e-22</span></span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal4         0.0686   0.00813      8.44 4.78e-17</span></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal5         0.0740   0.0114       6.50 9.13e-11</span></span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal6         0.212    0.0168      12.6  8.50e-36</span></span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal8         0.329    0.0212      15.5  2.52e-52</span></span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal9         0.135    0.0108      12.6  1.76e-35</span></span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal12        0.343    0.0165      20.8  3.60e-90</span></span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal16        0.115    0.0155       7.39 1.81e-13</span></span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal17       -0.0671   0.0136      -4.94 8.06e- 7</span></span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[4]]</span></span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic   p.value</span></span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept)  -2.60     1.23        -2.11 3.48e-  2</span></span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal1         0.242    0.00781     31.0  3.81e-185</span></span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal4         0.104    0.00895     11.6  1.52e- 30</span></span>
+<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal7         0.159    0.0118      13.5  1.71e- 40</span></span>
+<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal8         0.125    0.0185       6.78 1.46e- 11</span></span>
+<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal9         0.168    0.00855     19.6  4.20e- 81</span></span>
+<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal11        0.147    0.0138      10.7  3.11e- 26</span></span>
+<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal15       -0.0561   0.00944     -5.95 3.00e-  9</span></span>
+<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal16        0.173    0.0136      12.7  3.69e- 36</span></span>
+<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[5]]</span></span>
+<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic  p.value</span></span>
+<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb19-67"><a href="#cb19-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept)    0.261    1.48       0.176 8.60e- 1</span></span>
+<span id="cb19-68"><a href="#cb19-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal1          0.286    0.0164    17.5   2.04e-65</span></span>
+<span id="cb19-69"><a href="#cb19-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal2          0.136    0.0245     5.56  2.86e- 8</span></span>
+<span id="cb19-70"><a href="#cb19-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal3          0.295    0.0283    10.4   4.60e-25</span></span>
+<span id="cb19-71"><a href="#cb19-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal5          0.383    0.0182    21.0   2.94e-92</span></span>
+<span id="cb19-72"><a href="#cb19-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal7          0.149    0.0214     6.96  4.18e-12</span></span>
+<span id="cb19-73"><a href="#cb19-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal11         0.244    0.0249     9.81  2.07e-22</span></span>
+<span id="cb19-74"><a href="#cb19-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal16        -0.259    0.0231   -11.2   1.61e-28</span></span>
+<span id="cb19-75"><a href="#cb19-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal17        -0.122    0.0217    -5.60  2.34e- 8</span></span>
+<span id="cb19-76"><a href="#cb19-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-77"><a href="#cb19-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[6]]</span></span>
+<span id="cb19-78"><a href="#cb19-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-79"><a href="#cb19-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic   p.value</span></span>
+<span id="cb19-80"><a href="#cb19-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb19-81"><a href="#cb19-81" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept)  -2.53     1.43        -1.76 7.77e-  2</span></span>
+<span id="cb19-82"><a href="#cb19-82" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal1        -0.275    0.0115     -23.8  7.42e-116</span></span>
+<span id="cb19-83"><a href="#cb19-83" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal4         0.315    0.0128      24.6  6.44e-123</span></span>
+<span id="cb19-84"><a href="#cb19-84" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal6         0.224    0.0240       9.37 1.29e- 20</span></span>
+<span id="cb19-85"><a href="#cb19-85" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal9         0.212    0.0121      17.5  7.34e- 66</span></span>
+<span id="cb19-86"><a href="#cb19-86" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal10       -0.0695   0.00780     -8.92 7.82e- 19</span></span>
+<span id="cb19-87"><a href="#cb19-87" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal11        0.204    0.0187      10.9  4.31e- 27</span></span>
+<span id="cb19-88"><a href="#cb19-88" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal15        0.169    0.0142      11.9  4.95e- 32</span></span>
+<span id="cb19-89"><a href="#cb19-89" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal17        0.215    0.0177      12.1  3.32e- 33</span></span>
+<span id="cb19-90"><a href="#cb19-90" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-91"><a href="#cb19-91" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[7]]</span></span>
+<span id="cb19-92"><a href="#cb19-92" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-93"><a href="#cb19-93" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic  p.value</span></span>
+<span id="cb19-94"><a href="#cb19-94" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb19-95"><a href="#cb19-95" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept)   5.38     1.25         4.32 1.64e- 5</span></span>
+<span id="cb19-96"><a href="#cb19-96" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal1         0.131    0.00876     15.0  3.00e-49</span></span>
+<span id="cb19-97"><a href="#cb19-97" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal2         0.155    0.0147      10.5  1.35e-25</span></span>
+<span id="cb19-98"><a href="#cb19-98" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal3         0.0985   0.0165       5.96 2.83e- 9</span></span>
+<span id="cb19-99"><a href="#cb19-99" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal5         0.0984   0.0106       9.31 2.17e-20</span></span>
+<span id="cb19-100"><a href="#cb19-100" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal8         0.167    0.0195       8.55 1.81e-17</span></span>
+<span id="cb19-101"><a href="#cb19-101" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal9         0.0690   0.00910      7.58 4.56e-14</span></span>
+<span id="cb19-102"><a href="#cb19-102" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal11        0.125    0.0133       9.38 1.18e-20</span></span>
+<span id="cb19-103"><a href="#cb19-103" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal15        0.101    0.00960     10.5  2.63e-25</span></span>
+<span id="cb19-104"><a href="#cb19-104" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-105"><a href="#cb19-105" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[8]]</span></span>
+<span id="cb19-106"><a href="#cb19-106" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-107"><a href="#cb19-107" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic  p.value</span></span>
+<span id="cb19-108"><a href="#cb19-108" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb19-109"><a href="#cb19-109" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept) -19.3       2.29       -8.43 4.89e-17</span></span>
+<span id="cb19-110"><a href="#cb19-110" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal1         0.201     0.0132     15.2  1.33e-50</span></span>
+<span id="cb19-111"><a href="#cb19-111" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal3         0.282     0.0219     12.9  3.14e-37</span></span>
+<span id="cb19-112"><a href="#cb19-112" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal4         0.0960    0.0132      7.29 3.81e-13</span></span>
+<span id="cb19-113"><a href="#cb19-113" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal5         0.112     0.0154      7.30 3.47e-13</span></span>
+<span id="cb19-114"><a href="#cb19-114" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal6         0.127     0.0229      5.52 3.71e- 8</span></span>
+<span id="cb19-115"><a href="#cb19-115" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal8        -0.119     0.0257     -4.63 3.89e- 6</span></span>
+<span id="cb19-116"><a href="#cb19-116" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal11        0.288     0.0186     15.4  6.39e-52</span></span>
+<span id="cb19-117"><a href="#cb19-117" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal13        0.128     0.0127     10.1  1.67e-23</span></span>
+<span id="cb19-118"><a href="#cb19-118" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-119"><a href="#cb19-119" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[9]]</span></span>
+<span id="cb19-120"><a href="#cb19-120" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-121"><a href="#cb19-121" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic   p.value</span></span>
+<span id="cb19-122"><a href="#cb19-122" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb19-123"><a href="#cb19-123" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept)  53.4      1.62        32.9  7.16e-206</span></span>
+<span id="cb19-124"><a href="#cb19-124" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal2         0.202    0.0129      15.6  4.98e- 53</span></span>
+<span id="cb19-125"><a href="#cb19-125" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal5         0.0522   0.00905      5.77 8.43e-  9</span></span>
+<span id="cb19-126"><a href="#cb19-126" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal6         0.141    0.0126      11.2  1.28e- 28</span></span>
+<span id="cb19-127"><a href="#cb19-127" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal9         0.0946   0.00869     10.9  3.83e- 27</span></span>
+<span id="cb19-128"><a href="#cb19-128" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal10        0.0183   0.00461      3.97 7.40e-  5</span></span>
+<span id="cb19-129"><a href="#cb19-129" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal12       -0.106    0.0125      -8.51 2.69e- 17</span></span>
+<span id="cb19-130"><a href="#cb19-130" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal15        0.0336   0.00817      4.11 3.98e-  5</span></span>
+<span id="cb19-131"><a href="#cb19-131" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal17       -0.0989   0.0101      -9.76 3.30e- 22</span></span>
+<span id="cb19-132"><a href="#cb19-132" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-133"><a href="#cb19-133" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[10]]</span></span>
+<span id="cb19-134"><a href="#cb19-134" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-135"><a href="#cb19-135" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic  p.value</span></span>
+<span id="cb19-136"><a href="#cb19-136" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb19-137"><a href="#cb19-137" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept)  13.6      3.42         3.97 7.23e- 5</span></span>
+<span id="cb19-138"><a href="#cb19-138" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal1        -0.128    0.0141      -9.09 1.59e-19</span></span>
+<span id="cb19-139"><a href="#cb19-139" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal2         0.337    0.0243      13.9  1.25e-42</span></span>
+<span id="cb19-140"><a href="#cb19-140" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal3         0.422    0.0238      17.7  4.77e-67</span></span>
+<span id="cb19-141"><a href="#cb19-141" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal8         0.366    0.0320      11.5  8.21e-30</span></span>
+<span id="cb19-142"><a href="#cb19-142" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal10        0.0603   0.00853      7.06 1.98e-12</span></span>
+<span id="cb19-143"><a href="#cb19-143" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal12       -0.510    0.0322     -15.9  9.66e-55</span></span>
+<span id="cb19-144"><a href="#cb19-144" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal13       -0.154    0.0234      -6.60 4.78e-11</span></span>
+<span id="cb19-145"><a href="#cb19-145" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal17        0.206    0.0193      10.7  4.19e-26</span></span>
+<span id="cb19-146"><a href="#cb19-146" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-147"><a href="#cb19-147" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[11]]</span></span>
+<span id="cb19-148"><a href="#cb19-148" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-149"><a href="#cb19-149" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic  p.value</span></span>
+<span id="cb19-150"><a href="#cb19-150" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb19-151"><a href="#cb19-151" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept)   62.3      4.58       13.6  3.99e-41</span></span>
+<span id="cb19-152"><a href="#cb19-152" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal1          0.238    0.0203     11.7  5.78e-31</span></span>
+<span id="cb19-153"><a href="#cb19-153" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal5         -0.376    0.0323    -11.6  1.40e-30</span></span>
+<span id="cb19-154"><a href="#cb19-154" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal9          0.289    0.0276     10.5  3.23e-25</span></span>
+<span id="cb19-155"><a href="#cb19-155" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal11        -0.374    0.0399     -9.38 1.24e-20</span></span>
+<span id="cb19-156"><a href="#cb19-156" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal13        -0.270    0.0313     -8.64 8.79e-18</span></span>
+<span id="cb19-157"><a href="#cb19-157" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal15         0.241    0.0294      8.18 3.93e-16</span></span>
+<span id="cb19-158"><a href="#cb19-158" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal16         0.671    0.0427     15.7  1.27e-53</span></span>
+<span id="cb19-159"><a href="#cb19-159" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal17        -0.347    0.0378     -9.18 7.70e-20</span></span>
+<span id="cb19-160"><a href="#cb19-160" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-161"><a href="#cb19-161" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[12]]</span></span>
+<span id="cb19-162"><a href="#cb19-162" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-163"><a href="#cb19-163" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic  p.value</span></span>
+<span id="cb19-164"><a href="#cb19-164" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb19-165"><a href="#cb19-165" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept)  16.6      0.908       18.3  3.30e-71</span></span>
+<span id="cb19-166"><a href="#cb19-166" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal3         0.180    0.0176      10.2  3.42e-24</span></span>
+<span id="cb19-167"><a href="#cb19-167" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal4         0.0956   0.0110       8.71 4.55e-18</span></span>
+<span id="cb19-168"><a href="#cb19-168" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal5         0.0964   0.0122       7.93 2.98e-15</span></span>
+<span id="cb19-169"><a href="#cb19-169" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal6         0.116    0.0188       6.19 6.77e-10</span></span>
+<span id="cb19-170"><a href="#cb19-170" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal7         0.215    0.0135      15.9  7.39e-55</span></span>
+<span id="cb19-171"><a href="#cb19-171" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal10       -0.0677   0.00622    -10.9  4.23e-27</span></span>
+<span id="cb19-172"><a href="#cb19-172" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal15       -0.0703   0.0118      -5.97 2.59e- 9</span></span>
+<span id="cb19-173"><a href="#cb19-173" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal16        0.296    0.0160      18.5  9.44e-73</span></span>
+<span id="cb19-174"><a href="#cb19-174" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-175"><a href="#cb19-175" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[13]]</span></span>
+<span id="cb19-176"><a href="#cb19-176" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-177"><a href="#cb19-177" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic   p.value</span></span>
+<span id="cb19-178"><a href="#cb19-178" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb19-179"><a href="#cb19-179" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept)  67.5      1.42        47.5  0        </span></span>
+<span id="cb19-180"><a href="#cb19-180" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal2         0.161    0.0116      13.9  6.71e- 43</span></span>
+<span id="cb19-181"><a href="#cb19-181" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal7        -0.101    0.00656    -15.4  7.79e- 52</span></span>
+<span id="cb19-182"><a href="#cb19-182" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal8        -0.117    0.0153      -7.65 2.60e- 14</span></span>
+<span id="cb19-183"><a href="#cb19-183" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal9        -0.128    0.00755    -16.9  1.29e- 61</span></span>
+<span id="cb19-184"><a href="#cb19-184" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal13        0.459    0.00810     56.6  0        </span></span>
+<span id="cb19-185"><a href="#cb19-185" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal15       -0.0647   0.00740     -8.73 3.90e- 18</span></span>
+<span id="cb19-186"><a href="#cb19-186" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal16       -0.261    0.0104     -25.1  1.04e-127</span></span>
+<span id="cb19-187"><a href="#cb19-187" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal17        0.0751   0.00942      7.97 2.12e- 15</span></span>
+<span id="cb19-188"><a href="#cb19-188" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-189"><a href="#cb19-189" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[14]]</span></span>
+<span id="cb19-190"><a href="#cb19-190" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-191"><a href="#cb19-191" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic  p.value</span></span>
+<span id="cb19-192"><a href="#cb19-192" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb19-193"><a href="#cb19-193" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept)  -7.94     2.47        -3.22 1.31e- 3</span></span>
+<span id="cb19-194"><a href="#cb19-194" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal1        -0.0357   0.00915     -3.90 9.91e- 5</span></span>
+<span id="cb19-195"><a href="#cb19-195" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal5        -0.0748   0.0125      -6.00 2.15e- 9</span></span>
+<span id="cb19-196"><a href="#cb19-196" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal7         0.143    0.0131      10.9  2.11e-27</span></span>
+<span id="cb19-197"><a href="#cb19-197" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal9        -0.0610   0.0111      -5.48 4.68e- 8</span></span>
+<span id="cb19-198"><a href="#cb19-198" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal10       -0.0459   0.00648     -7.09 1.68e-12</span></span>
+<span id="cb19-199"><a href="#cb19-199" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal12        1.02     0.0180      56.9  0       </span></span>
+<span id="cb19-200"><a href="#cb19-200" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal15        0.0673   0.0114       5.89 4.29e- 9</span></span>
+<span id="cb19-201"><a href="#cb19-201" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal16        0.144    0.0167       8.63 9.42e-18</span></span>
+<span id="cb19-202"><a href="#cb19-202" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-203"><a href="#cb19-203" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[15]]</span></span>
+<span id="cb19-204"><a href="#cb19-204" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-205"><a href="#cb19-205" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic  p.value</span></span>
+<span id="cb19-206"><a href="#cb19-206" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb19-207"><a href="#cb19-207" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept)  66.8      3.13        21.3  1.27e-94</span></span>
+<span id="cb19-208"><a href="#cb19-208" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal3        -0.208    0.0243      -8.59 1.31e-17</span></span>
+<span id="cb19-209"><a href="#cb19-209" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal4        -0.103    0.0155      -6.64 3.53e-11</span></span>
+<span id="cb19-210"><a href="#cb19-210" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal5         0.232    0.0178      13.0  5.58e-38</span></span>
+<span id="cb19-211"><a href="#cb19-211" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal6         0.349    0.0268      13.0  9.15e-38</span></span>
+<span id="cb19-212"><a href="#cb19-212" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal10        0.0953   0.00916     10.4  5.42e-25</span></span>
+<span id="cb19-213"><a href="#cb19-213" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal11       -0.124    0.0233      -5.30 1.25e- 7</span></span>
+<span id="cb19-214"><a href="#cb19-214" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal12       -0.337    0.0334     -10.1  1.23e-23</span></span>
+<span id="cb19-215"><a href="#cb19-215" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal13        0.171    0.0244       7.03 2.54e-12</span></span>
+<span id="cb19-216"><a href="#cb19-216" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-217"><a href="#cb19-217" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[16]]</span></span>
+<span id="cb19-218"><a href="#cb19-218" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-219"><a href="#cb19-219" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic   p.value</span></span>
+<span id="cb19-220"><a href="#cb19-220" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb19-221"><a href="#cb19-221" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept)  55.7      1.86        30.0  4.70e-175</span></span>
+<span id="cb19-222"><a href="#cb19-222" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal2         0.100    0.0151       6.64 3.54e- 11</span></span>
+<span id="cb19-223"><a href="#cb19-223" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal3         0.136    0.0150       9.10 1.58e- 19</span></span>
+<span id="cb19-224"><a href="#cb19-224" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal4        -0.120    0.00958    -12.6  2.38e- 35</span></span>
+<span id="cb19-225"><a href="#cb19-225" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal10        0.0865   0.00575     15.0  1.73e- 49</span></span>
+<span id="cb19-226"><a href="#cb19-226" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal11        0.213    0.0148      14.3  3.00e- 45</span></span>
+<span id="cb19-227"><a href="#cb19-227" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal12       -0.507    0.0211     -24.0  1.16e-117</span></span>
+<span id="cb19-228"><a href="#cb19-228" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal13        0.136    0.0155       8.75 3.23e- 18</span></span>
+<span id="cb19-229"><a href="#cb19-229" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal17        0.181    0.0129      14.0  1.36e- 43</span></span>
+<span id="cb19-230"><a href="#cb19-230" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-231"><a href="#cb19-231" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[17]]</span></span>
+<span id="cb19-232"><a href="#cb19-232" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 9 x 5</span></span>
+<span id="cb19-233"><a href="#cb19-233" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term        estimate std.error statistic  p.value</span></span>
+<span id="cb19-234"><a href="#cb19-234" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb19-235"><a href="#cb19-235" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 (Intercept)  16.6      3.09         5.38 8.16e- 8</span></span>
+<span id="cb19-236"><a href="#cb19-236" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 goal1         0.122    0.00901     13.5  1.28e-40</span></span>
+<span id="cb19-237"><a href="#cb19-237" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 goal5         0.202    0.0141      14.3  7.45e-45</span></span>
+<span id="cb19-238"><a href="#cb19-238" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 goal8        -0.259    0.0252     -10.3  1.62e-24</span></span>
+<span id="cb19-239"><a href="#cb19-239" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 goal9         0.0953   0.0132       7.21 7.15e-13</span></span>
+<span id="cb19-240"><a href="#cb19-240" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 goal10       -0.0564   0.00749     -7.53 6.34e-14</span></span>
+<span id="cb19-241"><a href="#cb19-241" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 goal11        0.0490   0.0177       2.77 5.63e- 3</span></span>
+<span id="cb19-242"><a href="#cb19-242" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 goal12        0.198    0.0205       9.66 8.40e-22</span></span>
+<span id="cb19-243"><a href="#cb19-243" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9 goal16        0.286    0.0200      14.3  2.38e-45</span></span>
+<span id="cb19-244"><a href="#cb19-244" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(models_tidy) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Overallscore ~others"</span>, <span class="st">"Goal1 ~ others"</span>, <span class="st">"Goal2 ~ others"</span>, <span class="st">"Goal3 ~ others"</span>, <span class="st">"Goal4 ~ others"</span>, <span class="st">"Goal5 ~ others"</span>, <span class="st">"Goal6 ~ others"</span>, <span class="st">"Goal7 ~ others"</span>, <span class="st">"Goal8 ~ others"</span>, <span class="st">"Goal9 ~ others"</span>, <span class="st">"Goal10 ~ others"</span>, <span class="st">"Goal11 ~ others"</span>, <span class="st">"Goal12 ~ others"</span>, <span class="st">"Goal13 ~ others"</span>, <span class="st">"Goal15 ~ others"</span>, <span class="st">"Goal16 ~ others"</span>, <span class="st">"Goal17 ~ others"</span>)</span>
+<span id="cb19-245"><a href="#cb19-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-246"><a href="#cb19-246" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine into a single dataframe</span></span>
+<span id="cb19-247"><a href="#cb19-247" aria-hidden="true" tabindex="-1"></a>df_tidy <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">names</span>(models_tidy), <span class="cf">function</span>(x) <span class="fu">cbind</span>(models_tidy[[x]], <span class="at">Model=</span>x)))</span>
+<span id="cb19-248"><a href="#cb19-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-249"><a href="#cb19-249" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming 'p.value' is the column name for p-values in your dataframe</span></span>
+<span id="cb19-250"><a href="#cb19-250" aria-hidden="true" tabindex="-1"></a>significance_level <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb19-251"><a href="#cb19-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-252"><a href="#cb19-252" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for significant p-values</span></span>
+<span id="cb19-253"><a href="#cb19-253" aria-hidden="true" tabindex="-1"></a>df_tidy_significant <span class="ot">&lt;-</span> df_tidy[df_tidy<span class="sc">$</span>p.value <span class="sc">&lt;</span> significance_level, ]</span>
+<span id="cb19-254"><a href="#cb19-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-255"><a href="#cb19-255" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb19-256"><a href="#cb19-256" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_tidy_significant,</span>
+<span id="cb19-257"><a href="#cb19-257" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> Model,</span>
+<span id="cb19-258"><a href="#cb19-258" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> estimate,</span>
+<span id="cb19-259"><a href="#cb19-259" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> term)) <span class="sc">+</span></span>
+<span id="cb19-260"><a href="#cb19-260" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb19-261"><a href="#cb19-261" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> estimate <span class="sc">-</span> std.error, <span class="at">ymax =</span> estimate <span class="sc">+</span> std.error),</span>
+<span id="cb19-262"><a href="#cb19-262" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb19-263"><a href="#cb19-263" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb19-264"><a href="#cb19-264" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb19-265"><a href="#cb19-265" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"right"</span>, <span class="co"># You can change the position if needed</span></span>
+<span id="cb19-266"><a href="#cb19-266" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">5</span>), <span class="co"># Adjust text size</span></span>
+<span id="cb19-267"><a href="#cb19-267" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>), <span class="co"># Adjust title size</span></span>
+<span id="cb19-268"><a href="#cb19-268" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.3</span>, <span class="st">"cm"</span>)) <span class="sc">+</span>  <span class="co"># Adjust key size) +</span></span>
+<span id="cb19-269"><a href="#cb19-269" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Coefficient Plot of Regression Models"</span>,</span>
+<span id="cb19-270"><a href="#cb19-270" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Models"</span>,</span>
+<span id="cb19-271"><a href="#cb19-271" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Estimates"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analysis_4_SDG_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># library(leaps)</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># leaps_1 &lt;- regsubsets(goal1 ~ goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17,data=goals_data, method="forward", nbest=1)</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(leaps_1)</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(leaps_1,scale="adjr2") + theme_minimal()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># fit_2 &lt;- lm(goal2 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data)</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(fit_2)</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># leaps_2 &lt;- regsubsets(goal2 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17,data=goals_data, nbest=10, method="backward")</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(leaps_2,scale="adjr2")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lm_o_n &lt;- lm(overallscore ~ 1, data = goals_data)</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># lm_o_f &lt;- lm(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                       + goal6 + goal7 + goal8 + goal9 + goal10 + goal11</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">#                       + goal12 + goal13 + goal15 + goal16 + goal17,</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co">#              data = goals_data)</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># step_o &lt;- step(lm_o_n, scope = list(lower = lm_o_n, upper = lm_o_f))</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># leaps_o &lt;- regsubsets(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co">#                       + goal6 + goal7 + goal8 + goal9 + goal10 + goal11</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co">#                       + goal12 + goal13 + goal15 + goal16 + goal17,</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co">#                       data=goals_data, nbest=16, method="backward")</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(leaps_o,scale="adjr2") + theme_minimal()</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(leaps_o)$adjr2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Overallscore ~ others ####</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># lm_o_n &lt;- lm(overallscore ~ 1, data = goals_data)</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># lm_o_f &lt;- lm(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data)</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># step_o &lt;- step(lm_o_n, scope = list(lower = lm_o_n, upper = lm_o_f), direction = "forward")</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(step_o)</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(step_o)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
