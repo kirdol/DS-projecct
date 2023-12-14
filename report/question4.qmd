@@ -299,7 +299,6 @@ ggplot(df_tidy_significant,
 ```
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
-
 plot(mod_o, which = 1)
 plot(mod_1, which = 1)
 plot(mod_2, which = 1)
@@ -317,10 +316,5 @@ plot(mod_13, which = 1)
 plot(mod_15, which = 1)
 plot(mod_16, which = 1)
 plot(mod_17, which = 1)
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-
-
 ```
 
