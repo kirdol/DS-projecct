@@ -304,8 +304,11 @@ ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Perce
 
 # EDA / Analysis
 
-## Q1: EDA - distribution test 1
+##  {.smaller}
 
+### Factors influence over SDG goals
+
+::: {.column width="45%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 source(here::here("scripts/Clean/setup.R"))
 data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
@@ -314,89 +317,6 @@ Correlation_overall <- data_question1 %>%
       dplyr::select(population:ef_regulation)
 ```
 
-::: columns
-::: {.column width="35%"}
-```{r echo = FALSE, message = FALSE, warning=FALSE}
-long_df_goal_distribution <- pivot_longer(Correlation_overall, cols = starts_with("goal"), names_to = "Goal", values_to = "Value")
-
-long_df_goal_distribution$Goal <- with(long_df_goal_distribution, reorder(Goal, Value, FUN = mean))
-
-long_df_hfi_distribution <- pivot_longer(Correlation_overall, cols = pf_law:ef_regulation, names_to = "Category", values_to = "Value")
-
-long_df_hfi_distribution$Goal <- with(long_df_hfi_distribution, reorder(Category, Value, FUN = mean))
-
-ggplot(long_df_goal_distribution, aes(x = Value, y = Goal, fill = stat(x))) +
-  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "", option = "C") +
-  theme(plot.title = element_text(hjust = 0.5, size = 20), # Center the title
-        plot.title.position = "plot") + 
-  labs(x = 'Scores',
-       y = 'Goals',
-        title = 'SDG Goals Distribution')
-```
-:::
-
-::: {.column width="35%"}
-```{r echo = FALSE, message = FALSE, warning=FALSE}
-ggplot(long_df_hfi_distribution, aes(x = Value, y = Category, fill = stat(x))) +
-  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "", option = "C") +
-  theme(plot.title = element_text(hjust = 0.5, size = 20), # Center the title
-        plot.title.position = "plot") + 
-  labs(x = 'Scores',
-    title = 'Human Freedom Index Scores Distribution')
-```
-:::
-
-::: {.column width="30%"}
-```{r echo = FALSE, message = FALSE, warning=FALSE}
-ggplot(Correlation_overall, aes(x = unemployment.rate, y = 1, fill = stat(x))) +
-  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "", option = "C") +
-  theme(plot.title = element_text(hjust = 0.5, size = 20), # Center the title
-        plot.title.position = "plot") + 
-  labs(y = 'Density',
-  title = 'Distribution of Unemployment Rate')
-```
-:::
-
-::: {.column width="33%"}
-```{r echo = FALSE, message = FALSE, warning=FALSE}
-ggplot(Correlation_overall, aes(x = GDPpercapita, y = 1, fill = stat(x))) +
-  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "", option = "C") +
-  theme(plot.title = element_text(hjust = 0.5, size = 20), # Center the title
-        plot.title.position = "plot") + 
-  labs(y = 'Density', title = 'Distribution of GDP per Capita')
-```
-:::
-
-::: {.column width="33%"}
-```{r echo = FALSE, message = FALSE, warning=FALSE}
-ggplot(Correlation_overall, aes(x = MilitaryExpenditurePercentGDP, y = 1, fill = stat(x))) +
-  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "", option = "C") +
-  theme(plot.title = element_text(hjust = 0.5, size = 20), # Center the title
-        plot.title.position = "plot") + 
-  labs(y = 'Density',title = 'Distribution of Military Expenditure (% of GDP)')
-```
-:::
-
-::: {.column width="33%"}
-```{r echo = FALSE, message = FALSE, warning=FALSE}
-ggplot(Correlation_overall, aes(x = internet_usage, y = 1, fill = stat(x))) +
-  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "", option = "C") +theme(plot.title = element_text(hjust = 0.5, size = 20),
-        plot.title.position = "plot") + 
-  labs(y = 'Density',title = 'Distribution of Internet Usage')
-```
-:::
-:::
-
-## Distribution per continent, per goal
-
-::: columns
-::: {.column width="50%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 #### boxplots ####
 
@@ -478,110 +398,13 @@ ggplot(medians_all, aes(x = variable, y = value, fill = color)) +
   facet_grid(continent ~ ., scales = "free_y") +
   scale_y_continuous(labels = scales::label_number()) +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5), # Center the title
-        plot.title.position = "plot", axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  theme(plot.title = element_text(hjust = 0.25, size=17),
+        plot.title.position = "plot", 
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 :::
 
-::: {.column width="50%"}
-```{r echo = FALSE, message = FALSE, warning=FALSE}
-#Africa
-data_Q1_Africa_HFI <- data_question1 %>%
-  filter(data_question1$continent == 'Africa') %>%
-  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
-
-data_Q1_Africa_HFI_long <- melt(data_Q1_Africa_HFI)
-
-medians_AF_HFI <- data_Q1_Africa_HFI_long %>%
-  group_by(variable) %>%
-  summarize(median_value = median(value))
-
-data_Q1_Africa_HFI_long <- data_Q1_Africa_HFI_long %>%
-                  left_join(medians_AF_HFI, by = "variable")
-
-#America
-data_Q1_Americas_HFI <- data_question1 %>%
-  filter(data_question1$continent == 'Americas') %>%
-  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
-
-data_Q1_Americas_HFI_long <- melt(data_Q1_Americas_HFI)
-
-medians_AM_HFI <- data_Q1_Americas_HFI_long %>%
-  group_by(variable) %>%
-  summarize(median_value = median(value))
-
-data_Q1_Americas_HFI_long <- data_Q1_Americas_HFI_long %>%
-                  left_join(medians_AM_HFI, by = "variable")
-
-#Asia
-data_Q1_Asia_HFI <- data_question1 %>%
-  filter(data_question1$continent == 'Asia') %>%
-  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
-
-data_Q1_Asia_HFI_long <- melt(data_Q1_Asia_HFI)
-
-medians_AS_HFI <- data_Q1_Asia_HFI_long %>%
-  group_by(variable) %>%
-  summarize(median_value = median(value))
-
-data_Q1_Asia_HFI_long <- data_Q1_Asia_HFI_long %>%
-                  left_join(medians_AS_HFI, by = "variable")
-
-#Europe
-data_Q1_Europe_HFI <- data_question1 %>%
-  filter(data_question1$continent == 'Europe') %>%
-  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
-
-data_Q1_Europe_HFI_long <- melt(data_Q1_Europe_HFI)
-
-medians_EU_HFI <- data_Q1_Europe_HFI_long %>%
-  group_by(variable) %>%
-  summarize(median_value = median(value))
-
-data_Q1_Europe_HFI_long <- data_Q1_Europe_HFI_long %>%
-                  left_join(medians_EU_HFI, by = "variable")
-
-#Oceania 
-data_Q1_Oceania_HFI <- data_question1 %>%
-  filter(data_question1$continent == 'Oceania') %>%
-  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
-
-data_Q1_Oceania_HFI_long <- melt(data_Q1_Oceania_HFI)
-
-medians_OC_HFI <- data_Q1_Oceania_HFI_long %>%
-  group_by(variable) %>%
-  summarize(median_value = median(value))
-
-data_Q1_Oceania_HFI_long <- data_Q1_Oceania_HFI_long %>%
-                  left_join(medians_OC_HFI, by = "variable")
-
-# merge all medians 
-medians_all_HFI <- rbind(data_Q1_Oceania_HFI_long, data_Q1_Americas_HFI_long,data_Q1_Africa_HFI_long,data_Q1_Asia_HFI_long,data_Q1_Europe_HFI_long)
-
-medians_all_HFI$color <- ifelse(medians_all_HFI$median_value > 7.5, "lightgreen", 
-                        ifelse(medians_all_HFI$median_value < 2.5, "red3", 'lightblue3'))
-
-bandwidth_nrd_HFI <- bw.nrd(medians_all_HFI$value)
-
-# Create the plot
-ggplot(medians_all_HFI, aes(x = variable, y = value, fill = color)) +
-  geom_violin(trim = FALSE, bw = bandwidth_nrd_HFI) +
-  scale_fill_manual(values = c("lightgreen" = "lightgreen", "red3" = "red3", "lightblue3" = "lightblue3"),
-                    labels = c("between", ">7.5", "<2.5")) + 
-  labs(title = "Human Freedom Index Scores Distribution by Continent", x = "Variables", y = "Scores", fill = "Score Category") +
-  facet_grid(continent ~ ., scales = "free_y") +
-  scale_y_continuous(labels = scales::label_number()) +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5), # Center the title
-        plot.title.position = "plot", axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-```
-:::
-:::
-
-## Analysis : correlations
-
-::: columns
-::: {.column width="35%"}
+::: {.column width="45%"}
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 ### Correlation Matrix Heatmap SDG/Other variables ###
 
@@ -608,41 +431,115 @@ ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
                        name = "Spearman\nCorrelation") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        axis.text.y = element_text(angle = 45, hjust = 1)) +
+        axis.text.y = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.15, size = 17),
+        plot.title.position = "plot") +
   labs(x = 'Goals', y = 'Goals',
-       title = 'Correlations Heatmap between goals and our other variables')
+       title = 'Correlations Heatmap between goals/other variables')
 ```
+
 :::
 
-::: {.column width="35%"}
-```{r echo = FALSE, message = FALSE, warning=FALSE, results='hide'}
-goals_data <- data_question1 %>%
-  dplyr::select(overallscore, unemployment.rate, GDPpercapita, MilitaryExpenditurePercentGDP, internet_usage, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+::: incremental
 
-fit <- lm(overallscore ~ ., data = goals_data)
-# plot(fit)
-leaps<-regsubsets(overallscore ~ .,data=goals_data,nbest=10)
-# summary(leaps)
-plot(leaps,scale="r2") + theme_minimal() + title("Stepwise Regression : Forward method - adjusted R^2")
-```
+-  **distribution results:** EU best performance. 
+-  Africa: lack of resilient/sustainable industries and tech. 
+-  Americas: lack of reduction of inequalities within/between countries
+-  **Correlations results:** negative correlations between goals12 & 13 and the factors
+
 :::
+
+##  {.smaller}
+
+### Factors influence over SDG goals 
 
 ::: {.column width="40%"}
-```{r echo = FALSE, message = FALSE, warning=FALSE}
-#### PCA Biplot ####
-myPCA_s <- PCA(data_question1[,29:40], graph = FALSE)
-fviz_pca_biplot(myPCA_s,
-                label="var",
-                col.var="dodgerblue3",
-                geom="point",
-                pointsize = 0.1,
-                labelsize = 5) +
-  theme_minimal()
+```{r echo = FALSE, message = FALSE, warning=FALSE, results='hide'}
+reg_goal1 <- regsubsets(goal1 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
+
+plot(reg_goal1,scale="r2") + theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.2, size = 20),
+        plot.title.position = "plot") + 
+        title("Stepwise Regression Goal1 : Forward method")
 ```
-:::
+
 :::
 
-## fixing multicollinearity problem and model selection
+::: {.column width="50%"}
+```{r echo = FALSE, message = FALSE, warning=FALSE, results = 'hide'}
+Goal1lm <- lm(goal1 ~ unemployment.rate + MilitaryExpenditurePercentGDP + internet_usage + pf_religion + pf_assembly + pf_identity + ef_government + ef_trade, data = data_question1)
+
+Goal2lm <- lm(goal2 ~ MilitaryExpenditurePercentGDP + internet_usage + pf_identity + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+
+Goal3lm <- lm(goal3 ~ MilitaryExpenditurePercentGDP + internet_usage + pf_movement + pf_religion + pf_identity + ef_legal + ef_money + ef_trade, data = data_question1)
+
+Goal4lm <- lm(goal4 ~ GDPpercapita + internet_usage + pf_religion + pf_identity + ef_government + ef_legal + ef_trade + population, data = data_question1)
+
+Goal5lm <- lm(goal5 ~ MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_religion + pf_identity + ef_government + ef_legal, data = data_question1)
+
+Goal6lm <- lm(goal6 ~ unemployment.rate + internet_usage + pf_identity + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+
+Goal7lm <- lm(goal7 ~ unemployment.rate + internet_usage + pf_religion + pf_assembly + pf_identity + ef_government + ef_trade + ef_regulation, data = data_question1)
+
+Goal8lm <- lm(goal8 ~ unemployment.rate + internet_usage + pf_law + pf_expression + ef_legal + ef_trade + ef_regulation + population, data = data_question1)
+
+Goal9lm <- lm(goal9 ~ + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + ef_legal + ef_trade + ef_regulation + population, data = data_question1)
+
+Goal10lm <- lm(goal10 ~ unemployment.rate + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + population, data = data_question1)
+
+Goal11lm <- lm(goal11 ~ unemployment.rate + internet_usage + pf_movement + pf_religion + pf_identity + ef_legal + ef_trade + population, data = data_question1)
+
+Goal12lm <- lm(goal12 ~ + GDPpercapita + pf_law + pf_religion + pf_expression + pf_identity + ef_legal + ef_trade + population, data = data_question1)
+
+Goal13lm <- lm(goal13 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + pf_law + pf_religion + pf_expression + pf_identity + ef_legal, data = data_question1)
+
+Goal15lm <- lm(goal15 ~ unemployment.rate + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_religion + ef_government + ef_money + population, data = data_question1)
+
+Goal16lm <- lm(goal16 ~ pf_law + pf_security + pf_religion + pf_expression + pf_identity + ef_government + ef_legal + population, data = data_question1)
+
+Goal17lm <- lm(goal17 ~ unemployment.rate + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_movement + ef_government + ef_legal + population, data = data_question1)
+
+
+
+#coefficient plot
+
+library('broom')
+# Create a dataframe of tidy models
+model_list <- list(Goal1lm, Goal2lm, Goal3lm, Goal4lm, Goal5lm, Goal6lm, Goal7lm, Goal8lm, Goal9lm, Goal10lm, Goal11lm, Goal12lm, Goal13lm, Goal15lm, Goal16lm, Goal17lm)
+
+models_tidy <- lapply(model_list, tidy)
+names(models_tidy) <- paste("Goal", c(1:13, 15:17), "lm", sep="")
+
+# Combine into a single dataframe
+df_tidy <- do.call(rbind, lapply(names(models_tidy), function(x) cbind(models_tidy[[x]], Model=x)))
+
+# Assuming 'p.value' is the column name for p-values in your dataframe
+significance_level <- 0.05
+
+# Filter for significant p-values
+df_tidy_significant <- df_tidy[df_tidy$p.value < significance_level, ]
+
+# Plot
+ggplot(df_tidy_significant, aes(x = Model, y = estimate, color = term)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error), width = 0.2) +
+  scale_y_continuous(limits = c(-90, 85)) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.3),
+        plot.title.position = "plot",
+        legend.position = "right", # You can change the position if needed
+        legend.text = element_text(size = 6), # Adjust text size
+        legend.title = element_text(size = 8), # Adjust title size
+        legend.key.size = unit(0.4, "cm")) +  # Adjust key size) +
+  labs(title = "Coefficient Plot of Regression Models", x = "Models", y = "Estimates")
+```
+:::
+
+::: incremental
+-  **global regression results**: Factors influencing positively and negatively the goals (i.e unemployment.rate)
+-  Some variables such as internet_usage or ef_legal only influencing positively goals 
+:::
 
 ## How are the different SDGs linked? {.smaller}
 
@@ -1125,3 +1022,29 @@ Regressions for the Goal 9 with Cases per million variable in the COVID-19 datas
 :::
 
 ## Conclusion
+
+<p style="font-size: 19px;"><strong>Global Progress on SDGs:</strong></p>
+<ul style="font-size: 17px;">
+    <li>Slow growth of Sustainable Development Goals (SDGs) globally.</li>
+    <li>Africa lags behind other continents in SDG achievement.</li>
+    <li>Europe stands out as a leader in SDG accomplishment.</li>
+    <li>Oceania exhibits greater variations (both positive and negative) in SDG performance.</li>
+</ul>
+
+<p style="font-size: 19px;"><strong>Interconnectedness of SDGs:</strong></p>
+<ul style="font-size: 17px;">
+    <li>High achievement in one SDG often correlates with high scores in other goals, except for goals 12 and 13 (related to climate action) where the correlation appears opposite.</li>
+</ul>
+
+<p style="font-size: 19px;"><strong>Influential Factors:</strong></p>
+<ul style="font-size: 17px;">
+    <li>Higher Internet usage tends to correlate with higher scores in SDGs. Other influencing factors exhibit diverse effects on SDG achievement; for example, unemployment rates impact varies across different goals.</li>
+    <li>Climate disasters display weak or negligible relationships with SDGs. Limited associations exist between climate-related variables and specific goals, with no significant overall impact.</li>
+    <li>Variables related to Covid-19 and conflicts show significance in SDG achievement but explain limited variance for each objective.</li>
+</ul>
+
+<p style="font-size: 19px;"><strong>SDG Adoption and Partnership:</strong></p>
+<ul style="font-size: 17px;">
+    <li>Increased adoption of SDGs encourages greater partnerships across the goals, particularly aligning with Goal 16.</li>
+    <li>Goal 9 (industry, innovation, and infrastructure) shows a faster rate of advancement compared to other goals.</li>
+</ul>

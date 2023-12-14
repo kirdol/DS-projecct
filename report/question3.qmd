@@ -28,6 +28,7 @@ shapiro_test_total_affected
 shapiro_test_total_deaths
 
 ```
+The value of W are very close to zero (W = 0.06 and W=0.03) for the disasters variables, this suggests that the data diverge considerably from a normal distribution.
 
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 
@@ -41,6 +42,8 @@ shapiro_test_cases_per_million
 shapiro_test_deaths_per_million
 shapiro_test_stringency
 ```
+The value of W are close to zero (W = 0.2, W=0.2 and W=0.4) for the Covid-19 variables, this suggests that the data diverge from a normal distribution.
+
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 variables_to_test <- data_question3_2[, c("cases_per_million", "deaths_per_million", "stringency")]
 
@@ -49,6 +52,7 @@ shapiro_results <- lapply(variables_to_test, shapiro.test)
 names(shapiro_results) <- c("cases_per_million", "deaths_per_million", "stringency")
 shapiro_results
 ```
+The value of W are close to zero (W = 0.2, W= 0.2 and W=0.4) for the conflicts variables, this suggests that the data diverge from a normal distribution.
 
 In order to have an overview of the relationship between the different events variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
 
@@ -115,9 +119,9 @@ pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected
 Meaning of the stars: *** : p_value < 0.001; ** : p_value < 0.01; *: p_value <0.05; no star if p_value is higher.
 
 
-Negative values (ranging from -0.17 to -0.28) with three stars (***) indicate a strong and statistically significant negative correlation between the overall index (Overallscore) and the various conflict-related variables (Ongoing, sum_deaths, pop_affected, area_affected, maxintensity). A strong negative correlation means that an increase in the Overallscore is associated with a decrease in the values of the other variables. But we have to take into account that correlation does not necessarily imply direct causation. Further analysis may be required to understand in depth the nature of the relationships between these variables.
+Negative values (ranging from -0.17 to -0.28) with three stars (***) indicate a strong and statistically significant negative correlation between the overall index (Overallscore) and the various conflict-related variables (Ongoing, sum_deaths, pop_affected, area_affected, maxintensity). A strong negative correlation means that an increase in the Overallscore is associated with a decrease in the values of the other variables. But we have to take into account that correlation does not necessarily imply direct causation.
 
-To explore our data on events such as disasters, covid-19 and conflicts we have to first see which countries are the most touched by these. To do so, we made time-series analysis on this three events each time depending on different variables.
+To explore our data on events such as disasters, covid-19 and conflicts we have to first see which regions are the most touched by these. To do so, we made time-series analysis on this three events each time depending on different variables.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 # Converted 'year' column to date format
@@ -181,7 +185,7 @@ ggplot(data = covid_filtered, aes(x = year, y = stringency, group = region, colo
   ggtitle("Trend of COVID-19 Stringency Over Time")
 ```
 
-These is our time-analysis concerning climatic disasters with total affected per region
+These is our time-analysis concerning climatic disasters with total affected per region.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
 Q3.1[is.na(Q3.1)] <- 0
@@ -199,7 +203,27 @@ ggplot(data = Q3.1, aes(x = year, y = total_affected, group = region, color = re
   ) +
   ggtitle("Trend of Total Affected from Climatic Disasters Over Time")
 ```
-We can see that the regions the most affected by the conflicts are East Asia, North America and South Asia. We weill concetrate more in this regions. 
+We can see that the regions the most affected by the climate disasters are East Asia, North America and South Asia. We will concentrate more in this regions. 
+
+These is our time-analysis concerning climatic disasters with total deaths per region
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+Q3.1[is.na(Q3.1)] <- 0
+ggplot(data = Q3.1, aes(x = year, y = total_deaths, group = region, color = region)) +
+  geom_smooth(method = "loess",  se = FALSE, span = 0.7, size = 0.5) + 
+  labs(x = "Year", y = "Total Deaths") +
+  facet_wrap(~ region, nrow = 5) +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+        strip.text = element_text(size = 8),
+        panel.spacing = unit(0.5, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none"
+  ) +
+  ggtitle("Trend of Total Deaths from Climatic Disasters Over Time")
+```
+We can see that the regions the most affected by the climate disasters are East Asia, Latin America & the Caribbean and South Asia.
 
 These is our time-analysis concerning conflicts deaths per region between 2000 and 2016
 
@@ -220,7 +244,7 @@ ggplot(data = conflicts_filtered, aes(x = year, y = sum_deaths, group = region, 
   ggtitle("Trend of Deaths by Conflicts Over Time")
 ```
 
-We can see that the regions the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, then very less America & the Caribbean and Eastern Europe.
+We can see that the regions the most affected by the deaths are : Middle east and north Africa, Sub-Saharan Africa, South Asia, then very less America & the Caribbean and Eastern Europe.
 
 These is our time-analysis concerning conflicts affected population per region between 2000 and 2016.
 
@@ -239,7 +263,7 @@ ggplot(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region
   ggtitle("Trend of Population Affected by Conflicts Over Time")
 ```
 
-We can see that the regions the most affected by the conflicts are : Middle east and north Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Caucasus and Central Asia.
+We can see that the regions the most affected by the affected population are : Middle east and north Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Caucasus and Central Asia.
 
 Finally, these is our time-analysis concerning maxintensity conflicts per region between 2000 and 2016.
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
@@ -938,7 +962,7 @@ Some models have marginally significant p-values (close to 0.05) but still lack 
 Goals 7, 8, 10, 13, 14, and 15 exhibit statistically significant relationships with 'total_affected,' indicating small to moderate positive relationships.
 Goals 7 and 8 also show statistically significant relationships with 'total_deaths,' indicating moderate negative relationships.
 
-These findings suggest that, in most cases, the relationships between the specified goals and COVID-19 variables (total affected and total deaths) are not statistically significant. However, some goals do indicate small to moderate associations with these variables.
+These findings suggest that, in most cases, the relationships between the specified goals and Climate disasters variables (total affected and total deaths) are not statistically significant. However, some goals do indicate small to moderate associations with these variables.
 
 
 Let's see the regressions for each score depending of each variable in the COVID-19 dataset (stringency, cases_per_million and deaths_per_million).
@@ -1046,7 +1070,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-For all objectives (from objective 1 to objective 16), the predictor variables (stringency, number of cases per million and number of deaths per million) show statistically significant relationships. However, when assessed individually, these predictors explain only a marginal fraction of the variance of the respective objectives, with explanatory percentages ranging from around 0.141% to 6.99%.
+For all Goals, the predictor variables (stringency, number of cases per million and number of deaths per million) show statistically significant relationships. However, when assessed individually, these predictors explain only a marginal fraction of the variance of the respective objectives, with explanatory percentages ranging from around 0.141% to 6.99%.
 Adjusted R-squared values consistently indicate limited explanatory power for these relationships, implying the influence of other factors not accounted for in the variations observed for each objective. 
 Relying solely on rigor, cases per million and deaths per million results in modest predictive capabilities for each objective.
 
