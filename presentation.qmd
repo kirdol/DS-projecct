@@ -1120,3 +1120,30 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
 :::
 
 ## Conclusion
+
+<p style="font-size: 19px;"><strong>Global Progress on SDGs:</strong></p>
+<ul style="font-size: 17px;">
+    <li>Slow growth of Sustainable Development Goals (SDGs) globally.</li>
+    <li>Africa lags behind other continents in SDG achievement.</li>
+    <li>Europe stands out as a leader in SDG accomplishment.</li>
+    <li>Oceania exhibits greater variations (both positive and negative) in SDG performance.</li>
+</ul>
+
+<p style="font-size: 19px;"><strong>Interconnectedness of SDGs:</strong></p>
+<ul style="font-size: 17px;">
+    <li>High achievement in one SDG often correlates with high scores in other goals, except for goals 12 and 13 (related to climate action) where the correlation appears opposite.</li>
+</ul>
+
+<p style="font-size: 19px;"><strong>Influential Factors:</strong></p>
+<ul style="font-size: 17px;">
+    <li>Higher Internet usage tends to correlate with higher scores in SDGs. Other influencing factors exhibit diverse effects on SDG achievement; for example, unemployment rates impact varies across different goals.</li>
+    <li>Climate disasters display weak or negligible relationships with SDGs. Limited associations exist between climate-related variables and specific goals, with no significant overall impact.</li>
+    <li>Variables related to Covid-19 and conflicts show significance in SDG achievement but explain limited variance for each objective.</li>
+</ul>
+
+<p style="font-size: 19px;"><strong>SDG Adoption and Partnership:</strong></p>
+<ul style="font-size: 17px;">
+    <li>Increased adoption of SDGs encourages greater partnerships across the goals, particularly aligning with Goal 16.</li>
+    <li>Goal 9 (industry, innovation, and infrastructure) shows a faster rate of advancement compared to other goals.</li>
+</ul>
+
