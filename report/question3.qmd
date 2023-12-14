@@ -1030,7 +1030,7 @@ goal_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7",
 )
 
 ui <- fluidPage(
-  titlePanel("SDG - COVID Regression Analysis"),
+  titlePanel("SDG - Conflicts Regression Analysis"),
   sidebarLayout(
     sidebarPanel(
       selectInput("sdg", "Select SDG Goal:",
@@ -1041,18 +1041,18 @@ ui <- fluidPage(
     ),
     mainPanel(
       width = 9,
-      plotOutput("regression_plot_stringency"),
-      plotOutput("regression_plot_cases"),
-      plotOutput("regression_plot_deaths")
+      plotOutput("regression_plot_affected"),
+      plotOutput("regression_plot_deaths"),
+      plotOutput("regression_plot_maxintensity")
     )
   )
 )
 
 server <- function(input, output, session) {
   observeEvent(input$stopButton, {
-    output$regression_plot_stringency <- NULL
-    output$regression_plot_cases <- NULL
+    output$regression_plot_affected <- NULL
     output$regression_plot_deaths <- NULL
+    output$regression_plot_maxintensity <- NULL
   })
   
   generate_regression_plot <- function(selected_goal) {
@@ -1078,7 +1078,7 @@ server <- function(input, output, session) {
            x = "Sum of Deaths", y = selected_goal) +
       scale_x_continuous(labels = comma_format()) 
     
-    plot_maxintensity <- ggplot(subset_data, aes(x = sum_deaths, y = !!as.name(selected_goal))) +
+    plot_maxintensity <- ggplot(subset_data, aes(x = maxintensity, y = !!as.name(selected_goal))) +
       geom_point() +
       geom_smooth(method = "lm", se = FALSE) +
       labs(title = paste("Regression plot for", selected_goal, "vs Maxintensity"),
@@ -1088,7 +1088,7 @@ server <- function(input, output, session) {
     list(plot_pop_affected, plot_sum_deaths, plot_maxintensity)
   }
   
-  output$regression_plot_stringency <- renderPlot({
+  output$regression_plot_affected <- renderPlot({
     req(input$sdg)
     isolate({
       selected_goal <- input$sdg
@@ -1096,7 +1096,7 @@ server <- function(input, output, session) {
     })
   })
   
-  output$regression_plot_cases <- renderPlot({
+  output$regression_plot_deaths <- renderPlot({
     req(input$sdg)
     isolate({
       selected_goal <- input$sdg
@@ -1104,7 +1104,7 @@ server <- function(input, output, session) {
     })
   })
   
-  output$regression_plot_deaths <- renderPlot({
+  output$regression_plot_maxintensity <- renderPlot({
     req(input$sdg)
     isolate({
       selected_goal <- input$sdg
@@ -1115,7 +1115,6 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
-
 All three predictors exhibited statistically significant relationships with the respective goals across the board. 'Maxintensity' generally demonstrated a relatively stronger association compared to 'Population Affected' and 'Deaths' in most analyses. But collectively, these predictors explained only a small to moderate portion of the variability observed in the different goals (adjusted R-squared ranging from approximately 1% to 9.48%). This suggests that there are other unaccounted factors not included in the analysis that significantly influence the outcomes of these goals.
 To conclude, while 'Population Affected,' 'Deaths,' and 'Maxintensity' consistently showed significant associations with the various goals analyzed, their combined effect explained only a fraction of the variance observed in these goals. Therefore, there are likely additional crucial factors beyond these predictors that play substantial roles in influencing the outcomes of the respective goals.
 
