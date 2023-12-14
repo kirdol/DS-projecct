@@ -594,7 +594,7 @@ fviz_pca_biplot(pca_result,
 ```
 
 -   Interconnection of the goals
--   Negative correlation between "Responsible Consumption and Production" / "Climate Action" and the other goals.
+-   Negative correlation between **Responsible Consumption and Production** and **Climate Action** and the other goals
 :::
 
 ## How are the different SDGs linked? {.smaller}
@@ -633,6 +633,9 @@ ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
     labs(title = "Heatmap of Spearman Correlations for Goals", 
          x = "", y = "")
 ```
+
+- Strange association between **Reduced Inequalities** and **Life on Land goals**
+
 :::
 
 ::: {.column width="64%"}
