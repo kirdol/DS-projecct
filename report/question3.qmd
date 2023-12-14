@@ -563,8 +563,8 @@ server <- function(input, output, session) {
     
     p <- p %>% layout(
       title = "",
-      xaxis = list(title = ""),
-      yaxis = list(title = ""),
+      xaxis = list(title = "", tickfont = list(size = 16)),
+      yaxis = list(title = "", tickfont = list(size = 16)),
       coloraxis = list(
         colorbar = list(
           title = "Correlation",
@@ -962,21 +962,24 @@ server <- function(input, output, session) {
       geom_smooth(method = "lm", se = FALSE) +
       labs(title = paste("Regression plot for", selected_goal, "vs Stringency"),
            x = "Stringency", y = selected_goal) +
-      scale_x_continuous(labels = comma_format())
+      scale_x_continuous(labels = comma_format()) +
+      theme(axis.title = element_text(size = 16), axis.text = element_text(size = 16), plot.title = element_text(size = 20))
     
     plot_cases <- ggplot(subset_data, aes(x = cases_per_million, y = !!as.name(selected_goal))) +
       geom_point() +
       geom_smooth(method = "lm", se = FALSE) +
       labs(title = paste("Regression plot for", selected_goal, "vs Cases per Million"),
            x = "Cases per Million", y = selected_goal) +
-      scale_x_continuous(labels = comma_format()) 
+      scale_x_continuous(labels = comma_format()) +
+      theme(axis.title = element_text(size = 16), axis.text = element_text(size = 16), plot.title = element_text(size = 20))
     
     plot_deaths <- ggplot(subset_data, aes(x = deaths_per_million, y = !!as.name(selected_goal))) +
       geom_point() +
       geom_smooth(method = "lm", se = FALSE) +
       labs(title = paste("Regression plot for", selected_goal, "vs Deaths per Million"),
            x = "Deaths per Million", y = selected_goal) +
-      scale_x_continuous(labels = comma_format()) 
+      scale_x_continuous(labels = comma_format()) +
+      theme(axis.title = element_text(size = 16), axis.text = element_text(size = 16),plot.title = element_text(size = 20))
     
     list(plot_stringency, plot_cases, plot_deaths)
   }
@@ -1069,7 +1072,8 @@ server <- function(input, output, session) {
       geom_smooth(method = "lm", se = FALSE) +
       labs(title = paste("Regression plot for", selected_goal, "vs Population Affected"),
            x = "Population Affected", y = selected_goal) +
-      scale_x_continuous(labels = comma_format()) 
+      scale_x_continuous(labels = comma_format()) +
+      theme(axis.title = element_text(size = 12), axis.text = element_text(size = 10))
     
     plot_sum_deaths <- ggplot(subset_data, aes(x = sum_deaths, y = !!as.name(selected_goal))) +
       geom_point() +
