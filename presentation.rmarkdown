@@ -1,0 +1,1184 @@
+---
+title: "Comparative Analysis of SDG Implementation Evolution Worldwide"
+author: "Lodrik Adam, Sofia Benczédi, Stefan Favre, Delia Fuchs"
+title-slide-attributes:
+  data-background-image: /title.jpg
+  data-background-opacity: "0.3"
+execute:
+  echo: true
+format:
+  revealjs:
+    footer: "Comparative Analysis of SDG Implementation Evolution Worldwide"
+#format: beamer
+#format: pptx
+---
+
+
+## Introduction {.smaller}
+
+::: incremental
+<img src="SDG.png" height="350px" width="520" style="display: block; margin: 0 auto;"/>
+
+1.  What can explain the state of the countries regarding sustainable development?
+
+2.  How are the different SDGs linked?
+
+3.  How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
+
+2. How are the different SDGs linked? 
+
+3. How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
+
+4. Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crisis and natural disasters?
+
+:::
+
+## Main dataset {.smaller}
+
+1.  **SDG achievement scores**, overall & individual scores (except goal 14: life under water)
+
+
+```{r, message = FALSE, warning=FALSE, results='hide'}
+#| echo: false
+options(repos = "https://stat.ethz.ch/CRAN/")
+source(here::here("scripts/Clean/setup.R"))
+data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"))
+data_question2 <- data_question2 %>% dplyr::select(-X)
+
+data_question2 <- data_question2 %>% 
+  group_by(code) %>%
+  mutate(across(5:21, ~ . - dplyr::lag(.), .names = "diff_{.col}")) %>%
+  ungroup()
+```
+
+```{r, message = FALSE, warning=FALSE, fig.height=1.75}
+#| echo: false
+# Load world map data
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Merge data with the world map data
+data0 <- merge(world, data_question2, by.x = "iso_a3", by.y = "code", all.x = TRUE)
+
+data0 <- data0 %>%
+  filter(!is.na(overallscore))
+
+unique_years <- unique(data0$year)
+
+plot_ly(
+  type = "choropleth",
+  z = ~data0$overallscore[data0$year == 2000],
+  locations = ~data0$iso_a3[data0$year == 2000],
+  text = ~paste("Country: ", data0$name[data0$year == 2000], "<br>Overall Score: ", data0$overallscore[data0$year == 2000]),
+  colors = c("darkred", "orange", "yellow", "darkgreen"),
+  colorbar = list(title = "Overall Score", cmin = 40, cmax = 87),
+  zmin = 40,
+  zmax = 87,
+  hoverinfo = "text"
+) %>%
+  layout(
+    title = "SDG overall score evolution",
+    sliders = list(
+      list(
+        active = 0,
+        currentvalue = list(prefix = "Year: "),
+        steps = lapply(seq_along(unique_years), function(i) {
+          year <- unique_years[i]
+          list(
+            label = as.character(year),
+            method = "restyle",
+            args = list(
+              list(
+                z = list(data0$overallscore[data0$year == year]),
+                locations = list(data0$iso_a3[data0$year == year]),
+                text = list(~paste("Country: ", data0$name[data0$year == year], "<br>Overall Score: ", data0$overallscore[data0$year == year]))
+              )
+            )
+          )
+        })
+      )
+    )
+  )
+```
+
+
+## Complementary datasets {.smaller}
+
+::: incremental
+2.  **Unemployment rate**
+
+3.  **GDP per capita and military expenditure in % of GDP**
+
+4.  **Internet usage**, % of the population using internet
+
+5.  **Human freedom index (personal and economic)**, movement, religion, trade...
+
+6.  **Disasters**, deaths, injured...
+
+7.  **COVID**, deaths, cases and stringency
+
+8.  **Conflicts**, deaths, population and area affected
+
+- Continents, Regions
+- Match datasets by key = (country, year)
+
+:::
+
+##  {.smaller}
+
+### Data wrangling
+
+::: incremental
+-   Match datasets by key = (country, year)
+-   Delete columns, then rows with too much NAs
+:::
+
+##  {.smaller}
+
+### Data wrangling
+
+-   Match datasets by key = (country, year)
+-   Delete columns, then rows with too much NAs
+
+::: {.columns style="margin-bottom: 0px;"}
+::: {.column width="55%" style="margin-bottom: 0px;"}
+
+```{r, message = FALSE, warning=FALSE, fig.height=4.2}
+#| echo: false
+all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
+data_question1 <- all_Merge %>%
+  filter(year<=2020) %>%
+  select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected,
+            total_damages, cases_per_million, deaths_per_million, stringency,
+            ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
+
+variable_names <- names(data_question1)
+missing_percentages <-
+  sapply(data_question1, function(col) mean(is.na(col)) * 100)
+
+missing_data_summary <- data.frame(
+  Variable = variable_names,
+  Missing_Percentage = missing_percentages
+)
+
+missing_data_summary <- missing_data_summary %>%
+  mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))%>%
+  filter(missing_percentages!=0)
+
+ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Percentage), y = Missing_Percentage, fill = Missing_Percentage)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = ifelse(Missing_Percentage > 1, sprintf("%.1f%%", Missing_Percentage), ""),
+                y = Missing_Percentage),
+            position = position_stack(vjust = 1),  # Adjust vertical position
+            color = "white",  # Text color
+            size = 2,          # Text size
+            hjust = 1.05) +
+  labs(title = "Percentage of Missing Values by Variable",
+       y = "Missing Percentage") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 1, size=8),
+        legend.position="none",
+        axis.title.y=element_blank()) +
+  labs(fill = "% NAs") +
+  coord_flip()
+
+
+```
+
+:::
+
+::: {.column width="45%" style="margin-bottom: 0px;"}
+:::
+:::
+
+##  {.smaller}
+
+### Data wrangling
+
+-   Match datasets by key = (country, year)
+-   Delete columns, then rows with too much NAs
+
+::: {.columns style="margin-bottom: 0px;"}
+::: {.column width="55%" style="margin-bottom: 0px;"}
+
+```{r, message = FALSE, warning=FALSE, fig.height=4.2}
+#| echo: false
+all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
+data_question1 <- all_Merge %>%
+  filter(year<=2020) %>%
+  select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected,
+            total_damages, cases_per_million, deaths_per_million, stringency,
+            ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
+
+variable_names <- names(data_question1)
+missing_percentages <-
+  sapply(data_question1, function(col) mean(is.na(col)) * 100)
+
+missing_data_summary <- data.frame(
+  Variable = variable_names,
+  Missing_Percentage = missing_percentages
+)
+
+missing_data_summary <- missing_data_summary %>%
+  mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))%>%
+  filter(missing_percentages!=0)
+
+ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Percentage), y = Missing_Percentage, fill = Missing_Percentage)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = ifelse(Missing_Percentage > 1, sprintf("%.1f%%", Missing_Percentage), ""),
+                y = Missing_Percentage),
+            position = position_stack(vjust = 1),  # Adjust vertical position
+            color = "white",  # Text color
+            size = 2,          # Text size
+            hjust = 1.05) +
+  labs(title = "Percentage of Missing Values by Variable",
+       y = "Missing Percentage") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 1, size=8),
+        legend.position="none",
+        axis.title.y=element_blank()) +
+  labs(fill = "% NAs") +
+  coord_flip()
+
+
+```
+
+:::
+
+::: {.column width="45%" style="margin-bottom: 0px;"}
+<img src="data1.png" height="320"/>
+:::
+:::
+
+##  {.smaller}
+
+### Data wrangling
+
+-   Match datasets by key = (country, year)
+-   Delete columns, then rows with too much NAs
+
+::: {.columns style="margin-bottom: 0px;"}
+::: {.column width="55%" style="margin-bottom: 0px;"}
+
+```{r, message = FALSE, warning=FALSE, fig.height=4.2}
+#| echo: false
+all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
+data_question1 <- all_Merge %>%
+  filter(year<=2020) %>%
+  select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected,
+            total_damages, cases_per_million, deaths_per_million, stringency,
+            ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
+
+variable_names <- names(data_question1)
+missing_percentages <-
+  sapply(data_question1, function(col) mean(is.na(col)) * 100)
+
+missing_data_summary <- data.frame(
+  Variable = variable_names,
+  Missing_Percentage = missing_percentages
+)
+
+missing_data_summary <- missing_data_summary %>%
+  mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))%>%
+  filter(missing_percentages!=0)
+
+ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Percentage), y = Missing_Percentage, fill = Missing_Percentage)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = ifelse(Missing_Percentage > 1, sprintf("%.1f%%", Missing_Percentage), ""),
+                y = Missing_Percentage),
+            position = position_stack(vjust = 1),  # Adjust vertical position
+            color = "white",  # Text color
+            size = 2,          # Text size
+            hjust = 1.05) +
+  labs(title = "Percentage of Missing Values by Variable",
+       y = "Missing Percentage") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(hjust = 1, size=8),
+        legend.position="none",
+        axis.title.y=element_blank()) +
+  labs(fill = "% NAs") +
+  coord_flip()
+
+
+```
+
+:::
+
+::: {.column width="45%" style="margin-bottom: 0px;"}
+<img src="data1.png" height="320"/>
+:::
+:::
+
+-   Fill in remaining NAs with linear interpolation,\
+    median/mean based on region or zeros when appropriate
+
+# EDA / Analysis
+
+## Q1: EDA - distribution test 1
+
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+source(here::here("scripts/Clean/setup.R"))
+data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
+data <- read.csv(here("scripts", "data", "all_Merge.csv"))
+Correlation_overall <- data_question1 %>%
+      dplyr::select(population:ef_regulation)
+```
+
+
+::: columns
+::: {.column width="35%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+long_df_goal_distribution <- pivot_longer(Correlation_overall, cols = starts_with("goal"), names_to = "Goal", values_to = "Value")
+
+long_df_goal_distribution$Goal <- with(long_df_goal_distribution, reorder(Goal, Value, FUN = mean))
+
+long_df_hfi_distribution <- pivot_longer(Correlation_overall, cols = pf_law:ef_regulation, names_to = "Category", values_to = "Value")
+
+long_df_hfi_distribution$Goal <- with(long_df_hfi_distribution, reorder(Category, Value, FUN = mean))
+
+ggplot(long_df_goal_distribution, aes(x = Value, y = Goal, fill = stat(x))) +
+  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
+  scale_fill_viridis_c(name = "", option = "C") +
+  theme(plot.title = element_text(hjust = 0.5, size = 20), # Center the title
+        plot.title.position = "plot") + 
+  labs(x = 'Scores',
+       y = 'Goals',
+        title = 'SDG Goals Distribution')
+```
+
+:::
+
+::: {.column width="35%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+ggplot(long_df_hfi_distribution, aes(x = Value, y = Category, fill = stat(x))) +
+  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
+  scale_fill_viridis_c(name = "", option = "C") +
+  theme(plot.title = element_text(hjust = 0.5, size = 20), # Center the title
+        plot.title.position = "plot") + 
+  labs(x = 'Scores',
+    title = 'Human Freedom Index Scores Distribution')
+```
+
+:::
+
+::: {.column width="30%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+ggplot(Correlation_overall, aes(x = unemployment.rate, y = 1, fill = stat(x))) +
+  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
+  scale_fill_viridis_c(name = "", option = "C") +
+  theme(plot.title = element_text(hjust = 0.5, size = 20), # Center the title
+        plot.title.position = "plot") + 
+  labs(y = 'Density',
+  title = 'Distribution of Unemployment Rate')
+```
+
+:::
+
+::: {.column width="33%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+ggplot(Correlation_overall, aes(x = GDPpercapita, y = 1, fill = stat(x))) +
+  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
+  scale_fill_viridis_c(name = "", option = "C") +
+  theme(plot.title = element_text(hjust = 0.5, size = 20), # Center the title
+        plot.title.position = "plot") + 
+  labs(y = 'Density', title = 'Distribution of GDP per Capita')
+```
+
+:::
+
+::: {.column width="33%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+ggplot(Correlation_overall, aes(x = MilitaryExpenditurePercentGDP, y = 1, fill = stat(x))) +
+  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
+  scale_fill_viridis_c(name = "", option = "C") +
+  theme(plot.title = element_text(hjust = 0.5, size = 20), # Center the title
+        plot.title.position = "plot") + 
+  labs(y = 'Density',title = 'Distribution of Military Expenditure (% of GDP)')
+```
+
+:::
+
+::: {.column width="33%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+ggplot(Correlation_overall, aes(x = internet_usage, y = 1, fill = stat(x))) +
+  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
+  scale_fill_viridis_c(name = "", option = "C") +theme(plot.title = element_text(hjust = 0.5, size = 20),
+        plot.title.position = "plot") + 
+  labs(y = 'Density',title = 'Distribution of Internet Usage')
+```
+
+:::
+:::
+
+## Distribution per continent, per goal
+
+::: columns
+::: {.column width="50%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+#### boxplots ####
+
+#For sdg goals per continent 
+
+#Africa
+data_Q1_Africa <- data_question1 %>% #filtering Africa as continent
+  filter(data_question1$continent == 'Africa') %>%
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+
+data_Q1_Africa_long <- melt(data_Q1_Africa)
+
+medians_AF <- data_Q1_Africa_long %>% #median per variable
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+data_Q1_Africa_long <- data_Q1_Africa_long %>%
+                  left_join(medians_AF, by = "variable")
+#America
+data_Q1_Americas <- data_question1 %>%#filtering Americas as continent
+  filter(data_question1$continent == 'Americas') %>%
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+
+data_Q1_Americas_long <- melt(data_Q1_Americas)
+
+medians_AM <- data_Q1_Americas_long %>% #median per variable
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+data_Q1_Americas_long <- data_Q1_Americas_long %>%
+                  left_join(medians_AM, by = "variable")
+#Asia
+data_Q1_Asia <- data_question1 %>%
+  filter(data_question1$continent == 'Asia') %>%#filtering Asia as continent
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+
+data_Q1_Asia_long <- melt(data_Q1_Asia)
+
+medians_AS <- data_Q1_Asia_long %>% #median per variable
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+data_Q1_Asia_long <- data_Q1_Asia_long %>%
+                  left_join(medians_AS, by = "variable")
+#Europe
+data_Q1_Europe <- data_question1 %>%
+  filter(data_question1$continent == 'Europe') %>% #filtering Europe as continent
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+
+data_Q1_Europe_long <- melt(data_Q1_Europe)
+
+medians_EU <- data_Q1_Europe_long %>% #median per variable
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+data_Q1_Europe_long <- data_Q1_Europe_long %>%
+                  left_join(medians_EU, by = "variable")
+#Oceania
+data_Q1_Oceania <- data_question1 %>%
+  filter(data_question1$continent == 'Oceania') %>% #filtering Oceania as continent
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+
+data_Q1_Oceania_long <- melt(data_Q1_Oceania)
+
+medians_OC <- data_Q1_Oceania_long %>% #median per variable
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+data_Q1_Oceania_long <- data_Q1_Oceania_long %>%
+                  left_join(medians_OC, by = "variable")
+# merge all medians
+medians_all <- rbind(data_Q1_Oceania_long, data_Q1_Americas_long,data_Q1_Africa_long,data_Q1_Asia_long,data_Q1_Europe_long)
+
+medians_all$color <- ifelse(medians_all$median_value > 75, "lightgreen",
+                        ifelse(medians_all$median_value < 25, "red3", 'lightblue3')) #assigning colors. If median for a goal is > 75 -> lightblue, if < 25 -> red, orange otherwise.
+
+bandwidth_nrd <- bw.nrd(medians_all$value) #adapting the bandwidth
+
+ggplot(medians_all, aes(x = variable, y = value, fill = color)) +
+  geom_violin(trim = FALSE, bw = bandwidth_nrd) +
+  scale_fill_manual(values = c("lightgreen" = "lightgreen", "red3" = "red3", "lightblue3" = "lightblue3"),
+                    labels = c("between", ">75", "<25")) + 
+  labs(title = "SDG Goals Distribution by Continent", x = "Goals", y = "Scores", fill = "Score Category") +
+  facet_grid(continent ~ ., scales = "free_y") +
+  scale_y_continuous(labels = scales::label_number()) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5), # Center the title
+        plot.title.position = "plot", axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+#Africa
+data_Q1_Africa_HFI <- data_question1 %>%
+  filter(data_question1$continent == 'Africa') %>%
+  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+
+data_Q1_Africa_HFI_long <- melt(data_Q1_Africa_HFI)
+
+medians_AF_HFI <- data_Q1_Africa_HFI_long %>%
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+
+data_Q1_Africa_HFI_long <- data_Q1_Africa_HFI_long %>%
+                  left_join(medians_AF_HFI, by = "variable")
+
+#America
+data_Q1_Americas_HFI <- data_question1 %>%
+  filter(data_question1$continent == 'Americas') %>%
+  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+
+data_Q1_Americas_HFI_long <- melt(data_Q1_Americas_HFI)
+
+medians_AM_HFI <- data_Q1_Americas_HFI_long %>%
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+
+data_Q1_Americas_HFI_long <- data_Q1_Americas_HFI_long %>%
+                  left_join(medians_AM_HFI, by = "variable")
+
+#Asia
+data_Q1_Asia_HFI <- data_question1 %>%
+  filter(data_question1$continent == 'Asia') %>%
+  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+
+data_Q1_Asia_HFI_long <- melt(data_Q1_Asia_HFI)
+
+medians_AS_HFI <- data_Q1_Asia_HFI_long %>%
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+
+data_Q1_Asia_HFI_long <- data_Q1_Asia_HFI_long %>%
+                  left_join(medians_AS_HFI, by = "variable")
+
+#Europe
+data_Q1_Europe_HFI <- data_question1 %>%
+  filter(data_question1$continent == 'Europe') %>%
+  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+
+data_Q1_Europe_HFI_long <- melt(data_Q1_Europe_HFI)
+
+medians_EU_HFI <- data_Q1_Europe_HFI_long %>%
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+
+data_Q1_Europe_HFI_long <- data_Q1_Europe_HFI_long %>%
+                  left_join(medians_EU_HFI, by = "variable")
+
+#Oceania 
+data_Q1_Oceania_HFI <- data_question1 %>%
+  filter(data_question1$continent == 'Oceania') %>%
+  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+
+data_Q1_Oceania_HFI_long <- melt(data_Q1_Oceania_HFI)
+
+medians_OC_HFI <- data_Q1_Oceania_HFI_long %>%
+  group_by(variable) %>%
+  summarize(median_value = median(value))
+
+data_Q1_Oceania_HFI_long <- data_Q1_Oceania_HFI_long %>%
+                  left_join(medians_OC_HFI, by = "variable")
+
+# merge all medians 
+medians_all_HFI <- rbind(data_Q1_Oceania_HFI_long, data_Q1_Americas_HFI_long,data_Q1_Africa_HFI_long,data_Q1_Asia_HFI_long,data_Q1_Europe_HFI_long)
+
+medians_all_HFI$color <- ifelse(medians_all_HFI$median_value > 7.5, "lightgreen", 
+                        ifelse(medians_all_HFI$median_value < 2.5, "red3", 'lightblue3'))
+
+bandwidth_nrd_HFI <- bw.nrd(medians_all_HFI$value)
+
+# Create the plot
+ggplot(medians_all_HFI, aes(x = variable, y = value, fill = color)) +
+  geom_violin(trim = FALSE, bw = bandwidth_nrd_HFI) +
+  scale_fill_manual(values = c("lightgreen" = "lightgreen", "red3" = "red3", "lightblue3" = "lightblue3"),
+                    labels = c("between", ">7.5", "<2.5")) + 
+  labs(title = "Human Freedom Index Scores Distribution by Continent", x = "Variables", y = "Scores", fill = "Score Category") +
+  facet_grid(continent ~ ., scales = "free_y") +
+  scale_y_continuous(labels = scales::label_number()) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5), # Center the title
+        plot.title.position = "plot", axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+:::
+:::
+
+## Analysis : correlations
+
+::: columns
+::: {.column width="35%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+### Correlation Matrix Heatmap SDG/Other variables ###
+
+#computing pvals of our interested variables
+corr_matrix <- cor(data_question1[7:40], method = "spearman", use = "everything")
+p_matrix2 <- matrix(nrow = ncol(data_question1[7:40]), ncol = ncol(data_question1[7:40]))
+for (i in 1:ncol(data_question1[7:40])) {
+  for (j in 1:ncol(data_question1[7:40])) {
+    test_result <- cor.test(data_question1[7:40][, i], data_question1[7:40][, j])
+    p_matrix2[i, j] <- test_result$p.value
+  }
+}
+
+corr_matrix[which(p_matrix2 > 0.05)] <- NA #only keeping significant pval alpha = 0.05
+
+melted_corr_matrix_GVar <- melt(corr_matrix[19:34,1:18])
+
+ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = ifelse(!is.na(value) & abs(value) > 0.75, sprintf("%.2f", value), '')),
+            color = "black", size = 2) +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Spearman\nCorrelation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(angle = 45, hjust = 1)) +
+  labs(x = 'Goals', y = 'Goals',
+       title = 'Correlations Heatmap between goals and our other variables')
+```
+
+:::
+
+::: {.column width="35%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE, results='hide'}
+goals_data <- data_question1 %>%
+  dplyr::select(overallscore, unemployment.rate, GDPpercapita, MilitaryExpenditurePercentGDP, internet_usage, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+
+fit <- lm(overallscore ~ ., data = goals_data)
+# plot(fit)
+leaps<-regsubsets(overallscore ~ .,data=goals_data,nbest=10)
+# summary(leaps)
+plot(leaps,scale="r2") + theme_minimal() + title("Stepwise Regression : Forward method - adjusted R^2")
+```
+
+:::
+
+::: {.column width="40%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+#### PCA Biplot ####
+myPCA_s <- PCA(data_question1[,29:40], graph = FALSE)
+fviz_pca_biplot(myPCA_s,
+                label="var",
+                col.var="dodgerblue3",
+                geom="point",
+                pointsize = 0.1,
+                labelsize = 5) +
+  theme_minimal()
+```
+
+:::
+:::
+
+## fixing multicollinearity problem and model selection
+
+## How are the different SDGs linked? {.smaller}
+
+
+```{r echo = FALSE, message = FALSE}
+data_4 <- read.csv(here("scripts", "data", "data_question24.csv"))
+threashold_heatmap <- 0.5
+data_4_goals <- data_4 %>%
+  dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
+                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
+                goal13, goal15, goal16, goal17)
+spearman_corr_4 <-cor(data_4_goals, method = "spearman", use = "everything")
+spearman_corr_4[abs(spearman_corr_4) < threashold_heatmap] <- NA
+melted_corr_4 <- melt(spearman_corr_4, na.rm = TRUE)
+
+# Selecting only the goals columns
+goals_data <- data_4 %>%
+  dplyr::select(goal1, goal2, goal3, goal4, goal5,
+                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
+                goal13, goal15, goal16, goal17)
+goals_data_scaled <- scale(goals_data) # Scaling the data
+pca_result <- prcomp(goals_data_scaled) # Running PCA
+```
+
+
+::: {.column width="64%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
+    geom_tile() +
+    geom_text(aes(label = sprintf("%.2f", value)), vjust = 0.5, size=2.5) + # Adding text
+    scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                         midpoint = 0, limit = c(-1,1), space = "Lab", 
+                         name="Spearman\nCorrelation",
+                         na.value = "grey") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(title = "Heatmap of Spearman Correlations for Goals", 
+         x = "", y = "")
+```
+
+:::
+
+::: {.column width="35%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+#### Biplot ####
+
+# Plotting Biplot to visualize the two main dimensions
+fviz_pca_biplot(pca_result,
+                label="var",
+                col.var="dodgerblue3",
+                geom="point",
+                pointsize = 0.1,
+                labelsize = 4) +
+  theme_minimal()
+```
+
+
+-   Interconnection of the goals
+-   Negative correlation between goals 12 (Responsible Consumption and Production) and 13 (Climate Action) and the other goals.
+:::
+
+## How are the different SDGs linked? {.smaller}
+
+
+```{r echo = FALSE, message = FALSE}
+data_4 <- read.csv(here("scripts", "data", "data_question24.csv"))
+threashold_heatmap <- 0.5
+data_4_goals <- data_4 %>%
+  dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
+                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
+                goal13, goal15, goal16, goal17)
+spearman_corr_4 <-cor(data_4_goals, method = "spearman", use = "everything")
+spearman_corr_4[abs(spearman_corr_4) < threashold_heatmap] <- NA
+melted_corr_4 <- melt(spearman_corr_4, na.rm = TRUE)
+
+# Selecting only the goals columns
+goals_data <- data_4 %>%
+  dplyr::select(goal1, goal2, goal3, goal4, goal5,
+                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
+                goal13, goal15, goal16, goal17)
+goals_data_scaled <- scale(goals_data) # Scaling the data
+pca_result <- prcomp(goals_data_scaled) # Running PCA
+```
+
+
+::: {.column width="35%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
+    geom_tile() +
+    geom_text(aes(label = sprintf("%.2f", value)), vjust = 0.5, size=2.5) + # Adding text
+    scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                         midpoint = 0, limit = c(-1,1), space = "Lab", 
+                         name="Spearman\nCorrelation",
+                         na.value = "grey") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(title = "Heatmap of Spearman Correlations for Goals", 
+         x = "", y = "")
+```
+
+
+3 groups of goals
+
+-   Goal 12 and Goal 13
+-   Goal 10 and Goal 15
+-   The rest of the Goals
+:::
+
+::: {.column width="64%"}
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+#### Biplot ####
+
+# Plotting Biplot to visualize the two main dimensions
+fviz_pca_biplot(pca_result,
+                label="var",
+                col.var="dodgerblue3",
+                geom="point",
+                pointsize = 0.1,
+                labelsize = 4) +
+  theme_minimal()
+```
+
+:::
+
+## Evolution over time
+
+
+```{r, message = FALSE, warning=FALSE, out.width="100%", fig.height=2.75}
+#| echo: false
+data1 <- data_question2 %>% group_by(year, continent) %>%
+  mutate(mean_overall_score_by_year=mean(overallscore))
+
+plot1 <- ggplot(data1) +
+  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=0.6) +
+  #geom_point(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=1) +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Mean overall SDG \nachievement score",
+       y = "Mean Overall SDG Score",
+       x = "Year"
+       ) +
+  theme(legend.position = "none", plot.title = element_text(size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8))
+
+data2 <- data_question2 %>% group_by(year, continent) %>%
+  mutate(mean_diff_overall_score_by_year=mean(diff_overallscore))
+
+plot2 <- ggplot(data2) +
+  geom_line(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=continent), lwd=0.6) +
+  #geom_point(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=continent), lwd=1.5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") + 
+  scale_y_continuous(limits = c(-0.4, 1.2)) +
+  labs(title = "Score difference",
+       y = "Mean Overall SDG Score difference",
+       x = "Year"
+       )+
+  theme(legend.position = "right", plot.title = element_text(size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8), legend.text = element_text(size= 8),legend.title = element_text(size= 10))
+
+(plot1 + plot2)
+```
+
+
+## Evolution over time
+
+
+```{r, message = FALSE, warning=FALSE, fig.height=2}
+#| echo: false
+
+binary2015 <- data_question2 %>% 
+  mutate(after2015 = ifelse(year > 2015, 1, 0)) %>%
+  filter(as.numeric(year)>=2009)
+data_after_2015 <- filter(binary2015, as.numeric(year) >= 2015)
+data_before_2016 <- filter(binary2015, as.numeric(year) <= 2015)
+
+plotly::plot_ly() %>%
+  plotly::add_trace(data = data_after_2015, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_after_2015)), type = 'scatter', mode = 'lines', line = list(color = 'blue'), name = "After 2015") %>%
+  plotly::add_trace(data = data_before_2016, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_before_2016)), type = 'scatter', mode = 'lines', line = list(color = 'red'), name = "Before 2015") %>%
+  plotly::layout(title = "Different patterns across SDGs before and after 2015",
+         xaxis = list(title = "Year"),
+         yaxis = list(title = "SDG achievement score", range = c(30, 90)),
+         shapes = list(
+           list(
+             type = 'line',
+             x0 = 2015,
+             x1 = 2015,
+             y0 = 0,
+             y1 = 1,
+             yref = 'paper',
+             line = list(color = 'grey', width = 2, dash = 'dot')
+           )
+         ),
+         updatemenus = list(
+           list(
+             buttons = list(
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(overallscore ~ year, data = data_after_2015)),
+                   ~fitted(lm(overallscore ~ year, data = data_before_2016))
+                 )),
+                 label = "Overall score",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal1 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal1 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 1: \nno poverty",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal2 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal2 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 2: \nzero hunger",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal3 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal3 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 3: good health \nand well-being",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal4 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal4 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 4: \nquality education",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal5 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal5 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 5: \ngender equality",
+                 method = "restyle"
+               ), 
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal6 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal6 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 6: clean water \nand sanitation",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal7 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal7 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 7: affordable \nand clean energy",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal8 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal8 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 8: decent work \nand economic growth",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal9 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal9 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 9: industry, innovation \nand infrastructure",
+                 method = "restyle"
+               ), 
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal10 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal10 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 10: \nreduced inequalities",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal11 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal11 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 11: sustainable \ncities and communities",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal12 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal12 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 12: responsible \nconsumption and production",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal13 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal13 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 13: \nclimate action",
+                 method = "restyle"
+               ), 
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal15 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal15 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 15: \nlife on earth",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal16 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal16 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 16: peace, justice \nand strong institutions",
+                 method = "restyle"
+               ),
+               list(
+                 args = list("y", list(
+                   ~fitted(lm(goal17 ~ year, data = data_after_2015)),
+                   ~fitted(lm(goal17 ~ year, data = data_before_2016))
+                 )),
+                 label = "Goal 17: partnerships \nfor the goals",
+                 method = "restyle"
+               )
+             )
+           )
+         )
+  )
+```
+
+
+## Influence of events- Influence of events over the SDG scores
+
+
+```{r, message=FALSE, warning=FALSE, fig.width=3, fig.height=3}
+
+source(here::here("scripts","Clean","setup.R"))
+data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
+data_question3_1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
+data_question3_2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+data_question3_3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
+Q3.1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
+Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+Q3.3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
+data <- read.csv(here("scripts", "data", "all_Merge.csv"))
+Correlation_overall <- data_question1 %>% 
+      dplyr::select(population:ef_regulation)
+
+lower.panel <- function(x, y, ...){
+   points(x, y, pch = 20, col = "darkgreen", cex = 0.2)
+}
+ 
+ panel.hist <- function(x, ...){
+   usr <- par("usr"); on.exit(par(usr))
+   par(usr = c(usr[1:2], 0, 1.5) )
+   h <- hist(x, plot = FALSE)
+   breaks <- h$breaks; nB <- length(breaks)
+   y <- h$counts; y <- y/max(y)
+   rect(breaks[-nB], 0, breaks[-1], y, col = "lightgreen", ...)
+   text(0.3, 0.3, cex = 0.2)
+ }
+ 
+ # panel.cor_stars function with stars alongside correlation coefficients
+ panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
+   usr <- par("usr"); on.exit(par(usr))
+   par(usr = c(0, 1, 0, 1))
+   r <- cor(x, y)
+   p_value <- cor.test (x,y)$p.value
+ 
+   if (p_value < 0.001){
+     stars <- "***"
+   } else if (p_value < 0.01) {
+     stars <- "**"
+   } else if (p_value < 0.05) {
+     stars <- "*"
+   } else {
+     stars <- ""
+   }
+   txt <- paste0(format(c(r, 0.123456789), digits = digits)[1], " ", stars)
+   if(missing(cex.cor)) cex.cor <- 0.6/strwidth(txt)
+   text(0.6, 0.6, txt, cex = cex.cor)
+ }
+```
+
+
+::: columns
+::: {.column width="33%"}
+
+```{r, message=FALSE, warning=FALSE, fig.width=7, fig.height=8}
+pairs(data_question3_1[, c("overallscore", "total_affected", "total_deaths")], upper.panel = panel.cor_stars,diag.panel = panel.hist,lower.panel = lower.panel, main = "Correlation table and distribution of Disaster variables", cex.main = 1.5)
+```
+
+:::
+
+::: {.column width="33%"}
+
+```{r, message=FALSE, warning=FALSE, fig.width=7, fig.height=8}
+
+pairs(data_question3_2[,c("overallscore", "cases_per_million", "deaths_per_million", "stringency")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel,main="Correlation table and distribution of COVID variables", cex.main = 1.5)
+```
+
+:::
+
+::: {.column width="33%"}
+
+```{r, message=FALSE, warning=FALSE, fig.width=7, fig.height=8}
+
+pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")], upper.panel = panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of conflicts variables", cex.main = 1.5)
+```
+
+:::
+:::
+
+## Influence of events- Influence of events over the SDG scores
+
+::: columns 
+::: {.column width="70%" style="margin-top: -35px;"}
+
+```{r, message=FALSE, warning=FALSE, fig.width=6, fig.height=2.5}
+
+library(ggplot2)
+
+disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "total_deaths")
+subset_data <- disaster_data[, relevant_columns]
+
+correlation_matrix_subset <- cor(subset_data[, c("total_affected", "total_deaths")], subset_data)
+
+cor_melted <- reshape2::melt(correlation_matrix_subset)
+names(cor_melted) <- c("Variable2", "Variable1", "Correlation")
+
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation", guide = guide_colorbar(title.position = "top", title.vjust = 0.5, title.theme = element_text(size = 7), label.theme = element_text(size = 5), key.height = unit(0.1, "cm"))) +
+  
+  theme_minimal() +
+  theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+         plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
+                                   vjust = 7, lineheight = 1.5, size = 9)
+  ) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between the climate disasters and the SDG goals in South and East Asia and North America')
+```
+
+:::
+
+::: {.column width="70%" style="margin-top: -35px; margin-bottom: -70px;"}
+
+```{r, message=FALSE, warning=FALSE, fig.width=6, fig.height=2.5}
+
+covid_filtered <- Q3.2
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
+subset_data <- covid_filtered[, relevant_columns]
+
+correlation_matrix_Covid <- cor(subset_data, subset_data[, c("stringency", "cases_per_million", "deaths_per_million")])
+
+cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+# Create the heatmap
+library(ggplot2)
+
+ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limit = c(-1, 1), space = "Lab",
+                       name = "Correlation", guide = guide_colorbar(title.position = "top", title.vjust = 0.5, title.theme = element_text(size = 7), label.theme = element_text(size = 5))) +
+  
+  theme_minimal() +
+  theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+         plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
+                                   vjust = 4, lineheight = 1.5, size = 9)
+  ) +
+  coord_fixed() +
+  labs(x = '', y = '',
+       title = 'Correlation between COVID and the SDG goals')
+```
+
+:::
+
+::: {.column width="100%" style="margin-top: -60px;"}
+<img src="Covid-2022-gap-year.png" height="190px" width="520" style="display: block; margin: 60px auto 0;"/>
+<h2 style="font-size: 16px;">Correlation between COVID-19 variables and the SDG goals with 1 year gap</h2>
+:::
+
+::: {.column width="100%" style="margin-top: -60px;"}
+<img src="Covid-Goal-9-Cases.png" height="180px" width="520" style="display: block; margin: 65px auto 0;"/>
+<h2 style="font-size: 16px;">Regressions for the Goal 9 with Cases per million variable in the COVID-19 dataset</h2>
+:::
+:::
+
+## Conclusion
+

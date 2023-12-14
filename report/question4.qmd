@@ -105,10 +105,7 @@ The biplot offers insightful visualization, clearly illustrating the relationshi
 
 Grouping Goal 12 (Responsible Consumption and Production) and Goal 13 (Climate Action) together is logical, as both pertain to environmental issues. It is, however, interesting to note the pairing of Goal 10 (Reduced Inequalities) with Goal 15 (Life on Land). This could be explained by the fact that Goal 10 (Reduced inequalities) is related to the reduction of inequalities within and among countries, while Goal 15 (Life on Land) is related to the protection, restoration and promotion of sustainable use of terrestrial ecosystems, sustainable manage forests, combat desertification, and halt and reverse land degradation and halt biodiversity loss. Therefore, it is possible that the respondents who are more concerned about the reduction of inequalities are also more concerned about the protection of the environment. But this is a stretched.
 
-/////////////////////////////////////////////////////////////////////////
-//////////////////////////////   WIP    /////////////////////////////////
-/////////////////////////////////////////////////////////////////////////
-
+We also performed a stepwise regression to see more precisely how the goals are correlated with each other. We use the forward selection with the `leaps` package.
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 #### Preparation of the data ####
@@ -120,207 +117,210 @@ goals_data <- data_4 %>%
 ```
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Overallscore ~ others ####
+#### Stepwise regression ####
 
-# Finding the best model
-leaps_o <- regsubsets(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_o, scale="adjr2") + theme_minimal()
+leaps_o <- regsubsets(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5 +
+                        goal6 + goal7 + goal8 + goal9 + goal10 + goal11 +
+                        goal12 + goal13 + goal15 + goal16 + goal17,
+                      data = goals_data, nbest=1, method = "forward")
+leaps_1 <- regsubsets(goal1 ~ goal2 + goal3 + goal4 + goal5 + goal6 + goal7 +
+                        goal8 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_2 <- regsubsets(goal2 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal7 +
+                        goal8 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_3 <- regsubsets(goal3 ~ goal1 + goal2 + goal4 + goal5 + goal6 + goal7 +
+                        goal8 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_4 <- regsubsets(goal4 ~ goal1 + goal2 + goal3 + goal5 + goal6 + goal7 +
+                        goal8 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_5 <- regsubsets(goal5 ~ goal1 + goal2 + goal3 + goal4 + goal6 + goal7 +
+                        goal8 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_6 <- regsubsets(goal6 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal7 +
+                        goal8 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_7 <- regsubsets(goal7 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                        goal8 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_8 <- regsubsets(goal8 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                        goal7 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_9 <- regsubsets(goal9 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                        goal7 + goal8 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_10 <- regsubsets(goal10 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                         goal7 + goal8 + goal9 + goal11 + goal12 + goal13 +
+                         goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                       method = "forward")
+leaps_11 <- regsubsets(goal11 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                         goal7 + goal8 + goal9 + goal10 + goal12 + goal13 +
+                         goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                       method = "forward")
+leaps_12 <- regsubsets(goal12 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                         goal7 + goal8 + goal9 + goal10 + goal11 + goal13 +
+                         goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                       method = "forward")
+leaps_13 <- regsubsets(goal13 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                         goal7 + goal8 + goal9 + goal10 + goal11 + goal12 +
+                         goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                       method = "forward")
+leaps_15 <- regsubsets(goal15 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                         goal7 + goal8 + goal9 + goal10 + goal11 + goal12 +
+                         goal13 + goal16 + goal17, data = goals_data, nbest=1,
+                       method = "forward")
+leaps_16 <- regsubsets(goal16 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                         goal7 + goal8 + goal9 + goal10 + goal11 + goal12 +
+                         goal13 + goal15 + goal17, data = goals_data, nbest=1,
+                       method = "forward")
+leaps_17 <- regsubsets(goal17 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                         goal7 + goal8 + goal9 + goal10 + goal11 + goal12 +
+                         goal13 + goal15 + goal16, data = goals_data, nbest=1,
+                       method = "forward")
+```
 
-# Analyzing the best model
-mod_o <- lm(overallscore ~ goal2 + goal3 + goal4 + goal6 + goal7 + goal10 + goal15 + goal17, data = goals_data)
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+#### Regression found with stepwise regression ####
+
+mod_o <- lm(
+  overallscore ~ goal2 + goal3 + goal4 + goal6 + goal7 + goal10 + goal15 + goal17,
+  data = goals_data)
+mod_1 <- lm(
+  goal1 ~ goal3 + goal4 + goal5 + goal6 + goal7 + goal9 + goal13 + goal17,
+  data = goals_data)
+mod_2 <- lm(
+  goal2 ~ goal4 + goal5 + goal6 + goal8 + goal9 + goal12 + goal16 + goal17,
+  data = goals_data)
+mod_3 <- lm(
+  goal3 ~ goal1 + goal4 + goal7 + goal8 + goal9 + goal11 + goal15 + goal16,
+  data = goals_data)
+mod_4 <- lm(
+  goal4 ~ goal1 + goal2 + goal3 + goal5 + goal7 + goal11 + goal16 + goal17,
+  data = goals_data)
+mod_5 <- lm(
+  goal5 ~ goal1 + goal4 + goal6 + goal9 + goal10 + goal11 + goal15 + goal17,
+  data = goals_data)
+mod_6 <- lm(
+  goal6 ~ goal1 + goal2 + goal3 + goal5 + goal8 + goal9 + goal11 + goal15,
+  data = goals_data)
+mod_7 <- lm(
+  goal7 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal8 + goal11 + goal13,
+  data = goals_data)
+mod_8 <- lm(
+  goal8 ~ goal2 + goal5 + goal6 + goal9 + goal10 + goal12 + goal15 + goal17,
+  data = goals_data)
+mod_9 <- lm(
+  goal9 ~ goal1 + goal2 + goal3 + goal8 + goal10 + goal12 + goal13 + goal17,
+  data = goals_data)
+mod_10 <- lm(
+  goal10 ~ goal1 + goal5 + goal9 + goal11 + goal13 + goal15 + goal16 + goal17,
+  data = goals_data)
+mod_11 <- lm(
+  goal11 ~ goal3 + goal4 + goal5 + goal6 + goal7 + goal10 + goal15 + goal16,
+  data = goals_data)
+mod_12 <- lm(
+  goal12 ~ goal2 + goal7 + goal8 + goal9 + goal13 + goal15 + goal16 + goal17,
+  data = goals_data)
+mod_13 <- lm(
+  goal13 ~ goal1 + goal5 + goal7 + goal9 + goal10 + goal12 + goal15 + goal16,
+  data = goals_data)
+mod_15 <- lm(
+  goal15 ~ goal3 + goal4 + goal5 + goal6 + goal10 + goal11 + goal12 + goal13,
+  data = goals_data)
+mod_16 <- lm(
+  goal16 ~ goal2 + goal3 + goal4 + goal10 + goal11 + goal12 + goal13 + goal17,
+  data = goals_data)
+mod_17 <- lm(
+  goal17 ~ goal1 + goal5 + goal8 + goal9 + goal10 + goal11 + goal12 + goal16,
+  data = goals_data)
+```
+
+Below, we create a graph to present our different model that the stepwise regression chose as best regression for each of our goals. As expected, the model that explain the variable overallscore is explained by the other goals at a similar coefficient for each of our goals. This make sense since the overallscore has been directly calculated with the 17 scores. 
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+library('broom')
+# Create a dataframe of tidy models
+model_list <-
+  list(mod_o, mod_1, mod_2, mod_3, mod_4, mod_5,
+                   mod_6, mod_7, mod_8, mod_9, mod_10, mod_11,
+                   mod_12, mod_13, mod_15, mod_16, mod_17)
+
+models_tidy <-
+  lapply(model_list, tidy)
+
+names(models_tidy) <-
+  c("Overallscore ~others", "Goal1 ~ others", "Goal2 ~ others",
+    "Goal3 ~ others", "Goal4 ~ others", "Goal5 ~ others", "Goal6 ~ others",
+    "Goal7 ~ others", "Goal8 ~ others", "Goal9 ~ others", "Goal10 ~ others",
+    "Goal11 ~ others", "Goal12 ~ others", "Goal13 ~ others", "Goal15 ~ others",
+    "Goal16 ~ others", "Goal17 ~ others")
+
+# Combine into a single dataframe
+df_tidy <-
+  do.call(rbind,
+          lapply(names(models_tidy),
+                 function(x) cbind(models_tidy[[x]], Model=x)))
+
+# Assuming 'p.value' is the column name for p-values in your dataframe
+significance_level <- 0.05
+
+# Filter for significant p-values
+df_tidy_significant <-
+  df_tidy[df_tidy$p.value < significance_level, ]
+
+# Plot
+ggplot(df_tidy_significant,
+       aes(x = Model,
+           y = estimate,
+           color = term)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = estimate - std.error,
+                    ymax = estimate + std.error),
+                width = 0.2) +
+  ylim(-1, 1) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "right", # You can change the position if needed
+        legend.text = element_text(size = 5), # Adjust text size
+        legend.title = element_text(size = 7), # Adjust title size
+        legend.key.size = unit(0.3, "cm")) +  # Adjust key size) +
+  labs(title = "Coefficient Plot of Regression Models",
+       x = "Models",
+       y = "Estimates")
+```
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+
 plot(mod_o, which = 1)
-vif(mod_o)
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal1 ~ others ####
-
-# Finding the best model
-leaps_1 <- regsubsets(goal1 ~ goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_1, scale="adjr2") + theme_minimal()
-
-# Analyzing the best model
-mod_1 <- lm(overallscore ~ goal3 + goal4 + goal5 + goal6 + goal7 + goal9 + goal13 + goal17, data = goals_data)
 plot(mod_1, which = 1)
-vif(mod_1)
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal2 ~ others ####
-
-# Finding the best model
-leaps_2 <- regsubsets(goal2 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_2, scale="adjr2") + theme_minimal()
-```
-
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal3 ~ others ####
-
-# Finding the best model
-leaps_3 <- regsubsets(goal3 ~ goal1 + goal2 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_3, scale="adjr2") + theme_minimal()
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal4 ~ others ####
-
-# Finding the best model
-leaps_4 <- regsubsets(goal4 ~ goal1 + goal2 + goal3 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_4, scale="adjr2") + theme_minimal()
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal5 ~ others ####
-
-# Finding the best model
-leaps_5 <- regsubsets(goal5 ~ goal1 + goal2 + goal3 + goal4 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_5, scale="adjr2") + theme_minimal()
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal6 ~ others ####
-
-# Finding the best model
-leaps_6 <- regsubsets(goal6 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_6, scale="adjr2") + theme_minimal()
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal7 ~ others ####
-
-# Finding the best model
-leaps_7 <- regsubsets(goal7 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_7, scale="adjr2") + theme_minimal()
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal8 ~ others ####
-
-# Finding the best model
-leaps_8 <- regsubsets(goal8 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_8, scale="adjr2") + theme_minimal()
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal9 ~ others ####
-
-# Finding the best model
-leaps_9 <- regsubsets(goal9 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_9, scale="adjr2") + theme_minimal()
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal10 ~ others ####
-
-# Finding the best model
-leaps_10 <- regsubsets(goal10 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_10, scale="adjr2") + theme_minimal()
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal11 ~ others ####
-
-# Finding the best model
-leaps_11 <- regsubsets(goal11 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_11, scale="adjr2") + theme_minimal()
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal12 ~ others ####
-
-# Finding the best model
-leaps_12 <- regsubsets(goal12 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal13 + goal15 + goal16 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_12, scale="adjr2") + theme_minimal()
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal13 ~ others ####
-
-# Finding the best model
-leaps_13 <- regsubsets(goal13 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal15 + goal16 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_13, scale="adjr2") + theme_minimal()
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal15 ~ others ####
-
-# Finding the best model
-leaps_15 <- regsubsets(goal15 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal16 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_15, scale="adjr2") + theme_minimal()
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal16 ~ others ####
-
-# Finding the best model
-leaps_16 <- regsubsets(goal16 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal17, data = goals_data, nbest=1, method = "forward")
-plot(leaps_16, scale="adjr2") + theme_minimal()
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Goal17 ~ others ####
-
-# Finding the best model
-leaps_17 <- regsubsets(goal17 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16, data = goals_data, nbest=1, method = "forward")
-plot(leaps_17, scale="adjr2") + theme_minimal()
-```
-
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-
-# library(leaps)
-# leaps_1 <- regsubsets(goal1 ~ goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17,data=goals_data, method="forward", nbest=1)
-# 
-# summary(leaps_1)
-# plot(leaps_1,scale="adjr2") + theme_minimal()
+plot(mod_2, which = 1)
+plot(mod_3, which = 1)
+plot(mod_4, which = 1)
+plot(mod_5, which = 1)
+plot(mod_6, which = 1)
+plot(mod_7, which = 1)
+plot(mod_8, which = 1)
+plot(mod_9, which = 1)
+plot(mod_10, which = 1)
+plot(mod_11, which = 1)
+plot(mod_12, which = 1)
+plot(mod_13, which = 1)
+plot(mod_15, which = 1)
+plot(mod_16, which = 1)
+plot(mod_17, which = 1)
 ```
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 
-# fit_2 <- lm(goal2 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data)
-# plot(fit_2)
-# 
-# leaps_2 <- regsubsets(goal2 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17,data=goals_data, nbest=10, method="backward")
-# plot(leaps_2,scale="adjr2")
+
 ```
-
-```{r}
-
-# STEP
-# lm_1_n <- lm(goal1 ~ 1, data = goals_data)
-# lm_1_f <- lm(goal1 ~ goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data)
-# step_1 <- step(lm_1_n, scope = list(lower = lm_1_n, upper = lm_1_f), direction = "forward")
-# plot(step_1)
-# summary(step_1)
-# vif(step_1)
-
-# LEAPS
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-# lm_o_n <- lm(overallscore ~ 1, data = goals_data)
-# lm_o_f <- lm(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5
-#                       + goal6 + goal7 + goal8 + goal9 + goal10 + goal11
-#                       + goal12 + goal13 + goal15 + goal16 + goal17,
-#              data = goals_data)
-# step_o <- step(lm_o_n, scope = list(lower = lm_o_n, upper = lm_o_f))
-# leaps_o <- regsubsets(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5
-#                       + goal6 + goal7 + goal8 + goal9 + goal10 + goal11
-#                       + goal12 + goal13 + goal15 + goal16 + goal17,
-#                       data=goals_data, nbest=16, method="backward")
-# plot(leaps_o,scale="adjr2") + theme_minimal()
-# summary(leaps_o)$adjr2
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Overallscore ~ others ####
-
-# lm_o_n <- lm(overallscore ~ 1, data = goals_data)
-# lm_o_f <- lm(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data)
-# step_o <- step(lm_o_n, scope = list(lower = lm_o_n, upper = lm_o_f), direction = "forward")
-# plot(step_o)
-# summary(step_o)
-```
-
 

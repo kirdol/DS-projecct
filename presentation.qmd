@@ -929,8 +929,8 @@ pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected
 ## Influence of events- Influence of events over the SDG scores
 
 ::: columns 
-::: {.column width="70%" style="margin-top: -40px;"}
-```{r, message=FALSE, warning=FALSE, fig.width=6, fig.height=4}
+::: {.column width="70%" style="margin-top: -35px;"}
+```{r, message=FALSE, warning=FALSE, fig.width=6, fig.height=2.5}
 
 library(ggplot2)
 
@@ -950,10 +950,10 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
                        name = "Correlation", guide = guide_colorbar(title.position = "top", title.vjust = 0.5, title.theme = element_text(size = 7), label.theme = element_text(size = 5), key.height = unit(0.1, "cm"))) +
   
   theme_minimal() +
-  theme( axis.text.x = element_text(angle = 45, size = 7, hjust = 1),
-         axis.text.y = element_text(vjust = 1, size = 7, hjust = 1),
+  theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
          plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
-                                   vjust = 8, lineheight = 1.5, size = 8)
+                                   vjust = 7, lineheight = 1.5, size = 9)
   ) +
   coord_fixed() +
   labs(x = '', y = '',
@@ -961,14 +961,14 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
 ```
 :::
 
-::: {.column width="70%" style="margin-top: -40px;"}
-```{r, message=FALSE, warning=FALSE, fig.width=6, fig.height=4}
+::: {.column width="70%" style="margin-top: -35px; margin-bottom: -70px;"}
+```{r, message=FALSE, warning=FALSE, fig.width=6, fig.height=2.5}
 
 covid_filtered <- Q3.2
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
 subset_data <- covid_filtered[, relevant_columns]
 
-correlation_matrix_Covid <- cor(subset_data, subset_data[, c("stringency", "cases_per_million", "deaths_per_million")])
+correlation_matrix_Covid <- cor(subset_data, subset_data[, c("stringency", "cases_per_million", "deaths_per_million")], method = "spearman")
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
@@ -983,10 +983,10 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
                        name = "Correlation", guide = guide_colorbar(title.position = "top", title.vjust = 0.5, title.theme = element_text(size = 7), label.theme = element_text(size = 5))) +
   
   theme_minimal() +
-  theme( axis.text.x = element_text(angle = 45, size = 7, hjust = 1),
-         axis.text.y = element_text(vjust = 1, size = 7, hjust = 1),
+  theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
          plot.title = element_text(margin = margin(b = 20), hjust = 0.5, 
-                                   vjust = 5, lineheight = 1.5, size = 8)
+                                   vjust = 4, lineheight = 1.5, size = 9)
   ) +
   coord_fixed() +
   labs(x = '', y = '',
@@ -994,14 +994,14 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
 ```
 :::
 
-::: {.column width="70%" style="margin-top: -118px;"}
-<img src="Covid-2022-gap-year.png" height="200px" width="520" style="display: block; margin: 20px auto 0;"/>
-<h2 style="font-size: 24px;">Correlation between COVID-19 variables and the SDG goals with 1 year gap</h2>
+::: {.column width="100%" style="margin-top: -60px;"}
+<img src="Covid-2022-gap-year.png" height="190px" width="520" style="display: block; margin: 60px auto 0;"/>
+<h2 style="font-size: 16px;">Correlation between COVID-19 variables and the SDG goals with 1 year gap</h2>
 :::
 
-::: {.column width="70%" style="margin-top: -118px;"}
-<img src="Covid-Goal-9-Cases.png" height="200px" width="520" style="display: block; margin: 10px auto 0;"/>
-<h2 style="font-size: 24px;">Regressions for the Goal 9 depending on the Cases per million variable in the COVID-19 dataset</h2>
+::: {.column width="100%" style="margin-top: -60px;"}
+<img src="Covid-Goal-9-Cases.png" height="180px" width="520" style="display: block; margin: 65px auto 0;"/>
+<h2 style="font-size: 16px;">Regressions for the Goal 9 with Cases per million variable in the COVID-19 dataset</h2>
 :::
 :::
 

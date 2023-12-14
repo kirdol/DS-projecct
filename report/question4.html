@@ -185,7 +185,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The biplot offers insightful visualization, clearly illustrating the relationship between the various goals and the first two components. Notably, Dimension 2 exhibits a strong correlation with Goals 10 (Reduced inequalities) and 15 (Life on Land), whereas the remaining goals show a moderate to high correlation with Dimension 1. Furthermore, an interesting pattern emerges, revealing three distinct groups of variables, each playing a unique role. One group comprises Goals 12 (Responsible Consumption and Production) and 13 (Climate Action), another encompasses Goals 10 (Reduced inequalities) and 15 (Life on Land), and the third group includes all other variables. This categorization aids in understanding the distinct influences and interactions among the goals.</p>
 <p>Grouping Goal 12 (Responsible Consumption and Production) and Goal 13 (Climate Action) together is logical, as both pertain to environmental issues. It is, however, interesting to note the pairing of Goal 10 (Reduced Inequalities) with Goal 15 (Life on Land). This could be explained by the fact that Goal 10 (Reduced inequalities) is related to the reduction of inequalities within and among countries, while Goal 15 (Life on Land) is related to the protection, restoration and promotion of sustainable use of terrestrial ecosystems, sustainable manage forests, combat desertification, and halt and reverse land degradation and halt biodiversity loss. Therefore, it is possible that the respondents who are more concerned about the reduction of inequalities are also more concerned about the protection of the environment. But this is a stretched.</p>
-<p>///////////////////////////////////////////////////////////////////////// ////////////////////////////// WIP ///////////////////////////////// /////////////////////////////////////////////////////////////////////////</p>
+<p>We also performed a stepwise regression to see more precisely how the goals are correlated with each other. We use the forward selection with the <code>leaps</code> package.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Preparation of the data ####</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -195,70 +195,182 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                goal13, goal15, goal16, goal17)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Overallscore ~ others ####</span></span>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Stepwise regression ####</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>leaps_o <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(overallscore <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_o, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>mod_o <span class="ot">&lt;-</span> <span class="fu">lm</span>(overallscore <span class="sc">~</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal10 <span class="sc">+</span> goal15 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_o, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_o)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal2  goal3  goal4  goal6  goal7 goal10 goal15 goal17 </span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1.77   7.11   4.00   4.20   4.56   1.34   1.16   1.48</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>leaps_o <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(overallscore <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                        goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                        goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>leaps_1 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal1 <span class="sc">~</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                        goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>leaps_2 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal2 <span class="sc">~</span> goal1 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                        goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>leaps_3 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal3 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>                        goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>leaps_4 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal4 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>                        goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>leaps_5 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal5 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>                        goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>leaps_6 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal6 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal7 <span class="sc">+</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>                        goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>leaps_7 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal7 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>                        goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>leaps_8 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal8 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>                        goal7 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>leaps_9 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal9 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>                        goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>leaps_10 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal10 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>                         goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>                         goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>leaps_11 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal11 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>                         goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>                         goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>leaps_12 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal12 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>                         goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>                         goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>leaps_13 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal13 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>                         goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>                         goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>leaps_15 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal15 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>                         goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>                         goal13 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>leaps_16 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal16 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>                         goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>                         goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>leaps_17 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal17 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>                         goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>                         goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"forward"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal1 ~ others ####</span></span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Regression found with stepwise regression ####</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>leaps_1 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal1 <span class="sc">~</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_1, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyzing the best model</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>mod_1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(overallscore <span class="sc">~</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal9 <span class="sc">+</span> goal13 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_1, <span class="at">which =</span> <span class="dv">1</span>)</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">vif</span>(mod_1)</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  goal3  goal4  goal5  goal6  goal7  goal9 goal13 goal17 </span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   8.02   4.25   2.28   4.05   4.68   4.34   2.32   1.52</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>mod_o <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  overallscore <span class="sc">~</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal10 <span class="sc">+</span> goal15 <span class="sc">+</span> goal17,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>mod_1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  goal1 <span class="sc">~</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal9 <span class="sc">+</span> goal13 <span class="sc">+</span> goal17,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>mod_2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  goal2 <span class="sc">~</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal12 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>mod_3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  goal3 <span class="sc">~</span> goal1 <span class="sc">+</span> goal4 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal11 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>mod_4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  goal4 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal5 <span class="sc">+</span> goal7 <span class="sc">+</span> goal11 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>mod_5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  goal5 <span class="sc">~</span> goal1 <span class="sc">+</span> goal4 <span class="sc">+</span> goal6 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal15 <span class="sc">+</span> goal17,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>mod_6 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  goal6 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal5 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal11 <span class="sc">+</span> goal15,</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>mod_7 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  goal7 <span class="sc">~</span> goal1 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal8 <span class="sc">+</span> goal11 <span class="sc">+</span> goal13,</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>mod_8 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  goal8 <span class="sc">~</span> goal2 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal12 <span class="sc">+</span> goal15 <span class="sc">+</span> goal17,</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>mod_9 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  goal9 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal8 <span class="sc">+</span> goal10 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal17,</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>mod_10 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  goal10 <span class="sc">~</span> goal1 <span class="sc">+</span> goal5 <span class="sc">+</span> goal9 <span class="sc">+</span> goal11 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17,</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>mod_11 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  goal11 <span class="sc">~</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal10 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16,</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>mod_12 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>  goal12 <span class="sc">~</span> goal2 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17,</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>mod_13 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>  goal13 <span class="sc">~</span> goal1 <span class="sc">+</span> goal5 <span class="sc">+</span> goal7 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal12 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16,</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>mod_15 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>  goal15 <span class="sc">~</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13,</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>mod_16 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>  goal16 <span class="sc">~</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal17,</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>mod_17 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>  goal17 <span class="sc">~</span> goal1 <span class="sc">+</span> goal5 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal16,</span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-</div>
+<p>Below, we create a graph to present our different model that the stepwise regression chose as best regression for each of our goals. As expected, the model that explain the variable overallscore is explained by the other goals at a similar coefficient for each of our goals. This make sense since the overallscore has been directly calculated with the 17 scores.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal2 ~ others ####</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>leaps_2 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal2 <span class="sc">~</span> goal1 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_2, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">'broom'</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a dataframe of tidy models</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>model_list <span class="ot">&lt;-</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(mod_o, mod_1, mod_2, mod_3, mod_4, mod_5,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                   mod_6, mod_7, mod_8, mod_9, mod_10, mod_11,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                   mod_12, mod_13, mod_15, mod_16, mod_17)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>models_tidy <span class="ot">&lt;-</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(model_list, tidy)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(models_tidy) <span class="ot">&lt;-</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"Overallscore ~others"</span>, <span class="st">"Goal1 ~ others"</span>, <span class="st">"Goal2 ~ others"</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Goal3 ~ others"</span>, <span class="st">"Goal4 ~ others"</span>, <span class="st">"Goal5 ~ others"</span>, <span class="st">"Goal6 ~ others"</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Goal7 ~ others"</span>, <span class="st">"Goal8 ~ others"</span>, <span class="st">"Goal9 ~ others"</span>, <span class="st">"Goal10 ~ others"</span>,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Goal11 ~ others"</span>, <span class="st">"Goal12 ~ others"</span>, <span class="st">"Goal13 ~ others"</span>, <span class="st">"Goal15 ~ others"</span>,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Goal16 ~ others"</span>, <span class="st">"Goal17 ~ others"</span>)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine into a single dataframe</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>df_tidy <span class="ot">&lt;-</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(rbind,</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>          <span class="fu">lapply</span>(<span class="fu">names</span>(models_tidy),</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>                 <span class="cf">function</span>(x) <span class="fu">cbind</span>(models_tidy[[x]], <span class="at">Model=</span>x)))</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming 'p.value' is the column name for p-values in your dataframe</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>significance_level <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for significant p-values</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>df_tidy_significant <span class="ot">&lt;-</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>  df_tidy[df_tidy<span class="sc">$</span>p.value <span class="sc">&lt;</span> significance_level, ]</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_tidy_significant,</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> Model,</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> estimate,</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> term)) <span class="sc">+</span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> estimate <span class="sc">-</span> std.error,</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> estimate <span class="sc">+</span> std.error),</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"right"</span>, <span class="co"># You can change the position if needed</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">5</span>), <span class="co"># Adjust text size</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>), <span class="co"># Adjust title size</span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.3</span>, <span class="st">"cm"</span>)) <span class="sc">+</span>  <span class="co"># Adjust key size) +</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Coefficient Plot of Regression Models"</span>,</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Models"</span>,</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Estimates"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -268,12 +380,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal3 ~ others ####</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>leaps_3 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal3 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_3, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_o, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_1, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_2, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_3, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_4, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_5, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_6, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_7, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_8, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_9, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_10, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_11, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_12, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_13, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_15, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_16, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_17, <span class="at">which =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -281,240 +405,118 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal4 ~ others ####</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>leaps_4 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal4 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_4, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="question4_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal5 ~ others ####</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>leaps_5 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal5 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_5, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="question4_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal6 ~ others ####</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>leaps_6 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal6 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_6, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="question4_files/figure-html/unnamed-chunk-11-4.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal7 ~ others ####</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>leaps_7 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal7 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_7, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="question4_files/figure-html/unnamed-chunk-11-5.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal8 ~ others ####</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>leaps_8 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal8 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_8, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="question4_files/figure-html/unnamed-chunk-11-6.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal9 ~ others ####</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>leaps_9 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal9 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_9, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="question4_files/figure-html/unnamed-chunk-11-7.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal10 ~ others ####</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>leaps_10 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal10 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_10, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="question4_files/figure-html/unnamed-chunk-11-8.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal11 ~ others ####</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>leaps_11 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal11 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_11, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="question4_files/figure-html/unnamed-chunk-11-9.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal12 ~ others ####</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>leaps_12 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal12 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_12, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="question4_files/figure-html/unnamed-chunk-11-10.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal13 ~ others ####</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>leaps_13 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal13 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_13, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="question4_files/figure-html/unnamed-chunk-11-11.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal15 ~ others ####</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>leaps_15 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal15 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_15, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="question4_files/figure-html/unnamed-chunk-11-12.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal16 ~ others ####</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>leaps_16 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal16 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_16, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="question4_files/figure-html/unnamed-chunk-11-13.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Goal17 ~ others ####</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Finding the best model</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>leaps_17 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal17 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(leaps_17, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="question4_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="question4_files/figure-html/unnamed-chunk-11-14.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-15.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
 </div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># library(leaps)</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># leaps_1 &lt;- regsubsets(goal1 ~ goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17,data=goals_data, method="forward", nbest=1)</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(leaps_1)</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(leaps_1,scale="adjr2") + theme_minimal()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># fit_2 &lt;- lm(goal2 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data)</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(fit_2)</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># leaps_2 &lt;- regsubsets(goal2 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17,data=goals_data, nbest=10, method="backward")</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(leaps_2,scale="adjr2")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-16.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
 </div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lm_o_n &lt;- lm(overallscore ~ 1, data = goals_data)</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># lm_o_f &lt;- lm(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                       + goal6 + goal7 + goal8 + goal9 + goal10 + goal11</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">#                       + goal12 + goal13 + goal15 + goal16 + goal17,</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">#              data = goals_data)</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># step_o &lt;- step(lm_o_n, scope = list(lower = lm_o_n, upper = lm_o_f))</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># leaps_o &lt;- regsubsets(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co">#                       + goal6 + goal7 + goal8 + goal9 + goal10 + goal11</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co">#                       + goal12 + goal13 + goal15 + goal16 + goal17,</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co">#                       data=goals_data, nbest=16, method="backward")</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(leaps_o,scale="adjr2") + theme_minimal()</span></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(leaps_o)$adjr2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Overallscore ~ others ####</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># lm_o_n &lt;- lm(overallscore ~ 1, data = goals_data)</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># lm_o_f &lt;- lm(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 + goal7 + goal8 + goal9 + goal10 + goal11 + goal12 + goal13 + goal15 + goal16 + goal17, data = goals_data)</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co"># step_o &lt;- step(lm_o_n, scope = list(lower = lm_o_n, upper = lm_o_f), direction = "forward")</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(step_o)</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(step_o)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-17.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 </section>
