@@ -1032,4 +1032,3 @@ ggplot(data = cor_melted, aes(Variable1, Variable2, fill = Correlation)) +
     <li>Increased adoption of SDGs encourages greater partnerships across the goals, particularly aligning with Goal 16.</li>
     <li>Goal 9 (industry, innovation, and infrastructure) shows a faster rate of advancement compared to other goals.</li>
 </ul>
-
