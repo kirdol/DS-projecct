@@ -10,6 +10,7 @@ format:
   revealjs:
     footer: "Comparative Analysis of SDG Implementation Evolution Worldwide"
     transition: fade
+    self-contained: true
 #format: beamer
 #format: pptx
 ---
