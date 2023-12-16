@@ -1,0 +1,10 @@
+---
+title: "Comparative Analysis of SDG Implementation Evolution Worldwide"
+author: "Lodrik Adam, Sofia Benczédi, Stefan Favre, Delia Fuchs"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+code-folding: true
+---
+
+```{r child = c('intro_test_Lodrik.Rmd','data_test_Lodrik.Rmd','eda_test_Lodrik.Rmd')}
+```

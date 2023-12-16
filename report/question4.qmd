@@ -48,10 +48,7 @@ melted_corr_4 <- melt(spearman_corr_4, na.rm = TRUE)
 ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
     geom_tile() +
     geom_text(aes(label = sprintf("%.2f", value)), vjust = 0.5, size=2.5) + # Adding text
-    scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                         midpoint = 0, limit = c(-1,1), space = "Lab", 
-                         name="Spearman\nCorrelation",
-                         na.value = "grey") +
+    scale_fill_viridis_c(name = "Spearman\nCorrelation", na.value = "white", direction = 1, begin = 0.2, end = 1) +
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
     labs(title = "Heatmap of Spearman Correlations for Goals", 
