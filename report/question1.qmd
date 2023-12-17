@@ -375,16 +375,20 @@ data_Q1_Oceania_HFI_long <- data_Q1_Oceania_HFI_long %>%
 # merge all medians 
 medians_all_HFI <- rbind(data_Q1_Oceania_HFI_long, data_Q1_Americas_HFI_long,data_Q1_Africa_HFI_long,data_Q1_Asia_HFI_long,data_Q1_Europe_HFI_long)
 
-medians_all_HFI$color <- ifelse(medians_all_HFI$median_value > 7.5, "lightgreen", 
-                        ifelse(medians_all_HFI$median_value < 2.5, "red3", 'lightblue3'))
+medians_all_HFI$color <- ifelse(medians_all_HFI$median_value > 7.5, "3", 
+                        ifelse(medians_all_HFI$median_value < 2.5, "2", '1'))
 
 bandwidth_nrd_HFI <- bw.nrd(medians_all_HFI$value)
 
 # Create the plot
 ggplot(medians_all_HFI, aes(x = variable, y = value, fill = color)) +
   geom_violin(trim = FALSE, bw = bandwidth_nrd_HFI) +
-  scale_fill_manual(values = c("lightgreen" = "lightgreen", "red3" = "red3", "lightblue3" = "lightblue3"),
-                    labels = c("between", ">7.5", "<2.5")) + 
+  scale_fill_viridis_d(name = "",
+                       option = "D",
+                       direction = -1,
+                       labels = c("between",
+                                  "> 7.5",
+                                  "< 2.5")) +
   labs(title = "Human Freedom Index Scores Distribution by Continent", x = "Variables", y = "Scores", fill = "Score Category") +
   facet_grid(continent ~ ., scales = "free_y") +
   scale_y_continuous(labels = scales::label_number()) +
@@ -413,9 +417,10 @@ cor_melted <- # wide to long transformation
 
 ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   geom_tile() +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
-                       name="Spearman\nCorrelation") +
+  scale_fill_viridis_c(name = "Spearman\nCorrelation",
+                       direction = 1,
+                       begin = 0,
+                       end = 1) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 6, hjust = 1),
         axis.text.y = element_text(size = 6),
@@ -434,7 +439,12 @@ In order to have an overview of the relationship between our independent variabl
 #### Spearman's correlation coeff ####
 
 lower.panel <- function(x, y, ...){
-   points(x, y, pch = 20, col = "darkgreen", cex = 0.2)
+   points(x,
+          y,
+          pch = 20,
+          cex = 0.2,
+          col = viridis(1, option = "D",
+                        begin = 0.5))
 }
  
  panel.hist <- function(x, ...){
@@ -443,7 +453,9 @@ lower.panel <- function(x, y, ...){
    h <- hist(x, plot = FALSE)
    breaks <- h$breaks; nB <- length(breaks)
    y <- h$counts; y <- y/max(y)
-   rect(breaks[-nB], 0, breaks[-1], y, col = "lightgreen", ...)
+   rect(breaks[-nB], 0, breaks[-1], y, col = viridis(10,
+                                                     option = "D", 
+                                                     begin = 0.4), ...)
  }
  
  # panel.cor_stars function with stars alongside correlation coefficients
@@ -507,9 +519,11 @@ ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   geom_text(aes(label = ifelse(!is.na(value) & abs(value) > 0.75, sprintf("%.2f", value), '')),
             color = "black", size = 2) +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
-                       midpoint = 0, limit = c(-1, 1), space = "Lab",
-                       name = "Spearman\nCorrelation") +
+  scale_fill_viridis_c(name = "Spearman\nCorrelation",
+                       na.value = "white",
+                       direction = 1,
+                       begin = 0.1,
+                       end = 1) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.text.y = element_text(angle = 45, hjust = 1)) +
@@ -533,9 +547,11 @@ ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   geom_text(aes(label = ifelse(!is.na(value) & abs(value) > 0.75, sprintf("%.2f", value), '')),
             color = "black", size = 1.7) +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
-                       midpoint = 0, limit = c(-1, 1), space = "Lab",
-                       name = "Spearman\nCorrelation") +
+  scale_fill_viridis_c(name = "Spearman\nCorrelation",
+                       na.value = "white",
+                       direction = 1,
+                       begin = 0.1,
+                       end = 1) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.text.y = element_text(angle = 45, hjust = 1)) +
@@ -554,7 +570,15 @@ In order to have a look at the influence of some factors over our dependent vari
 
 myPCA_s <- PCA(data_question1[,29:40], graph = FALSE)
 fviz_eig(myPCA_s,
-         addlabels = TRUE) +
+         addlabels = TRUE,
+         linecolor = viridis(1,
+                             option = "B",
+                             begin = 0.5),
+         barcolor = "black",
+         barfill = viridis(10,
+                           option = "D",
+                           begin = 0,
+                           end = 0.8)) +
   theme_minimal()
 
 summary(myPCA_s)
@@ -562,9 +586,12 @@ summary(myPCA_s)
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### PCA Biplot ####
+
 fviz_pca_biplot(myPCA_s,
                 label="var",
-                col.var="dodgerblue3",
+                col.var = viridis(1,
+                                  option = "D",
+                                  begin = 0.5),
                 geom="point",
                 pointsize = 0.1,
                 labelsize = 5) +
@@ -576,7 +603,8 @@ Now concerning the Human Freedom Index scores, most of the variables are positiv
 Let's try now to conduct a cluster analysis, using the Kmean method.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-data_kmean_country <- data_question1 %>% dplyr::select(-c(X,code,year,continent,region, population))
+data_kmean_country <- data_question1 %>%
+  dplyr::select(-c(X,code,year,continent,region, population))
 
 #filter data different than 0 and dropping observations 
 filtered_data <- data_kmean_country %>%
@@ -595,11 +623,19 @@ means_by_country <- scale_by_country %>% #mean by country
 rownames(means_by_country) <- seq_along(row.names(means_by_country))
 
 # Your existing elbow plot
-elbow_plot <- fviz_nbclust(means_by_country[,-1], kmeans, method="wss", linecolor = "steelblue")
+elbow_plot <- fviz_nbclust(means_by_country[,-1],
+                           kmeans,
+                           method="wss",
+                           linecolor = viridis(1,
+                                               begin = 0.5))
 
 # Add a vertical line at the elbow point (4 clusters)
 elbow_plot_with_line <- elbow_plot + 
-  geom_vline(xintercept=4, linetype="dashed", color="red")
+  geom_vline(xintercept=4,
+             linetype="dashed",
+             color = viridis(1,
+                             option = "B",
+                             begin = 0.5))
 
 print(elbow_plot_with_line)
 ```
@@ -607,8 +643,17 @@ print(elbow_plot_with_line)
 After adapting the data for conducting our cluster analysis, we can see that according the the elbow method that we would only need 4 clusters in our analysis.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-kmean <- kmeans(means_by_country[,-1], 4, nstart = 25)
-fviz_cluster(kmean, data=means_by_country[,-1], repel=FALSE, depth =NULL, ellipse.type = "norm", labelsize = 10, pointsize = 0.5)
+kmean <- kmeans(means_by_country[,-1],
+                4,
+                nstart = 25)
+
+fviz_cluster(kmean,
+             data = means_by_country[,-1],
+             repel=FALSE,
+             depth =NULL,
+             ellipse.type = "norm",
+             labelsize = 10,
+             pointsize = 0.5)
 ```
 
 Our cluster analysis gives us one principal cluster (here in purple) --\> CENTERED ON 0 BECAUSE AFTER DATA SCALED-\> REALLY SMALL VALUES --\> HOW TO DEAL WITH IT? I TRIED TO TAKE ONLY HFI INTO ACCOUNT BUT NOT WORKING NEITHER. STILL CENTERED ON 0.
