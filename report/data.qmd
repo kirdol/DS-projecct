@@ -373,7 +373,7 @@ D8_0_Conflicts_table_info %>%
 
 ### Pre-cleaning
 
-To accommodate the large scale of the datasets, we pre-cleaned each one prior to merging. This streamlined the process, simplifying the cleaning of the final, combined dataset. The treatment of missing values wil be taken care of after merging our datasets.
+To deal with the large scale of the datasets, we pre-cleaned each one prior to merging. This streamlined the process, simplifying the cleaning of the final, combined dataset. The treatment of missing values will be taken care of after merging our datasets.
 
 #### Dataset on SDG
 
