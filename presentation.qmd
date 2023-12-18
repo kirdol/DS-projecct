@@ -10,6 +10,7 @@ format:
   revealjs:
     footer: "Comparative Analysis of SDG Implementation Evolution Worldwide"
     transition: fade
+    embed-resources: true
 #format: beamer
 #format: pptx
 ---
@@ -25,11 +26,7 @@ format:
 
 3.  How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
 
-4.  How are the different SDGs linked?
-
-5.  How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?
-
-6.  Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crisis and natural disasters?
+4.  Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crisis and natural disasters?
 :::
 
 ## Main dataset {.smaller}
@@ -120,187 +117,6 @@ plot_ly(
 -   Match datasets by key = (country, year)
 :::
 
-##  {.smaller}
-
-### Data wrangling
-
-::: incremental
--   Match datasets by key = (country, year)
--   Delete columns, then rows with too much NAs
-:::
-
-##  {.smaller}
-
-### Data wrangling
-
--   Match datasets by key = (country, year)
--   Delete columns, then rows with too much NAs
-
-::: {.columns style="margin-bottom: 0px;"}
-::: {.column width="55%" style="margin-bottom: 0px;"}
-```{r, message = FALSE, warning=FALSE, fig.height=4.2}
-#| echo: false
-all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
-data_question1 <- all_Merge %>%
-  filter(year<=2020) %>%
-  select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected,
-            total_damages, cases_per_million, deaths_per_million, stringency,
-            ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
-
-variable_names <- names(data_question1)
-missing_percentages <-
-  sapply(data_question1, function(col) mean(is.na(col)) * 100)
-
-missing_data_summary <- data.frame(
-  Variable = variable_names,
-  Missing_Percentage = missing_percentages
-)
-
-missing_data_summary <- missing_data_summary %>%
-  mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))%>%
-  filter(missing_percentages!=0)
-
-ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Percentage), y = Missing_Percentage, fill = Missing_Percentage)) +
-  geom_bar(stat = "identity") +
-  geom_text(aes(label = ifelse(Missing_Percentage > 1, sprintf("%.1f%%", Missing_Percentage), ""),
-                y = Missing_Percentage),
-            position = position_stack(vjust = 1),  # Adjust vertical position
-            color = "white",  # Text color
-            size = 2,          # Text size
-            hjust = 1.05) +
-  labs(title = "Percentage of Missing Values by Variable",
-       y = "Missing Percentage") +
-  theme_minimal() +
-  theme(axis.text.y = element_text(hjust = 1, size=8),
-        legend.position="none",
-        axis.title.y=element_blank()) +
-  labs(fill = "% NAs") +
-  coord_flip()
-
-
-```
-:::
-
-::: {.column width="45%" style="margin-bottom: 0px;"}
-:::
-:::
-
-##  {.smaller}
-
-### Data wrangling
-
--   Match datasets by key = (country, year)
--   Delete columns, then rows with too much NAs
-
-::: {.columns style="margin-bottom: 0px;"}
-::: {.column width="55%" style="margin-bottom: 0px;"}
-```{r, message = FALSE, warning=FALSE, fig.height=4.2}
-#| echo: false
-all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
-data_question1 <- all_Merge %>%
-  filter(year<=2020) %>%
-  select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected,
-            total_damages, cases_per_million, deaths_per_million, stringency,
-            ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
-
-variable_names <- names(data_question1)
-missing_percentages <-
-  sapply(data_question1, function(col) mean(is.na(col)) * 100)
-
-missing_data_summary <- data.frame(
-  Variable = variable_names,
-  Missing_Percentage = missing_percentages
-)
-
-missing_data_summary <- missing_data_summary %>%
-  mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))%>%
-  filter(missing_percentages!=0)
-
-ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Percentage), y = Missing_Percentage, fill = Missing_Percentage)) +
-  geom_bar(stat = "identity") +
-  geom_text(aes(label = ifelse(Missing_Percentage > 1, sprintf("%.1f%%", Missing_Percentage), ""),
-                y = Missing_Percentage),
-            position = position_stack(vjust = 1),  # Adjust vertical position
-            color = "white",  # Text color
-            size = 2,          # Text size
-            hjust = 1.05) +
-  labs(title = "Percentage of Missing Values by Variable",
-       y = "Missing Percentage") +
-  theme_minimal() +
-  theme(axis.text.y = element_text(hjust = 1, size=8),
-        legend.position="none",
-        axis.title.y=element_blank()) +
-  labs(fill = "% NAs") +
-  coord_flip()
-
-
-```
-:::
-
-::: {.column width="45%" style="margin-bottom: 0px;"}
-<img src="data1.png" height="320"/>
-:::
-:::
-
-##  {.smaller}
-
-### Data wrangling
-
--   Match datasets by key = (country, year)
--   Delete columns, then rows with too much NAs
-
-::: {.columns style="margin-bottom: 0px;"}
-::: {.column width="55%" style="margin-bottom: 0px;"}
-```{r, message = FALSE, warning=FALSE, fig.height=4.2}
-#| echo: false
-all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
-data_question1 <- all_Merge %>%
-  filter(year<=2020) %>%
-  select(-c(total_deaths, no_injured, no_affected, no_homeless, total_affected,
-            total_damages, cases_per_million, deaths_per_million, stringency,
-            ongoing, sum_deaths, pop_affected, area_affected, maxintensity))
-
-variable_names <- names(data_question1)
-missing_percentages <-
-  sapply(data_question1, function(col) mean(is.na(col)) * 100)
-
-missing_data_summary <- data.frame(
-  Variable = variable_names,
-  Missing_Percentage = missing_percentages
-)
-
-missing_data_summary <- missing_data_summary %>%
-  mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))%>%
-  filter(missing_percentages!=0)
-
-ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Percentage), y = Missing_Percentage, fill = Missing_Percentage)) +
-  geom_bar(stat = "identity") +
-  geom_text(aes(label = ifelse(Missing_Percentage > 1, sprintf("%.1f%%", Missing_Percentage), ""),
-                y = Missing_Percentage),
-            position = position_stack(vjust = 1),  # Adjust vertical position
-            color = "white",  # Text color
-            size = 2,          # Text size
-            hjust = 1.05) +
-  labs(title = "Percentage of Missing Values by Variable",
-       y = "Missing Percentage") +
-  theme_minimal() +
-  theme(axis.text.y = element_text(hjust = 1, size=8),
-        legend.position="none",
-        axis.title.y=element_blank()) +
-  labs(fill = "% NAs") +
-  coord_flip()
-
-
-```
-:::
-
-::: {.column width="45%" style="margin-bottom: 0px;"}
-<img src="data1.png" height="320"/>
-:::
-:::
-
--   Fill in remaining NAs with linear interpolation,\
-    median/mean based on region or zeros when appropriate
 
 # EDA / Analysis
 
@@ -594,7 +410,7 @@ fviz_pca_biplot(pca_result,
 ```
 
 -   Interconnection of the goals
--   Negative correlation between "Responsible Consumption and Production" / "Climate Action" and the other goals.
+-   Negative correlation between **Responsible Consumption and Production** and **Climate Action** and the other goals
 :::
 
 ## How are the different SDGs linked? {.smaller}
@@ -633,6 +449,9 @@ ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
     labs(title = "Heatmap of Spearman Correlations for Goals", 
          x = "", y = "")
 ```
+
+- Strange association between **Reduced Inequalities** and **Life on Land goals**
+
 :::
 
 ::: {.column width="64%"}
@@ -858,7 +677,7 @@ plotly::plot_ly() %>%
   )
 ```
 
-## Influence of events- Influence of events over the SDG scores
+## Influence of events over the SDG scores
 
 ```{r, message=FALSE, warning=FALSE, fig.width=3, fig.height=3}
 
@@ -936,7 +755,7 @@ pairs(data_question3_3[,c("overallscore", "ongoing", "sum_deaths", "pop_affected
 <h2 style="font-size: 16px;">Covid-19 variables they have a weak positive relationship but are highly significant.</h2>
 <h2 style="font-size: 16px;">Conflicts variables indicate a strong significant negative correlation with the overall score.</h2>
 
-## Influence of events- Influence of events over the SDG scores
+## Influence of events over the SDG scores
 
 ::: columns
 ::: {.column width="70%" style="margin-top: -35px;"}
