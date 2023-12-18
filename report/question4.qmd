@@ -2,7 +2,7 @@
 #### Setup ####
 source(here::here("scripts","Clean","setup.R"))
 data_4 <- read.csv(here("scripts", "data", "data_question24.csv"))
-threashold_heatmap <- 0.5
+threshold_heatmap <- 0.5
 library(leaps)
 ```
 
@@ -11,10 +11,7 @@ library(leaps)
 
 ### EDA: General visualization of the SDGs
 
-We want now to explore and analyse how the SDGs scores are linked together. 
-We first, interest ourself to the correlation between the goals scores. To do that we chose to use a correlation heatmap. We set an arbitrary threashold to better concentrate our attention to the most corrolated goals. We fixed our threashold at `r threashold_heatmap` (indicating a strong positive relationship) and less than -`r threashold_heatmap` (signifying a strong negative relationship).
-
-Given that, as seen previously, our variables do not follow a normal distribution, employing the Pearson correlation method is not suitable in our analysis since it requires observations to be normaly distributed. We attempted to normalize the data through logarithmic or square root transformations, but these adjustments were insufficiently effective. Consequently, we will resort to computing the Spearman correlation. While not ideal, this method does not necessitate the normal distribution of our data. In our analysis, particularly for the heatmap visualization, we will focus on correlations that exceed the threshold of `r threashold_heatmap` or fall below -`r threashold_heatmap`. This selective approach will enhance the readability and interpretability of the heatmap.
+To better analyse the relationships between the SDGs, we will first visualize the correlation between the correlation between the SDGs with the help of a heatmap. We chose to set a threshold at |`r threshold_heatmap`| to concentrate our analysis on the most linked SDGs. We initially intended to use the Pearson correlation method, but our data is, as seen in previous chapter, not normally ditributed. We tryed to normalized our data through logarithmic or square root transformation, but it was not sufficient. For that reason, we chose to use th Spearman correlation. While not being an ideal method, the Spearman correaltion does not require the data to be normally ditributed.
 
 To do that, we select only the colums of interest and compute the correlation matrix using Spearman correlation. We then melt the matrix to be able to plot it. We then plot the heatmap using `ggplot2`.
 
@@ -37,7 +34,7 @@ spearman_corr_4 <-cor(data_4_goals,
                       use = "everything")
 
 # Apply threshold and replace values below it with NA
-spearman_corr_4[abs(spearman_corr_4) < threashold_heatmap] <- NA
+spearman_corr_4[abs(spearman_corr_4) < threshold_heatmap] <- NA
 ```
 
 ```{r echo = TRUE, message = FALSE}
@@ -68,9 +65,9 @@ ggplot(data = melted_corr_4,
          y = "")
 ```
 
-The correlation can be read on the graph. The darker the color, the stronger the correlation. If there is not colors, it means that the goals correlation does not exceed our threashold of ±`r threashold_heatmap`.
+The correlation can be read on the graph. The darker the color, the stronger the correlation. If there is not colors, it means that the goals correlation does not exceed our threashold of ±`r threshold_heatmap`.
 
-It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals appear to be less interrelated compared to others. Specifically, SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) demonstrate a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also exhibits a lesser degree of interconnection with the other SDGs. It is also interesting to note that some goals are negatively correlated with others. For instance, based on the Spearman correlation, goal 12 (Responsable Consumption and Production) and goal 13 (Climate Action) are negatively correlated with the others goals. This suggest that when the higher a goal other than goal 12 or 13 is, the lower the goals 12 and 13 are. Given their similar nature, it is not surprising that they are highly correlated with each other.
+It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals seems to be less interrelated compared to others. We can see that SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) have a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also have a weacker interconnection with the other SDGs. It is also interesting to note that some goals are negatively correlated with others. For instance, based on the Spearman correlation, goal 12 (Responsable Consumption and Production) and goal 13 (Climate Action) are negatively correlated with the others goals. This suggest that when the higher a goal other than goal 12 or 13 is, the lower the goals 12 and 13 are. Given their similar nature, it is not surprising that they are highly correlated with each other.
 
 ### Analysis: Factor analysis and Stepwise regression applied to the SDGs
 
@@ -105,7 +102,7 @@ fviz_eig(pca_result,
 eigenvalues <- pca_result$sdev^2 # getting the third eigenvalue
 ```
 
-We see clearly that the first component is the most important one. Guided by the Kaiser criterion, which advises retaining only those components with eigenvalues exceeding 1, the initial three components emerge as candidates. However, considering the third component's eigenvalue of `r eigenvalues[3]`, we opted for simplification by focusing exclusively on the first two components even though the third eigenvalue is technically higher than 1. This decision also enhances clarity in the biplot representation, as it reduces the dimensions to just two, making interpretation more straightforward.
+We see clearly that the first component is the most important one. Guided by the Kaiser criterion, which advises retaining only those components with eigenvalues exceeding 1, the initial three components emerge as candidates with the third components having a eigenvalue of `r eigenvalues[3]`. We now want to see how those our two first components look on in a biplot.
 
 ```{r echo = TRUE, message = FALSE}
 #### Biplot ####
