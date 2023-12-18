@@ -22,37 +22,53 @@ Correlation_overall <- data_question1 %>%
 For this first part of our EDA, let's try to check first the distribution of the variables selected for answering our 1st question.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
-
 # Reshape the data from wide to long format for our sdg goals and our human freedom index scores
-long_df_goal_distribution <- pivot_longer(Correlation_overall, cols = starts_with("goal"), names_to = "Goal", values_to = "Value")
+long_df_goal_distribution <- pivot_longer(Correlation_overall,
+                                          cols = starts_with("goal"),
+                                          names_to = "Goal",
+                                          values_to = "Value")
 
-long_df_goal_distribution$Goal <- with(long_df_goal_distribution, reorder(Goal, Value, FUN = mean))
+long_df_goal_distribution$Goal <- with(long_df_goal_distribution,
+                                       reorder(Goal, Value, FUN = mean))
 
-long_df_hfi_distribution <- pivot_longer(Correlation_overall, cols = pf_law:ef_regulation, names_to = "Category", values_to = "Value")
+long_df_hfi_distribution <- pivot_longer(Correlation_overall,
+                                         cols = pf_law:ef_regulation,
+                                         names_to = "Category",
+                                         values_to = "Value")
 
-long_df_hfi_distribution$Goal <- with(long_df_hfi_distribution, reorder(Category, Value, FUN = mean))
+long_df_hfi_distribution$Goal <- with(long_df_hfi_distribution,
+                                      reorder(Category, Value, FUN = mean))
 
-ggplot(long_df_goal_distribution, aes(x = Value, y = Goal, fill = stat(x))) +
-  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "", option = "C") +
+ggplot(long_df_goal_distribution, aes(x = Value,
+                                      y = Goal,
+                                      fill = stat(x))) +
+  geom_density_ridges_gradient(scale = 3,
+                               size = 0.3,
+                               rel_min_height = 0.01) +
+  scale_fill_viridis_c(name = "",
+                       option = "D") +
   theme(plot.title = element_text(hjust = 0.5), # Center the title
         plot.title.position = "plot") + 
   labs(x = 'Scores',
        y = 'Goals',
-        title = 'SDG Goals Distribution')
+      title = 'SDG Goals Distribution')
 ```
 
 As we can see, most of our goals have a left-skewed distribution, which shows that for most of the country concerned implemented good strategies for targeting the goals objectives. Some distribution have a longer distribution than other, which could be a proof of inequality in the investments made for implementing solutions. In another hand, we notice that the only right-skewed distribution is concerning the observations of goal 9, which is promoting infrastructures, innovation and inclusive and sustainable industrialization. Again, that could show means inequalities. Wealthier countries are able to invest more on these sustainable development goals.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 
-ggplot(long_df_hfi_distribution, aes(x = Value, y = Category, fill = stat(x))) +
-  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "", option = "C") +
+ggplot(long_df_hfi_distribution, aes(x = Value,
+                                     y = Category,
+                                     fill = stat(x))) +
+  geom_density_ridges_gradient(scale = 3,
+                               size = 0.3,
+                               rel_min_height = 0.01) +
+  scale_fill_viridis_c(name = "", option = "D") +
   theme(plot.title = element_text(hjust = 0.5), # Center the title
         plot.title.position = "plot") + 
   labs(x = 'Scores',
-    title = 'Human Freedom Index Scores Distribution')
+       title = 'Human Freedom Index Scores Distribution')
 ```
 
 The distribution of the Human Freedom Index Score follows the same trend. Most of the scores are left-skewed, which means that countries tend to have in general good scores. The only scores not folowing are pf_law and ef_legal, which tend to have lower scores in general. Legal system, for civilians and countries, is changing slowly because it has a lot of implications over the situation within a country/between countries and because of the divergence of opinions. Therefore, investing more money for raising these scores will take more time than raising the scores of other goals.
@@ -63,33 +79,64 @@ These variables shows us even more the inequalities between the countries in our
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 #now, same for the remaining variables. No need to reshape our data as only one variable.
-unempl_d <- ggplot(Correlation_overall, aes(x = unemployment.rate, y = 1, fill = stat(x))) +
-  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "", option = "C") +
-  theme(plot.title = element_text(hjust = 0.5, size = 10), # Center the title
+unempl_d <- ggplot(Correlation_overall, aes(x = unemployment.rate,
+                                            y = 1,
+                                            fill = stat(x))) +
+  geom_density_ridges_gradient(scale = 3,
+                               size = 0.3,
+                               rel_min_height = 0.01) +
+  scale_fill_viridis_c(name = "",
+                       option = "D") +
+  theme(plot.title = element_text(hjust = 0.5,
+                                  size = 10), # Center the title
         plot.title.position = "plot") + 
   labs(y = 'Density',
-  title = 'Distribution of Unemployment Rate')
+       title = 'Distribution of Unemployment Rate')
 
-gdp_d <- ggplot(Correlation_overall, aes(x = GDPpercapita, y = 1, fill = stat(x))) +
-  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "", option = "C") +
-  theme(plot.title = element_text(hjust = 0.5, size = 10), # Center the title
+gdp_d <- ggplot(Correlation_overall,
+                aes(x = GDPpercapita,
+                    y = 1,
+                    fill = stat(x))) +
+  geom_density_ridges_gradient(scale = 3,
+                               size = 0.3,
+                               rel_min_height = 0.01) +
+  scale_fill_viridis_c(name = "",
+                       option = "D") +
+  theme(plot.title = element_text(hjust = 0.5,
+                                  size = 10), # Center the title
         plot.title.position = "plot") + 
-  labs(y = 'Density', title = 'Distribution of GDP per Capita')
+  labs(y = 'Density',
+       title = 'Distribution of GDP per Capita')
 
-milit_d <- ggplot(Correlation_overall, aes(x = MilitaryExpenditurePercentGDP, y = 1, fill = stat(x))) +
-  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "", option = "C") +
-  theme(plot.title = element_text(hjust = 0.5, size = 10), # Center the title
+milit_d <- ggplot(Correlation_overall,
+                  aes(x = MilitaryExpenditurePercentGDP,
+                      y = 1,
+                      fill = stat(x))) +
+  geom_density_ridges_gradient(scale = 3,
+                               size = 0.3,
+                               rel_min_height = 0.01) +
+  scale_fill_viridis_c(name = "",
+                       option = "D") +
+  theme(plot.title = element_text(hjust = 0.5,
+                                  size = 10), # Center the title
         plot.title.position = "plot") + 
-  labs(y = 'Density',title = 'Distribution of Military Expenditure (% of GDP)')
+  labs(y = 'Density',
+       title = 'Distribution of Military Expenditure (% of GDP)')
 
-internet_d <- ggplot(Correlation_overall, aes(x = internet_usage, y = 1, fill = stat(x))) +
-  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "", option = "C") +theme(plot.title = element_text(hjust = 0.5, size = 10),
+internet_d <- ggplot(Correlation_overall,
+                     aes(x = internet_usage,
+                         y = 1,
+                         fill = stat(x))) +
+  geom_density_ridges_gradient(scale = 3,
+                               size = 0.3,
+                               rel_min_height = 0.01) +
+  scale_fill_viridis_c(name = "",
+                       option = "D") + 
+  theme(plot.title = element_text(hjust = 0.5,
+                                  size = 10),
         plot.title.position = "plot") + 
-  labs(y = 'Density',title = 'Distribution of Internet Usage')
+  labs(y = 'Density',
+       title = 'Distribution of Internet Usage')
 
 grid.arrange(unempl_d,gdp_d,milit_d,internet_d, ncol = 2, nrow = 2)
 
@@ -122,13 +169,13 @@ server <- function(input, output) {
       if (currentPlot() == "goal") {
          ggplot(long_df_goal_distribution, aes(x = Value, y = Goal, fill = stat(x))) +
             geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-            scale_fill_viridis_c(name = "", option = "C") +
+            scale_fill_viridis_c(name = "", option = "D") +
             theme(plot.title = element_text(hjust = 0.5), plot.title.position = "plot") + 
             labs(x = 'Scores', y = 'Goals', title = 'SDG Goals Distribution')
       } else if (currentPlot() == "hfi") {
          ggplot(long_df_hfi_distribution, aes(x = Value, y = Category, fill = stat(x))) +
             geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
-            scale_fill_viridis_c(name = "", option = "C") +
+            scale_fill_viridis_c(name = "", option = "D") +
             theme(plot.title = element_text(hjust = 0.5), plot.title.position = "plot") + 
             labs(x = 'Scores', title = 'Human Freedom Index Scores Distribution')
       } else {
@@ -211,22 +258,37 @@ data_Q1_Oceania_long <- data_Q1_Oceania_long %>%
 # merge all medians
 medians_all <- rbind(data_Q1_Oceania_long, data_Q1_Americas_long,data_Q1_Africa_long,data_Q1_Asia_long,data_Q1_Europe_long)
 
-medians_all$color <- ifelse(medians_all$median_value > 75, "lightgreen",
-                        ifelse(medians_all$median_value < 25, "red3", 'lightblue3')) #assigning colors. If median for a goal is > 75 -> lightblue, if < 25 -> red, orange otherwise.
+medians_all$color <-
+  ifelse(medians_all$median_value > 75, "1",
+         ifelse(medians_all$median_value < 25, "3", '2')) # assigning the
+# Median core category. If median for a goal is > 75 -> 1,
+#                       If < 25 -> red,
+#                       orange otherwise.
 
 bandwidth_nrd <- bw.nrd(medians_all$value) #adapting the bandwidth
 
-ggplot(medians_all, aes(x = variable, y = value, fill = color)) +
+ggplot(medians_all,
+       aes(x = variable,
+           y = value,
+           fill = color)) +
   geom_violin(trim = FALSE, bw = bandwidth_nrd) +
-  scale_fill_manual(values = c("lightgreen" = "lightgreen", "red3" = "red3", "lightblue3" = "lightblue3"),
-                    labels = c("between", ">75", "<25")) + 
-  labs(title = "SDG Goals Distribution by Continent", x = "Goals", y = "Scores", fill = "Score Category") +
-  facet_grid(continent ~ ., scales = "free_y") +
+  scale_fill_viridis_d(name = "",
+                       option = "D",
+                       labels = c("High median",
+                                  "Medium median",
+                                  "Low median")) + 
+  labs(title = "SDG Goals Distribution by Continent",
+       x = "Goals",
+       y = "Scores",
+       fill = "Score Category") +
+  facet_grid(continent ~ .,
+             scales = "free_y") +
   scale_y_continuous(labels = scales::label_number()) +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5), # Center the title
-        plot.title.position = "plot", axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-    
+        plot.title.position = "plot",
+        axis.text.x = element_text(angle = 90,
+                                   vjust = 0.5, hjust=1))
 ```
 
 Here is the distribution of the goals per continent. We notice that Europe the continent with most of its goals having a median superior to 75 (represented by the lightblue color. We notice that only two goals have a median score lower than 25, which is for goal 9 for Africa and goal 10 for America. As seen before, goal 9 is generally having lower scores than the other goals. That could mean that the access to technology and sustainable/resilient infrastructures/industrialization is harder in Africa, because of various reasons such as less wealthy countries, corruption,...
@@ -313,16 +375,20 @@ data_Q1_Oceania_HFI_long <- data_Q1_Oceania_HFI_long %>%
 # merge all medians 
 medians_all_HFI <- rbind(data_Q1_Oceania_HFI_long, data_Q1_Americas_HFI_long,data_Q1_Africa_HFI_long,data_Q1_Asia_HFI_long,data_Q1_Europe_HFI_long)
 
-medians_all_HFI$color <- ifelse(medians_all_HFI$median_value > 7.5, "lightgreen", 
-                        ifelse(medians_all_HFI$median_value < 2.5, "red3", 'lightblue3'))
+medians_all_HFI$color <- ifelse(medians_all_HFI$median_value > 7.5, "3", 
+                        ifelse(medians_all_HFI$median_value < 2.5, "2", '1'))
 
 bandwidth_nrd_HFI <- bw.nrd(medians_all_HFI$value)
 
 # Create the plot
 ggplot(medians_all_HFI, aes(x = variable, y = value, fill = color)) +
   geom_violin(trim = FALSE, bw = bandwidth_nrd_HFI) +
-  scale_fill_manual(values = c("lightgreen" = "lightgreen", "red3" = "red3", "lightblue3" = "lightblue3"),
-                    labels = c("between", ">7.5", "<2.5")) + 
+  scale_fill_viridis_d(name = "",
+                       option = "D",
+                       direction = -1,
+                       labels = c("between",
+                                  "> 7.5",
+                                  "< 2.5")) +
   labs(title = "Human Freedom Index Scores Distribution by Continent", x = "Variables", y = "Scores", fill = "Score Category") +
   facet_grid(continent ~ ., scales = "free_y") +
   scale_y_continuous(labels = scales::label_number()) +
@@ -351,9 +417,10 @@ cor_melted <- # wide to long transformation
 
 ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   geom_tile() +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
-                       name="Spearman\nCorrelation") +
+  scale_fill_viridis_c(name = "Spearman\nCorrelation",
+                       direction = 1,
+                       begin = 0,
+                       end = 1) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 6, hjust = 1),
         axis.text.y = element_text(size = 6),
@@ -372,7 +439,12 @@ In order to have an overview of the relationship between our independent variabl
 #### Spearman's correlation coeff ####
 
 lower.panel <- function(x, y, ...){
-   points(x, y, pch = 20, col = "darkgreen", cex = 0.2)
+   points(x,
+          y,
+          pch = 20,
+          cex = 0.2,
+          col = viridis(1, option = "D",
+                        begin = 0.5))
 }
  
  panel.hist <- function(x, ...){
@@ -381,7 +453,9 @@ lower.panel <- function(x, y, ...){
    h <- hist(x, plot = FALSE)
    breaks <- h$breaks; nB <- length(breaks)
    y <- h$counts; y <- y/max(y)
-   rect(breaks[-nB], 0, breaks[-1], y, col = "lightgreen", ...)
+   rect(breaks[-nB], 0, breaks[-1], y, col = viridis(10,
+                                                     option = "D", 
+                                                     begin = 0.4), ...)
  }
  
  # panel.cor_stars function with stars alongside correlation coefficients
@@ -445,9 +519,11 @@ ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   geom_text(aes(label = ifelse(!is.na(value) & abs(value) > 0.75, sprintf("%.2f", value), '')),
             color = "black", size = 2) +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
-                       midpoint = 0, limit = c(-1, 1), space = "Lab",
-                       name = "Spearman\nCorrelation") +
+  scale_fill_viridis_c(name = "Spearman\nCorrelation",
+                       na.value = "white",
+                       direction = 1,
+                       begin = 0.1,
+                       end = 1) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.text.y = element_text(angle = 45, hjust = 1)) +
@@ -471,9 +547,11 @@ ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   geom_text(aes(label = ifelse(!is.na(value) & abs(value) > 0.75, sprintf("%.2f", value), '')),
             color = "black", size = 1.7) +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
-                       midpoint = 0, limit = c(-1, 1), space = "Lab",
-                       name = "Spearman\nCorrelation") +
+  scale_fill_viridis_c(name = "Spearman\nCorrelation",
+                       na.value = "white",
+                       direction = 1,
+                       begin = 0.1,
+                       end = 1) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.text.y = element_text(angle = 45, hjust = 1)) +
@@ -492,7 +570,15 @@ In order to have a look at the influence of some factors over our dependent vari
 
 myPCA_s <- PCA(data_question1[,29:40], graph = FALSE)
 fviz_eig(myPCA_s,
-         addlabels = TRUE) +
+         addlabels = TRUE,
+         linecolor = viridis(1,
+                             option = "B",
+                             begin = 0.5),
+         barcolor = "black",
+         barfill = viridis(10,
+                           option = "D",
+                           begin = 0,
+                           end = 0.8)) +
   theme_minimal()
 
 summary(myPCA_s)
@@ -500,9 +586,12 @@ summary(myPCA_s)
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### PCA Biplot ####
+
 fviz_pca_biplot(myPCA_s,
                 label="var",
-                col.var="dodgerblue3",
+                col.var = viridis(1,
+                                  option = "D",
+                                  begin = 0.5),
                 geom="point",
                 pointsize = 0.1,
                 labelsize = 5) +
@@ -514,7 +603,8 @@ Now concerning the Human Freedom Index scores, most of the variables are positiv
 Let's try now to conduct a cluster analysis, using the Kmean method.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-data_kmean_country <- data_question1 %>% dplyr::select(-c(X,code,year,continent,region, population))
+data_kmean_country <- data_question1 %>%
+  dplyr::select(-c(X,code,year,continent,region, population))
 
 #filter data different than 0 and dropping observations 
 filtered_data <- data_kmean_country %>%
@@ -533,11 +623,19 @@ means_by_country <- scale_by_country %>% #mean by country
 rownames(means_by_country) <- seq_along(row.names(means_by_country))
 
 # Your existing elbow plot
-elbow_plot <- fviz_nbclust(means_by_country[,-1], kmeans, method="wss", linecolor = "steelblue")
+elbow_plot <- fviz_nbclust(means_by_country[,-1],
+                           kmeans,
+                           method="wss",
+                           linecolor = viridis(1,
+                                               begin = 0.5))
 
 # Add a vertical line at the elbow point (4 clusters)
 elbow_plot_with_line <- elbow_plot + 
-  geom_vline(xintercept=4, linetype="dashed", color="red")
+  geom_vline(xintercept=4,
+             linetype="dashed",
+             color = viridis(1,
+                             option = "B",
+                             begin = 0.5))
 
 print(elbow_plot_with_line)
 ```
@@ -545,8 +643,17 @@ print(elbow_plot_with_line)
 After adapting the data for conducting our cluster analysis, we can see that according the the elbow method that we would only need 4 clusters in our analysis.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-kmean <- kmeans(means_by_country[,-1], 4, nstart = 25)
-fviz_cluster(kmean, data=means_by_country[,-1], repel=FALSE, depth =NULL, ellipse.type = "norm", labelsize = 10, pointsize = 0.5)
+kmean <- kmeans(means_by_country[,-1],
+                4,
+                nstart = 25)
+
+fviz_cluster(kmean,
+             data = means_by_country[,-1],
+             repel=FALSE,
+             depth =NULL,
+             ellipse.type = "norm",
+             labelsize = 10,
+             pointsize = 0.5)
 ```
 
 Our cluster analysis gives us one principal cluster (here in purple) --\> CENTERED ON 0 BECAUSE AFTER DATA SCALED-\> REALLY SMALL VALUES --\> HOW TO DEAL WITH IT? I TRIED TO TAKE ONLY HFI INTO ACCOUNT BUT NOT WORKING NEITHER. STILL CENTERED ON 0.

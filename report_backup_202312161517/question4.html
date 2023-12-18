@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>question4</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="question4_files/libs/clipboard/clipboard.min.js"></script>
+<script src="question4_files/libs/quarto-html/quarto.js"></script>
+<script src="question4_files/libs/quarto-html/popper.min.js"></script>
+<script src="question4_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="question4_files/libs/quarto-html/anchor.min.js"></script>
+<link href="question4_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="question4_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="question4_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="question4_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="question4_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="focus-on-the-relationships-among-the-sdgs" class="level2">
+<h2 class="anchored" data-anchor-id="focus-on-the-relationships-among-the-sdgs">Focus on the relationships among the SDGs</h2>
+<p><strong>How are the different SDGs linked? (We want to see if some SDGs are linked in the fact that a high score on one implies a high score on the other, and thus if we can make groups of SDGs that are comparable in that way).</strong></p>
+<section id="eda-general-visualization-of-the-sdgs" class="level3">
+<h3 class="anchored" data-anchor-id="eda-general-visualization-of-the-sdgs">EDA: General visualization of the SDGs</h3>
+<p>We want now to explore and analyse how the SDGs scores are linked together. We first, interest ourself to the correlation between the goals scores. To do that we chose to use a correlation heatmap. We set an arbitrary threashold to better concentrate our attention to the most corrolated goals. We fixed our threashold at 0.5 (indicating a strong positive relationship) and less than -0.5 (signifying a strong negative relationship).</p>
+<p>Given that, as seen previously, our variables do not follow a normal distribution, employing the Pearson correlation method is not suitable in our analysis since it requires observations to be normaly distributed. We attempted to normalize the data through logarithmic or square root transformations, but these adjustments were insufficiently effective. Consequently, we will resort to computing the Spearman correlation. While not ideal, this method does not necessitate the normal distribution of our data. In our analysis, particularly for the heatmap visualization, we will focus on correlations that exceed the threshold of 0.5 or fall below -0.5. This selective approach will enhance the readability and interpretability of the heatmap.</p>
+<p>To do that, we select only the colums of interest and compute the correlation matrix using Spearman correlation. We then melt the matrix to be able to plot it. We then plot the heatmap using <code>ggplot2</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Preparation of the data ####</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Keeping only the columns of interest for the correlation calcluation</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>data_4_goals <span class="ot">&lt;-</span> data_4 <span class="sc">%&gt;%</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(overallscore, goal1, goal2, goal3, goal4, goal5,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                goal6,goal7, goal8, goal9, goal10, goal11, goal12,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                goal13, goal15, goal16, goal17)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Spearman Correlation ####</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate Spearman correlation</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>spearman_corr_4 <span class="ot">&lt;-</span><span class="fu">cor</span>(data_4_goals, <span class="at">method =</span> <span class="st">"spearman"</span>, <span class="at">use =</span> <span class="st">"everything"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply threshold and replace values below it with NA</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>spearman_corr_4[<span class="fu">abs</span>(spearman_corr_4) <span class="sc">&lt;</span> threashold_heatmap] <span class="ot">&lt;-</span> <span class="cn">NA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Spearman Correlation Heatmap ####</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Melting the data</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>melted_corr_4 <span class="ot">&lt;-</span> <span class="fu">melt</span>(spearman_corr_4, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Creation of the heatmap</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> melted_corr_4, <span class="fu">aes</span>(<span class="at">x =</span> Var1, <span class="at">y =</span> Var2, <span class="at">fill =</span> value)) <span class="sc">+</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">"%.2f"</span>, value)), <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">size=</span><span class="fl">2.5</span>) <span class="sc">+</span> <span class="co"># Adding text</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                         <span class="at">midpoint =</span> <span class="dv">0</span>, <span class="at">limit =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">space =</span> <span class="st">"Lab"</span>, </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                         <span class="at">name=</span><span class="st">"Spearman</span><span class="sc">\n</span><span class="st">Correlation"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                         <span class="at">na.value =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Heatmap of Spearman Correlations for Goals"</span>, </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The correaltion can be read on the graph. The darker the color, the stronger the correlation. If there is not colors, it means that the gaols correlation does not exceed our threashold of ±0.5.</p>
+<p>It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals appear to be less interrelated compared to others. Specifically, SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) demonstrate a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also exhibits a lesser degree of interconnection with the other SDGs. It is also interesting to note that some goals are negatively correlated with others. For instance, based on the Spearman correlation, goal 12 (Responsable Consumption and Production) and goal 13 (Climate Action) are negatively correlated with the others goals. This suggest that when the higher a goal other than goal 12 or 13 is, the lower the goals 12 and 13 are. Given their similar nature, it is not surprising that they are highly correlated with each other.</p>
+</section>
+<section id="analysis-factor-analysis-and-stepwise-regression-applied-to-the-sdgs" class="level3">
+<h3 class="anchored" data-anchor-id="analysis-factor-analysis-and-stepwise-regression-applied-to-the-sdgs">Analysis: Factor analysis and Stepwise regression applied to the SDGs</h3>
+<p>At this point, we saw that the goals were mostly correlated. We now want to see if we can group them in a smaller number of factors. To do that, we will use a principal component analysis (PCA). We will first look at the scree plot to see how many factors we should keep. We will then look at the biplot to see how the goals are grouped together.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Scree Plot ####</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecting only the goals columns</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>goals_data <span class="ot">&lt;-</span> data_4 <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(goal1, goal2, goal3, goal4, goal5,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                goal6,goal7, goal8, goal9, goal10, goal11, goal12,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                goal13, goal15, goal16, goal17)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>goals_data_scaled <span class="ot">&lt;-</span> <span class="fu">scale</span>(goals_data) <span class="co"># Scaling the data</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>pca_result <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(goals_data_scaled) <span class="co"># Running PCA</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting Scree plot to visualize the importance of each principal component</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(pca_result,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">addlabels =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">col.var=</span><span class="st">"dodgerblue3"</span>) <span class="sc">+</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>eigenvalues <span class="ot">&lt;-</span> pca_result<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span> <span class="co"># getting the eigenvalues</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecting only the goals columns</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>goals_data <span class="ot">&lt;-</span> data_4 <span class="sc">%&gt;%</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(goal1, goal2, goal3, goal4, goal5,</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>                goal6, goal7, goal8, goal9, goal10, goal11, goal12,</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                goal13, goal15, goal16, goal17)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>goals_data_scaled <span class="ot">&lt;-</span> <span class="fu">scale</span>(goals_data) <span class="co"># Scaling the data</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Running PCA</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>pca_result <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(goals_data_scaled)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Applying Varimax rotation</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>rotation_result <span class="ot">&lt;-</span> <span class="fu">varimax</span>(pca_result<span class="sc">$</span>rotation)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Since fviz_eig is designed to work with objects of class 'prcomp', </span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co"># we need to replace the original rotation with the varimax rotation</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>pca_result<span class="sc">$</span>rotation <span class="ot">&lt;-</span> rotation_result<span class="sc">$</span>loadings</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting Scree plot to visualize the importance of each principal component</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(pca_result,</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>         <span class="at">addlabels =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>         <span class="at">col.var=</span><span class="st">"dodgerblue3"</span>) <span class="sc">+</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We see clearly that the first component is the most important one. Guided by the Kaiser criterion, which advises retaining only those components with eigenvalues exceeding 1, the initial three components emerge as candidates. However, considering the third component’s eigenvalue of 1.016, we opted for simplification by focusing exclusively on the first two components even though the third eigenvalue is technically higher than 1. This decision also enhances clarity in the biplot representation, as it reduces the dimensions to just two, making interpretation more straightforward.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Biplot ####</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting Biplot to visualize the two main dimensions</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(pca_result,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">label=</span><span class="st">"var"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">col.var=</span><span class="st">"dodgerblue3"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">geom=</span><span class="st">"point"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">pointsize =</span> <span class="fl">0.1</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">labelsize =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The biplot offers insightful visualization, clearly illustrating the relationship between the various goals and the first two components. Notably, Dimension 2 exhibits a strong correlation with Goals 10 (Reduced inequalities) and 15 (Life on Land), whereas the remaining goals show a moderate to high correlation with Dimension 1. Furthermore, an interesting pattern emerges, revealing three distinct groups of variables, each playing a unique role. One group comprises Goals 12 (Responsible Consumption and Production) and 13 (Climate Action), another encompasses Goals 10 (Reduced inequalities) and 15 (Life on Land), and the third group includes all other variables. This categorization aids in understanding the distinct influences and interactions among the goals.</p>
+<p>Grouping Goal 12 (Responsible Consumption and Production) and Goal 13 (Climate Action) together is logical, as both pertain to environmental issues. It is, however, interesting to note the pairing of Goal 10 (Reduced Inequalities) with Goal 15 (Life on Land). This could be explained by the fact that Goal 10 (Reduced inequalities) is related to the reduction of inequalities within and among countries, while Goal 15 (Life on Land) is related to the protection, restoration and promotion of sustainable use of terrestrial ecosystems, sustainable manage forests, combat desertification, and halt and reverse land degradation and halt biodiversity loss. Therefore, it is possible that the respondents who are more concerned about the reduction of inequalities are also more concerned about the protection of the environment. But this is a stretched.</p>
+<p>We also performed a stepwise regression to see more precisely how the goals are correlated with each other. We use the forward selection with the <code>leaps</code> package.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Preparation of the data ####</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>goals_data <span class="ot">&lt;-</span> data_4 <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(overallscore, goal1, goal2, goal3, goal4, goal5,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                goal6,goal7, goal8, goal9, goal10, goal11, goal12,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                goal13, goal15, goal16, goal17)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Stepwise regression ####</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>leaps_o <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(overallscore <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                        goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                        goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>, <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>leaps_1 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal1 <span class="sc">~</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                        goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>leaps_2 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal2 <span class="sc">~</span> goal1 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                        goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>leaps_3 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal3 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>                        goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>leaps_4 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal4 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>                        goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>leaps_5 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal5 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>                        goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>leaps_6 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal6 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal7 <span class="sc">+</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>                        goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>leaps_7 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal7 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>                        goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>leaps_8 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal8 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>                        goal7 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>leaps_9 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal9 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>                        goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>                        goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>leaps_10 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal10 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>                         goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>                         goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>leaps_11 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal11 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>                         goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>                         goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>leaps_12 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal12 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>                         goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal13 <span class="sc">+</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>                         goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>leaps_13 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal13 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>                         goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>                         goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>leaps_15 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal15 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>                         goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>                         goal13 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>leaps_16 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal16 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>                         goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>                         goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal17, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"forward"</span>)</span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>leaps_17 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal17 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>                         goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>                         goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16, <span class="at">data =</span> goals_data, <span class="at">nbest=</span><span class="dv">1</span>,</span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"forward"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Regression found with stepwise regression ####</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>mod_o <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  overallscore <span class="sc">~</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal10 <span class="sc">+</span> goal15 <span class="sc">+</span> goal17,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>mod_1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  goal1 <span class="sc">~</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal9 <span class="sc">+</span> goal13 <span class="sc">+</span> goal17,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>mod_2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  goal2 <span class="sc">~</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal12 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>mod_3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  goal3 <span class="sc">~</span> goal1 <span class="sc">+</span> goal4 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal11 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>mod_4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  goal4 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal5 <span class="sc">+</span> goal7 <span class="sc">+</span> goal11 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>mod_5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  goal5 <span class="sc">~</span> goal1 <span class="sc">+</span> goal4 <span class="sc">+</span> goal6 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal15 <span class="sc">+</span> goal17,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>mod_6 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  goal6 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal5 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal11 <span class="sc">+</span> goal15,</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>mod_7 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  goal7 <span class="sc">~</span> goal1 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal8 <span class="sc">+</span> goal11 <span class="sc">+</span> goal13,</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>mod_8 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  goal8 <span class="sc">~</span> goal2 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal12 <span class="sc">+</span> goal15 <span class="sc">+</span> goal17,</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>mod_9 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  goal9 <span class="sc">~</span> goal1 <span class="sc">+</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal8 <span class="sc">+</span> goal10 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal17,</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>mod_10 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  goal10 <span class="sc">~</span> goal1 <span class="sc">+</span> goal5 <span class="sc">+</span> goal9 <span class="sc">+</span> goal11 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17,</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>mod_11 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  goal11 <span class="sc">~</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal7 <span class="sc">+</span> goal10 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16,</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>mod_12 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>  goal12 <span class="sc">~</span> goal2 <span class="sc">+</span> goal7 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal13 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16 <span class="sc">+</span> goal17,</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>mod_13 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>  goal13 <span class="sc">~</span> goal1 <span class="sc">+</span> goal5 <span class="sc">+</span> goal7 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal12 <span class="sc">+</span> goal15 <span class="sc">+</span> goal16,</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>mod_15 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>  goal15 <span class="sc">~</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal5 <span class="sc">+</span> goal6 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13,</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>mod_16 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>  goal16 <span class="sc">~</span> goal2 <span class="sc">+</span> goal3 <span class="sc">+</span> goal4 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal13 <span class="sc">+</span> goal17,</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>mod_17 <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>  goal17 <span class="sc">~</span> goal1 <span class="sc">+</span> goal5 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal16,</span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Below, we create a graph to present our different model that the stepwise regression chose as best regression for each of our goals. As expected, the model that explain the variable overallscore is explained by the other goals at a similar coefficient for each of our goals. This make sense since the overallscore has been directly calculated with the 17 scores.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">'broom'</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a dataframe of tidy models</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>model_list <span class="ot">&lt;-</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(mod_o, mod_1, mod_2, mod_3, mod_4, mod_5,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                   mod_6, mod_7, mod_8, mod_9, mod_10, mod_11,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                   mod_12, mod_13, mod_15, mod_16, mod_17)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>models_tidy <span class="ot">&lt;-</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(model_list, tidy)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(models_tidy) <span class="ot">&lt;-</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"Overallscore ~others"</span>, <span class="st">"Goal1 ~ others"</span>, <span class="st">"Goal2 ~ others"</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Goal3 ~ others"</span>, <span class="st">"Goal4 ~ others"</span>, <span class="st">"Goal5 ~ others"</span>, <span class="st">"Goal6 ~ others"</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Goal7 ~ others"</span>, <span class="st">"Goal8 ~ others"</span>, <span class="st">"Goal9 ~ others"</span>, <span class="st">"Goal10 ~ others"</span>,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Goal11 ~ others"</span>, <span class="st">"Goal12 ~ others"</span>, <span class="st">"Goal13 ~ others"</span>, <span class="st">"Goal15 ~ others"</span>,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Goal16 ~ others"</span>, <span class="st">"Goal17 ~ others"</span>)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine into a single dataframe</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>df_tidy <span class="ot">&lt;-</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(rbind,</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>          <span class="fu">lapply</span>(<span class="fu">names</span>(models_tidy),</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>                 <span class="cf">function</span>(x) <span class="fu">cbind</span>(models_tidy[[x]], <span class="at">Model=</span>x)))</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming 'p.value' is the column name for p-values in your dataframe</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>significance_level <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for significant p-values</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>df_tidy_significant <span class="ot">&lt;-</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>  df_tidy[df_tidy<span class="sc">$</span>p.value <span class="sc">&lt;</span> significance_level, ]</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_tidy_significant,</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> Model,</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> estimate,</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> term)) <span class="sc">+</span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> estimate <span class="sc">-</span> std.error,</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> estimate <span class="sc">+</span> std.error),</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"right"</span>, <span class="co"># You can change the position if needed</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">5</span>), <span class="co"># Adjust text size</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>), <span class="co"># Adjust title size</span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.3</span>, <span class="st">"cm"</span>)) <span class="sc">+</span>  <span class="co"># Adjust key size) +</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Coefficient Plot of Regression Models"</span>,</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Models"</span>,</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Estimates"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_o, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_1, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_2, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_3, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_4, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_5, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_6, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_7, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_8, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_9, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_10, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_11, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_12, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_13, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_15, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_16, <span class="at">which =</span> <span class="dv">1</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_17, <span class="at">which =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-4.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-5.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-6.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-7.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-8.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-9.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-10.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-11.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-12.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-13.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-14.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-15.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-16.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question4_files/figure-html/unnamed-chunk-11-17.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

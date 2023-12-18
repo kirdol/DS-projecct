@@ -429,16 +429,17 @@ ggplot(prop_missing_data,
        aes(x = variable,
            y = prop_missing)) +
    geom_bar(stat = "identity",
-            fill = "skyblue",
+            aes(fill = prop_missing),
             color = "black") +
+   scale_fill_viridis_c(name = "Proportion\nof missing") +
    labs(title = "NAs by columns in the main dataset",
         x = "Variable",
         y = "Proportion of Missing Values") +
-  theme(plot.title=element_text(size=10),
-        axis.title.x=element_text(size=8),
-        axis.title.y=element_text(size=8))+
-   theme_minimal()+
-   coord_flip()
+   theme(plot.title = element_text(size = 10),
+         axis.title.x = element_text(size = 8),
+         axis.title.y = element_text(size = 8)) +
+   theme_minimal() +
+  coord_flip()
 ```
 
 Observing that the 'population' column contains numerous NAs, we investigate and discover that missing values are common, as some observations represent regions, not countries. Therefore, we can safely exclude these observations.
@@ -456,7 +457,8 @@ ggplot(SDG0,
        aes(x = code,
            y = NaPop)) +
   geom_bar(stat = "identity",
-           fill = "lightgreen",
+           fill = viridis(1,
+                          begin = 0.5),
            color = "black") +
   labs(title = "NAs by row in population variable are for regions and not countries",
        x = "Code",
@@ -1532,8 +1534,7 @@ ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Perce
   theme(axis.text.y = element_text(hjust = 1, size=6 ),
         legend.text = element_text(size = 8),
         legend.title = element_text(size = 10)) +
-  labs(fill = "% NAs") +
-  coord_flip()
+  labs(fill = "% NAs")
 
 data_question1 <- data_question1 %>% select(-c(MiliratyExpenditurePercentGovExp,
                                                hf_score, pf_score, ef_score))

@@ -32,7 +32,9 @@ data_4_goals <- data_4 %>%
 #### Spearman Correlation ####
 
 # Calculate Spearman correlation
-spearman_corr_4 <-cor(data_4_goals, method = "spearman", use = "everything")
+spearman_corr_4 <-cor(data_4_goals,
+                      method = "spearman",
+                      use = "everything")
 
 # Apply threshold and replace values below it with NA
 spearman_corr_4[abs(spearman_corr_4) < threashold_heatmap] <- NA
@@ -45,20 +47,28 @@ spearman_corr_4[abs(spearman_corr_4) < threashold_heatmap] <- NA
 melted_corr_4 <- melt(spearman_corr_4, na.rm = TRUE)
 
 # Creation of the heatmap
-ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
+ggplot(data = melted_corr_4,
+       aes(x = Var1,
+           y = Var2,
+           fill = value)) +
     geom_tile() +
-    geom_text(aes(label = sprintf("%.2f", value)), vjust = 0.5, size=2.5) + # Adding text
-    scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                         midpoint = 0, limit = c(-1,1), space = "Lab", 
-                         name="Spearman\nCorrelation",
-                         na.value = "grey") +
+    geom_text(aes(label = sprintf("%.2f", value)),
+              vjust = 0.5,
+              size=2.5) + # Adding text
+    scale_fill_viridis_c(name = "Spearman\nCorrelation",
+                         na.value = "white",
+                         direction = 1,
+                         begin = 0.1,
+                         end = 1) +
     theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    theme(axis.text.x = element_text(angle = 45,
+                                     hjust = 1)) +
     labs(title = "Heatmap of Spearman Correlations for Goals", 
-         x = "", y = "")
+         x = "",
+         y = "")
 ```
 
-The correaltion can be read on the graph. The darker the color, the stronger the correlation. If there is not colors, it means that the gaols correlation does not exceed our threashold of ±`r threashold_heatmap`.
+The correlation can be read on the graph. The darker the color, the stronger the correlation. If there is not colors, it means that the goals correlation does not exceed our threashold of ±`r threashold_heatmap`.
 
 It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals appear to be less interrelated compared to others. Specifically, SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) demonstrate a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also exhibits a lesser degree of interconnection with the other SDGs. It is also interesting to note that some goals are negatively correlated with others. For instance, based on the Spearman correlation, goal 12 (Responsable Consumption and Production) and goal 13 (Climate Action) are negatively correlated with the others goals. This suggest that when the higher a goal other than goal 12 or 13 is, the lower the goals 12 and 13 are. Given their similar nature, it is not surprising that they are highly correlated with each other.
 
@@ -68,6 +78,8 @@ At this point, we saw that the goals were mostly correlated. We now want to see 
 
 ```{r echo = TRUE, message = FALSE}
 #### Scree Plot ####
+
+viridis_colors <- viridis(10, option = "D", begin = 0, end = 0.8)
 
 # Selecting only the goals columns
 goals_data <- data_4 %>%
@@ -80,10 +92,17 @@ pca_result <- prcomp(goals_data_scaled) # Running PCA
 # Plotting Scree plot to visualize the importance of each principal component
 fviz_eig(pca_result,
          addlabels = TRUE,
-         col.var="dodgerblue3") +
+         linecolor = viridis(1,
+                             option = "B",
+                             begin = 0.5),
+         barcolor = "black",
+         barfill = viridis(10,
+                           option = "D",
+                           begin = 0,
+                           end = 0.8)) +
   theme_minimal()
 
-eigenvalues <- pca_result$sdev^2 # getting the eigenvalues
+eigenvalues <- pca_result$sdev^2 # getting the third eigenvalue
 ```
 
 We see clearly that the first component is the most important one. Guided by the Kaiser criterion, which advises retaining only those components with eigenvalues exceeding 1, the initial three components emerge as candidates. However, considering the third component's eigenvalue of `r eigenvalues[3]`, we opted for simplification by focusing exclusively on the first two components even though the third eigenvalue is technically higher than 1. This decision also enhances clarity in the biplot representation, as it reduces the dimensions to just two, making interpretation more straightforward.
@@ -93,9 +112,11 @@ We see clearly that the first component is the most important one. Guided by the
 
 # Plotting Biplot to visualize the two main dimensions
 fviz_pca_biplot(pca_result,
-                label="var",
-                col.var="dodgerblue3",
-                geom="point",
+                label = "var",
+                col.var = viridis(1,
+                                  option = "D",
+                                  begin = 0.5),
+                geom = "point",
                 pointsize = 0.1,
                 labelsize = 4) +
   theme_minimal()

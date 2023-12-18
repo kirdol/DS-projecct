@@ -1,0 +1,320 @@
+```{r echo = FALSE, message = FALSE}
+#### Setup ####
+source(here::here("scripts","Clean","setup.R"))
+data_4 <- read.csv(here("scripts", "data", "data_question24.csv"))
+threashold_heatmap <- 0.5
+library(leaps)
+```
+
+## Focus on the relationships among the SDGs
+**How are the different SDGs linked? (We want to see if some SDGs are linked in the fact that a high score on one implies a high score on the other, and thus if we can make groups of SDGs that are comparable in that way).**
+
+### EDA: General visualization of the SDGs
+
+We want now to explore and analyse how the SDGs scores are linked together. 
+We first, interest ourself to the correlation between the goals scores. To do that we chose to use a correlation heatmap. We set an arbitrary threashold to better concentrate our attention to the most corrolated goals. We fixed our threashold at `r threashold_heatmap` (indicating a strong positive relationship) and less than -`r threashold_heatmap` (signifying a strong negative relationship).
+
+Given that, as seen previously, our variables do not follow a normal distribution, employing the Pearson correlation method is not suitable in our analysis since it requires observations to be normaly distributed. We attempted to normalize the data through logarithmic or square root transformations, but these adjustments were insufficiently effective. Consequently, we will resort to computing the Spearman correlation. While not ideal, this method does not necessitate the normal distribution of our data. In our analysis, particularly for the heatmap visualization, we will focus on correlations that exceed the threshold of `r threashold_heatmap` or fall below -`r threashold_heatmap`. This selective approach will enhance the readability and interpretability of the heatmap.
+
+To do that, we select only the colums of interest and compute the correlation matrix using Spearman correlation. We then melt the matrix to be able to plot it. We then plot the heatmap using `ggplot2`.
+
+```{r echo = TRUE, message = FALSE}
+#### Preparation of the data ####
+
+# Keeping only the columns of interest for the correlation calcluation
+data_4_goals <- data_4 %>%
+  dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
+                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
+                goal13, goal15, goal16, goal17)
+```
+
+```{r echo = TRUE, message = FALSE}
+#### Spearman Correlation ####
+
+# Calculate Spearman correlation
+spearman_corr_4 <-cor(data_4_goals, method = "spearman", use = "everything")
+
+# Apply threshold and replace values below it with NA
+spearman_corr_4[abs(spearman_corr_4) < threashold_heatmap] <- NA
+```
+
+```{r echo = TRUE, message = FALSE}
+#### Spearman Correlation Heatmap ####
+
+# Melting the data
+melted_corr_4 <- melt(spearman_corr_4, na.rm = TRUE)
+
+# Creation of the heatmap
+ggplot(data = melted_corr_4, aes(x = Var1, y = Var2, fill = value)) +
+    geom_tile() +
+    geom_text(aes(label = sprintf("%.2f", value)), vjust = 0.5, size=2.5) + # Adding text
+    scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                         midpoint = 0, limit = c(-1,1), space = "Lab", 
+                         name="Spearman\nCorrelation",
+                         na.value = "grey") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    labs(title = "Heatmap of Spearman Correlations for Goals", 
+         x = "", y = "")
+```
+
+The correaltion can be read on the graph. The darker the color, the stronger the correlation. If there is not colors, it means that the gaols correlation does not exceed our threashold of ±`r threashold_heatmap`.
+
+It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals appear to be less interrelated compared to others. Specifically, SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) demonstrate a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also exhibits a lesser degree of interconnection with the other SDGs. It is also interesting to note that some goals are negatively correlated with others. For instance, based on the Spearman correlation, goal 12 (Responsable Consumption and Production) and goal 13 (Climate Action) are negatively correlated with the others goals. This suggest that when the higher a goal other than goal 12 or 13 is, the lower the goals 12 and 13 are. Given their similar nature, it is not surprising that they are highly correlated with each other.
+
+### Analysis: Factor analysis and Stepwise regression applied to the SDGs
+
+At this point, we saw that the goals were mostly correlated. We now want to see if we can group them in a smaller number of factors. To do that, we will use a principal component analysis (PCA). We will first look at the scree plot to see how many factors we should keep. We will then look at the biplot to see how the goals are grouped together.
+
+```{r echo = TRUE, message = FALSE}
+#### Scree Plot ####
+
+# Selecting only the goals columns
+goals_data <- data_4 %>%
+  dplyr::select(goal1, goal2, goal3, goal4, goal5,
+                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
+                goal13, goal15, goal16, goal17)
+goals_data_scaled <- scale(goals_data) # Scaling the data
+pca_result <- prcomp(goals_data_scaled) # Running PCA
+
+# Plotting Scree plot to visualize the importance of each principal component
+fviz_eig(pca_result,
+         addlabels = TRUE,
+         col.var="dodgerblue3") +
+  theme_minimal()
+
+eigenvalues <- pca_result$sdev^2 # getting the eigenvalues
+```
+
+We see clearly that the first component is the most important one. Guided by the Kaiser criterion, which advises retaining only those components with eigenvalues exceeding 1, the initial three components emerge as candidates. However, considering the third component's eigenvalue of `r eigenvalues[3]`, we opted for simplification by focusing exclusively on the first two components even though the third eigenvalue is technically higher than 1. This decision also enhances clarity in the biplot representation, as it reduces the dimensions to just two, making interpretation more straightforward.
+
+```{r echo = TRUE, message = FALSE}
+#### Biplot ####
+
+# Plotting Biplot to visualize the two main dimensions
+fviz_pca_biplot(pca_result,
+                label="var",
+                col.var="dodgerblue3",
+                geom="point",
+                pointsize = 0.1,
+                labelsize = 4) +
+  theme_minimal()
+```
+
+The biplot offers insightful visualization, clearly illustrating the relationship between the various goals and the first two components. Notably, Dimension 2 exhibits a strong correlation with Goals 10 (Reduced inequalities) and 15 (Life on Land), whereas the remaining goals show a moderate to high correlation with Dimension 1. Furthermore, an interesting pattern emerges, revealing three distinct groups of variables, each playing a unique role. One group comprises Goals 12 (Responsible Consumption and Production) and 13 (Climate Action), another encompasses Goals 10 (Reduced inequalities) and 15 (Life on Land), and the third group includes all other variables. This categorization aids in understanding the distinct influences and interactions among the goals.
+
+Grouping Goal 12 (Responsible Consumption and Production) and Goal 13 (Climate Action) together is logical, as both pertain to environmental issues. It is, however, interesting to note the pairing of Goal 10 (Reduced Inequalities) with Goal 15 (Life on Land). This could be explained by the fact that Goal 10 (Reduced inequalities) is related to the reduction of inequalities within and among countries, while Goal 15 (Life on Land) is related to the protection, restoration and promotion of sustainable use of terrestrial ecosystems, sustainable manage forests, combat desertification, and halt and reverse land degradation and halt biodiversity loss. Therefore, it is possible that the respondents who are more concerned about the reduction of inequalities are also more concerned about the protection of the environment. But this is a stretched.
+
+We also performed a stepwise regression to see more precisely how the goals are correlated with each other. We use the forward selection with the `leaps` package.
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+#### Preparation of the data ####
+
+goals_data <- data_4 %>%
+  dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
+                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
+                goal13, goal15, goal16, goal17)
+```
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+#### Stepwise regression ####
+
+leaps_o <- regsubsets(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5 +
+                        goal6 + goal7 + goal8 + goal9 + goal10 + goal11 +
+                        goal12 + goal13 + goal15 + goal16 + goal17,
+                      data = goals_data, nbest=1, method = "forward")
+leaps_1 <- regsubsets(goal1 ~ goal2 + goal3 + goal4 + goal5 + goal6 + goal7 +
+                        goal8 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_2 <- regsubsets(goal2 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal7 +
+                        goal8 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_3 <- regsubsets(goal3 ~ goal1 + goal2 + goal4 + goal5 + goal6 + goal7 +
+                        goal8 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_4 <- regsubsets(goal4 ~ goal1 + goal2 + goal3 + goal5 + goal6 + goal7 +
+                        goal8 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_5 <- regsubsets(goal5 ~ goal1 + goal2 + goal3 + goal4 + goal6 + goal7 +
+                        goal8 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_6 <- regsubsets(goal6 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal7 +
+                        goal8 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_7 <- regsubsets(goal7 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                        goal8 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_8 <- regsubsets(goal8 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                        goal7 + goal9 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_9 <- regsubsets(goal9 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                        goal7 + goal8 + goal10 + goal11 + goal12 + goal13 +
+                        goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                      method = "forward")
+leaps_10 <- regsubsets(goal10 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                         goal7 + goal8 + goal9 + goal11 + goal12 + goal13 +
+                         goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                       method = "forward")
+leaps_11 <- regsubsets(goal11 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                         goal7 + goal8 + goal9 + goal10 + goal12 + goal13 +
+                         goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                       method = "forward")
+leaps_12 <- regsubsets(goal12 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                         goal7 + goal8 + goal9 + goal10 + goal11 + goal13 +
+                         goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                       method = "forward")
+leaps_13 <- regsubsets(goal13 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                         goal7 + goal8 + goal9 + goal10 + goal11 + goal12 +
+                         goal15 + goal16 + goal17, data = goals_data, nbest=1,
+                       method = "forward")
+leaps_15 <- regsubsets(goal15 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                         goal7 + goal8 + goal9 + goal10 + goal11 + goal12 +
+                         goal13 + goal16 + goal17, data = goals_data, nbest=1,
+                       method = "forward")
+leaps_16 <- regsubsets(goal16 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                         goal7 + goal8 + goal9 + goal10 + goal11 + goal12 +
+                         goal13 + goal15 + goal17, data = goals_data, nbest=1,
+                       method = "forward")
+leaps_17 <- regsubsets(goal17 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
+                         goal7 + goal8 + goal9 + goal10 + goal11 + goal12 +
+                         goal13 + goal15 + goal16, data = goals_data, nbest=1,
+                       method = "forward")
+```
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+#### Regression found with stepwise regression ####
+
+mod_o <- lm(
+  overallscore ~ goal2 + goal3 + goal4 + goal6 + goal7 + goal10 + goal15 + goal17,
+  data = goals_data)
+mod_1 <- lm(
+  goal1 ~ goal3 + goal4 + goal5 + goal6 + goal7 + goal9 + goal13 + goal17,
+  data = goals_data)
+mod_2 <- lm(
+  goal2 ~ goal4 + goal5 + goal6 + goal8 + goal9 + goal12 + goal16 + goal17,
+  data = goals_data)
+mod_3 <- lm(
+  goal3 ~ goal1 + goal4 + goal7 + goal8 + goal9 + goal11 + goal15 + goal16,
+  data = goals_data)
+mod_4 <- lm(
+  goal4 ~ goal1 + goal2 + goal3 + goal5 + goal7 + goal11 + goal16 + goal17,
+  data = goals_data)
+mod_5 <- lm(
+  goal5 ~ goal1 + goal4 + goal6 + goal9 + goal10 + goal11 + goal15 + goal17,
+  data = goals_data)
+mod_6 <- lm(
+  goal6 ~ goal1 + goal2 + goal3 + goal5 + goal8 + goal9 + goal11 + goal15,
+  data = goals_data)
+mod_7 <- lm(
+  goal7 ~ goal1 + goal3 + goal4 + goal5 + goal6 + goal8 + goal11 + goal13,
+  data = goals_data)
+mod_8 <- lm(
+  goal8 ~ goal2 + goal5 + goal6 + goal9 + goal10 + goal12 + goal15 + goal17,
+  data = goals_data)
+mod_9 <- lm(
+  goal9 ~ goal1 + goal2 + goal3 + goal8 + goal10 + goal12 + goal13 + goal17,
+  data = goals_data)
+mod_10 <- lm(
+  goal10 ~ goal1 + goal5 + goal9 + goal11 + goal13 + goal15 + goal16 + goal17,
+  data = goals_data)
+mod_11 <- lm(
+  goal11 ~ goal3 + goal4 + goal5 + goal6 + goal7 + goal10 + goal15 + goal16,
+  data = goals_data)
+mod_12 <- lm(
+  goal12 ~ goal2 + goal7 + goal8 + goal9 + goal13 + goal15 + goal16 + goal17,
+  data = goals_data)
+mod_13 <- lm(
+  goal13 ~ goal1 + goal5 + goal7 + goal9 + goal10 + goal12 + goal15 + goal16,
+  data = goals_data)
+mod_15 <- lm(
+  goal15 ~ goal3 + goal4 + goal5 + goal6 + goal10 + goal11 + goal12 + goal13,
+  data = goals_data)
+mod_16 <- lm(
+  goal16 ~ goal2 + goal3 + goal4 + goal10 + goal11 + goal12 + goal13 + goal17,
+  data = goals_data)
+mod_17 <- lm(
+  goal17 ~ goal1 + goal5 + goal8 + goal9 + goal10 + goal11 + goal12 + goal16,
+  data = goals_data)
+```
+
+Below, we create a graph to present our different model that the stepwise regression chose as best regression for each of our goals. As expected, the model that explain the variable overallscore is explained by the other goals at a similar coefficient for each of our goals. This make sense since the overallscore has been directly calculated with the 17 scores. 
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+library('broom')
+# Create a dataframe of tidy models
+model_list <-
+  list(mod_o, mod_1, mod_2, mod_3, mod_4, mod_5,
+                   mod_6, mod_7, mod_8, mod_9, mod_10, mod_11,
+                   mod_12, mod_13, mod_15, mod_16, mod_17)
+
+models_tidy <-
+  lapply(model_list, tidy)
+
+names(models_tidy) <-
+  c("Overallscore ~others", "Goal1 ~ others", "Goal2 ~ others",
+    "Goal3 ~ others", "Goal4 ~ others", "Goal5 ~ others", "Goal6 ~ others",
+    "Goal7 ~ others", "Goal8 ~ others", "Goal9 ~ others", "Goal10 ~ others",
+    "Goal11 ~ others", "Goal12 ~ others", "Goal13 ~ others", "Goal15 ~ others",
+    "Goal16 ~ others", "Goal17 ~ others")
+
+# Combine into a single dataframe
+df_tidy <-
+  do.call(rbind,
+          lapply(names(models_tidy),
+                 function(x) cbind(models_tidy[[x]], Model=x)))
+
+# Assuming 'p.value' is the column name for p-values in your dataframe
+significance_level <- 0.05
+
+# Filter for significant p-values
+df_tidy_significant <-
+  df_tidy[df_tidy$p.value < significance_level, ]
+
+# Plot
+ggplot(df_tidy_significant,
+       aes(x = Model,
+           y = estimate,
+           color = term)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = estimate - std.error,
+                    ymax = estimate + std.error),
+                width = 0.2) +
+  ylim(-1, 1) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "right", # You can change the position if needed
+        legend.text = element_text(size = 5), # Adjust text size
+        legend.title = element_text(size = 7), # Adjust title size
+        legend.key.size = unit(0.3, "cm")) +  # Adjust key size) +
+  labs(title = "Coefficient Plot of Regression Models",
+       x = "Models",
+       y = "Estimates")
+```
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+plot(mod_o, which = 1)
+plot(mod_1, which = 1)
+plot(mod_2, which = 1)
+plot(mod_3, which = 1)
+plot(mod_4, which = 1)
+plot(mod_5, which = 1)
+plot(mod_6, which = 1)
+plot(mod_7, which = 1)
+plot(mod_8, which = 1)
+plot(mod_9, which = 1)
+plot(mod_10, which = 1)
+plot(mod_11, which = 1)
+plot(mod_12, which = 1)
+plot(mod_13, which = 1)
+plot(mod_15, which = 1)
+plot(mod_16, which = 1)
+plot(mod_17, which = 1)
+```
+
