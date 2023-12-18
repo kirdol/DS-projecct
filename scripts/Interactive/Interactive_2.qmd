@@ -1,0 +1,104 @@
+---
+title: "Interactive 2"
+output: shiny::shiny_document
+format: html
+execute: 
+  echo: false
+server: shiny
+runtime: shiny
+---
+
+## Interactive map of the correlation between the different events and the SDG goals with 1 year gap.
+
+```{r echo = FALSE, message = FALSE, warning=FALSE}
+source(here::here("scripts","Clean","setup.R"))
+data_question3_1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
+data_question3_2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+data_question3_3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
+Q3.1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
+Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+Q3.3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
+data <- read.csv(here("scripts", "data", "all_Merge.csv"))
+```
+
+```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+# Converted 'year' column to date format
+Q3.1$year <- as.Date(as.character(Q3.1$year), format = "%Y")
+Q3.2$year <- as.Date(as.character(Q3.2$year), format = "%Y")
+Q3.3$year <- as.Date(as.character(Q3.3$year), format = "%Y")
+Q3.1[is.na(Q3.1)] <- 0
+```
+
+Here you can see an interactive map of the correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019).
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
+
+library(shiny)
+library(plotly)
+
+Q3.2 <- Q3.2 %>%
+  arrange(code,year)%>%
+  group_by(code)
+
+Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
+
+covid_filtered <- Q3.2
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
+
+subset_data <- covid_filtered[, relevant_columns]
+
+correlation_matrix_Covid <- cor(subset_data, subset_data[, c("stringency", "cases_per_million", "deaths_per_million")])
+
+cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
+names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+
+ui <- fluidPage(
+  titlePanel("Interactive Correlation Heatmap between COVID and the SDG goal with one year gap"),
+  plotlyOutput("heatmap"),
+  sliderInput("year", "Select Year", min = 2020, max = 2022, value = 2020, step = 1),
+  actionButton("stopButton", "Stop application")
+)
+
+server <- function(input, output, session) {
+  selected_covid_data <- reactive({
+    filtered_data <- covid_filtered[covid_filtered$year == input$year, ]
+    subset_data <- filtered_data[, relevant_columns]
+    return(subset_data)
+  })
+  
+  output$heatmap <- renderPlotly({
+    correlation_matrix_Covid <- cor(selected_covid_data(), selected_covid_data()[, c("stringency", "cases_per_million", "deaths_per_million")])
+    cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
+    names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+    
+    p <- plot_ly(data = cor_melted, x = ~Variable1, y = ~Variable2, z = ~Correlation,
+                 type = "heatmap", colorscale = list(c(0, "blue"), c(0.5, "white"), c(1, "red")),
+                 zmin = -1, zmax = 1)
+    
+    p <- p %>% layout(
+      title = "",
+      xaxis = list(title = "", tickfont = list(size = 16)),
+      yaxis = list(title = "", tickfont = list(size = 16)),
+      coloraxis = list(
+        colorbar = list(
+          title = "Correlation",
+          tickvals = c(-1, 0, 1), 
+          ticktext = c("-1", "0", "1"),
+          len = 5, 
+          thickness = 20, 
+          x = 0,
+          xanchor = "left", 
+          ticks = "outside"
+        )
+      )
+    )
+    return(p)
+  })
+  
+  observeEvent(input$stopButton, {
+    stopApp()  
+  })
+}
+shinyApp(ui = ui, server = server)
+```
+
