@@ -1,8 +1,16 @@
 ```{r echo = FALSE, message = FALSE}
 #### Setup ####
+
+# Running our setup script to load our packages
 source(here::here("scripts","Clean","setup.R"))
+
+# Import of our dataset for or question on the SDGs
 data_4 <- read.csv(here("scripts", "data", "data_question24.csv"))
+
+# setting our correlation threshold for the heatmap
 threshold_heatmap <- 0.5
+
+# laoding the leaps package for the stepwise regression
 library(leaps)
 ```
 
@@ -18,7 +26,7 @@ To do that, we select only the colums of interest and compute the correlation ma
 ```{r echo = TRUE, message = FALSE}
 #### Preparation of the data ####
 
-# Keeping only the columns of interest for the correlation calcluation
+# Keeping only the columns of interest for the correlation calculation
 data_4_goals <- data_4 %>%
   dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
                 goal6,goal7, goal8, goal9, goal10, goal11, goal12,
@@ -28,12 +36,12 @@ data_4_goals <- data_4 %>%
 ```{r echo = TRUE, message = FALSE}
 #### Spearman Correlation ####
 
-# Calculate Spearman correlation
-spearman_corr_4 <-cor(data_4_goals,
-                      method = "spearman",
-                      use = "everything")
+# Calculate the correlation between our variables
+spearman_corr_4 <-cor(data_4_goals, # using only the columns of interest
+                      method = "spearman", # using the Spearman correlation
+                      use = "everything") # using all the data
 
-# Apply threshold and replace values below it with NA
+# Apply threshold and replace values below it with NAs
 spearman_corr_4[abs(spearman_corr_4) < threshold_heatmap] <- NA
 ```
 
@@ -44,23 +52,22 @@ spearman_corr_4[abs(spearman_corr_4) < threshold_heatmap] <- NA
 melted_corr_4 <- melt(spearman_corr_4, na.rm = TRUE)
 
 # Creation of the heatmap
-ggplot(data = melted_corr_4,
-       aes(x = Var1,
-           y = Var2,
+ggplot(data = melted_corr_4, # melted data
+       aes(x = Var1, # x axis
+           y = Var2, # y axis
            fill = value)) +
-    geom_tile() +
-    geom_text(aes(label = sprintf("%.2f", value)),
+    geom_tile() + # Adding tiles
+    geom_text(aes(label = sprintf("%.2f", value)), # Adding the correlation values
               vjust = 0.5,
-              size=2.5) + # Adding text
-    scale_fill_viridis_c(name = "Spearman\nCorrelation",
-                         na.value = "white",
-                         direction = 1,
-                         begin = 0.1,
+              size=2.5) +
+    scale_fill_viridis_c(name = "Spearman\nCorrelation", # Adding the color legend
+                         na.value = "white", # Setting the color for NAs
+                         begin = 0.1, # changing the color to prevent dark colors
                          end = 1) +
-    theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45,
+    theme_minimal() + # applying a minimal theme to be consistant with our other graphs
+    theme(axis.text.x = element_text(angle = 45, # Rotating the x axis labels 45 degrees
                                      hjust = 1)) +
-    labs(title = "Heatmap of Spearman Correlations for Goals", 
+    labs(title = "Heatmap of Spearman Correlations for Goals",  # Adding a title to our graph
          x = "",
          y = "")
 ```
@@ -76,8 +83,6 @@ At this point, we saw that the goals were mostly correlated. We now want to see 
 ```{r echo = TRUE, message = FALSE}
 #### Scree Plot ####
 
-viridis_colors <- viridis(10, option = "D", begin = 0, end = 0.8)
-
 # Selecting only the goals columns
 goals_data <- data_4 %>%
   dplyr::select(goal1, goal2, goal3, goal4, goal5,
@@ -87,17 +92,17 @@ goals_data_scaled <- scale(goals_data) # Scaling the data
 pca_result <- prcomp(goals_data_scaled) # Running PCA
 
 # Plotting Scree plot to visualize the importance of each principal component
-fviz_eig(pca_result,
+fviz_eig(pca_result, # specify the data used for the graph
          addlabels = TRUE,
-         linecolor = viridis(1,
-                             option = "B",
-                             begin = 0.5),
-         barcolor = "black",
-         barfill = viridis(10,
-                           option = "D",
+         linecolor = viridis(1, # specifying to the viridis function that we want 1 color
+                             option = "B", # we use a color from the magma palette
+                             begin = 0.5), # we want the "midel" color of that palette
+         barcolor = "black", # the contour of th bars
+         barfill = viridis(10, # specifying to the viridis function that we want 10 colors
+                           option = "D", # we use color from the viridis palette
                            begin = 0,
-                           end = 0.8)) +
-  theme_minimal()
+                           end = 0.8)) + # we want to use the first 80% of the palette to avoid the yellowish colors
+  theme_minimal() # applying a minimal theme to be consistant with our other graphs
 
 eigenvalues <- pca_result$sdev^2 # getting the third eigenvalue
 ```
@@ -108,27 +113,25 @@ We see clearly that the first component is the most important one. Guided by the
 #### Biplot ####
 
 # Plotting Biplot to visualize the two main dimensions
-fviz_pca_biplot(pca_result,
-                label = "var",
-                col.var = viridis(1,
-                                  option = "D",
-                                  begin = 0.5),
-                geom = "point",
-                pointsize = 0.1,
-                labelsize = 4) +
-  theme_minimal()
+fviz_pca_biplot(pca_result, # specify the data used for the graph
+                label = "var", # we want to label the variables
+                col.var = viridis(1, # specifying to the viridis function that we want 1 color
+                                  option = "D", # we use the color from the viridis palette
+                                  begin = 0.5), # we want the "midel" color of that palette
+                geom = "point", # we want to use points to represent the variables
+                pointsize = 0.1, # we want the points to be small
+                labelsize = 4) + # Specify the size of our labels
+  theme_minimal() # applying a minimal theme to be consistant with our other graphs
 ```
 
-The biplot offers insightful visualization, clearly illustrating the relationship between the various goals and the first two components. Notably, Dimension 2 exhibits a strong correlation with Goals 10 (Reduced inequalities) and 15 (Life on Land), whereas the remaining goals show a moderate to high correlation with Dimension 1. Furthermore, an interesting pattern emerges, revealing three distinct groups of variables, each playing a unique role. One group comprises Goals 12 (Responsible Consumption and Production) and 13 (Climate Action), another encompasses Goals 10 (Reduced inequalities) and 15 (Life on Land), and the third group includes all other variables. This categorization aids in understanding the distinct influences and interactions among the goals.
+The biplot offers an interesting visualization that clearly illustrate the relationship between the various goals and the first two components. We can see that the second dimension is mostly correlated with Goals 10 (Reduced inequalities) and 15 (Life on Land). The rest of the variables are more correlated with Dimension 1. With the biplot, we can see three disinct groups of variables, each playing a unique role. We see a group that regroup Goals 12 (Responsible Consumption and Production) and 13 (Climate Action). It is not a surprise to see that they are in the opposite direction from the rest of the variable. This comportment is due to the negative correlation between them and the rest of the variables as discussed previously. Both depicte environmental issues. We also see a group that regroup Goals 10 (Reduced inequalities) and 15 (Life on Land) which is suprising. To group the goal that treat the inequalities (goal 10) and the goal that concern the life on land (goal 15) does not make any sense. The last group regroup the rest of the variables. This categorization helps to understand the distinct influences and interactions between the goals.
 
-Grouping Goal 12 (Responsible Consumption and Production) and Goal 13 (Climate Action) together is logical, as both pertain to environmental issues. It is, however, interesting to note the pairing of Goal 10 (Reduced Inequalities) with Goal 15 (Life on Land). This could be explained by the fact that Goal 10 (Reduced inequalities) is related to the reduction of inequalities within and among countries, while Goal 15 (Life on Land) is related to the protection, restoration and promotion of sustainable use of terrestrial ecosystems, sustainable manage forests, combat desertification, and halt and reverse land degradation and halt biodiversity loss. Therefore, it is possible that the respondents who are more concerned about the reduction of inequalities are also more concerned about the protection of the environment. But this is a stretched.
-
-We also performed a stepwise regression to see more precisely how the goals are correlated with each other. We use the forward selection with the `leaps` package.
+We also performed a stepwise regression trying to see more precisely how the goals are correlated with each other. We use the forward selection with the `leaps` package to do so.
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 #### Preparation of the data ####
 
-goals_data <- data_4 %>%
+goals_data <- data_4 %>% # Selecting only the columns needed
   dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
                 goal6,goal7, goal8, goal9, goal10, goal11, goal12,
                 goal13, goal15, goal16, goal17)
@@ -137,6 +140,7 @@ goals_data <- data_4 %>%
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 #### Stepwise regression ####
 
+# Performing a stepwise regression trying to explain each variables with the others
 leaps_o <- regsubsets(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5 +
                         goal6 + goal7 + goal8 + goal9 + goal10 + goal11 +
                         goal12 + goal13 + goal15 + goal16 + goal17,
@@ -210,6 +214,7 @@ leaps_17 <- regsubsets(goal17 ~ goal1 + goal2 + goal3 + goal4 + goal5 + goal6 +
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 #### Regression found with stepwise regression ####
 
+# Getting all the linear models from the stepwise regression
 mod_o <- lm(
   overallscore ~ goal2 + goal3 + goal4 + goal6 + goal7 + goal10 + goal15 + goal17,
   data = goals_data)
@@ -263,10 +268,11 @@ mod_17 <- lm(
   data = goals_data)
 ```
 
-Below, we create a graph to present our different model that the stepwise regression chose as best regression for each of our goals. As expected, the model that explain the variable overallscore is explained by the other goals at a similar coefficient for each of our goals. This make sense since the overallscore has been directly calculated with the 17 scores. 
+Below, we create a graph to present our different model that the stepwise regression chose as best regression for each of our goals. As expected, the model that explain the variable overallscore is explained by the other goals at a similar coefficient for each of our goals. This make sense since the overallscore has been directly calculated with the 17 scores. We can see that none of the goals seems to be more used in the regression that the others. And that none of our explanatory variables received a high coefficient.
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
-library('broom')
+#### Graph of the different models ####
+
 # Create a dataframe of tidy models
 model_list <-
   list(mod_o, mod_1, mod_2, mod_3, mod_4, mod_5,
@@ -277,7 +283,7 @@ models_tidy <-
   lapply(model_list, tidy)
 
 names(models_tidy) <-
-  c("Overallscore ~others", "Goal1 ~ others", "Goal2 ~ others",
+  c("Overallscore ~ others", "Goal1 ~ others", "Goal2 ~ others",
     "Goal3 ~ others", "Goal4 ~ others", "Goal5 ~ others", "Goal6 ~ others",
     "Goal7 ~ others", "Goal8 ~ others", "Goal9 ~ others", "Goal10 ~ others",
     "Goal11 ~ others", "Goal12 ~ others", "Goal13 ~ others", "Goal15 ~ others",
@@ -306,33 +312,86 @@ ggplot(df_tidy_significant,
                     ymax = estimate + std.error),
                 width = 0.2) +
   ylim(-1, 1) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+  theme(axis.text.x = element_text(angle = 45,
+                                   hjust = 1),
         legend.position = "right", # You can change the position if needed
         legend.text = element_text(size = 5), # Adjust text size
         legend.title = element_text(size = 7), # Adjust title size
         legend.key.size = unit(0.3, "cm")) +  # Adjust key size) +
   labs(title = "Coefficient Plot of Regression Models",
        x = "Models",
-       y = "Estimates")
+       y = "Estimates") +
+  scale_color_viridis_d()
 ```
+
+The following graphs show the Residuals versus our fitted values for our model that explained the overallscore and the goal 9. Let's first look at the model that explain the best the Overallscore variable:
+
+$$
+\begin{split}
+Overallscore\sim \beta_0 &+ Goal~2*\beta_1 + Goal~3*\beta_2 + Goal~4*\beta_3 + Goal~6*\beta_4 \\ &+ Goal~7*\beta_5 + Goal~10*\beta_6 + Goal~15*\beta_7 + Goal~17*\beta_8
+\end{split}
+$$
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
-plot(mod_o, which = 1)
-plot(mod_1, which = 1)
-plot(mod_2, which = 1)
-plot(mod_3, which = 1)
-plot(mod_4, which = 1)
-plot(mod_5, which = 1)
-plot(mod_6, which = 1)
-plot(mod_7, which = 1)
-plot(mod_8, which = 1)
-plot(mod_9, which = 1)
-plot(mod_10, which = 1)
-plot(mod_11, which = 1)
-plot(mod_12, which = 1)
-plot(mod_13, which = 1)
-plot(mod_15, which = 1)
-plot(mod_16, which = 1)
-plot(mod_17, which = 1)
+#### Residuals vs Fitted plot for overallscore ####
+
+# Overallscore ~ others variables
+ggplot(mod_o,
+       aes(x = .fitted,
+           y = .resid)) +
+  geom_point(aes(color = abs(.resid)),
+             size = 0.5) +
+  scale_color_viridis_c(name = "Residuals",
+                        option = "D") +
+  geom_hline(yintercept = 0,
+             linetype = 2,
+             size = 0.6) +
+  xlab("Fitted Values") +
+  ylab("Residuals") +
+  ggtitle("Residuals vs. Fitted Plot (Overallscore ~ others variables)") +
+  geom_smooth(se = FALSE,
+              size = 0.75,
+              span = 0.95,
+              method = "loess",
+              color = viridis(1,
+                             option = "B",
+                             begin = 0.5)) +
+  theme_minimal()
 ```
 
+As the we now from the nature of the overallscore variable. She has been calculated using the 17 goal scores. Hence, the stepwise regression did not struggle to find a model with good results. As we can see in the first graph, the residuals are well distributed around 0, the residual and the red line, representing the mean residual, is almost flat and very close to 0. Let's now look at the model that according to our stepwise regression, is the best model at explaining our goal 9 scores but in reality that does not perform well according to the residual versus fitted plot. The predicted model look as follow:
+
+$$
+\begin{split}
+Goal~9\sim \beta_0 &+ Goal~1*\beta_1 + Goal~2*\beta_2 + Goal~3*\beta_3 + Goal~8*\beta_4 \\ &+ Goal~10*\beta_5 + Goal~12*\beta_6 + Goal~15*\beta_7 + Goal~17*\beta_8
+\end{split}
+$$
+
+```{r echo = TRUE, message = FALSE, warning=FALSE}
+#### Residuals vs Fitted plot for goal 9 ####
+
+# Goal 9 ~ others variables
+ggplot(mod_9,
+       aes(x = .fitted,
+           y = .resid)) +
+  geom_point(aes(color = abs(.resid)),
+             size = 0.5) +
+  scale_color_viridis_c(name = "Residuals",
+                        option = "D") +
+  geom_hline(yintercept = 0,
+             linetype = 2,
+             size = 0.6) +
+  xlab("Fitted Values") +
+  ylab("Residuals") +
+  ggtitle("Residuals vs. Fitted Plot (Goal 9 ~ others variables)") +
+  geom_smooth(se = FALSE,
+              size = 0.75,
+              span = 0.95,
+              method = "loess",
+              color = viridis(1,
+                             option = "B",
+                             begin = 0.5)) +
+  theme_minimal()
+```
+
+As we can see in the graph, the model that tried to explain goal 9 is not as good. The mean residual is not flat and vary a lot. This could suggest non-linearity.
