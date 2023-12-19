@@ -17,9 +17,9 @@ Correlation_overall <- data_question1 %>%
       dplyr::select(population:ef_regulation)
 ```
 
-### EDA: general exploratory data analysis on factors influencing the sdg goals
+### EDA: general exploratory data analysis
 
-For this first part of our EDA, let's try to check first the distribution of the variables selected for answering our 1st question.
+For this first part of our EDA, let's try to check first the distribution of the SDG goals. The following variables are ordered by decreasing order of the average of the scores.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 # Reshape the data from wide to long format for our sdg goals and our human freedom index scores
@@ -49,12 +49,14 @@ ggplot(long_df_goal_distribution, aes(x = Value,
                        option = "D") +
   theme(plot.title = element_text(hjust = 0.5), # Center the title
         plot.title.position = "plot") + 
-  labs(x = 'Scores',
+  labs(x = 'Score',
        y = 'Goals',
       title = 'SDG Goals Distribution')
 ```
 
-As we can see, most of our goals have a left-skewed distribution, which shows that for most of the country concerned implemented good strategies for targeting the goals objectives. Some distribution have a longer distribution than other, which could be a proof of inequality in the investments made for implementing solutions. In another hand, we notice that the only right-skewed distribution is concerning the observations of goal 9, which is promoting infrastructures, innovation and inclusive and sustainable industrialization. Again, that could show means inequalities. Wealthier countries are able to invest more on these sustainable development goals.
+As we can see, most of our goals have a left-skewed distribution, which shows that for most of the country concerned implemented good strategies for targeting the goals objectives. Some distributions have a longer distribution than other, showing the variance of the scores between the countries, due to various reasons such as the inequality of the amount of money available to be invested for implementing solutions. In addition, we notice that the only right-skewed distribution is concerning the observations of the goal 9, which is promoting infrastructures, innovation and inclusive and sustainable industrialization.Therefore, it seems like many countries are encountering difficulties for implementing good solutions concerning this goal. 
+
+Now let's focus on the distribution of the Human Freedom Index scores.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 
@@ -71,11 +73,9 @@ ggplot(long_df_hfi_distribution, aes(x = Value,
        title = 'Human Freedom Index Scores Distribution')
 ```
 
-The distribution of the Human Freedom Index Score follows the same trend. Most of the scores are left-skewed, which means that countries tend to have in general good scores. The only scores not folowing are pf_law and ef_legal, which tend to have lower scores in general. Legal system, for civilians and countries, is changing slowly because it has a lot of implications over the situation within a country/between countries and because of the divergence of opinions. Therefore, investing more money for raising these scores will take more time than raising the scores of other goals.
+The distribution of the Human Freedom Index Score follows the same trend as the SDG goal one. Most of the scores are left-skewed, which means that countries tend to have in general good scores. The only scores not following the trend are pf_law and ef_legal, which tend to have in average lower scores. There could be multipl reasons why it is the case. One could be , i.e., legal system for civilians and countries is evolving slowly because it has a lot of implications over the situation within a country/between countries and because of the divergence of opinions. Therefore, investing money for raising these variable could be more difficult than raising the scores of other goals.
 
-Now let's consider the remaining variables of the dataset dedicated to answering the influence of factors over our SDG goals scores. All these variables have right-skewed distribution. Taking the mode into account, most of the concerned countries in our data have an unemployment rate between 2 to 7%, a distribution of GDP per capita between \$3'000-\$10'000, a distribution of military expenditure in percentage of the GDP 10% to 20% and finally a internet usage between 0 and 10%.
-
-These variables shows us even more the inequalities between the countries in our dataset. While most of our countries have low internet usage or/and a low GDP per capita, few countries are more developed, then mostly wealthier, and thus having better chances to get higher scores.
+Now let's consider the remaining variables of the dataset dedicated to answering the influence of factors over our SDG goals scores. 
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 #now, same for the remaining variables. No need to reshape our data as only one variable.
@@ -188,7 +188,11 @@ server <- function(input, output) {
 # shinyApp(ui = ui, server = server)
 ```
 
-Now, let's display the distribution of the different SDG achievement scores per continent, using violin boxplots to have an overview of the mods, the range with most of the observations and the outliers.
+All these variables have a right-skewed distribution. Taking the mode into account, most of the concerned countries in our data have an unemployment rate between 2 to 7%, a distribution of GDP per capita between $3'000-\$10'000, a distribution of military expenditure in percentage of the GDP 10% to 20% and finally a internet usage between 0 and 10%.
+
+These variables shows us even more the inequalities between the countries in our dataset. While most of our countries have low internet usage or/and a low GDP per capita, few countries are more developed, thus probably more wealthy, and therefore have better chances of getting higher scores.
+
+Now, let's display the distribution of the different SDG achievement scores per continent, using violin boxplots to have an overview of the mods, the range and the outliers of our observations. To do so, we used the median of each goal per continent.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 #### boxplots ####
@@ -267,6 +271,7 @@ medians_all$color <-
 
 bandwidth_nrd <- bw.nrd(medians_all$value) #adapting the bandwidth
 
+#plot
 ggplot(medians_all,
        aes(x = variable,
            y = value,
@@ -285,19 +290,19 @@ ggplot(medians_all,
              scales = "free_y") +
   scale_y_continuous(labels = scales::label_number()) +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5), # Center the title
+  theme(plot.title = element_text(hjust = 0.5),
         plot.title.position = "plot",
         axis.text.x = element_text(angle = 90,
                                    vjust = 0.5, hjust=1))
 ```
 
-Here is the distribution of the goals per continent. We notice that Europe the continent with most of its goals having a median superior to 75 (represented by the lightblue color. We notice that only two goals have a median score lower than 25, which is for goal 9 for Africa and goal 10 for America. As seen before, goal 9 is generally having lower scores than the other goals. That could mean that the access to technology and sustainable/resilient infrastructures/industrialization is harder in Africa, because of various reasons such as less wealthy countries, corruption,...
+We notice that Europe is the continent with most of its goals having a median score superior to 75 (represented by the dark blue color. We notice that only two goals have a median score lower than 25, which is for goal 9 for Africa and goal 10 for America. As seen before, goal 9 is generally having lower scores than the other goals. That could mean that the access to technology and sustainable/resilient infrastructures/industrialization is harder in Africa, due to various reasons such as the economical situation of these countries, corruption,...
 
-The goal 10 concerns the reduction of inequalities within/amongst countries. Therefore, we presume that less effort and investment has been made on this goal in America.
+The goal 10 concerns the reduction of inequalities within and amongst countries. Therefore, we presume that the investments made in the Americas to implement solutions for getting better scores towards this goal is maybe less effective due to for instance culture difference with other continent, or simply less money spent for solving the issue. 
 
-In addition, some distributions are quite disparsed, such as goal 13 in Oceania and goal 10 in Africa. That could again show inequalities within countries or less investment made to raise the scores by different countries of the same continent.
+In addition, some distributions are quite dispersed, such as goal 13 in Oceania and goal 10 in Africa. That could show inequalities within countries or again less investment made to raise the scores by different countries of the same continent.
 
-Now let's display boxplots for the different variables of the human freedom index.
+Now let's display boxplots for the different variables of the Human Freedom Index.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 #for Human Freedom Index scores 
@@ -397,9 +402,9 @@ ggplot(medians_all_HFI, aes(x = variable, y = value, fill = color)) +
         plot.title.position = "plot", axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
-Here we can notice the same results as before concerning the SDG goals, except that no score has a median below 25%. Again, Europe is the continent with most of its median scores superior to 75 (lightblue color)
+Here we can notice the same results, except that no score has a median below 25%. Again, Europe is the continent with most of its median scores superior to 75. 
 
-For space reason because of the different scales, we have decided not to make violin boxplot per continent for the remaining variables. The distribution can be seen in the general distribution seen prior to that.
+For space reason because of the different scales, we have decided not to make violin boxplot per continent for the remaining variables. Nevertheless, their distribution can be seen in the general distribution seen prior to that.
 
 Now, let's have a closer look to the general correlation between our variables. Using our cleaned dataset, we will use a correlation heatmap to help us vizualising the informations. Given that most of our variables are not normally distributed, we will use the Spearman method to calculate the correlation.
 
@@ -429,71 +434,69 @@ ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
   labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
 ```
 
-By looking at our heatmap, we notice that most of our goals are strongely correlated together and that some variables amongst the Human Freedom Index scores too (strong correlation among personal freedom variables (pf), reflecting scores from the Human Freedom Index on movement, religion, assembly, and expression). This could be explained by the fact that some of these goals/scores share partially similar objectifs, which could mean that a raise in the score of one of these goals will raise positively the score of another/some other goals. In addition, we notice that goals 12 and 13 (respectively "responsible consumption & production" and "climate action") are strongely negatively correlated with most of our variables, except between themself.
+By looking at our heatmap, we notice that most of our goals are strongely correlated together and that some variables amongst the Human Freedom Index scores too (strong correlation among personal freedom variables (pf), reflecting scores from the Human Freedom Index on movement, religion, assembly, and expression). This could be explained by the fact that some of these goals/scores share partially similar objectifs, which could mean that a raise in the score of one of these goals will raise positively the score of another/some other goals. In addition, we notice that goals 12 and 13 (respectively "responsible consumption & production" and "climate action", therefore climate oriented goals) are strongely negatively correlated with most of our variables. For the moment, as correlation doesn't imply causality, we cannot deduce anything from these informations. We will see more in detail the correlations between our goals and variables in the analysis part of the influence of the factors over the Sustainable Development Goals.
 
-We will see more in detail the correlations between our goals and variables in the analysis part of the influence of the factors over the Sustainable Development Goals.
+<!-- In order to have an overview of the relationship between our independent variables and the SDG overall score, we make several graphs containing the Spearman correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable. --\> -->
 
-In order to have an overview of the relationship between our independent variables and the SDG overall score, we make several graphs containing the Spearman correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable. --\>
+<!-- ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"} -->
+<!-- #### Spearman's correlation coeff #### -->
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
-#### Spearman's correlation coeff ####
+<!-- lower.panel <- function(x, y, ...){ -->
+<!--    points(x, -->
+<!--           y, -->
+<!--           pch = 20, -->
+<!--           cex = 0.2, -->
+<!--           col = viridis(1, option = "D", -->
+<!--                         begin = 0.5)) -->
+<!-- } -->
 
-lower.panel <- function(x, y, ...){
-   points(x,
-          y,
-          pch = 20,
-          cex = 0.2,
-          col = viridis(1, option = "D",
-                        begin = 0.5))
-}
- 
- panel.hist <- function(x, ...){
-   usr <- par("usr"); on.exit(par(usr))
-   par(usr = c(usr[1:2], 0, 1.5) )
-   h <- hist(x, plot = FALSE)
-   breaks <- h$breaks; nB <- length(breaks)
-   y <- h$counts; y <- y/max(y)
-   rect(breaks[-nB], 0, breaks[-1], y, col = viridis(10,
-                                                     option = "D", 
-                                                     begin = 0.4), ...)
- }
- 
- # panel.cor_stars function with stars alongside correlation coefficients
- panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
-   usr <- par("usr"); on.exit(par(usr))
-   par(usr = c(0, 1, 0, 1))
-   r <- cor(x, y)
-   p_value <- cor.test (x,y)$p.value
- 
-   if (p_value < 0.001){
-     stars <- "***"
-   } else if (p_value < 0.01) {
-     stars <- "**"
-   } else if (p_value < 0.05) {
-     stars <- "*"
-   } else {
-     stars <- ""
-   }
-   txt <- paste0(format(c(r, 0.123456789), digits = digits)[1], " ", stars)
-   if(missing(cex.cor)) cex.cor <- 0.5/strwidth(txt)
-   text(0.5, 0.5, txt, cex = cex.cor)
- }
- 
- # # Independent variables
- pairs(Correlation_overall[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of various variables")
- 
- # pairs(Correlation_overall[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly" ,"pf_expression" ,"pf_identity", "ef_government", "ef_legal", "ef_money", "ef_trade", "ef_regulation")], upper.panel=panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of HFI variables")
-```
+<!--  panel.hist <- function(x, ...){ -->
+<!--    usr <- par("usr"); on.exit(par(usr)) -->
+<!--    par(usr = c(usr[1:2], 0, 1.5) ) -->
+<!--    h <- hist(x, plot = FALSE) -->
+<!--    breaks <- h$breaks; nB <- length(breaks) -->
+<!--    y <- h$counts; y <- y/max(y) -->
+<!--    rect(breaks[-nB], 0, breaks[-1], y, col = viridis(10, -->
+<!--                                                      option = "D",  -->
+<!--                                                      begin = 0.4), ...) -->
+<!--  } -->
 
-Meaning of the stars: \*\*\* : p_value \< 0.001; \*\* : p_value \< 0.01; \*: p_value \<0.05; no star if p_value is higher.
+<!--  # panel.cor_stars function with stars alongside correlation coefficients -->
+<!--  panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) { -->
+<!--    usr <- par("usr"); on.exit(par(usr)) -->
+<!--    par(usr = c(0, 1, 0, 1)) -->
+<!--    r <- cor(x, y) -->
+<!--    p_value <- cor.test (x,y)$p.value -->
 
-The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score.
+<!--    if (p_value < 0.001){ -->
+<!--      stars <- "***" -->
+<!--    } else if (p_value < 0.01) { -->
+<!--      stars <- "**" -->
+<!--    } else if (p_value < 0.05) { -->
+<!--      stars <- "*" -->
+<!--    } else { -->
+<!--      stars <- "" -->
+<!--    } -->
+<!--    txt <- paste0(format(c(r, 0.123456789), digits = digits)[1], " ", stars) -->
+<!--    if(missing(cex.cor)) cex.cor <- 0.5/strwidth(txt) -->
+<!--    text(0.5, 0.5, txt, cex = cex.cor) -->
+<!--  } -->
 
-The overall SDG achievement score is highly correlated with "personal freedom: law" (p=.69) and "personal freedom: identity" (p=.62). The other dimensions of personal freedom do not seem to have important influence. Regarding the distribution of the personal freedom variables, we notice that except for law, all have right-skewed distributions meaning that most of the countries have high scores.
+<!--  # # Independent variables -->
+<!--  pairs(Correlation_overall[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of various variables") -->
 
-The overall SDG achievement score is highly correlated with "economical freedom: legal" (p=.77), "economical trade: legal" (p=.67) and "economical freedom: money" (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom.
+<!--  # pairs(Correlation_overall[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly" ,"pf_expression" ,"pf_identity", "ef_government", "ef_legal", "ef_money", "ef_trade", "ef_regulation")], upper.panel=panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of HFI variables") -->
+<!-- ``` -->
 
-### Analysis: analysis of the Influence of the factors over the Sustainable Development Goals
+<!-- Meaning of the stars: \*\*\* : p_value \< 0.001; \*\* : p_value \< 0.01; \*: p_value \<0.05; no star if p_value is higher. -->
+
+<!-- The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score. -->
+
+<!-- The overall SDG achievement score is highly correlated with "personal freedom: law" (p=.69) and "personal freedom: identity" (p=.62). The other dimensions of personal freedom do not seem to have important influence. Regarding the distribution of the personal freedom variables, we notice that except for law, all have right-skewed distributions meaning that most of the countries have high scores. -->
+
+<!-- The overall SDG achievement score is highly correlated with "economical freedom: legal" (p=.77), "economical trade: legal" (p=.67) and "economical freedom: money" (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom. -->
+
+### Analysis: Influence of the factors over the Sustainable Development Goals
 
 In order to answer the first question of our work, let's start by zooming on the correlation matrix heatmap made in our EDA part. Here are the correlations between the SDG goals and all the other variables except the SDG goals.
 
