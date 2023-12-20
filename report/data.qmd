@@ -5,6 +5,15 @@
 
 # Execute the setup script to install and load all the packages
 source(here::here("scripts","Clean","setup.R"))
+
+# Create a color palette for the percentage of missing values
+MPer_0_10 <- "#1abc9c"
+MPer_10_20 <- "#e5e419"
+MPer_20_30 <- "#fba537"
+MPer_30_100 <- "#e34e64"
+
+# Creation of a continuous color palette for the percentage of missing values
+MPer_pal <- colorRampPalette(c(MPer_0_10, MPer_10_20, MPer_20_30, MPer_30_100))
 ```
 
 ## Sources
@@ -469,8 +478,7 @@ ggplot(prop_missing_data,
    geom_bar(stat = "identity",
             aes(fill = prop_missing),
             color = "black") +
-   scale_fill_viridis_c(name = "Proportion\nof missing",
-                        begin = 0.5) +
+   scale_fill_gradientn(colors = MPer_pal(100), name = "Proportion\nof missing") +
    labs(title = "NAs by columns in the main dataset",
         x = "Variable",
         y = "Proportion of Missing Values") +
@@ -497,8 +505,7 @@ ggplot(SDG0,
        aes(x = code,
            y = NaPop)) +
   geom_bar(stat = "identity",
-           fill = viridis(1,
-                          begin = 0.7),
+           fill = MPer_30_100,
            color = "black") +
   labs(title = "NAs by row in population variable are for regions and not countries",
        x = "Code",
@@ -1160,8 +1167,7 @@ ggplot(COVID1,
                          na.value = "white",
                          begin = 0.5,
                          end = 1) +
-  theme_minimal() +
-  guides(fill = FALSE)
+  theme_minimal()
 
 issue_list <- c("ERI",
                 "GUM",
@@ -1693,13 +1699,6 @@ For MilitaryExpenditurePercentGDP, We plot the evolution of MilitaryExpenditureP
 ```{r, echo = TRUE, message = TRUE, warning = FALSE, fig.height=4}
 #### Evolution of MilitaryExpenditurePercentGDP over the time ####
 
-# Create a color palette for the percentage of missing values
-MPer_0_10 <- "#1abc9c"
-MPer_10_20 <- "#e5e419"
-MPer_20_30 <- "#fba537"
-MPer_30_100 <- "#e34e64"
-
-
 MilitaryExpenditurePercentGDP1 <- data_question1 %>%
   group_by(code) %>%
   summarize(NaMil1 = round(mean(is.na(MilitaryExpenditurePercentGDP)),3)) %>%
@@ -2173,6 +2172,9 @@ We noticed earlier that there were only missing values for goals 1 and 10. As we
 #### Goal1 and Goal10 missing values ####
 
 na_count <- sapply(data_question1, function(x) sum(is.na(x)))
+
+na_count[17]
+
 na_count_df <- data.frame(variable = names(na_count),
                           num_missing = na_count)
 na_count_df_filtered <- subset(na_count_df,
@@ -2208,7 +2210,7 @@ data_question1 <- data_question1 %>%
 # still 42 NA values goal10
 ```
 
-We had found that the missing values were located in only 5 countries. So we have decided to get rid of them. At this stage, there were only 42 remaining missing values. Then, we redo the same steps for goal 10.
+We found that there is `r na_count[8]`missing values for goal 1 and `r na_count[17]` for goal 10.  The missing values were located in only 5 countries. So we have decided to get rid of them. At this stage, there were only 42 remaining missing values. Then, we redo the same steps for goal 10.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Goal10 missing values ####
@@ -2264,19 +2266,31 @@ missing_data_summary <- data.frame(
 missing_data_summary <- missing_data_summary %>%
   mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))
 
-ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Percentage), y = Missing_Percentage, fill = Missing_Percentage)) +
+ggplot(data = missing_data_summary,
+       aes(x = reorder(VariableGroup,
+                       Missing_Percentage),
+           y = Missing_Percentage,
+           fill = Missing_Percentage)) +
   geom_bar(stat = "identity") +
-  geom_text(aes(label = ifelse(Missing_Percentage > 1, sprintf("%.1f%%", Missing_Percentage), ""), y = Missing_Percentage),
+  geom_text(aes(label = ifelse(Missing_Percentage > 1,
+                               sprintf("%.1f%%",
+                                       Missing_Percentage),
+                               ""),
+                y = Missing_Percentage),
             position = position_stack(vjust = 1),  # Adjust vertical position
             color = "white",  # Text color
             size = 3,          # Text size
             hjust = 1.05) +
+  scale_fill_viridis_c(name = "Missing Percentage",
+                       begin = 0.5,
+                       end = 0.98) +
   labs(title = "Percentage of Missing Values by Variable",
        x = "Variable",
        y = "Missing Percentage") +
   theme_minimal() +
   theme(axis.text.y = element_text(hjust = 1)) +
-  coord_flip()
+  coord_flip() +
+  guides(fill = FALSE)
 ```
 
 In this particular case, even if there are many missing values in our disaster dataset, we made the hypothesis that disaster events can not happen every year for every country given that these are uncontrollable and non-recurring events. Therefore the NAs that we encounter will become zeroes, implying that there have been no climatic disasters.
@@ -2304,7 +2318,7 @@ COVID4 <- data_question3_2 %>%
 
 g1 <- ggplot(COVID4, aes(x = reorder(code, Na_deaths), y = Na_deaths)) +
   geom_bar(stat = "identity",
-           fill = "lightgreen",
+           fill = MPer_30_100,
            color = "black") +
   labs(title = "NAs by country: \ndeaths per million",
        x = "Country code",
@@ -2321,7 +2335,7 @@ g2 <- ggplot(COVID4,
              aes(x = reorder(code, Na_cases),
                  y = Na_cases)) +
   geom_bar(stat = "identity",
-           fill = "lightgreen",
+           fill = MPer_30_100,
            color = "black") +
   labs(title = "NAs by country: \ncases per million",
        x = "Country code",
@@ -2338,7 +2352,7 @@ g3 <- ggplot(COVID4,
              aes(x = reorder(code, Na_stringency),
                  y = Na_stringency)) +
   geom_bar(stat = "identity",
-           fill = "lightgreen",
+           fill = MPer_30_100,
            color = "black") +
   labs(title = "NAs by country: \nstringency",
        x = "Country code",
