@@ -273,11 +273,11 @@ Below, we create a graph to present our different model that the stepwise regres
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 #### Graph of the different models ####
 
-# Create a dataframe of tidy models
+# Create a dataframe with our selected models
 model_list <-
-  list(mod_o, mod_1, mod_2, mod_3, mod_4, mod_5,
-                   mod_6, mod_7, mod_8, mod_9, mod_10, mod_11,
-                   mod_12, mod_13, mod_15, mod_16, mod_17)
+  list(mod_o, mod_1, mod_2, mod_3, mod_4, mod_5, mod_6, mod_7, mod_8, mod_9,
+       mod_10, mod_11, mod_12, mod_13, mod_15, mod_16, mod_17)
+
 
 models_tidy <-
   lapply(model_list, tidy)

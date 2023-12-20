@@ -3,6 +3,7 @@
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 #### Setup ####
 
+# Execute the setup script to install and load all the packages
 source(here::here("scripts","Clean","setup.R"))
 ```
 
@@ -13,6 +14,7 @@ We are collecting our Data from the sustainability development report (SDG), the
 ```{r}
 #### Source Table ####
 
+# Create a dataframe with all the information about the sources
 source_info <- data.frame(
   Column1 = c("D1_1_SDG",
               "D2_2_Unemployment_rate",
@@ -34,9 +36,11 @@ source_info <- data.frame(
               '<a href="https://github.com/owid/covid-19-data/tree/master/public/data">github.com</a>',
               '<a href="https://datacatalog.worldbank.org/search/dataset/0041070/Global-Spread-of-Conflict-by-Country-and-Population">datacatalog.worldbank.org</a>'))
 
+# Rename the columns
 colnames(source_info) <- c("Name of the Table",
                            "Source")
 
+# Print the table with the sources
 source_info %>%
   kable("html", escape = FALSE) %>%
   kable_styling(bootstrap_options = c("striped",
@@ -62,6 +66,7 @@ Our primary database focuses on the Sustainable Development Goals (SDG). Below i
 ```{r}
 #### D1_1_SDG Table ####
 
+# Create a dataframe with all the information about the variables
 D1_1_SDG_table_info <- data.frame(
   Column1 = c("code",
               "country",
@@ -76,9 +81,11 @@ D1_1_SDG_table_info <- data.frame(
               "Score on each SDG except SDG 14 (16 variables)",
               "Population of the country"))
 
+# Rename the columns
 colnames(D1_1_SDG_table_info) <- c("Variable Name",
                                    "Explanation")
 
+# Print the table with the variables information
 D1_1_SDG_table_info %>%
   kable(format = "html", escape = FALSE) %>%
   kable_styling(bootstrap_options = c("striped",
@@ -95,6 +102,7 @@ This database give us comprehensive data on the unemployment rates for each coun
 ```{r}
 #### D2_2_Unemployment_rate Table ####
 
+# Create a dataframe with all the information about the variables
 D2_2_Unemployment_rate_table_info <- data.frame(
   Column1 = c("code",
               "country",
@@ -105,9 +113,11 @@ D2_2_Unemployment_rate_table_info <- data.frame(
               "Year of the observation (2000-2022)",
               "Unemployment rate (% of the population 15 years old and older)"))
 
+# Rename the columns
 colnames(D2_2_Unemployment_rate_table_info) <- c("Variable Name",
                                    "Explanation")
 
+# Print the table with the variables information
 D2_2_Unemployment_rate_table_info %>%
   kable(format = "html", escape = FALSE) %>%
   kable_styling(bootstrap_options = c("striped",
@@ -124,6 +134,7 @@ This database offers detailed information on the GDP per capita in dollars for v
 ```{r}
 #### D3_0_GDP_per_capita Table ####
 
+# Create a dataframe with all the information about the variables
 D3_0_GDP_per_capita_table_info <- data.frame(
   Column1 = c("code",
               "country",
@@ -134,9 +145,11 @@ D3_0_GDP_per_capita_table_info <- data.frame(
               "Year of the observation (2000-2022)",
               "GDP per capita"))
 
+# Rename the columns
 colnames(D3_0_GDP_per_capita_table_info) <- c("Variable Name",
                                    "Explanation")
 
+# Print the table with the variables information
 D3_0_GDP_per_capita_table_info %>%
   kable(format = "html", escape = FALSE) %>%
   kable_styling(bootstrap_options = c("striped",
@@ -153,6 +166,7 @@ This database provides an insightful view of the proportion of their respective 
 ```{r}
 #### D3_1_Military_expenditure_percent_GDP Table ####
 
+# Create a dataframe with all the information about the variables
 D3_1_Military_expenditure_percent_GDP_table_info <- data.frame(
   Column1 = c("code",
               "country",
@@ -163,9 +177,11 @@ D3_1_Military_expenditure_percent_GDP_table_info <- data.frame(
               "Year of the observation (2000-2022)",
               "Military expenditures in percentage of GDP"))
 
+# Rename the columns
 colnames(D3_1_Military_expenditure_percent_GDP_table_info) <- c("Variable Name",
                                    "Explanation")
 
+# Print the table with the variables information
 D3_1_Military_expenditure_percent_GDP_table_info %>%
   kable(format = "html", escape = FALSE) %>%
   kable_styling(bootstrap_options = c("striped",
@@ -182,6 +198,7 @@ This database provides information on the percentage of the population that uses
 ```{r}
 #### D4_0_Internet_usage Table ####
 
+# Create a dataframe with all the information about the variables
 D4_0_Internet_usage_table_info <- data.frame(
   Column1 = c("code",
               "country",
@@ -192,9 +209,11 @@ D4_0_Internet_usage_table_info <- data.frame(
               "Year of the observation (2000-2022)",
               "Internet usage (% of the population)"))
 
+# Rename the columns
 colnames(D4_0_Internet_usage_table_info) <- c("Variable Name",
                                    "Explanation")
 
+# Print the table with the variables information
 D4_0_Internet_usage_table_info %>%
   kable(format = "html", escape = FALSE) %>%
   kable_styling(bootstrap_options = c("striped",
@@ -211,6 +230,7 @@ This database provides information on the Human Freedom Index (HFI) for each cou
 ```{r}
 #### D5_0_Human_freedom_index Table ####
 
+# Create a dataframe with all the information about the variables
 D5_0_Human_freedom_index_table_info <- data.frame(
   Column1 = c("code",
               "country",
@@ -245,9 +265,11 @@ D5_0_Human_freedom_index_table_info <- data.frame(
               "Tariffs, Regulatory trade barriers, Black-market exchange rates, Movement of capital and people",
               "Credit market regulations, Labor market regulations, Business regulations"))
 
+# Rename the columns
 colnames(D5_0_Human_freedom_index_table_info) <- c("Variable Name",
                                    "Explanation")
 
+# Print the table with the variables information
 D5_0_Human_freedom_index_table_info %>%
   kable(format = "html", escape = FALSE) %>%
   kable_styling(bootstrap_options = c("striped",
@@ -264,6 +286,7 @@ This database provides information on the number of deaths, injured, affected an
 ```{r}
 #### D6_0_Disaters Table ####
 
+# Create a dataframe with all the information about the variables
 D6_0_Disaters_table_info <- data.frame(
   Column1 = c("code",
               "country",
@@ -286,9 +309,11 @@ D6_0_Disaters_table_info <- data.frame(
               "Total number of affected caused by disasters",
               "Total of infrastructure damages"))
 
+# Rename the columns
 colnames(D6_0_Disaters_table_info) <- c("Variable Name",
                                    "Explanation")
 
+# Print the table with the variables information
 D6_0_Disaters_table_info %>%
   kable(format = "html", escape = FALSE) %>%
   kable_styling(bootstrap_options = c("striped",
@@ -305,6 +330,7 @@ This database provides information on the number of people dead due to COVID, th
 ```{r}
 #### D7_0_COVID Table ####
 
+# Create a dataframe with all the information about the variables
 D7_0_COVID_table_info <- data.frame(
   Column1 = c("code",
               "country",
@@ -319,9 +345,11 @@ D7_0_COVID_table_info <- data.frame(
               "Number of COVID cases",
               "Government Response Stringency Index: composite measure based on 9 response indicators including school closures, workplace closures, and trave"))
 
+# Rename the columns
 colnames(D7_0_COVID_table_info) <- c("Variable Name",
                                    "Explanation")
 
+# Print the table with the variables information
 D7_0_COVID_table_info %>%
   kable(format = "html", escape = FALSE) %>%
   kable_styling(bootstrap_options = c("striped",
@@ -338,6 +366,7 @@ This database provides information on the number of deaths, the number of people
 ```{r}
 #### D8_0_Conflicts Table ####
 
+# Create a dataframe with all the information about the variables
 D8_0_Conflicts_table_info <- data.frame(
   Column1 = c("code",
               "country",
@@ -356,10 +385,11 @@ D8_0_Conflicts_table_info <- data.frame(
               "Area affected by conflict",
               "Two different intensity levels are coded: minor armed conflicts (1) and wars (2), Takes the max intensity of conflict in the country so that it is coded 2 if there is at least one war (>=1000 deaths in intrastate conflict) during the year. Data from UCDP/PRIO Armed Conflict Dataset 17.1."))
 
-
+# Rename the columns
 colnames(D8_0_Conflicts_table_info) <- c("Variable Name",
                                    "Explanation")
 
+# Print the table with the variables information
 D8_0_Conflicts_table_info %>%
   kable(format = "html", escape = FALSE) %>%
   kable_styling(bootstrap_options = c("striped",
@@ -373,21 +403,24 @@ D8_0_Conflicts_table_info %>%
 
 ### Pre-cleaning
 
-To deal with the large scale of the datasets, we pre-cleaned each one prior to merging. This streamlined the process, simplifying the cleaning of the final, combined dataset. The treatment of missing values will be taken care of after merging our datasets.
+To deal with the large scale of the datasets, we pre-cleaned each dataset before merging them together. This streamlined the process, simplifying the cleaning of the final, combined dataset. The treatment of missing values will be taken care of after merging our datasets.
 
 #### Dataset on SDG
 
-This is our main dataset, that we clean in order to keep the columns containing the following information: country name, country code, year, population, overall score and the SDGs scores.
+This is our main dataset that we clean in order to keep the columns containing the following information: country name, country code, year, population, overall score and the SDGs scores.
 
 We start by importing the data and converting it into a DataFrame. Next, we rename the columns and convert the scores into numeric variables.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### D1_0_SDG importation ####
 
+#Importing the data from the csv file
 D1_0_SDG <- read.csv(here("scripts","data","SDG.csv"), sep = ";")
 
+# Keeping only the firste 22 columns
 D1_0_SDG <- D1_0_SDG[,1:22]
 
+# Renaming the columns
 colnames(D1_0_SDG) <- c("code", "country", "year", "population",
                         "overallscore", "goal1", "goal2", "goal3",
                         "goal4", "goal5", "goal6", "goal7", "goal8",
@@ -395,9 +428,13 @@ colnames(D1_0_SDG) <- c("code", "country", "year", "population",
                         "goal13", "goal14", "goal15", "goal16",
                         "goal17")
 
+# Function to convert the overallscore column into numeric values
+# and replace the "," by "."
 D1_0_SDG[["overallscore"]] <-
   as.double(gsub(",", ".", D1_0_SDG[["overallscore"]]))
 
+# Function to convert the scores columns into numeric values
+# and also to replace the "," by "."
 makenumSDG <- function(D1_0_SDG) {
   for (i in 1:17) {
     varname <- paste("goal", i, sep = "")
@@ -407,6 +444,7 @@ makenumSDG <- function(D1_0_SDG) {
   return(D1_0_SDG)
 }
 
+# Applying the function to the 1_0_SDG dataset
 D1_0_SDG <- makenumSDG(D1_0_SDG)
 ```
 
@@ -553,7 +591,8 @@ Finally, we complete the database to ensure there are no missing pairs of (year,
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 #### D1_0_SDG complete ####
 
-D1_0_SDG <- D1_0_SDG |> complete(code, year)
+D1_0_SDG <- D1_0_SDG %>%
+  complete(code, year)
 ```
 
 **Here are the first few lines of the cleaned dataset on SDG achievement scores:**
@@ -579,23 +618,30 @@ In this dataset, the initial step involves importing the data. Next, we ensure t
 
 D2_1_Unemployment_rate <-
   read.csv(here("scripts","data","UnemploymentRate.csv")) %>%
-  mutate(
-    country = iconv(ref_area.label, to = "UTF-8", sub = "byte"),
-    country = countrycode(country, "country.name", "country.name"),
-    year = time,
-    `unemployment rate` = obs_value / 100,
-    age_category = classif1.label,
-    sex = sex.label
-  ) %>%
-  select(-ref_area.label, -time, -obs_value, -classif1.label,
-         -sex.label, -source.label, -obs_status.label, -indicator.label) %>%
+  mutate(country = iconv(ref_area.label,
+                         to = "UTF-8",
+                         sub = "byte"),
+         country = countrycode(country,
+                               "country.name",
+                               "country.name"),
+         `unemployment rate` = obs_value / 100,
+         year = time,
+         age_category = classif1.label,
+         sex = sex.label) %>%
+  select(-ref_area.label, -time, -obs_value,
+         -classif1.label, -sex.label, -source.label,
+         -obs_status.label, -indicator.label) %>%
   merge(D1_0_SDG_country_list[, c("country", "code")],
-        by = "country", all.x = TRUE) %>%
+        by = "country",
+        all.x = TRUE) %>%
   filter(year >= 2000 & year <= 2022,
          !str_detect(sex, fixed("Male")) & !str_detect(sex, fixed("Female")),
          code %in% D1_0_SDG_country_list$code,
          age_category == "Age (Youth, adults): 15+") %>%
-  select(code, country, year, `unemployment rate`) %>%
+  select(code,
+         country,
+         year,
+         `unemployment rate`) %>%
   distinct()
 ```
 
@@ -614,10 +660,8 @@ datatable(D2_1_Unemployment_rate,
                    render = JS(
                      "function(data, type, row, meta){",
                      "  if(type === 'display'){",
-                     "    return (parseFloat(data) * 100).toFixed(2) + '%';",
-                     "  }",
-                     "  return data;",
-                     "}")))),
+                     "    return (parseFloat(data) * 100).toFixed(2) + '%'}",
+                     "  return data}")))),
           rownames = FALSE)
 ```
 
@@ -801,10 +845,8 @@ datatable(D3_1_GDP_per_capita,
                    render = JS(
                      "function(data, type, row, meta){",
                      "  if(type === 'display'){",
-                     "    return parseFloat(data).toFixed(2)",
-                     "  }",
-                     "  return data;",
-                     "}")))),
+                     "    return parseFloat(data).toFixed(2)}",
+                     "  return data}")))),
           rownames = FALSE)
 ```
 
@@ -825,10 +867,8 @@ datatable(D3_2_Military_Expenditure_Percent_GDP,
                    render = JS(
                      "function(data, type, row, meta){",
                      "  if(type === 'display'){",
-                     "    return parseFloat(data).toFixed(2) + '%';",
-                     "  }",
-                     "  return data;",
-                     "}")))),
+                     "    return parseFloat(data).toFixed(2) + '%'}",
+                     "  return data}")))),
           rownames = FALSE)
 ```
 
@@ -849,10 +889,8 @@ datatable(D3_3_Miliraty_Expenditure_Percent_Gov_Exp,
                    render = JS(
                      "function(data, type, row, meta){",
                      "  if(type === 'display'){",
-                     "    return parseFloat(data).toFixed(2) + '%';",
-                     "  }",
-                     "  return data;",
-                     "}")))),
+                     "    return parseFloat(data).toFixed(2) + '%'}",
+                     "  return data}")))),
           rownames = FALSE)
 ```
 
@@ -891,10 +929,8 @@ datatable(D4_0_Internet_usage,
                    render = JS(
                      "function(data, type, row, meta){",
                      "  if(type === 'display'){",
-                     "    return (parseFloat(data) * 100).toFixed(2) + '%';",
-                     "  }",
-                     "  return data;",
-                     "}")))),
+                     "    return (parseFloat(data) * 100).toFixed(2) + '%'}",
+                     "  return data}")))),
           rownames = FALSE)
 ```
 
@@ -981,10 +1017,8 @@ datatable(D5_0_Human_freedom_index,
                    render = JS(
                      "function(data, type, row, meta){",
                      "  if(type === 'display'){",
-                     "    return parseFloat(data).toFixed(2)",
-                     "  }",
-                     "  return data;",
-                     "}")))),
+                     "    return parseFloat(data).toFixed(2)}",
+                     "  return data}")))),
           rownames = FALSE)
 ```
 
@@ -1119,9 +1153,10 @@ ggplot(COVID1,
   labs(title = "Patterns of NAs for COVID variables before cleaning",
        x = "proportion of NAs",
        y = "Count of countries") +
-  scale_fill_manual(values = c("NaDeaths" = "red",
-                               "NaCases" = "blue",
-                               "NaStringency" = "green")) +
+  scale_fill_viridis_d(name = "Variables",
+                         na.value = "white",
+                         begin = 0.1,
+                         end = 1) +
   theme_minimal()
 
 issue_list <- c("ERI",
@@ -1415,6 +1450,7 @@ We load our final database and we visualize the missing values.We see that some 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%", out.height="75%"}
 #### Loading the final database to be cleaned ####
 
+# Import the final database
 all_Merge <- read.csv(here("scripts","data","all_Merge.csv"))
 
 # Remove unnecessary column
@@ -1422,7 +1458,7 @@ all_Merge <- all_Merge %>%
   select(-c(X))
 
 # Create a dataframe with the goals without NAs summarize in one column to
-#simplify the visualization
+# simplify the visualization
 goal_vars <- all_Merge %>%
   select(starts_with("goal")) %>%
   filter_all(all_vars(!is.na(.))) %>%
@@ -1433,7 +1469,9 @@ to_plot_missing <- all_Merge %>%
             goal11, goal12, goal13, goal15, goal16, goal17))
 
 vis_dat(to_plot_missing, warn_large_data = FALSE) +
-  scale_fill_brewer(palette = "Paired") +
+  scale_fill_viridis_d(na.value = "grey99",
+                         begin = 0,
+                         end = 1) +
   theme(
     axis.text.x = element_text(angle = 90, size = 6),
     legend.text = element_text(size = 8),  # Adjust the size of legend text
@@ -1503,7 +1541,7 @@ data_question3_3 <- all_Merge %>%
 
 We begin by visualizing the missing values. To have a less messy graph we group all the goals wihtout NAs into one single variable. We decide to remove MilitaryExpenditurePercentGovExp, because it has too many missing values and it contains similar information to MilitaryExpenditurePercentGDP.We also remove hf_score, pf_score and ef_score, because there are many missing values and since these variables summarize the other ones, deleting them will not make us loose information.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=4}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=2}
 #### Visualizing missing values by variables ####
 
 # Create a dataframe with the goals without NAs summarize in one column to simplify the visualization
@@ -1519,25 +1557,34 @@ missing_data_summary <- data.frame(
 missing_data_summary <- missing_data_summary %>%
   mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))
 
-ggplot(data = missing_data_summary, aes(x = reorder(VariableGroup, Missing_Percentage), y = Missing_Percentage, fill = Missing_Percentage)) +
-  geom_bar(stat = "identity") +
-  geom_text(aes(label = ifelse(Missing_Percentage > 1, sprintf("%.1f%%", Missing_Percentage), ""),
-                y = Missing_Percentage),
-            position = position_stack(vjust = 1),  # Adjust vertical position
-            color = "white",  # Text color
-            size = 2,          # Text size
-            hjust = 1.05) +
+summary(missing_data_summary)
+
+# Add a column with the number of missing values for the hover function
+missing_data_summary$hover_text <- paste("Variable: ",
+                                         missing_data_summary$Variable,
+                                         "\nMissing percentage: ",
+                                         round(missing_data_summary$Missing_Percentage, 2),
+                                         "%",
+                                         sep = "")
+
+ggplotly(ggplot(data = missing_data_summary,
+                aes(x = reorder(VariableGroup, Missing_Percentage),
+                y = Missing_Percentage,
+                fill = Missing_Percentage,
+                text = hover_text)) +
+           geom_bar(stat = "identity") +
+  scale_fill_viridis_c(name = "% NAs") +
   labs(title = "Percentage of Missing Values by Variable",
        x = "Variable",
        y = "Missing Percentage") +
   theme_minimal() +
-  theme(axis.text.y = element_text(hjust = 1, size=6 ),
+  theme(axis.text.y = element_text(hjust = 1, size=6),
+        axis.text.x = element_text(angle = 45, hjust = 1, size=6),
         legend.text = element_text(size = 8),
-        legend.title = element_text(size = 10)) +
-  labs(fill = "% NAs")
+        legend.title = element_text(size = 10)), tooltip = "text")
 
-data_question1 <- data_question1 %>% select(-c(MiliratyExpenditurePercentGovExp,
-                                               hf_score, pf_score, ef_score))
+data_question1 <- data_question1 %>%
+  select(-c(MiliratyExpenditurePercentGovExp, hf_score, pf_score, ef_score))
 ```
 
 ##### Dealing with missing values in rows   {.unnumbered}
@@ -1562,18 +1609,33 @@ data_question1 <- data_question1 %>% filter(!code %in% see_missing1_1$code)
 
 Here is the graph that allows us to visualize the countries that have missing values and how many , when there are more than 50 NAs in total.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=3}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=2}
 #### Number of missing values per country (>50 NAs) ####
 
-ggplot(see_missing1_1, aes(x = num_missing , y = reorder(code, num_missing), fill = num_missing)) +
-    geom_bar(stat = "identity") + 
-    scale_fill_gradient(low = "lightgreen", high = "darkgreen") +
+# Add a column with the number of missing values for the hover function
+see_missing1_1$hover_text <- paste("Country: ", see_missing1_1$code,
+                                   "\nMissing values: ", see_missing1_1$num_missing)
+
+# Creation of the plot with the number of missing values per country
+p <- ggplot(see_missing1_1, aes(x = num_missing,
+                                y = reorder(code, num_missing),
+                                fill = num_missing,
+                                text = hover_text)) +
+    geom_bar(stat = "identity") +
+    scale_fill_viridis_c(name = "Number of\nMissing Values",
+                         begin = 0,
+                         end = 1) +
     theme_minimal() +
-  theme(axis.text.y = element_text(hjust = 1, size=8 ),
-        legend.text = element_text(size = 8),
-        legend.title = element_text(size = 10),
-        plot.title = element_text(size=12)) +
-    labs(title = "Number of missing values per country containing at least 50 NAs", x = "Number of Missing Values", y = "Countries")
+    theme(axis.text.y = element_text(hjust = 1, size=8),
+          legend.text = element_text(size = 8),
+          legend.title = element_text(size = 10),
+          plot.title = element_text(size=12)) +
+    labs(title = "Number of missing values per country containing at least 50 NAs",
+         x = "Number of Missing Values",
+         y = "Countries")
+
+# Convert to plotly and specify what to display when hovering the graph
+ggplotly(p, tooltip = "text")
 ```
 
 We also look at patterns of missing values in the rows and see that except for the two goals with NAs that we discussed earlier and for the triplet "ef_money", "ef_trade" and "ef_regulation" there are not well defined patterns. We removes the countries that have NAs in the three variables mentioned at the same time.
@@ -1581,11 +1643,14 @@ We also look at patterns of missing values in the rows and see that except for t
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Visualizing the missing values in the rows ####
 
-naniar::gg_miss_upset(data_question1, nsets=10, nintersects=11)
+gg_miss_upset(data_question1,
+              nsets=10,
+              nintersects=11)
 
-data_question1 <- data_question1[rowSums(is.na(data_question1[, c("ef_money",
-                                                                  "ef_trade",
-                                                                  "ef_regulation")])) < 3, ]
+data_question1 <-
+  data_question1[rowSums(is.na(data_question1[, c("ef_money",
+                                                  "ef_trade",
+                                                  "ef_regulation")])) < 3, ]
 
 data_question1 <- data_question1 %>%
   group_by(code) %>%
