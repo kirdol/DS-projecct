@@ -257,9 +257,9 @@ ggplot(medians_all,
   geom_violin(trim = FALSE, bw = bandwidth_nrd) +
   scale_fill_viridis_d(name = "",
                        option = "D",
-                       labels = c("High median",
+                       labels = c("Low median",
                                   "Medium median",
-                                  "Low median")) + 
+                                  "High median")) + 
   labs(title = "SDG Distribution by Continent",
        x = "Goals",
        y = "Scores",
@@ -358,8 +358,8 @@ data_Q1_Oceania_HFI_long <- data_Q1_Oceania_HFI_long %>%
 # merge all medians 
 medians_all_HFI <- rbind(data_Q1_Oceania_HFI_long, data_Q1_Americas_HFI_long,data_Q1_Africa_HFI_long,data_Q1_Asia_HFI_long,data_Q1_Europe_HFI_long)
 
-medians_all_HFI$color <- ifelse(medians_all_HFI$median_value > 7.5, "3", 
-                        ifelse(medians_all_HFI$median_value < 2.5, "2", '1'))
+medians_all_HFI$color <- ifelse(medians_all_HFI$median_value > 7.5, "1", 
+                        ifelse(medians_all_HFI$median_value < 2.5, "3", '2'))
 
 bandwidth_nrd_HFI <- bw.nrd(medians_all_HFI$value)
 
@@ -369,8 +369,8 @@ ggplot(medians_all_HFI, aes(x = variable, y = value, fill = color)) +
   scale_fill_viridis_d(name = "",
                        option = "D",
                        direction = -1,
-                       labels = c("between",
-                                  "> 7.5",
+                       labels = c(">7.5",
+                                  "Between",
                                   "< 2.5")) +
   labs(title = "Human Freedom Index Scores Distribution by Continent", x = "Variables", y = "Scores", fill = "Score Category") +
   facet_grid(continent ~ ., scales = "free_y") +
