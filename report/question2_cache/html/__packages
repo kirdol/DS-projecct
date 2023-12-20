@@ -43,3 +43,7 @@ ggridges
 shiny
 leaps
 shinydashboard
+broom
+viridisLite
+viridis
+paletteer
