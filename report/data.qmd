@@ -851,7 +851,7 @@ datatable(D3_1_GDP_per_capita,
           rownames = FALSE)
 ```
 
-For this dataset, we went from ??? observations for 68 variables to 3818 observations for 4 varibles.
+For this dataset, we went from 266 observations (wide format) for 68 variables to 3818 (long format) observations for 4 variables.
 
 **Here are the first few lines of the cleaned dataset of military expenditures in percentage of GDP:**
 
@@ -873,7 +873,7 @@ datatable(D3_2_Military_Expenditure_Percent_GDP,
           rownames = FALSE)
 ```
 
-For this dataset, we went from ??? observations for 68 variables to 3818 observations for 4 varibles.
+For this dataset, we went from 266 observations (wide format) for 68 variables to 3818 (long format) observations for 4 variables.
 
 **Here are the first few lines of the cleaned dataset of military expenditures in percentage of government expenditures:**
 
@@ -894,6 +894,7 @@ datatable(D3_3_Miliraty_Expenditure_Percent_Gov_Exp,
                      "  return data}")))),
           rownames = FALSE)
 ```
+For this dataset, we went from 266 observations (wide format) for 68 variables to 3818 (long format) observations for 4 variables.
 
 #### Dataset on internet usage
 
