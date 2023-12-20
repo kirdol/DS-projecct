@@ -83,38 +83,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="focus-on-the-influence-of-the-factors-over-the-sdg-scores">Focus on the influence of the factors over the SDG scores</h2>
 <section id="eda-general-exploratory-data-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="eda-general-exploratory-data-analysis">EDA: general exploratory data analysis</h3>
-<p>For this first part of our EDA, let’s try to check first the distribution of the SDG. The following variables are ordered by decreasing order of the average of the scores.</p>
+<p>For this first part of our EDA, let’s try to check first the distribution of the SDG. The following variables are ordered by decreasing order of the average of the scores. The color represent the density of the observations: more the color is bright, more the density is high.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshape the data from wide to long format for our sdg and our human freedom index scores</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>long_df_goal_distribution <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(Correlation_overall,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"goal"</span>),</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">names_to =</span> <span class="st">"Goal"</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>long_df_goal_distribution<span class="sc">$</span>Goal <span class="ot">&lt;-</span> <span class="fu">with</span>(long_df_goal_distribution,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">reorder</span>(Goal, Value, <span class="at">FUN =</span> mean))</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>long_df_hfi_distribution <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(Correlation_overall,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> pf_law<span class="sc">:</span>ef_regulation,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">"Category"</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>long_df_hfi_distribution<span class="sc">$</span>Goal <span class="ot">&lt;-</span> <span class="fu">with</span>(long_df_hfi_distribution,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                                      <span class="fu">reorder</span>(Category, Value, <span class="at">FUN =</span> mean))</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(long_df_goal_distribution, <span class="fu">aes</span>(<span class="at">x =</span> Value,</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">y =</span> Goal,</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>,</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                               <span class="at">size =</span> <span class="fl">0.3</span>,</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>,</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>                       <span class="at">option =</span> <span class="st">"D"</span>) <span class="sc">+</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># Center the title</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Score'</span>,</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'Goals'</span>,</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">'SDG Scores Distribution'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>long_df_goal_distribution <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(Correlation_overall,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"goal"</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">names_to =</span> <span class="st">"Goal"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>long_df_goal_distribution<span class="sc">$</span>Goal <span class="ot">&lt;-</span> <span class="fu">with</span>(long_df_goal_distribution,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">reorder</span>(Goal, Value, <span class="at">FUN =</span> mean))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>long_df_hfi_distribution <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(Correlation_overall,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">cols =</span> pf_law<span class="sc">:</span>ef_regulation,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">names_to =</span> <span class="st">"Category"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">values_to =</span> <span class="st">"Value"</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>long_df_hfi_distribution<span class="sc">$</span>Goal <span class="ot">&lt;-</span> <span class="fu">with</span>(long_df_hfi_distribution,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                                      <span class="fu">reorder</span>(Category, Value, <span class="at">FUN =</span> mean))</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot density</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(long_df_goal_distribution, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> Goal, <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>, <span class="at">size =</span> <span class="fl">0.3</span>, <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"D"</span>) <span class="sc">+</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>)) <span class="sc">+</span>  <span class="co"># Center the title</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Score'</span>, <span class="at">y =</span> <span class="st">'Goals'</span>, <span class="at">title =</span> <span class="st">'SDG Scores Distribution'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -123,17 +117,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>As we can see, most of our goals have a left-skewed distribution, which shows that for most of the country concerned implemented good strategies for targeting the goals objectives. Some distributions have a longer distribution than other, showing the variance of the scores between the countries, due to various reasons such as the inequality of the amount of money available to be invested for implementing solutions. In addition, we notice that the only right-skewed distribution is concerning the observations of the goal 9, which is promoting infrastructures, innovation and inclusive and sustainable industrialization.Therefore, it seems like many countries are encountering difficulties for implementing good solutions concerning this goal.</p>
-<p>Now let’s focus on the distribution of the Human Freedom Index scores.</p>
+<p>As we can see, most of our goals have a left-skewed distribution, which shows that for most of the country concerned implemented good strategies for targeting the goals objectives. Some distributions have a longer distribution than other, showing the variance of the scores between the countries, due to various reasons such as the inequality of the amount of money available to be invested for implementing solutions. In addition, we notice that the only right-skewed distribution is concerning the observations of the goal 9, which is promoting infrastructures, innovation and inclusive and sustainable industrialization.Therefore, it seems like many countries are encountering difficulties for implementing good solutions concerning this goal. Furthermore, we notice that the goal1 has the highest density, which means that for this SDG,most of the countries received the same scores.</p>
+<p>Now let’s focus on the distribution of the Human Freedom Index scores. Same ordering selection and color method as the previous distribution plot.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(long_df_hfi_distribution, <span class="fu">aes</span>(<span class="at">x =</span> Value,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">y =</span> Category,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>,</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">size =</span> <span class="fl">0.3</span>,</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>, <span class="at">option =</span> <span class="st">"D"</span>) <span class="sc">+</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">"density"</span>, <span class="at">option =</span> <span class="st">"D"</span>) <span class="sc">+</span></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># Center the title</span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Scores'</span>,</span>
@@ -146,13 +140,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The distribution of the Human Freedom Index Score follows the same trend as the SDG goal one. Most of the scores are left-skewed, which means that countries tend to have in general good scores. The only scores not following the trend are pf_law and ef_legal, which tend to have in average lower scores. There could be multipl reasons why it is the case. One could be , i.e., legal system for civilians and countries is evolving slowly because it has a lot of implications over the situation within a country/between countries and because of the divergence of opinions. Therefore, investing money for raising these variable could be more difficult than raising the scores of other goals.</p>
+<p>The distribution of the Human Freedom Index Score follows the same trend as the SDG goal one. Most of the scores are left-skewed, which means that countries tend to have in general good scores. The only scores not following the trend are pf_law and ef_legal, which tend to have in average lower scores. There could be multipl reasons why it is the case. One could be , i.e., legal system for civilians and countries is evolving slowly because it has a lot of implications over the situation within a country/between countries and because of the divergence of opinions. Therefore, investing money for raising these variable could be more difficult than raising the scores of other goals. Furthermore, the highest density is contained in the factor pf_movement, which mean that most of our observations received the same high score.</p>
 <p>Now let’s consider the remaining variables of the dataset dedicated to answering the influence of factors over our SDG scores.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#now, same for the remaining variables. No need to reshape our data as only one variable.</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>unempl_d <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Correlation_overall, <span class="fu">aes</span>(<span class="at">x =</span> unemployment.rate,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">y =</span> <span class="dv">1</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>,</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">size =</span> <span class="fl">0.3</span>,</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
@@ -162,101 +156,87 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">size =</span> <span class="dv">10</span>), <span class="co"># Center the title</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'Density'</span>,</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">'Distribution of Unemployment Rate'</span>)</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>gdp_d <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Correlation_overall,</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                <span class="fu">aes</span>(<span class="at">x =</span> GDPpercapita,</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>                    <span class="at">y =</span> <span class="dv">1</span>,</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>                    <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>,</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                               <span class="at">size =</span> <span class="fl">0.3</span>,</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>,</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                       <span class="at">option =</span> <span class="st">"D"</span>) <span class="sc">+</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">size =</span> <span class="dv">10</span>), <span class="co"># Center the title</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'Density'</span>,</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">'Distribution of GDP per Capita'</span>)</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>milit_d <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Correlation_overall,</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">aes</span>(<span class="at">x =</span> MilitaryExpenditurePercentGDP,</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="dv">1</span>,</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>                      <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>,</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>                               <span class="at">size =</span> <span class="fl">0.3</span>,</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>,</span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>                       <span class="at">option =</span> <span class="st">"D"</span>) <span class="sc">+</span></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">size =</span> <span class="dv">10</span>), <span class="co"># Center the title</span></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'Density'</span>,</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">'Distribution of Military Expenditure (% of GDP)'</span>)</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>internet_d <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Correlation_overall,</span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">aes</span>(<span class="at">x =</span> internet_usage,</span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> <span class="dv">1</span>,</span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>                         <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>,</span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>                               <span class="at">size =</span> <span class="fl">0.3</span>,</span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>,</span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>                       <span class="at">option =</span> <span class="st">"D"</span>) <span class="sc">+</span> </span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">size =</span> <span class="dv">10</span>),</span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'Density'</span>,</span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">'Distribution of Internet Usage'</span>)</span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(unempl_d,gdp_d,milit_d,internet_d, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Define UI for application</span></span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">dashboardPage</span>(</span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>   <span class="fu">dashboardHeader</span>(<span class="at">title =</span> <span class="st">"Interactive Plots"</span>),</span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>   <span class="fu">dashboardSidebar</span>(</span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>      <span class="fu">actionButton</span>(<span class="st">"switchPlot"</span>, <span class="st">"Switch to Next Plot"</span>)</span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>   ),</span>
-<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>   <span class="fu">dashboardBody</span>(</span>
-<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>      <span class="fu">plotOutput</span>(<span class="st">"distPlot"</span>)</span>
-<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>   )</span>
-<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="co"># Define server logic</span></span>
-<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
-<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Reactive value to store which plot is currently active</span></span>
-<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>   currentPlot <span class="ot">&lt;-</span> <span class="fu">reactiveVal</span>(<span class="st">"goal"</span>)</span>
-<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>   <span class="fu">observeEvent</span>(input<span class="sc">$</span>switchPlot, {</span>
-<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Cycle through the plots</span></span>
-<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>      <span class="fu">currentPlot</span>(<span class="cf">switch</span>(<span class="fu">currentPlot</span>(),</span>
-<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"goal"</span> <span class="ot">=</span> <span class="st">"hfi"</span>,</span>
-<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"hfi"</span> <span class="ot">=</span> <span class="st">"grid"</span>,</span>
-<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"grid"</span> <span class="ot">=</span> <span class="st">"goal"</span>))</span>
-<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>   })</span>
-<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>   <span class="co"># Render the appropriate plot</span></span>
-<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>   output<span class="sc">$</span>distPlot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
-<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">currentPlot</span>() <span class="sc">==</span> <span class="st">"goal"</span>) {</span>
-<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>         <span class="fu">ggplot</span>(long_df_goal_distribution, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> Goal, <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
-<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>, <span class="at">size =</span> <span class="fl">0.3</span>, <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
-<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>            <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>, <span class="at">option =</span> <span class="st">"D"</span>) <span class="sc">+</span></span>
-<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
-<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Scores'</span>, <span class="at">y =</span> <span class="st">'Goals'</span>, <span class="at">title =</span> <span class="st">'SDG scores Distribution'</span>)</span>
-<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">currentPlot</span>() <span class="sc">==</span> <span class="st">"hfi"</span>) {</span>
-<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>         <span class="fu">ggplot</span>(long_df_hfi_distribution, <span class="fu">aes</span>(<span class="at">x =</span> Value, <span class="at">y =</span> Category, <span class="at">fill =</span> <span class="fu">stat</span>(x))) <span class="sc">+</span></span>
-<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>, <span class="at">size =</span> <span class="fl">0.3</span>, <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
-<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>            <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>, <span class="at">option =</span> <span class="st">"D"</span>) <span class="sc">+</span></span>
-<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
-<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Scores'</span>, <span class="at">title =</span> <span class="st">'Human Freedom Index Scores Distribution'</span>)</span>
-<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
-<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>         <span class="co"># Replace unempl_d, gdp_d, milit_d, internet_d with your ggplot objects</span></span>
-<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>         <span class="fu">grid.arrange</span>(unempl_d, gdp_d, milit_d, internet_d, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
-<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>   })</span>
-<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a><span class="co"># shinyApp(ui = ui, server = server)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span> <span class="st">'Percentage'</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">'Distribution of Unemployment Rate'</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>gdp_d <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Correlation_overall,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>                <span class="fu">aes</span>(<span class="at">x =</span> GDPpercapita,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>                    <span class="at">y =</span> <span class="dv">1</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                               <span class="at">size =</span> <span class="fl">0.3</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>                       <span class="at">option =</span> <span class="st">"D"</span>) <span class="sc">+</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">size =</span> <span class="dv">10</span>), <span class="co"># Center the title</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'Density'</span>,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Values'</span>,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">'Distribution of GDP per Capita'</span>)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>milit_d <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Correlation_overall,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">aes</span>(<span class="at">x =</span> MilitaryExpenditurePercentGDP,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="dv">1</span>,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>                      <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>,</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>                               <span class="at">size =</span> <span class="fl">0.3</span>,</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>,</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>                       <span class="at">option =</span> <span class="st">"D"</span>) <span class="sc">+</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">size =</span> <span class="dv">10</span>), <span class="co"># Center the title</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'Density'</span>,</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Percentage'</span>,</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">'Distribution of Military Expenditure (% of GDP)'</span>)</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>internet_d <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Correlation_overall,</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">aes</span>(<span class="at">x =</span> internet_usage,</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> <span class="dv">1</span>,</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>                         <span class="at">fill =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges_gradient</span>(<span class="at">scale =</span> <span class="dv">3</span>,</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>                               <span class="at">size =</span> <span class="fl">0.3</span>,</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>                               <span class="at">rel_min_height =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">""</span>,</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>                       <span class="at">option =</span> <span class="st">"D"</span>) <span class="sc">+</span> </span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span> </span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'Density'</span>,</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'Values'</span>,</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">'Distribution of Internet Usage'</span>)</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(unempl_d,gdp_d,milit_d,internet_d, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a><span class="co"># set y = 1. This creates a single ridge line for each distribution. -&gt; common approach when you want to visualize the distribution of a single variable without categorizing it by another variable.</span></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a><span class="co"># it can be normal for the scale of the density legend in a density plot to have a range that extends beyond the typical range of the variable itself, like going from 0 to 12 in the case of unemployment.rate. This can happen due to the way density is calculated and represented in the plot. Here are a few points to understand why this occurs:</span></span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a><span class="co"># Density Calculation: The density in a density plot is a probability density, not a simple frequency or proportion. It represents the probability per unit on the x-axis (in your case, the unemployment rate). Probability densities can exceed 1 because they are not probabilities themselves but rather rates at which probability is accumulating at each point.</span></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalization: Density plots typically normalize the area under the curve to sum up to 1. This normalization can result in density values that are greater than 1, especially if the data is concentrated in a narrow range.</span></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a><span class="co"># Kernel Smoothing: Density plots use kernel smoothing to estimate the probability density function of a random variable. The height of the density curve (y-axis) depends on how concentrated the data points are around each value of the variable. A high peak (high density value) means a lot of data points are concentrated in that area.</span></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a><span class="co"># Interpreting Density Values: The actual numerical value of the density on the y-axis is less important than the shape of the density curve. It's the relative height and the area under the curve that provide insights into the data distribution, not the absolute density values.</span></span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a><span class="co"># Different Variables, Different Scales: Each variable will have its own density scale depending on its distribution. Variables with a more concentrated distribution will have higher density values.</span></span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a><span class="co"># In summary, for your unemployment.rate plot, a density scale going up to 12 is a reflection of how the data is distributed and how the density is calculated, and it's not unusual. The key is to focus on the shape and peaks of the density plot to understand the distribution of your data.</span></span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a><span class="co"># Yes, it can be normal for the scale of the density legend in a density plot to have a range that extends beyond the typical range of the variable itself, like going from 0 to 12 in the case of unemployment.rate. This can happen due to the way density is calculated and represented in the plot. Here are a few points to understand why this occurs:</span></span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a><span class="co"># Density Calculation: The density in a density plot is a probability density, not a simple frequency or proportion. It represents the probability per unit on the x-axis (in your case, the unemployment rate). Probability densities can exceed 1 because they are not probabilities themselves but rather rates at which probability is accumulating at each point.</span></span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalization: Density plots typically normalize the area under the curve to sum up to 1. This normalization can result in density values that are greater than 1, especially if the data is concentrated in a narrow range.</span></span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a><span class="co"># Kernel Smoothing: Density plots use kernel smoothing to estimate the probability density function of a random variable. The height of the density curve (y-axis) depends on how concentrated the data points are around each value of the variable. A high peak (high density value) means a lot of data points are concentrated in that area.</span></span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a><span class="co"># Interpreting Density Values: The actual numerical value of the density on the y-axis is less important than the shape of the density curve. It's the relative height and the area under the curve that provide insights into the data distribution, not the absolute density values.</span></span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a><span class="co"># Different Variables, Different Scales: Each variable will have its own density scale depending on its distribution. Variables with a more concentrated distribution will have higher density values.</span></span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a><span class="co"># In summary, for your unemployment.rate plot, a density scale going up to 12 is a reflection of how the data is distributed and how the density is calculated, and it's not unusual. The key is to focus on the shape and peaks of the density plot to understand the distribution of your data.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -265,7 +245,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>All these variables have a right-skewed distribution. Taking the mode into account, most of the concerned countries in our data have an unemployment rate between 2 to 7%, a distribution of GDP per capita between $3’000-$10’000, a distribution of military expenditure in percentage of the GDP 10% to 20% and finally a internet usage between 0 and 10%.</p>
+<p>All these variables have a right-skewed distribution. Taking the mode into account, most of the concerned countries in our data have an unemployment rate between 2 to 7%, a distribution of GDP per capita between $1’000-$10’000, a distribution of military expenditure in percentage of the GDP 10% to 20% and finally a internet usage between 0 and 10%.</p>
 <p>These variables shows us even more the inequalities between the countries in our dataset. While most of our countries have low internet usage or/and a low GDP per capita, few countries are more developed, thus probably more wealthy, and therefore have better chances of getting higher scores.</p>
 <p>Now, let’s display the distribution of the different SDG achievement scores per continent, using violin boxplots to have an overview of the mods, the range and the outliers of our observations. To do so, we used the median of each goal per continent.</p>
 <div class="cell" data-layout-align="center">
@@ -856,37 +836,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>reg_goal16 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal16 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
 <span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>reg_goal17 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal17 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
 <span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal1,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal1 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal1,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal1 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal2,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal2 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal2,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal2 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal3,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal3 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal3,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal3 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal4,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal4 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal4,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal4 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal5,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal5 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal5,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal5 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal6,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal6 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal6,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal6 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal7,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal7 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal7,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal7 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal8,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal8 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal8,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal8 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal9,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal9 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal9,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal9 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal10,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal10 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal10,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal10 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal11,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal11 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal11,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal11 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal12,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal12 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal12,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal12 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal13,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal13 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal13,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal13 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal15,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal15 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal15,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal15 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal16,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal16 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal16,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal16 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal17,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal17 : Forward method - adjusted R^2"</span>)</span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal17,<span class="at">scale=</span><span class="st">"r2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal17 Forward method, adj.R^2"</span>)</span>
 <span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1075,7 +1055,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Here is our general plot. For vizualisation purpose, let’s also plot the positive and negative correlation plots</p>
+<p>Here is our general plot. For visualization purpose, let’s also plot the positive and negative correlation plots</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#positive values only </span></span>
@@ -1123,106 +1103,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>In this plot, we can see that most of our variables are influencing positively and negatively our goals. I.e., unemployment.rate is influencing goal 10 &amp; 8 negatively, but positively our other goals. Nevertheless, some factors seems to influence only positively our goals. It is the case for the factors internet_usage.</p>
-<p>Now let’s compute our regression model with the variables selected by our stepwise methode</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your R code for the regression and stargazer output goes here</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>reg_overall_Q1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(overallscore <span class="sc">~</span> unemployment.rate <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_security <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_trade, <span class="at">data =</span> data_question1)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>sg1 <span class="ot">&lt;-</span> <span class="fu">stargazer</span>(reg_overall_Q1,</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">title=</span><span class="st">"Impact of variables over Overallscore SDG"</span>,</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">type=</span><span class="st">'text'</span>,</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">digits=</span><span class="dv">3</span>)</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Impact of variables over Overallscore SDG</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; =========================================================</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                   Dependent variable:    </span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                               ---------------------------</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                      overallscore        </span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---------------------------------------------------------</span></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; unemployment.rate                      14.200***         </span></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                         (1.860)          </span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                                          </span></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; MilitaryExpenditurePercentGDP          0.604***          </span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                         (0.096)          </span></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                                          </span></span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; internet_usage                         15.600***         </span></span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                         (0.482)          </span></span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                                          </span></span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_security                            0.609***          </span></span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                         (0.072)          </span></span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                                          </span></span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_religion                            -0.804***         </span></span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                         (0.072)          </span></span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                                          </span></span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_identity                            0.839***          </span></span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                         (0.057)          </span></span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                                          </span></span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ef_legal                               1.540***          </span></span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                         (0.113)          </span></span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                                          </span></span>
-<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ef_trade                               1.580***          </span></span>
-<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                         (0.109)          </span></span>
-<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                                          </span></span>
-<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Constant                               33.400***         </span></span>
-<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                         (0.822)          </span></span>
-<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                                          </span></span>
-<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---------------------------------------------------------</span></span>
-<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Observations                             2,226           </span></span>
-<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; R2                                       0.822           </span></span>
-<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Adjusted R2                              0.822           </span></span>
-<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual Std. Error                4.670 (df = 2217)     </span></span>
-<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F Statistic                   1,282.000*** (df = 8; 2217)</span></span>
-<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; =========================================================</span></span>
-<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Note:                         *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In these plots, we can see that most of our variables are influencing positively and negatively our goals. I.e., unemployment.rate is influencing goal 10 &amp; 8 negatively, but positively our other goals. Nevertheless, some factors seems to influence only positively our goals. It is the case for the factors internet_usage. These results are due to the range of the objectives contained in the SDG: as each goal has a different objective, and that our factors are have also a wide range of action, we find different influence between our variables.</p>
+<div class="cell" data-layout-align="center" data-hash="question1_cache/html/unnamed-chunk-16_f816f1c677ae8c70c0d9ba9064ae6531">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### geom point #####</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># geom1 &lt;- ggplot(data_question1, aes(internet_usage, overallscore)) +</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and internet usage")</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># geom2 &lt;- ggplot(data_question1, aes(unemployment.rate, overallscore)) +</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and unemployment rate")</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co"># geom3 &lt;- ggplot(data_question1, aes(MilitaryExpenditurePercentGDP,overallscore)) +</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and military expenditure")</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co"># geom4 &lt;- ggplot(data_question1, aes(pf_security,overallscore)) +</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and pf_security")</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co"># geom5 &lt;-ggplot(data_question1, aes(pf_religion, overallscore)) +</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and pf_religion")</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="co"># geom7 &lt;-ggplot(data_question1, aes(pf_identity, overallscore)) +</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and pf_identity")</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="co"># geom8 &lt;-ggplot(data_question1, aes(ef_legal, overallscore)) +</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and ef_legal")</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a><span class="co"># geom9 &lt;-ggplot(data_question1, aes(ef_trade, overallscore)) +</span></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and ef_trade")</span></span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a><span class="co"># grid.arrange(geom1, geom2, geom3, geom4, geom5, geom7, geom8, geom9, nrow=3, ncol=3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>As we can see, all of the variables above are significantly impacting the overall score of our Sustainable Development Goals. In addition, our Radjusted is high enough, which means that our model is well explained.</p>
-<div class="cell" data-layout-align="center" data-hash="question1_cache/html/unnamed-chunk-17_fa8d12d97f91fff103d2b5bbea241a26">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### geom point #####</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>geom1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data_question1, <span class="fu">aes</span>(internet_usage, overallscore)) <span class="sc">+</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scarplot overallscore and internet usage"</span>)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>geom2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data_question1, <span class="fu">aes</span>(unemployment.rate, overallscore)) <span class="sc">+</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scarplot overallscore and unemployment rate"</span>)</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>geom3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data_question1, <span class="fu">aes</span>(MilitaryExpenditurePercentGDP,overallscore)) <span class="sc">+</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scarplot overallscore and military expenditure"</span>)</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>geom4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data_question1, <span class="fu">aes</span>(pf_security,overallscore)) <span class="sc">+</span></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scarplot overallscore and pf_security"</span>)</span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>geom5 <span class="ot">&lt;-</span><span class="fu">ggplot</span>(data_question1, <span class="fu">aes</span>(pf_religion, overallscore)) <span class="sc">+</span></span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scarplot overallscore and pf_religion"</span>)</span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>geom7 <span class="ot">&lt;-</span><span class="fu">ggplot</span>(data_question1, <span class="fu">aes</span>(pf_identity, overallscore)) <span class="sc">+</span></span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scarplot overallscore and pf_identity"</span>)</span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>geom8 <span class="ot">&lt;-</span><span class="fu">ggplot</span>(data_question1, <span class="fu">aes</span>(ef_legal, overallscore)) <span class="sc">+</span></span>
-<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scarplot overallscore and ef_legal"</span>)</span>
-<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>geom9 <span class="ot">&lt;-</span><span class="fu">ggplot</span>(data_question1, <span class="fu">aes</span>(ef_trade, overallscore)) <span class="sc">+</span></span>
-<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scarplot overallscore and ef_trade"</span>)</span>
-<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(geom1, geom2, geom3, geom4, geom5, geom7, geom8, geom9, <span class="at">nrow=</span><span class="dv">3</span>, <span class="at">ncol=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="question1_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>By checking the influence of the chosen variables over the overallscore, we can see that the functions are not linear. For some, such as internet_usage and ef_legal, we notice that the more the variable increase, the more it influence positively the overall score. For the others, the relations are more complex. I.e.: Unemployment.rate increase mostly the overallscore between 0 and 10%. pf_identity is slowly reducing the overallscore before going back up.</p>
-<p>In conclusion, after reviewing which variables are correlating between themself, after taking care of multicollinearity problems and doing our regressions on our overall SDG score and finally seeing the influence of these dependent variables depending on their range, we notice that most of our variables taken into account in our model is significant in explaining their influence (positive or negative) over the overall SDG. As our goals are mostly correlated between eachother, we can presume that taking the overall score as our dependent variable is giving us the same conclusion. Nevertheless, we still need to go deeper and check the influence of the scores between themself.</p>
+<!-- By checking the influence of the chosen variables over the overallscore, we can see that the functions are not linear. For some, such as internet_usage and ef_legal, we notice that the more the variable increase, the more it influence positively the overall score. For the others, the relations are more complex. I.e.: Unemployment.rate increase mostly the overallscore between 0 and 10%. pf_identity is slowly reducing the overallscore before going back up. -->
+<p>In conclusion, after reviewing which variables are correlating between eachother, after taking care of our multicollinearity problems and doing our regressions on our overall SDG score, we have been finally able to get a broad picture of the influence of our factors over our SDG.</p>
 </section>
 </section>
 
