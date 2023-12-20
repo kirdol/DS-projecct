@@ -1600,7 +1600,7 @@ data_question1 <- data_question1 %>%
 We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. We decide to remove the countries that have more than 50 missing values.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### Colums with number of missing values ####
+#### Columns with number of missing values ####
 
 see_missing1_1 <- data_question1 %>%
   group_by(code) %>%

@@ -137,7 +137,6 @@ plot7 <- ggplot(data = data5) +
 legend <- cowplot::get_legend(plot7)
 
 (plot5 + plot6) / legend
-plot5 / plot6 / legend
 
 ```
 

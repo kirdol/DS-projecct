@@ -9,15 +9,14 @@ Dernière slide présentation à mettre en phrases
 
 ## Limitations
 
-Some interesting countries missing from our analysis (which one would have been interesting?)
-We chose some variables, (events, factors), but infinity of possibilities
-Multicolinearity
+We had to delete several countries due to a high percentage of missing values, which means that some interesting countries are not analyzed for every research question. For example we removed Afghanistan and Somalia from the data used to analyze the different factors impacting the SDG scores. 
+In addition, we chose some variables as events and factors for our analysis based on our knowledge and ideas on what would have the most interesting impacts, but there are an infinity of possibilities. It is thus difficult to know if we focused on the most important variables to explain the different SDG scores across the world. 
+Finally, we encountered many cases of multicolinearity...
 
 ## Future work?
 
-Other events: financial crisis, elections
-other factors: type of country governance: dictatorship?, democracy?, etc.
-Study more specificaly the different targets/indicators of each SDGs ("subSDGs") to get a more precise view of what is impacted by what
+Our research serves as an overview of the different characteristics of a country, as well as uncontrollable events that can affect the 17 SDG scores. In this regard, future work could investigate other factors' effects such as the type of country governance (dictatorship, democracy, etc.) or the tourism rate. It could additionally focus on other events, including financial crises and elections. 
+We kept our analysis on the goal level, however, each goal has several targets and indicators that help keep track of the achievement and set subgoals. It would be interesting to dive in each goal separately to study more specifically these different targets and indicators in order to get a more precise view of what aspect of each goal is impacted by the different factors. 
 
 # References
 
