@@ -469,20 +469,22 @@ ggplot(prop_missing_data,
    geom_bar(stat = "identity",
             aes(fill = prop_missing),
             color = "black") +
-   scale_fill_viridis_c(name = "Proportion\nof missing") +
+   scale_fill_viridis_c(name = "Proportion\nof missing",
+                        begin = 0.5) +
    labs(title = "NAs by columns in the main dataset",
         x = "Variable",
         y = "Proportion of Missing Values") +
-   theme(plot.title = element_text(size = 10),
+   theme(plot.title = element_text(size = 10, hjust = 0.5),
          axis.title.x = element_text(size = 8),
          axis.title.y = element_text(size = 8)) +
    theme_minimal() +
-  coord_flip()
+  coord_flip() +
+  guides(fill = FALSE)
 ```
 
 Observing that the 'population' column contains numerous NAs, we investigate and discover that missing values are common, as some observations represent regions, not countries. Therefore, we can safely exclude these observations.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="55%", out.width="70%", fig.height=2.5}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=2.5}
 #### D1_0_SDG missing values in population ####
 
 SDG0 <- D1_0_SDG %>%
@@ -496,14 +498,15 @@ ggplot(SDG0,
            y = NaPop)) +
   geom_bar(stat = "identity",
            fill = viridis(1,
-                          begin = 0.5),
+                          begin = 0.7),
            color = "black") +
   labs(title = "NAs by row in population variable are for regions and not countries",
        x = "Code",
        y = "Proportion of NAs") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45,
-                                   hjust = 1))
+                                   hjust = 1),
+        plot.title = element_text(hjust = 0.5))
 
 D1_0_SDG <- D1_0_SDG %>%
   filter(!str_detect(code, "^_"))
@@ -600,7 +603,7 @@ D1_0_SDG <- D1_0_SDG %>%
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 #### D1_0_SDG first lines ####
 
-datatable(D1_0_SDG, options = list(pageLength = 10,
+datatable(D1_0_SDG, options = list(pageLength = 5,
                                    class = "hover",
                                    searchHighlight = TRUE), rownames = FALSE)
 ```
@@ -652,7 +655,7 @@ D2_1_Unemployment_rate <-
 
 datatable(D2_1_Unemployment_rate, 
           options = list(
-            pageLength = 10, 
+            pageLength = 5, 
             class = "hover", 
             searchHighlight = TRUE,
             columnDefs = list(
@@ -837,7 +840,7 @@ D3_3_Miliraty_Expenditure_Percent_Gov_Exp <- MiliratyExpenditurePercentGovExp
 
 datatable(D3_1_GDP_per_capita, 
           options = list(
-            pageLength = 10, 
+            pageLength = 5, 
             class = "hover", 
             searchHighlight = TRUE,
             columnDefs = list(
@@ -859,7 +862,7 @@ For this dataset, we went from ??? observations for 68 variables to 3818 observa
 
 datatable(D3_2_Military_Expenditure_Percent_GDP, 
           options = list(
-            pageLength = 10, 
+            pageLength = 5, 
             class = "hover", 
             searchHighlight = TRUE,
             columnDefs = list(
@@ -881,7 +884,7 @@ For this dataset, we went from ??? observations for 68 variables to 3818 observa
 
 datatable(D3_3_Miliraty_Expenditure_Percent_Gov_Exp, 
           options = list(
-            pageLength = 10, 
+            pageLength = 5, 
             class = "hover", 
             searchHighlight = TRUE,
             columnDefs = list(
@@ -921,7 +924,7 @@ D4_0_Internet_usage <- read.csv(here("scripts", "data", "InternetUsage.csv")) %>
 
 datatable(D4_0_Internet_usage, 
           options = list(
-            pageLength = 10, 
+            pageLength = 5, 
             class = "hover", 
             searchHighlight = TRUE,
             columnDefs = list(
@@ -1009,7 +1012,7 @@ D5_0_Human_freedom_index <- D5_0_Human_freedom_index %>%
 
 datatable(D5_0_Human_freedom_index, 
           options = list(
-            pageLength = 10, 
+            pageLength = 5, 
             class = "hover", 
             searchHighlight = TRUE,
             columnDefs = list(
@@ -1102,7 +1105,7 @@ setdiff(list_country, list_country_disasters)
 ```{r, echo = FALSE, message = TRUE, warning = FALSE}
 #### D6_0_Disasters first few lines ####
 
-datatable(D6_0_Disasters, options = list(pageLength = 10,
+datatable(D6_0_Disasters, options = list(pageLength = 5,
                                          class = "hover",
                                          searchHighlight = TRUE),
           rownames = FALSE)
@@ -1155,9 +1158,10 @@ ggplot(COVID1,
        y = "Count of countries") +
   scale_fill_viridis_d(name = "Variables",
                          na.value = "white",
-                         begin = 0.1,
+                         begin = 0.5,
                          end = 1) +
-  theme_minimal()
+  theme_minimal() +
+  guides(fill = FALSE)
 
 issue_list <- c("ERI",
                 "GUM",
@@ -1470,8 +1474,8 @@ to_plot_missing <- all_Merge %>%
 
 vis_dat(to_plot_missing, warn_large_data = FALSE) +
   scale_fill_viridis_d(na.value = "grey99",
-                         begin = 0,
-                         end = 1) +
+                         begin = 0.4,
+                         end = 0.9) +
   theme(
     axis.text.x = element_text(angle = 90, size = 6),
     legend.text = element_text(size = 8),  # Adjust the size of legend text
@@ -1557,31 +1561,38 @@ missing_data_summary <- data.frame(
 missing_data_summary <- missing_data_summary %>%
   mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))
 
-summary(missing_data_summary)
-
 # Add a column with the number of missing values for the hover function
 missing_data_summary$hover_text <- paste("Variable: ",
                                          missing_data_summary$Variable,
                                          "\nMissing percentage: ",
                                          round(missing_data_summary$Missing_Percentage, 2),
-                                         "%",
-                                         sep = "")
+                                         "%", sep = "")
 
-ggplotly(ggplot(data = missing_data_summary,
-                aes(x = reorder(VariableGroup, Missing_Percentage),
+p <- ggplot(data = missing_data_summary,
+            aes(x = reorder(VariableGroup, Missing_Percentage),
                 y = Missing_Percentage,
                 fill = Missing_Percentage,
                 text = hover_text)) +
-           geom_bar(stat = "identity") +
+  geom_bar(stat = "identity") +
   scale_fill_viridis_c(name = "% NAs") +
   labs(title = "Percentage of Missing Values by Variable",
        x = "Variable",
        y = "Missing Percentage") +
   theme_minimal() +
-  theme(axis.text.y = element_text(hjust = 1, size=6),
-        axis.text.x = element_text(angle = 45, hjust = 1, size=6),
+  theme(axis.text.y = element_text(hjust = 1,
+                                   size=6),
+        axis.text.x = element_text(angle = 45,
+                                   hjust = 1,
+                                   size=6),
         legend.text = element_text(size = 8),
-        legend.title = element_text(size = 10)), tooltip = "text")
+        legend.title = element_text(size = 10)) +
+        guides(fill = FALSE)
+
+# Convert to plotly and specify what to display when hovering the graph
+ggplotly(p,
+         tooltip = "text") %>%
+  config(plot_ly,
+         displayModeBar = FALSE)
 
 data_question1 <- data_question1 %>%
   select(-c(MiliratyExpenditurePercentGovExp, hf_score, pf_score, ef_score))
@@ -1632,10 +1643,12 @@ p <- ggplot(see_missing1_1, aes(x = num_missing,
           plot.title = element_text(size=12)) +
     labs(title = "Number of missing values per country containing at least 50 NAs",
          x = "Number of Missing Values",
-         y = "Countries")
+         y = "Countries") +
+  guides(fill = FALSE)
 
 # Convert to plotly and specify what to display when hovering the graph
-ggplotly(p, tooltip = "text")
+ggplotly(p, tooltip = "text") %>%
+  config(plot_ly, displayModeBar = FALSE)
 ```
 
 We also look at patterns of missing values in the rows and see that except for the two goals with NAs that we discussed earlier and for the triplet "ef_money", "ef_trade" and "ef_regulation" there are not well defined patterns. We removes the countries that have NAs in the three variables mentioned at the same time.
@@ -1680,6 +1693,13 @@ For MilitaryExpenditurePercentGDP, We plot the evolution of MilitaryExpenditureP
 ```{r, echo = TRUE, message = TRUE, warning = FALSE, fig.height=4}
 #### Evolution of MilitaryExpenditurePercentGDP over the time ####
 
+# Create a color palette for the percentage of missing values
+MPer_0_10 <- "#1abc9c"
+MPer_10_20 <- "#e5e419"
+MPer_20_30 <- "#fba537"
+MPer_30_100 <- "#e34e64"
+
+
 MilitaryExpenditurePercentGDP1 <- data_question1 %>%
   group_by(code) %>%
   summarize(NaMil1 = round(mean(is.na(MilitaryExpenditurePercentGDP)),3)) %>%
@@ -1709,14 +1729,14 @@ Evol_Missing_Mil1 <- ggplot(data = filtered_data_Mil1) +
   labs(title = "Military expenditure in % of GDP over time",
        x = "Year",
        y = "Military expenditure in % of GDP") +
-  scale_color_manual(values = c("0-10%" = "blue",
-                                "10-20%" = "green",
-                                "20-30%" = "red",
-                                "30-100%" = "black"),
-                     labels = c("0-10%",
-                                "10-20%",
-                                "20-30%",
-                                "30-100%")) +
+  scale_color_manual(values = c("0-10%" = MPer_0_10,
+                               "10-20%" = MPer_10_20,
+                               "20-30%"= MPer_20_30,
+                               "30-100%" = MPer_30_100),
+                    labels = c("0-10%",
+                               "10-20%",
+                               "20-30%",
+                               "30-100%")) +
   guides(color = guide_legend(title = "% NAs")) +
   facet_wrap(~ code, nrow = 5) +
   theme(strip.text = element_text(size = 6),
@@ -1780,10 +1800,10 @@ Freq_Missing_Military <- ggplot(data = question1_missing_Military) +
   labs(title = "Distribution of Military expenditures in % of GDP",
        x = "Military expenditures in % of GDP",
        y = "Frequency") +
-  scale_fill_manual(values = c("0-10%" = "blue",
-                               "10-20%" = "green",
-                               "20-30%"="red",
-                               "30-100%" = "black"),
+  scale_fill_manual(values = c("0-10%" = MPer_0_10,
+                               "10-20%" = MPer_10_20,
+                               "20-30%" = MPer_20_30,
+                               "30-100%" = MPer_30_100),
                     labels = c("0-10%",
                                "10-20%",
                                "20-30%",
@@ -1850,10 +1870,10 @@ Evol_Missing_Internet <- ggplot(data = question1_missing_Internet) +
   labs(title = "Evolution of internet usage over time",
        x = "Year",
        y = "Internet usage in %") +
-  scale_color_manual(values = c("0-10%" = "blue",
-                                "10-20%" = "green",
-                                "20-30%" = "red",
-                                "30-100%" = "black"),
+  scale_color_manual(values = c("0-10%" = MPer_0_10,
+                                "10-20%" = MPer_10_20,
+                                "20-30%" = MPer_20_30,
+                                "30-100%" = MPer_30_100),
                      labels = c("0-10%",
                                 "10-20%",
                                 "20-30%",
@@ -1933,10 +1953,10 @@ Evol_Missing_ef_money <- ggplot(data = question1_missing_ef_money) +
   labs(title = "Evolution of economic freedom: money over time",
        x = "Year",
        y = "ef_money") +
-  scale_color_manual(values = c("0-10%" = "blue",
-                                "10-20%" = "green",
-                                "20-30%" = "red",
-                                "30-100%" = "black"),
+  scale_color_manual(values = c("0-10%" = MPer_0_10,
+                                "10-20%" = MPer_10_20,
+                                "20-30%" = MPer_20_30,
+                                "30-100%" = MPer_30_100),
                      labels = c("0-10%",
                                 "10-20%",
                                 "20-30%",
@@ -1986,10 +2006,10 @@ Freq_Missing_ef_money <- ggplot(data = question1_missing_ef_money) +
   labs(title = "Distribution of economic freedom: money",
        x = "ef_money",
        y = "Frequency") +
-  scale_fill_manual(values = c("0-10%" = "blue",
-                               "10-20%" = "green",
-                               "20-30%"="red",
-                               "30-100%" = "black"),
+  scale_fill_manual(values = c("0-10%" = MPer_0_10,
+                               "10-20%" = MPer_10_20,
+                               "20-30%"= MPer_20_30,
+                               "30-100%" = MPer_30_100),
                     labels = c("0-10%",
                                "10-20%",
                                "20-30%",
@@ -2056,10 +2076,10 @@ Evol_Missing_ef_trade <- ggplot(data = question1_missing_ef_trade) +
   labs(title = "Evolution of economic freedom: trade over time",
        x = "Year",
        y = "ef_trade") +
-  scale_color_manual(values = c("0-10%" = "blue",
-                                "10-20%" = "green",
-                                "20-30%" = "red",
-                                "30-100%" = "black"),
+  scale_color_manual(values = c("0-10%" = MPer_0_10,
+                                "10-20%" = MPer_10_20,
+                                "20-30%" = MPer_20_30,
+                                "30-100%" = MPer_30_100),
                      labels = c("0-10%",
                                 "10-20%",
                                 "20-30%",
@@ -2111,10 +2131,10 @@ Freq_Missing_ef_trade <- ggplot(data = question1_missing_ef_trade) +
   labs(title = "Distribution of economic freedom: trade",
        x = "ef_trade",
        y = "Frequency") +
-  scale_fill_manual(values = c("0-10%" = "blue",
-                               "10-20%" = "green",
-                               "20-30%"="red",
-                               "30-100%" = "black"),
+  scale_fill_manual(values = c("0-10%" = MPer_0_10,
+                               "10-20%" = MPer_10_20,
+                               "20-30%"= MPer_20_30,
+                               "30-100%" = MPer_30_100),
                     labels = c("0-10%",
                                "10-20%",
                                "20-30%",
@@ -2158,8 +2178,8 @@ na_count_df <- data.frame(variable = names(na_count),
 na_count_df_filtered <- subset(na_count_df,
                                num_missing > 0)
 ggplot(na_count_df_filtered,
-       aes(x= num_missing,
-           y=variable,
+       aes(x = num_missing,
+           y = variable,
            fill = num_missing)) +
     geom_bar(aes(fill = num_missing),
              stat = "identity",
