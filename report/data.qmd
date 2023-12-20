@@ -2199,7 +2199,7 @@ data_question1 <- data_question1 %>%
 # still 42 NA values goal10
 ```
 
-We found that there is `r na_count[8]`missing values for goal 1 and `r na_count[17]` for goal 10.  The missing values were located in only 5 countries. So we have decided to get rid of them. At this stage, there were only 42 remaining missing values. Then, we redo the same steps for goal 10.
+We found that there is `r na_count[8]` missing values for goal 1 and `r na_count[17]` missing values for goal 10.  The missing values were located in only 5 countries. So we have decided to get rid of them. At this stage, there were only 42 remaining missing values. Then, we redo the same steps for goal 10.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Goal10 missing values ####
