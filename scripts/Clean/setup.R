@@ -2,6 +2,17 @@
 ## The following loads the needed packages ##
 #############################################
 
+# Create a color palette for the percentage of missing values
+MPer_0_10 <- "#1abc9c"
+MPer_10_20 <- "#e5e419"
+MPer_20_30 <- "#fba537"
+MPer_30_100 <- "#e34e64"
+
+Fix_color <- "#1abc9c"
+
+# Creation of a continuous color palette for the percentage of missing values
+MPer_pal <- colorRampPalette(c(MPer_0_10, MPer_10_20, MPer_20_30, MPer_30_100))
+
 # load the required packages and install them if they are not.
 packages <- c(
   "here", # for the project's organization
