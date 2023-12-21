@@ -267,9 +267,9 @@ mod_17 <- lm(
   data = goals_data)
 ```
 
-Below, we create a graph to present our different model that the stepwise regression chose based on the $R^2\:adjusted$ as best regression for each of our goals. The $R^2\:adjusted$ measure the quality of the models and takes into account the number of dependent variables. As expected, the model that explain the variable overallscore is explained by the other goals at a similar coefficient for each of our goals. This make sense since the overallscore has been directly calculated with the 17 scores. We can see that none of the goals seems to be more used in the regression that the others. And that none of our explanatory variables received a high coefficient.
+Below, we create a graph to present our different model that the stepwise regression chose based on the $R^2\:adjusted$ as best regression for each of our goals. The $R^2\:adjusted$ measure the quality of the models and takes into account the number of dependent variables. As expected, the model that explain the variable overallscore is explained by the other goals at a similar coefficient for each of our goals. This make sense since the overallscore has been directly calculated with the 17 scores. We can see that none of the goals seems to be more used in the regression that the others. And that none of our explanatory variables received a high coefficient. We also found that in general the model does not select all variables to explain the given goals. This comes from the high correlation between some goals.
 
-```{r echo = TRUE, message = FALSE, warning=FALSE}
+```{r echo = TRUE, message = FALSE, warning=FALSE, fig.height = 4}
 #### Graph of the different models ####
 
 # Create a dataframe with our selected models
@@ -313,9 +313,10 @@ ggplot(df_tidy_significant,
                 width = 0.2) +
   ylim(-1, 1) +
   theme(axis.text.x = element_text(angle = 45,
-                                   hjust = 1),
+                                   hjust = 1,
+                                   size = 10),
         legend.position = "right",
-        legend.text = element_text(size = 5),
+        legend.text = element_text(size = 6.5),
         legend.title = element_text(size = 7),
         legend.key.size = unit(0.3, "cm")) +
   labs(title = "Coefficient Plot of Regression Models",

@@ -349,7 +349,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>  goal17 <span class="sc">~</span> goal1 <span class="sc">+</span> goal5 <span class="sc">+</span> goal8 <span class="sc">+</span> goal9 <span class="sc">+</span> goal10 <span class="sc">+</span> goal11 <span class="sc">+</span> goal12 <span class="sc">+</span> goal16,</span>
 <span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> goals_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Below, we create a graph to present our different model that the stepwise regression chose based on the <span class="math inline">\(R^2\:adjusted\)</span> as best regression for each of our goals. As expected, the model that explain the variable overallscore is explained by the other goals at a similar coefficient for each of our goals. This make sense since the overallscore has been directly calculated with the 17 scores. We can see that none of the goals seems to be more used in the regression that the others. And that none of our explanatory variables received a high coefficient.</p>
+<p>Below, we create a graph to present our different model that the stepwise regression chose based on the <span class="math inline">\(R^2\:adjusted\)</span> as best regression for each of our goals. The <span class="math inline">\(R^2\:adjusted\)</span> measure the quality of the models and takes into account the number of dependent variables. As expected, the model that explain the variable overallscore is explained by the other goals at a similar coefficient for each of our goals. This make sense since the overallscore has been directly calculated with the 17 scores. We can see that none of the goals seems to be more used in the regression that the others. And that none of our explanatory variables received a high coefficient. We also found that in general the model does not select all variables to explain the given goals. This comes from the high correlation between some goals.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Graph of the different models ####</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -394,15 +394,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
 <span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>,</span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">hjust =</span> <span class="dv">1</span>),</span>
-<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
-<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">5</span>),</span>
-<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>),</span>
-<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.3</span>, <span class="st">"cm"</span>)) <span class="sc">+</span></span>
-<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Coefficient Plot of Regression Models"</span>,</span>
-<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Models"</span>,</span>
-<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Estimates"</span>) <span class="sc">+</span></span>
-<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>  colors_pal</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">hjust =</span> <span class="dv">1</span>,</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">6.5</span>),</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>),</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.3</span>, <span class="st">"cm"</span>)) <span class="sc">+</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Coefficient Plot of Regression Models"</span>,</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Models"</span>,</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Estimates"</span>) <span class="sc">+</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>  colors_pal</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -451,7 +452,7 @@ Overallscore\sim \beta_0 &amp;+ Goal~2*\beta_1 + Goal~3*\beta_2 + Goal~4*\beta_3
 </div>
 </div>
 </div>
-<p>As the we now from the nature of the overallscore variable. She has been calculated using the 17 goal scores. Hence, the stepwise regression did not struggle to find a model with good results. As we can see in the first graph, the residuals are well distributed around 0, the residual and the red line, representing the mean residual, is almost flat and very close to 0. Let’s now look at the model that according to our stepwise regression, is the best model at explaining our goal 9 scores but in reality that does not perform well according to the residual versus fitted plot. The predicted model look as follow:</p>
+<p>As the we now from the nature of the overallscore variable. It has been calculated using the 17 goal scores. Hence, the stepwise regression did not struggle to find a model with good results. The <span class="math inline">\(R^2\:adjusted\)</span> of 0.98 of this model suggest that the model is good quality. As we can see in the first graph, the residuals vs.&nbsp;fitted plot also suggest a good quality. The residuals are well distributed around 0, the residual and the red line, representing the mean residual, is almost flat and very close to 0. Let’s now look at the model that according to our stepwise regression, is the best model at explaining our goal 9 scores with a <span class="math inline">\(R^2\:adjusted\)</span> of 0.81 but in reality that does not perform well according to the residual versus fitted plot. The predicted model looks as follow:</p>
 <p><span class="math display">\[
 \begin{split}
 Goal~9\sim \beta_0 &amp;+ Goal~1*\beta_1 + Goal~2*\beta_2 + Goal~3*\beta_3 + Goal~8*\beta_4 \\ &amp;+ Goal~10*\beta_5 + Goal~12*\beta_6 + Goal~15*\beta_7 + Goal~17*\beta_8
@@ -492,6 +493,7 @@ Goal~9\sim \beta_0 &amp;+ Goal~1*\beta_1 + Goal~2*\beta_2 + Goal~3*\beta_3 + Goa
 </div>
 </div>
 <p>As we can see in the graph, the model that tried to explain goal 9 is not as good. The mean residual is not flat and vary a lot. This could suggest non-linearity.</p>
+<p>To conclude this part, we have seen some interesting relationships between the SDGs scores. We found that if a country is performing well in some goals, it does not necessary mean that it will perform well in the others. Some goals are negatively correlated. We then interested our-self on regrouping some goals together with a principal components analysis and we found that the analysis suggested to regroup some goals that at first sight, would not have been regrouped together. We also performed some stepwise regression to see how thw individual goals could be explained by the other and found that in general the model does not select all variables to explain the given goals. This comes from the high correlation between some goals.</p>
 </section>
 </section>
 
