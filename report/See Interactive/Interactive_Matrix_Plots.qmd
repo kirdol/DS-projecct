@@ -24,6 +24,98 @@ Correlation_overall <- data_question1 %>%
 
 Here you can see an interactive map of the correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019).
 
+```{r, eval = TRUE, echo = FALSE, message = FALSE, warning=FALSE}
+
+Q3.1 <- Q3.1 %>%
+  arrange(code, year) %>%
+  group_by(code)
+
+disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
+
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6",
+                      "goal7", "goal8", "goal9", "goal10", "goal11", "goal12",
+                      "goal13", "goal15", "goal16", "total_affected",
+                      "total_deaths")
+
+subset_data <- disaster_data[, relevant_columns]
+
+lagged_subset_data <- subset_data %>%
+  mutate(
+    lagged_total_affected = lag(total_affected, default = NA),
+    lagged_total_deaths = lag(total_deaths, default = NA)
+  )
+
+correlation_matrix_lagged <-
+  cor(lagged_subset_data[, c("lagged_total_affected", "lagged_total_deaths")],
+      subset_data,
+      method = "spearman")
+
+cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
+names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
+
+ui <- fluidPage(
+  titlePanel("Interactive Correlation Heatmap between the climate disasters and the SDG goals in South, East Asia and North America with 1 year gap"),
+  plotlyOutput("heatmap"),
+  sliderInput("year", "Select Year", min = 2000, max = 2021, value = 2012, step = 1),
+  verbatimTextOutput("correlation_output"),
+  actionButton("stopButton", "Stop application")
+)
+
+server <- function(input, output, session) {
+  selected_data <- reactive({
+    filtered_data <- disaster_data[disaster_data$year == input$year, ]
+    subset_data <- filtered_data[, relevant_columns]
+    lagged_subset_data <- subset_data %>%
+      mutate(
+        lagged_total_affected = lag(total_affected, default = NA),
+        lagged_total_deaths = lag(total_deaths, default = NA)
+      )
+    
+    correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_total_affected", "lagged_total_deaths")], subset_data)
+    
+    cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
+    names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
+    
+    return(cor_melted_lagged)
+  })
+  
+  output$heatmap <- renderPlotly({
+    p <- plot_ly(data = selected_data(),
+                 x = ~Variable1,
+                 y = ~Variable2,
+                 z = ~Correlation, 
+                 type = "heatmap",
+                 colorscale = list(c(-1, "blue"), c(0, "white"), c(1, "red")),
+                 zmin = -1, zmax = 1)
+    
+    p <- p %>% layout(
+      title = "",
+      xaxis = list(title = ""),
+      yaxis = list(title = ""),
+      coloraxis = list(
+        colorbar = list(
+          title = "Correlation",  
+          tickvals = c(-1, 0, 1),  
+          ticktext = c("-1", "0", "1"),
+          len = 5,
+          thickness = 20,
+          x = 0,
+          xanchor = "left",
+          ticks = "outside" 
+        )
+      )
+    )
+    return(p)
+  })
+  
+  observeEvent(input$stopButton, {
+    stopApp()  
+  })
+}
+shinyApp(ui = ui, server = server)
+```
+
+
 ```{r, eval = TRUE, echo = FALSE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
 library(shiny)
