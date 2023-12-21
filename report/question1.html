@@ -330,11 +330,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> value,</span>
 <span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> color)) <span class="sc">+</span></span>
 <span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">trim =</span> <span class="cn">FALSE</span>, <span class="at">bw =</span> bandwidth_nrd) <span class="sc">+</span></span>
-<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">name =</span> <span class="st">""</span>,</span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">name =</span> <span class="st">""</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
 <span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>                       <span class="at">option =</span> <span class="st">"D"</span>,</span>
-<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Low median"</span>,</span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"High median"</span>,</span>
 <span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"Medium median"</span>,</span>
-<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"High median"</span>)) <span class="sc">+</span> </span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"Low median"</span>)) <span class="sc">+</span> </span>
 <span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"SDG Distribution by Continent"</span>,</span>
 <span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Goals"</span>,</span>
 <span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Scores"</span>,</span>
@@ -436,7 +436,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>medians_all_HFI <span class="ot">&lt;-</span> <span class="fu">rbind</span>(data_Q1_Oceania_HFI_long, data_Q1_Americas_HFI_long,data_Q1_Africa_HFI_long,data_Q1_Asia_HFI_long,data_Q1_Europe_HFI_long)</span>
 <span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>medians_all_HFI<span class="sc">$</span>color <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(medians_all_HFI<span class="sc">$</span>median_value <span class="sc">&gt;</span> <span class="fl">7.5</span>, <span class="st">"1"</span>, </span>
-<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">ifelse</span>(medians_all_HFI<span class="sc">$</span>median_value <span class="sc">&lt;</span> <span class="fl">2.5</span>, <span class="st">"3"</span>, <span class="st">'2'</span>))</span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">ifelse</span>(medians_all_HFI<span class="sc">$</span>median_value <span class="sc">&lt;</span> <span class="fl">2.5</span>, <span class="st">"2"</span>, <span class="st">'3'</span>))</span>
 <span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>bandwidth_nrd_HFI <span class="ot">&lt;-</span> <span class="fu">bw.nrd</span>(medians_all_HFI<span class="sc">$</span>value)</span>
 <span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a></span>
@@ -552,40 +552,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="analysis-influence-of-the-factors-over-the-sdg" class="level3">
 <h3 class="anchored" data-anchor-id="analysis-influence-of-the-factors-over-the-sdg">Analysis: Influence of the factors over the SDG</h3>
 <p>In order to answer the first question of our work, let’s start by zooming on the correlation matrix heatmap made in our EDA part. Here are the correlations between the SDG and all the other variables except the SDG.</p>
-<div class="cell" data-layout-align="center" data-hash="question1_cache/html/unnamed-chunk-7_b633495acc107af032b9029f0c6ec2cc">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="do">### Correlation Matrix Heatmap SDG/Other variables </span><span class="al">###</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#computing pvals of our interested variables</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>corr_matrix <span class="ot">&lt;-</span> <span class="fu">cor</span>(data_question1[<span class="dv">7</span><span class="sc">:</span><span class="dv">40</span>], <span class="at">method =</span> <span class="st">"spearman"</span>, <span class="at">use =</span> <span class="st">"everything"</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>p_matrix2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="fu">ncol</span>(data_question1[<span class="dv">7</span><span class="sc">:</span><span class="dv">40</span>]), <span class="at">ncol =</span> <span class="fu">ncol</span>(data_question1[<span class="dv">7</span><span class="sc">:</span><span class="dv">40</span>]))</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(data_question1[<span class="dv">7</span><span class="sc">:</span><span class="dv">40</span>])) {</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(data_question1[<span class="dv">7</span><span class="sc">:</span><span class="dv">40</span>])) {</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    test_result <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(data_question1[<span class="dv">7</span><span class="sc">:</span><span class="dv">40</span>][, i], data_question1[<span class="dv">7</span><span class="sc">:</span><span class="dv">40</span>][, j])</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    p_matrix2[i, j] <span class="ot">&lt;-</span> test_result<span class="sc">$</span>p.value</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>corr_matrix[<span class="fu">which</span>(p_matrix2 <span class="sc">&gt;</span> p_value_threshold)] <span class="ot">&lt;-</span> <span class="cn">NA</span> <span class="co">#only keeping significant pval alpha = 0.05</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>melted_corr_matrix_GVar <span class="ot">&lt;-</span> <span class="fu">melt</span>(corr_matrix[<span class="dv">19</span><span class="sc">:</span><span class="dv">34</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">18</span>])</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(melted_corr_matrix_GVar, <span class="fu">aes</span>(Var1, Var2, <span class="at">fill =</span> value)) <span class="sc">+</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">ifelse</span>(<span class="sc">!</span><span class="fu">is.na</span>(value) <span class="sc">&amp;</span> <span class="fu">abs</span>(value) <span class="sc">&gt;</span> threshold_heatmap, <span class="fu">sprintf</span>(<span class="st">"%.2f"</span>, value), <span class="st">''</span>)),</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">"Spearman</span><span class="sc">\n</span><span class="st">Correlation"</span>,</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"white"</span>,</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>                       <span class="at">direction =</span> <span class="dv">1</span>,</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>                       <span class="at">begin =</span> <span class="fl">0.1</span>,</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>                       <span class="at">end =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># Center the title</span></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Variables'</span>, <span class="at">y =</span> <span class="st">'Goals'</span>,</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">'Correlations Heatmap between goals and our other variables'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-layout-align="center" data-hash="question1_cache/html/unnamed-chunk-7_3d4b374f57c4a90b7f9e5411006f3dbe">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Correlation Matrix Heatmap SDG/Other variables </span><span class="al">###</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># computing p-values of our interested variables</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>corr_matrix <span class="ot">&lt;-</span> <span class="fu">cor</span>(data_question1[<span class="dv">7</span><span class="sc">:</span><span class="dv">40</span>], <span class="at">method =</span> <span class="st">"spearman"</span>, <span class="at">use =</span> <span class="st">"everything"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>p_matrix2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="fu">ncol</span>(data_question1[<span class="dv">7</span><span class="sc">:</span><span class="dv">40</span>]), <span class="at">ncol =</span> <span class="fu">ncol</span>(data_question1[<span class="dv">7</span><span class="sc">:</span><span class="dv">40</span>]))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(data_question1[<span class="dv">7</span><span class="sc">:</span><span class="dv">40</span>])) {</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(data_question1[<span class="dv">7</span><span class="sc">:</span><span class="dv">40</span>])) {</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    test_result <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(data_question1[<span class="dv">7</span><span class="sc">:</span><span class="dv">40</span>][, i], data_question1[<span class="dv">7</span><span class="sc">:</span><span class="dv">40</span>][, j])</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    p_matrix2[i, j] <span class="ot">&lt;-</span> test_result<span class="sc">$</span>p.value</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>corr_matrix[<span class="fu">which</span>(p_matrix2 <span class="sc">&gt;</span> p_value_threshold)] <span class="ot">&lt;-</span> <span class="cn">NA</span> <span class="co">#only keeping significant pval alpha = 0.05</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>melted_corr_matrix_GVar <span class="ot">&lt;-</span> <span class="fu">melt</span>(corr_matrix[<span class="dv">19</span><span class="sc">:</span><span class="dv">34</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">18</span>])</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(melted_corr_matrix_GVar, <span class="fu">aes</span>(Var1, Var2, <span class="at">fill =</span> value)) <span class="sc">+</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">ifelse</span>(<span class="sc">!</span><span class="fu">is.na</span>(value) <span class="sc">&amp;</span> <span class="fu">abs</span>(value) <span class="sc">&gt;</span> threshold_heatmap, <span class="fu">sprintf</span>(<span class="st">"%.2f"</span>, value), <span class="st">''</span>)),</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">"Spearman</span><span class="sc">\n</span><span class="st">Correlation"</span>,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>                       <span class="at">na.value =</span> <span class="st">"white"</span>,</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>                       <span class="at">direction =</span> <span class="dv">1</span>,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>                       <span class="at">begin =</span> <span class="fl">0.1</span>,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>                       <span class="at">end =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># Center the title</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>) <span class="sc">+</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Variables'</span>, <span class="at">y =</span> <span class="st">'Goals'</span>,</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">'Correlations Heatmap between goals and our other variables'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -627,86 +626,104 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>As noticed earlier, there is a strong correlation among personal freedom variables (pf), reflecting scores from the Human Freedom Index on movement, religion, assembly, and expression.</p>
 <p>Again, we can see that GDP per capita, pf_law, ef_legal are highly correlated with some other variables. On another hand, we notice that pf_movement, pf_assembly, pf_expression are now also higly correlated with some of the other variables. In addition, we notice than the variables MilitaryExpenditurePercentGDP and ef_governement are negatively correlated with our other variables.</p>
-<p>In order to have a look at the influence of some factors over our dependent variables, let’s conduct a Principal Component Analysis over the Human Freedom Index Scores.</p>
-<div class="cell" data-layout-align="center" data-hash="question1_cache/html/unnamed-chunk-9_3b6d541e1fc3d2062371336f384510f4">
+<p>In order to have a look at the influence of our factors over our dependent variables, let’s conduct a Principal Component Analysis.</p>
+<div class="cell" data-layout-align="center" data-hash="question1_cache/html/unnamed-chunk-9_6dc865133cbf16edf5a91540224f6d9e">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### PCA and PCA Scree plot####</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>myPCA_s <span class="ot">&lt;-</span> <span class="fu">PCA</span>(data_question1[,<span class="dv">29</span><span class="sc">:</span><span class="dv">40</span>], <span class="at">graph =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(myPCA_s,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">addlabels =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">linecolor =</span> <span class="fu">viridis</span>(<span class="dv">1</span>,</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">option =</span> <span class="st">"B"</span>,</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">begin =</span> <span class="fl">0.5</span>),</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">barcolor =</span> <span class="st">"black"</span>,</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">barfill =</span> <span class="fu">viridis</span>(<span class="dv">10</span>,</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                           <span class="at">option =</span> <span class="st">"D"</span>,</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                           <span class="at">begin =</span> <span class="dv">0</span>,</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>                           <span class="at">end =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(myPCA_s)</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PCA(X = data_question1[, 29:40], graph = FALSE) </span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Select our data and effectuate our PCA analysis</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>myPCA_s <span class="ot">&lt;-</span> <span class="fu">PCA</span>(data_question1[,<span class="dv">25</span><span class="sc">:</span><span class="dv">40</span>], <span class="at">graph =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#scree plot</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_eig</span>(myPCA_s,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">addlabels =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">linecolor =</span> <span class="fu">viridis</span>(<span class="dv">1</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                             <span class="at">option =</span> <span class="st">"B"</span>,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                             <span class="at">begin =</span> <span class="fl">0.5</span>),</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">barcolor =</span> <span class="st">"black"</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">barfill =</span> <span class="fu">viridis</span>(<span class="dv">10</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>                           <span class="at">option =</span> <span class="st">"D"</span>,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>                           <span class="at">begin =</span> <span class="dv">0</span>,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>                           <span class="at">end =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(myPCA_s)</span>
 <span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Eigenvalues</span></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                        Dim.1   Dim.2   Dim.3   Dim.4   Dim.5   Dim.6</span></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variance               6.710   1.577   1.014   0.731   0.507   0.419</span></span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; % of var.             55.915  13.140   8.453   6.093   4.222   3.491</span></span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Cumulative % of var.  55.915  69.055  77.507  83.601  87.823  91.314</span></span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                        Dim.7   Dim.8   Dim.9  Dim.10  Dim.11  Dim.12</span></span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variance               0.287   0.218   0.192   0.168   0.106   0.070</span></span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; % of var.              2.395   1.820   1.602   1.402   0.882   0.585</span></span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Cumulative % of var.  93.710  95.530  97.132  98.533  99.415 100.000</span></span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Individuals (the 10 first)</span></span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                   Dist    Dim.1    ctr   cos2    Dim.2    ctr   cos2</span></span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1             |  2.143 | -0.207  0.000  0.009 |  1.261  0.045  0.346</span></span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2             |  2.085 | -0.135  0.000  0.004 |  1.325  0.050  0.404</span></span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3             |  2.413 |  0.027  0.000  0.000 |  1.656  0.078  0.471</span></span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4             |  2.529 |  0.530  0.002  0.044 |  1.430  0.058  0.320</span></span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5             |  2.416 |  0.364  0.001  0.023 |  1.272  0.046  0.277</span></span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6             |  2.277 |  0.378  0.001  0.028 |  1.146  0.037  0.253</span></span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7             |  2.320 |  0.613  0.003  0.070 |  1.196  0.041  0.266</span></span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8             |  2.605 |  0.726  0.004  0.078 |  1.614  0.074  0.384</span></span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9             |  2.335 |  0.850  0.005  0.132 |  1.287  0.047  0.304</span></span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10            |  2.183 |  0.909  0.006  0.173 |  0.982  0.027  0.202</span></span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                  Dim.3    ctr   cos2  </span></span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1             | -0.542  0.013  0.064 |</span></span>
-<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2             | -0.253  0.003  0.015 |</span></span>
-<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3             |  0.176  0.001  0.005 |</span></span>
-<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4             |  0.990  0.043  0.153 |</span></span>
-<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5             |  0.579  0.015  0.057 |</span></span>
-<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6             |  0.341  0.005  0.022 |</span></span>
-<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7             |  0.494  0.011  0.045 |</span></span>
-<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8             |  0.411  0.007  0.025 |</span></span>
-<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9             |  0.292  0.004  0.016 |</span></span>
-<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10            |  0.214  0.002  0.010 |</span></span>
-<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variables (the 10 first)</span></span>
-<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                  Dim.1    ctr   cos2    Dim.2    ctr   cos2    Dim.3</span></span>
-<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_law        |  0.871 11.310  0.759 | -0.301  5.732  0.090 | -0.110</span></span>
-<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_security   |  0.578  4.984  0.334 | -0.446 12.630  0.199 | -0.208</span></span>
-<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_movement   |  0.837 10.432  0.700 |  0.282  5.028  0.079 | -0.148</span></span>
-<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_religion   |  0.704  7.392  0.496 |  0.537 18.285  0.288 | -0.299</span></span>
-<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_assembly   |  0.839 10.482  0.703 |  0.404 10.343  0.163 | -0.206</span></span>
-<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_expression |  0.890 11.814  0.793 |  0.171  1.855  0.029 | -0.241</span></span>
-<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_identity   |  0.668  6.650  0.446 | -0.007  0.003  0.000 |  0.034</span></span>
-<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ef_government | -0.154  0.354  0.024 |  0.779 38.445  0.606 |  0.435</span></span>
-<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ef_legal      |  0.871 11.314  0.759 | -0.302  5.791  0.091 |  0.052</span></span>
-<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ef_money      |  0.690  7.104  0.477 | -0.128  1.047  0.017 |  0.544</span></span>
-<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                  ctr   cos2  </span></span>
-<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_law         1.189  0.012 |</span></span>
-<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_security    4.245  0.043 |</span></span>
-<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_movement    2.164  0.022 |</span></span>
-<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_religion    8.814  0.089 |</span></span>
-<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_assembly    4.167  0.042 |</span></span>
-<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_expression  5.703  0.058 |</span></span>
-<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_identity    0.113  0.001 |</span></span>
-<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ef_government 18.631  0.189 |</span></span>
-<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ef_legal       0.262  0.003 |</span></span>
-<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ef_money      29.130  0.295 |</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PCA(X = data_question1[, 25:40], graph = FALSE) </span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Eigenvalues</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                        Dim.1   Dim.2   Dim.3   Dim.4   Dim.5   Dim.6</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variance               7.781   2.027   1.155   1.068   0.756   0.686</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; % of var.             48.634  12.671   7.220   6.674   4.723   4.285</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Cumulative % of var.  48.634  61.305  68.526  75.199  79.922  84.207</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                        Dim.7   Dim.8   Dim.9  Dim.10  Dim.11  Dim.12</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variance               0.544   0.419   0.387   0.281   0.211   0.196</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; % of var.              3.400   2.621   2.418   1.754   1.317   1.228</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Cumulative % of var.  87.608  90.228  92.647  94.401  95.718  96.946</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                       Dim.13  Dim.14  Dim.15  Dim.16</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variance               0.180   0.141   0.105   0.063</span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; % of var.              1.127   0.879   0.655   0.393</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Cumulative % of var.  98.073  98.952  99.607 100.000</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Individuals (the 10 first)</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                   Dist    Dim.1    ctr   cos2  </span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1                             |  3.279 | -0.612  0.002  0.035 |</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2                             |  3.179 | -0.549  0.002  0.030 |</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3                             |  3.330 | -0.411  0.001  0.015 |</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4                             |  3.317 |  0.066  0.000  0.000 |</span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5                             |  3.143 | -0.070  0.000  0.000 |</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6                             |  2.966 | -0.018  0.000  0.000 |</span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7                             |  2.917 |  0.214  0.000  0.005 |</span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8                             |  3.128 |  0.343  0.001  0.012 |</span></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9                             |  2.617 |  0.525  0.002  0.040 |</span></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10                            |  2.501 |  0.768  0.003  0.094 |</span></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                Dim.2    ctr   cos2    Dim.3    ctr</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1                             -1.325  0.039  0.163 |  2.011  0.157</span></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2                             -1.340  0.040  0.178 |  2.009  0.157</span></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3                             -1.635  0.059  0.241 |  1.889  0.139</span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4                             -1.511  0.051  0.207 |  1.533  0.091</span></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5                             -1.374  0.042  0.191 |  1.424  0.079</span></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6                             -1.264  0.035  0.182 |  1.373  0.073</span></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7                             -1.240  0.034  0.181 |  1.384  0.075</span></span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8                             -1.450  0.047  0.215 |  1.569  0.096</span></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9                             -1.159  0.030  0.196 |  1.150  0.051</span></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10                            -0.906  0.018  0.131 |  0.964  0.036</span></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                 cos2  </span></span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1                              0.376 |</span></span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2                              0.399 |</span></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3                              0.322 |</span></span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4                              0.214 |</span></span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5                              0.205 |</span></span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6                              0.214 |</span></span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7                              0.225 |</span></span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8                              0.252 |</span></span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9                              0.193 |</span></span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10                             0.148 |</span></span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variables (the 10 first)</span></span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                  Dim.1    ctr   cos2    Dim.2    ctr</span></span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; unemployment.rate             |  0.092  0.109  0.009 |  0.265  3.472</span></span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; GDPpercapita                  |  0.760  7.425  0.578 |  0.303  4.537</span></span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; MilitaryExpenditurePercentGDP | -0.221  0.625  0.049 |  0.539 14.347</span></span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; internet_usage                |  0.736  6.953  0.541 |  0.398  7.806</span></span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_law                        |  0.891 10.212  0.795 |  0.237  2.768</span></span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_security                   |  0.593  4.519  0.352 |  0.267  3.524</span></span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_movement                   |  0.799  8.211  0.639 | -0.372  6.839</span></span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_religion                   |  0.658  5.567  0.433 | -0.576 16.385</span></span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_assembly                   |  0.802  8.259  0.643 | -0.450 10.009</span></span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_expression                 |  0.869  9.693  0.754 | -0.256  3.221</span></span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                 cos2    Dim.3    ctr   cos2  </span></span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; unemployment.rate              0.070 |  0.859 63.894  0.738 |</span></span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; GDPpercapita                   0.092 | -0.282  6.878  0.079 |</span></span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; MilitaryExpenditurePercentGDP  0.291 |  0.396 13.597  0.157 |</span></span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; internet_usage                 0.158 | -0.198  3.397  0.039 |</span></span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_law                         0.056 |  0.043  0.158  0.002 |</span></span>
+<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_security                    0.071 | -0.152  2.004  0.023 |</span></span>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_movement                    0.139 |  0.151  1.969  0.023 |</span></span>
+<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_religion                    0.332 |  0.167  2.401  0.028 |</span></span>
+<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_assembly                    0.203 |  0.186  2.995  0.035 |</span></span>
+<span id="cb9-96"><a href="#cb9-96" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; pf_expression                  0.065 |  0.094  0.773  0.009 |</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -715,19 +732,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div class="cell" data-layout-align="center" data-hash="question1_cache/html/unnamed-chunk-10_841e4c51cfabbfb8fe378f6b08c313f6">
+<div class="cell" data-layout-align="center" data-hash="question1_cache/html/unnamed-chunk-10_f624908459b9319ea9adc61ee392adc9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### PCA Biplot ####</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(myPCA_s,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">label=</span><span class="st">"var"</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">col.var =</span> <span class="fu">viridis</span>(<span class="dv">1</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">option =</span> <span class="st">"D"</span>,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">begin =</span> <span class="fl">0.5</span>),</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">geom=</span><span class="st">""</span>,</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">pointsize =</span> <span class="fl">0.05</span>,</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">labelsize =</span> <span class="dv">3</span>,</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">repel =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Biplot</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_biplot</span>(myPCA_s,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">label=</span><span class="st">"var"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">col.var =</span> <span class="fu">viridis</span>(<span class="dv">1</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">option =</span> <span class="st">"D"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">begin =</span> <span class="fl">0.5</span>),</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">geom=</span><span class="st">""</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">pointsize =</span> <span class="fl">0.05</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">labelsize =</span> <span class="dv">3</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">repel =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -736,8 +754,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Now concerning the Human Freedom Index scores, most of the variables are positively correlated to the dimension 1, slightly less for the PF religion, and finally the EF government variable is slighlty incorrelated to the dimension 1. With a eigenvalue bigger than 1 for the three first components, we conclude that there are 3 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance. Therefore, the rule of thumb would suggest us to take 4 dimensions into account.</p>
-<p>According to the direction of the factors related to the dimension 1, the latter might be showing a fundamental contrast, such as between more regulated versus less regulated environments or between environments with more versus less government intervention. On another hand, dimension 2 might differentiate between aspects of freedoms, such as the rule of law versus personal liberties, or perhaps different types of regulation.</p>
+<p>With a eigenvalue bigger than 1 for the four first components, we conclude that there are 4 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance. Therefore, the rule of thumb would suggest us to take 6 dimensions into account.</p>
+<p>By looking at the biplot, we notice that only some variables are not following the same trend: MilitaryExpenditurepenrcentGDP, which is negatively correlated with dim1/positively correlated to dim2, ef_government which is negatively correlated with dim1 and 2 and finally unemployment.rate which is slightly positively correlated with dim1 and dim2.</p>
+<p>As we can see, the presence of “GDPpercapita,” “Internet_usage,” and “ef_money” close to the X axis suggests that Dim1 may be associated with overall economic development and prosperity, as well as the freedoms that are typically associated with more developed economies, such as freedom of expression (“pf_expression”), movement (“pf_movement”), and assembly (“pf_assembly”). Now concerning Dim2, it could be contrasting socio-economic stability with factors that often increase with instability or conflict, such as higher military expenditure or unemployment rates.</p>
 <p>Let’s try now to conduct a cluster analysis, using the Kmean method.</p>
 <div class="cell" data-layout-align="center" data-hash="question1_cache/html/unnamed-chunk-11_4b366420933f315f239e51581664c517">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>data_kmean_country <span class="ot">&lt;-</span> data_question1 <span class="sc">%&gt;%</span></span>
@@ -809,70 +828,358 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>While considering our regressions, we have noticed that we had high multicolinearity between several dependent variables in our models, by conducting a VIF test. This is due to the numerous variables that we tried to take into account while computing our regressions. Therefore, we have decided to use the stepwise regression with the forward method and choose the model according to the adjusted R squared.</p>
 <p>Let’s find the best model for each goal that does not involve severe multicollinearity (VIF &gt; 5) and that has a variance well explained by our independent variable (an adjusted Rsquared over 0.7). Here are for example the selected models for the goals 12 and 17.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>reg_goal1 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal1 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>reg_goal2 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal2 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>reg_goal3 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal3 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>reg_goal4 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal4 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>reg_goal5 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal5 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>reg_goal6 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal6 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>reg_goal7 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal7 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>reg_goal8 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal8 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>reg_goal9 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal9 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>reg_goal10 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal10 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>reg_goal11 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal11 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>reg_goal12 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal12 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>reg_goal13 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal13 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>reg_goal15 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal15 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>reg_goal16 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal16 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>reg_goal17 <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(goal17 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1, <span class="at">nbest=</span><span class="dv">10</span>, <span class="at">method=</span><span class="st">"forward"</span>)</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal1, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal1 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal2,<span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal2 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal3,<span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal3 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal4, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal4 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal5, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal5 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal6, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal6 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal7, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal7 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal8, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal8 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal9, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal9 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal10, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal10 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal11, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal11 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal12, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal12 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal13, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal13 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal15, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal15 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal16, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal16 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
-<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal17, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal17 Forward method, adj.R^2"</span>)</span>
-<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>reg_goal1 <span class="ot">&lt;-</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal1 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion<span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade<span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>reg_goal2 <span class="ot">&lt;-</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal2 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>reg_goal3 <span class="ot">&lt;-</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal3 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>reg_goal4 <span class="ot">&lt;-</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal4 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>reg_goal5 <span class="ot">&lt;-</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal5 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>reg_goal6 <span class="ot">&lt;-</span></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal6 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>reg_goal7 <span class="ot">&lt;-</span></span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal7 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a>reg_goal8 <span class="ot">&lt;-</span></span>
+<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal8 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a>reg_goal9 <span class="ot">&lt;-</span></span>
+<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal9 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a>reg_goal10 <span class="ot">&lt;-</span></span>
+<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal10 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-86"><a href="#cb13-86" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-87"><a href="#cb13-87" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-88"><a href="#cb13-88" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-89"><a href="#cb13-89" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-90"><a href="#cb13-90" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-91"><a href="#cb13-91" aria-hidden="true" tabindex="-1"></a>reg_goal11 <span class="ot">&lt;-</span></span>
+<span id="cb13-92"><a href="#cb13-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal11 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-93"><a href="#cb13-93" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-94"><a href="#cb13-94" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-95"><a href="#cb13-95" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-96"><a href="#cb13-96" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-97"><a href="#cb13-97" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-98"><a href="#cb13-98" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-99"><a href="#cb13-99" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-100"><a href="#cb13-100" aria-hidden="true" tabindex="-1"></a>reg_goal12 <span class="ot">&lt;-</span></span>
+<span id="cb13-101"><a href="#cb13-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal12 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-102"><a href="#cb13-102" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-103"><a href="#cb13-103" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-104"><a href="#cb13-104" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-105"><a href="#cb13-105" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-106"><a href="#cb13-106" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-107"><a href="#cb13-107" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-108"><a href="#cb13-108" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-109"><a href="#cb13-109" aria-hidden="true" tabindex="-1"></a>reg_goal13 <span class="ot">&lt;-</span></span>
+<span id="cb13-110"><a href="#cb13-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal13 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-111"><a href="#cb13-111" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-112"><a href="#cb13-112" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-113"><a href="#cb13-113" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-114"><a href="#cb13-114" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-115"><a href="#cb13-115" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-116"><a href="#cb13-116" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-117"><a href="#cb13-117" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-118"><a href="#cb13-118" aria-hidden="true" tabindex="-1"></a>reg_goal15 <span class="ot">&lt;-</span></span>
+<span id="cb13-119"><a href="#cb13-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal15 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-120"><a href="#cb13-120" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-121"><a href="#cb13-121" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-122"><a href="#cb13-122" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-123"><a href="#cb13-123" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-124"><a href="#cb13-124" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-125"><a href="#cb13-125" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-126"><a href="#cb13-126" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-127"><a href="#cb13-127" aria-hidden="true" tabindex="-1"></a>reg_goal16 <span class="ot">&lt;-</span></span>
+<span id="cb13-128"><a href="#cb13-128" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal16 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-129"><a href="#cb13-129" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-130"><a href="#cb13-130" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-131"><a href="#cb13-131" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-132"><a href="#cb13-132" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-133"><a href="#cb13-133" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-134"><a href="#cb13-134" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-135"><a href="#cb13-135" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-136"><a href="#cb13-136" aria-hidden="true" tabindex="-1"></a>reg_goal17 <span class="ot">&lt;-</span></span>
+<span id="cb13-137"><a href="#cb13-137" aria-hidden="true" tabindex="-1"></a>  <span class="fu">regsubsets</span>(goal17 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span></span>
+<span id="cb13-138"><a href="#cb13-138" aria-hidden="true" tabindex="-1"></a>               MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span></span>
+<span id="cb13-139"><a href="#cb13-139" aria-hidden="true" tabindex="-1"></a>               pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span></span>
+<span id="cb13-140"><a href="#cb13-140" aria-hidden="true" tabindex="-1"></a>               pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span></span>
+<span id="cb13-141"><a href="#cb13-141" aria-hidden="true" tabindex="-1"></a>               ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb13-142"><a href="#cb13-142" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> data_question1,</span>
+<span id="cb13-143"><a href="#cb13-143" aria-hidden="true" tabindex="-1"></a>             <span class="at">nbest=</span><span class="dv">10</span>,</span>
+<span id="cb13-144"><a href="#cb13-144" aria-hidden="true" tabindex="-1"></a>             <span class="at">method=</span><span class="st">"forward"</span>)</span>
+<span id="cb13-145"><a href="#cb13-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-146"><a href="#cb13-146" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal1,</span>
+<span id="cb13-147"><a href="#cb13-147" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-148"><a href="#cb13-148" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-149"><a href="#cb13-149" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal1 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-150"><a href="#cb13-150" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb13-151"><a href="#cb13-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-152"><a href="#cb13-152" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal2,</span>
+<span id="cb13-153"><a href="#cb13-153" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-154"><a href="#cb13-154" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-155"><a href="#cb13-155" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal2 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-156"><a href="#cb13-156" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb13-157"><a href="#cb13-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-158"><a href="#cb13-158" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal3,</span>
+<span id="cb13-159"><a href="#cb13-159" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-160"><a href="#cb13-160" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-161"><a href="#cb13-161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal3 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-162"><a href="#cb13-162" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb13-163"><a href="#cb13-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-164"><a href="#cb13-164" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal4,</span>
+<span id="cb13-165"><a href="#cb13-165" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-166"><a href="#cb13-166" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-167"><a href="#cb13-167" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal4 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-168"><a href="#cb13-168" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb13-169"><a href="#cb13-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-170"><a href="#cb13-170" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal5,</span>
+<span id="cb13-171"><a href="#cb13-171" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-172"><a href="#cb13-172" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-173"><a href="#cb13-173" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal5 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-174"><a href="#cb13-174" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb13-175"><a href="#cb13-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-176"><a href="#cb13-176" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal6,</span>
+<span id="cb13-177"><a href="#cb13-177" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-178"><a href="#cb13-178" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-179"><a href="#cb13-179" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal6 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-180"><a href="#cb13-180" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb13-181"><a href="#cb13-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-182"><a href="#cb13-182" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal7,</span>
+<span id="cb13-183"><a href="#cb13-183" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-184"><a href="#cb13-184" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-185"><a href="#cb13-185" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal7 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-186"><a href="#cb13-186" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb13-187"><a href="#cb13-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-188"><a href="#cb13-188" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal8,</span>
+<span id="cb13-189"><a href="#cb13-189" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-190"><a href="#cb13-190" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-191"><a href="#cb13-191" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal8 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-192"><a href="#cb13-192" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb13-193"><a href="#cb13-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-194"><a href="#cb13-194" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal9,</span>
+<span id="cb13-195"><a href="#cb13-195" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-196"><a href="#cb13-196" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-197"><a href="#cb13-197" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal9 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-198"><a href="#cb13-198" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb13-199"><a href="#cb13-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-200"><a href="#cb13-200" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal10,</span>
+<span id="cb13-201"><a href="#cb13-201" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-202"><a href="#cb13-202" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-203"><a href="#cb13-203" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal10 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-204"><a href="#cb13-204" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb13-205"><a href="#cb13-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-206"><a href="#cb13-206" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal11,</span>
+<span id="cb13-207"><a href="#cb13-207" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-208"><a href="#cb13-208" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-209"><a href="#cb13-209" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal11 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-210"><a href="#cb13-210" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb13-211"><a href="#cb13-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-212"><a href="#cb13-212" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal12,</span>
+<span id="cb13-213"><a href="#cb13-213" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-214"><a href="#cb13-214" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-215"><a href="#cb13-215" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal12 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-216"><a href="#cb13-216" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb13-217"><a href="#cb13-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-218"><a href="#cb13-218" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal13,</span>
+<span id="cb13-219"><a href="#cb13-219" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-220"><a href="#cb13-220" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-221"><a href="#cb13-221" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal13 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-222"><a href="#cb13-222" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb13-223"><a href="#cb13-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-224"><a href="#cb13-224" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal15,</span>
+<span id="cb13-225"><a href="#cb13-225" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-226"><a href="#cb13-226" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-227"><a href="#cb13-227" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal15 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-228"><a href="#cb13-228" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb13-229"><a href="#cb13-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-230"><a href="#cb13-230" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal16,</span>
+<span id="cb13-231"><a href="#cb13-231" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-232"><a href="#cb13-232" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-233"><a href="#cb13-233" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal16 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-234"><a href="#cb13-234" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span>
+<span id="cb13-235"><a href="#cb13-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-236"><a href="#cb13-236" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal17,</span>
+<span id="cb13-237"><a href="#cb13-237" aria-hidden="true" tabindex="-1"></a>     <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span></span>
+<span id="cb13-238"><a href="#cb13-238" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-239"><a href="#cb13-239" aria-hidden="true" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal17 Forward method, adj.R^2"</span>)</span>
+<span id="cb13-240"><a href="#cb13-240" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-3.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-4.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-5.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-6.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-7.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-8.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-9.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-10.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-11.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-12.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-13.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-14.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-15.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="question1_files/figure-html/unnamed-chunk-13-16.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal12, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal12 Forward method, adj.R^2"</span>)</span>
@@ -885,11 +1192,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p><span class="math display">\[
-\begin{split}
-Goal12\sim \beta_0 &amp;+ GDPpercapita*\beta_1 + PFlaw*\beta_2 + PFreligion*\beta_3 + PFexpression*\beta_4 \\ &amp;+ PFidentity*\beta_5 + EFlegal*\beta_6 + EFtrade*\beta_7 + Population*\beta_8
-\end{split}
-\]</span></p>
+$$
+<span class="math display">\[\begin{split}
+Goal12\sim \beta_0 &amp;+ GDPpercapita*\beta_1 + PFlaw*\beta_2 + PFreligion*\beta_3 + PFexpression*\beta_4 \\ &amp;+ PFidentity*\beta_5 + EFlegal*\beta_6 + EFtrade*\beta_7 + Population*\beta_8 + ε_i
+
+\end{split}\]</span>
+<p>$$</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg_goal17, <span class="at">scale=</span><span class="st">"adjr2"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">title</span>(<span class="st">"Stepwise Regression Goal17 Forward method, adj.R^2"</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; integer(0)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -903,7 +1211,7 @@ Goal12\sim \beta_0 &amp;+ GDPpercapita*\beta_1 + PFlaw*\beta_2 + PFreligion*\bet
 </div>
 <p><span class="math display">\[
 \begin{split}
-Goal17\sim \beta_0 &amp;+ unemployment.rate*\beta_1 + MilitaryExpenditurePercentGDP*\beta_2 \\  &amp;+ InternetUsage*\beta_3 + PFlaw*\beta_4 + PFmovement*\beta_5 \\&amp;+ EFgovernment*\beta_6 + EFlegal*\beta_7 + Population*\beta_8
+Goal17\sim \beta_0 &amp;+ unemployment.rate*\beta_1 + MilitaryExpenditurePercentGDP*\beta_2 \\  &amp;+ InternetUsage*\beta_3 + PFlaw*\beta_4 + PFmovement*\beta_5 \\&amp;+ EFgovernment*\beta_6 + EFlegal*\beta_7 + Population*\beta_8 + ε_i
 \end{split}
 \]</span></p>
 <p>We can see that for goal12, the adjusted R squared of the model is good, which means that the independent variables fit well for explaining the dependent variable. Nevertheless, concerning goal17, the adjusted R squared is only equal to 0.5. Therefore, the lack of explanation of our variables can be caused by multiple factors, such as the non significant relationship between the chosen independent variables and the goal17, Omitted variable bias or overfitting.</p>
@@ -912,67 +1220,133 @@ Goal17\sim \beta_0 &amp;+ unemployment.rate*\beta_1 + MilitaryExpenditurePercent
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Regressions </span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>Goal1lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal1 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_trade, <span class="at">data =</span> data_question1)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>Goal2lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal2 <span class="sc">~</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>Goal3lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal3 <span class="sc">~</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade, <span class="at">data =</span> data_question1)</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>Goal4lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal4 <span class="sc">~</span> GDPpercapita <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_trade <span class="sc">+</span> population, <span class="at">data =</span> data_question1)</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>Goal5lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal5 <span class="sc">~</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal, <span class="at">data =</span> data_question1)</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>Goal6lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal6 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1)</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>Goal7lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal7 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation, <span class="at">data =</span> data_question1)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>Goal1lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal1 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> MilitaryExpenditurePercentGDP</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>              <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_identity</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>              <span class="sc">+</span> ef_government <span class="sc">+</span> ef_trade,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> data_question1)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>Goal2lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal2 <span class="sc">~</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>              <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> data_question1)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>Goal3lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal3 <span class="sc">~</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>              <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>              <span class="sc">+</span> ef_trade,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> data_question1)</span>
 <span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>Goal8lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal8 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_expression <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1)</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>Goal9lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal9 <span class="sc">~</span> <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population, <span class="at">data =</span> data_question1)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>Goal4lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal4 <span class="sc">~</span> GDPpercapita <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_identity</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>              <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_trade <span class="sc">+</span> population,</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> data_question1)</span>
 <span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>Goal10lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal10 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_expression <span class="sc">+</span> population, <span class="at">data =</span> data_question1)</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>Goal11lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal11 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_trade <span class="sc">+</span> population, <span class="at">data =</span> data_question1)</span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>Goal12lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal12 <span class="sc">~</span> <span class="sc">+</span> GDPpercapita <span class="sc">+</span> pf_law <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_trade <span class="sc">+</span> population, <span class="at">data =</span> data_question1)</span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>Goal13lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal13 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> pf_law <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_legal, <span class="at">data =</span> data_question1)</span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>Goal15lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal15 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_religion <span class="sc">+</span> ef_government <span class="sc">+</span> ef_money <span class="sc">+</span> population, <span class="at">data =</span> data_question1)</span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>Goal16lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal16 <span class="sc">~</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> population, <span class="at">data =</span> data_question1)</span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>Goal17lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal17 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_movement <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> population, <span class="at">data =</span> data_question1)</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>Goal5lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal5 <span class="sc">~</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>              <span class="sc">+</span> pf_security <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>              <span class="sc">+</span> ef_legal,</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> data_question1)</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>Goal6lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal6 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_identity</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>              <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_money <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation <span class="sc">+</span> population,</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> data_question1)</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>Goal7lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal7 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_religion</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>              <span class="sc">+</span> pf_assembly <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_trade</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>              <span class="sc">+</span> ef_regulation,</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> data_question1)</span>
 <span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a><span class="co">#coefficient plot</span></span>
-<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a dataframe of tidy models</span></span>
-<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>model_list <span class="ot">&lt;-</span> <span class="fu">list</span>(Goal1lm, Goal2lm, Goal3lm, Goal4lm, Goal5lm, Goal6lm, Goal7lm, Goal8lm, Goal9lm, Goal10lm, Goal11lm, Goal12lm, Goal13lm, Goal15lm, Goal16lm, Goal17lm)</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>Goal8lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal8 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>              <span class="sc">+</span> pf_expression <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation</span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>              <span class="sc">+</span> population,</span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> data_question1)</span>
 <span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>models_tidy <span class="ot">&lt;-</span> <span class="fu">lapply</span>(model_list, tidy)</span>
-<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(models_tidy) <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"Goal"</span>, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">13</span>, <span class="dv">15</span><span class="sc">:</span><span class="dv">17</span>), <span class="st">"lm"</span>, <span class="at">sep=</span><span class="st">""</span>)</span>
-<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine into a single dataframe</span></span>
-<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>df_tidy <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">names</span>(models_tidy), <span class="cf">function</span>(x) <span class="fu">cbind</span>(models_tidy[[x]], <span class="at">Model=</span>x)))</span>
-<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for significant p-values</span></span>
-<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>df_tidy_significant <span class="ot">&lt;-</span> df_tidy[df_tidy<span class="sc">$</span>p.value <span class="sc">&lt;</span> p_value_threshold, ]</span>
-<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>Goal9lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal9 <span class="sc">~</span> <span class="sc">+</span> GDPpercapita <span class="sc">+</span> MilitaryExpenditurePercentGDP</span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>              <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_trade <span class="sc">+</span> ef_regulation</span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>              <span class="sc">+</span> population,</span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> data_question1)</span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>Goal10lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal10 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law</span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>               <span class="sc">+</span> pf_security <span class="sc">+</span> pf_movement <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_expression</span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>               <span class="sc">+</span> population,</span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> data_question1)</span>
 <span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a>myColors <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">brewer.pal</span>(<span class="dv">11</span>, <span class="st">"Spectral"</span>))(<span class="fu">length</span>(<span class="fu">unique</span>(df_tidy_significant<span class="sc">$</span>term)))</span>
-<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
-<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_tidy_significant, <span class="fu">aes</span>(<span class="at">x =</span> Model, <span class="at">y =</span> estimate, <span class="at">color =</span> term)) <span class="sc">+</span></span>
-<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> estimate <span class="sc">-</span> std.error, <span class="at">ymax =</span> estimate <span class="sc">+</span> std.error), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> myColors) <span class="sc">+</span> </span>
-<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
-<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># Center the title</span></span>
-<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
-<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"right"</span>, <span class="co"># You can change the position if needed</span></span>
-<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>), <span class="co"># Adjust text size</span></span>
-<span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>), <span class="co"># Adjust title size</span></span>
-<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.4</span>, <span class="st">"cm"</span>)) <span class="sc">+</span>  <span class="co"># Adjust key size) +</span></span>
-<span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Coefficient Plot of Regression Models"</span>, <span class="at">x =</span> <span class="st">"Models"</span>, <span class="at">y =</span> <span class="st">"Estimates"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a>Goal11lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal11 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_movement</span>
+<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a>               <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_trade</span>
+<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a>               <span class="sc">+</span> population,</span>
+<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> data_question1)</span>
+<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a>Goal12lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal12 <span class="sc">~</span> <span class="sc">+</span> GDPpercapita <span class="sc">+</span> pf_law <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_expression</span>
+<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a>               <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_legal <span class="sc">+</span> ef_trade <span class="sc">+</span> population,</span>
+<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> data_question1)</span>
+<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a>Goal13lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal13 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> GDPpercapita</span>
+<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a>               <span class="sc">+</span> MilitaryExpenditurePercentGDP <span class="sc">+</span> pf_law <span class="sc">+</span> pf_religion</span>
+<span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a>               <span class="sc">+</span> pf_expression <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_legal,</span>
+<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> data_question1)</span>
+<span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-64"><a href="#cb16-64" aria-hidden="true" tabindex="-1"></a>Goal15lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal15 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> MilitaryExpenditurePercentGDP</span>
+<span id="cb16-65"><a href="#cb16-65" aria-hidden="true" tabindex="-1"></a>               <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_religion <span class="sc">+</span> ef_government</span>
+<span id="cb16-66"><a href="#cb16-66" aria-hidden="true" tabindex="-1"></a>               <span class="sc">+</span> ef_money <span class="sc">+</span> population, <span class="at">data =</span> data_question1)</span>
+<span id="cb16-67"><a href="#cb16-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-68"><a href="#cb16-68" aria-hidden="true" tabindex="-1"></a>Goal16lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal16 <span class="sc">~</span> pf_law <span class="sc">+</span> pf_security <span class="sc">+</span> pf_religion <span class="sc">+</span> pf_expression</span>
+<span id="cb16-69"><a href="#cb16-69" aria-hidden="true" tabindex="-1"></a>               <span class="sc">+</span> pf_identity <span class="sc">+</span> ef_government <span class="sc">+</span> ef_legal <span class="sc">+</span> population,</span>
+<span id="cb16-70"><a href="#cb16-70" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> data_question1)</span>
+<span id="cb16-71"><a href="#cb16-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-72"><a href="#cb16-72" aria-hidden="true" tabindex="-1"></a>Goal17lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(goal17 <span class="sc">~</span> unemployment.rate <span class="sc">+</span> MilitaryExpenditurePercentGDP</span>
+<span id="cb16-73"><a href="#cb16-73" aria-hidden="true" tabindex="-1"></a>               <span class="sc">+</span> internet_usage <span class="sc">+</span> pf_law <span class="sc">+</span> pf_movement <span class="sc">+</span> ef_government</span>
+<span id="cb16-74"><a href="#cb16-74" aria-hidden="true" tabindex="-1"></a>               <span class="sc">+</span> ef_legal <span class="sc">+</span> population,</span>
+<span id="cb16-75"><a href="#cb16-75" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> data_question1)</span>
+<span id="cb16-76"><a href="#cb16-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-77"><a href="#cb16-77" aria-hidden="true" tabindex="-1"></a><span class="co">#coefficient plot</span></span>
+<span id="cb16-78"><a href="#cb16-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-79"><a href="#cb16-79" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a dataframe of tidy models</span></span>
+<span id="cb16-80"><a href="#cb16-80" aria-hidden="true" tabindex="-1"></a>model_list <span class="ot">&lt;-</span> <span class="fu">list</span>(Goal1lm, Goal2lm, Goal3lm, Goal4lm, Goal5lm, Goal6lm,</span>
+<span id="cb16-81"><a href="#cb16-81" aria-hidden="true" tabindex="-1"></a>                   Goal7lm, Goal8lm, Goal9lm, Goal10lm, Goal11lm, Goal12lm,</span>
+<span id="cb16-82"><a href="#cb16-82" aria-hidden="true" tabindex="-1"></a>                   Goal13lm, Goal15lm, Goal16lm, Goal17lm)</span>
+<span id="cb16-83"><a href="#cb16-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-84"><a href="#cb16-84" aria-hidden="true" tabindex="-1"></a>models_tidy <span class="ot">&lt;-</span> <span class="fu">lapply</span>(model_list, tidy)</span>
+<span id="cb16-85"><a href="#cb16-85" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(models_tidy) <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"Goal"</span>,</span>
+<span id="cb16-86"><a href="#cb16-86" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">13</span>, <span class="dv">15</span><span class="sc">:</span><span class="dv">17</span>),</span>
+<span id="cb16-87"><a href="#cb16-87" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"lm"</span>,</span>
+<span id="cb16-88"><a href="#cb16-88" aria-hidden="true" tabindex="-1"></a>                            <span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb16-89"><a href="#cb16-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-90"><a href="#cb16-90" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine into a single dataframe</span></span>
+<span id="cb16-91"><a href="#cb16-91" aria-hidden="true" tabindex="-1"></a>df_tidy <span class="ot">&lt;-</span></span>
+<span id="cb16-92"><a href="#cb16-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(rbind,</span>
+<span id="cb16-93"><a href="#cb16-93" aria-hidden="true" tabindex="-1"></a>          <span class="fu">lapply</span>(<span class="fu">names</span>(models_tidy),</span>
+<span id="cb16-94"><a href="#cb16-94" aria-hidden="true" tabindex="-1"></a>                 <span class="cf">function</span>(x) <span class="fu">cbind</span>(models_tidy[[x]],</span>
+<span id="cb16-95"><a href="#cb16-95" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">Model=</span>x)))</span>
+<span id="cb16-96"><a href="#cb16-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-97"><a href="#cb16-97" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for significant p-values</span></span>
+<span id="cb16-98"><a href="#cb16-98" aria-hidden="true" tabindex="-1"></a>df_tidy_significant <span class="ot">&lt;-</span></span>
+<span id="cb16-99"><a href="#cb16-99" aria-hidden="true" tabindex="-1"></a>  df_tidy[df_tidy<span class="sc">$</span>p.value <span class="sc">&lt;</span> p_value_threshold, ]</span>
+<span id="cb16-100"><a href="#cb16-100" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb16-101"><a href="#cb16-101" aria-hidden="true" tabindex="-1"></a>model_order <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Goal1lm"</span>, <span class="st">"Goal2lm"</span>, <span class="st">"Goal3lm"</span>, <span class="st">"Goal4lm"</span>, <span class="st">"Goal5lm"</span>,</span>
+<span id="cb16-102"><a href="#cb16-102" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Goal6lm"</span>, <span class="st">"Goal7lm"</span>, <span class="st">"Goal8lm"</span>,<span class="st">"Goal9lm"</span>, <span class="st">"Goal10lm"</span>,</span>
+<span id="cb16-103"><a href="#cb16-103" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Goal11lm"</span>, <span class="st">"Goal12lm"</span>, <span class="st">"Goal13lm"</span>, <span class="st">"Goal15lm"</span>,</span>
+<span id="cb16-104"><a href="#cb16-104" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Goal16lm"</span>, <span class="st">"Goal17lm"</span>)</span>
+<span id="cb16-105"><a href="#cb16-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-106"><a href="#cb16-106" aria-hidden="true" tabindex="-1"></a>df_tidy_significant<span class="sc">$</span>Model <span class="ot">&lt;-</span></span>
+<span id="cb16-107"><a href="#cb16-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">factor</span>(df_tidy_significant<span class="sc">$</span>Model, <span class="at">levels =</span> model_order)</span>
+<span id="cb16-108"><a href="#cb16-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-109"><a href="#cb16-109" aria-hidden="true" tabindex="-1"></a>myColors <span class="ot">&lt;-</span></span>
+<span id="cb16-110"><a href="#cb16-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colorRampPalette</span>(<span class="fu">brewer.pal</span>(<span class="dv">11</span>, <span class="st">"Spectral"</span>))(<span class="fu">length</span>(<span class="fu">unique</span>(df_tidy_significant<span class="sc">$</span>term)))</span>
+<span id="cb16-111"><a href="#cb16-111" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb16-112"><a href="#cb16-112" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_tidy_significant,</span>
+<span id="cb16-113"><a href="#cb16-113" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> Model,</span>
+<span id="cb16-114"><a href="#cb16-114" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> estimate,</span>
+<span id="cb16-115"><a href="#cb16-115" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> term)) <span class="sc">+</span></span>
+<span id="cb16-116"><a href="#cb16-116" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb16-117"><a href="#cb16-117" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> estimate <span class="sc">-</span> std.error, <span class="at">ymax =</span> estimate <span class="sc">+</span> std.error),</span>
+<span id="cb16-118"><a href="#cb16-118" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb16-119"><a href="#cb16-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> myColors) <span class="sc">+</span> </span>
+<span id="cb16-120"><a href="#cb16-120" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb16-121"><a href="#cb16-121" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># Center the title</span></span>
+<span id="cb16-122"><a href="#cb16-122" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
+<span id="cb16-123"><a href="#cb16-123" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"right"</span>, <span class="co"># You can change the position if needed</span></span>
+<span id="cb16-124"><a href="#cb16-124" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>), <span class="co"># Adjust text size</span></span>
+<span id="cb16-125"><a href="#cb16-125" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>), <span class="co"># Adjust title size</span></span>
+<span id="cb16-126"><a href="#cb16-126" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.4</span>, <span class="st">"cm"</span>)) <span class="sc">+</span>  <span class="co"># Adjust key size) +</span></span>
+<span id="cb16-127"><a href="#cb16-127" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Coefficient Plot of Regression Models"</span>,</span>
+<span id="cb16-128"><a href="#cb16-128" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Models"</span>,</span>
+<span id="cb16-129"><a href="#cb16-129" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Estimates"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -986,37 +1360,53 @@ Goal17\sim \beta_0 &amp;+ unemployment.rate*\beta_1 + MilitaryExpenditurePercent
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#positive values only </span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df_tidy_positive_p <span class="ot">&lt;-</span> df_tidy_significant[df_tidy_significant<span class="sc">$</span>estimate <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>myColors <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">brewer.pal</span>(<span class="dv">11</span>, <span class="st">"Spectral"</span>))(<span class="fu">length</span>(<span class="fu">unique</span>(df_tidy_positive_p<span class="sc">$</span>term)))</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot only positive coefficients</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_tidy_positive_p, <span class="fu">aes</span>(<span class="at">x =</span> Model, <span class="at">y =</span> estimate, <span class="at">color =</span> term)) <span class="sc">+</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> estimate <span class="sc">-</span> std.error, <span class="at">ymax =</span> estimate <span class="sc">+</span> std.error), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> myColors) <span class="sc">+</span> </span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>),</span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>),</span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.4</span>, <span class="st">"cm"</span>)) <span class="sc">+</span></span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Coefficient Plot of Regression Models (Positive Coefficients)"</span>, <span class="at">x =</span> <span class="st">"Models"</span>, <span class="at">y =</span> <span class="st">"Estimates"</span>)</span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="co">#negative values only</span></span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>df_tidy_positive_n <span class="ot">&lt;-</span> df_tidy_significant[df_tidy_significant<span class="sc">$</span>estimate <span class="sc">&lt;</span> <span class="dv">0</span>, ]</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>myColors <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">brewer.pal</span>(<span class="dv">11</span>, <span class="st">"Spectral"</span>))(<span class="fu">length</span>(<span class="fu">unique</span>(df_tidy_positive_n<span class="sc">$</span>term)))</span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_tidy_positive_n, <span class="fu">aes</span>(<span class="at">x =</span> Model, <span class="at">y =</span> estimate, <span class="at">color =</span> term)) <span class="sc">+</span></span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> estimate <span class="sc">-</span> std.error, <span class="at">ymax =</span> estimate <span class="sc">+</span> std.error), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> myColors) <span class="sc">+</span> </span>
-<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
-<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
-<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
-<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>),</span>
-<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>),</span>
-<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.4</span>, <span class="st">"cm"</span>)) <span class="sc">+</span></span>
-<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Coefficient Plot of Regression Models (Negative Coefficients)"</span>, <span class="at">x =</span> <span class="st">"Models"</span>, <span class="at">y =</span> <span class="st">"Estimates"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>df_tidy_positive_p<span class="sc">$</span>Model <span class="ot">&lt;-</span> <span class="fu">factor</span>(df_tidy_positive_p<span class="sc">$</span>Model, <span class="at">levels =</span> model_order)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>myColors <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">brewer.pal</span>(<span class="dv">11</span>, <span class="st">"Spectral"</span>))(<span class="fu">length</span>(<span class="fu">unique</span>(df_tidy_positive_p<span class="sc">$</span>term)))</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot only positive coefficients</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_tidy_positive_p,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> Model,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> estimate,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> term)) <span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> estimate <span class="sc">-</span> std.error, <span class="at">ymax =</span> estimate <span class="sc">+</span> std.error),</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> myColors) <span class="sc">+</span> </span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>),</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>),</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.4</span>, <span class="st">"cm"</span>)) <span class="sc">+</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Coefficient Plot of Regression Models (Positive Coefficients)"</span>,</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Models"</span>,</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Estimates"</span>)</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a><span class="co">#negative values only</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>df_tidy_positive_n <span class="ot">&lt;-</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>  df_tidy_significant[df_tidy_significant<span class="sc">$</span>estimate <span class="sc">&lt;</span> <span class="dv">0</span>, ]</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>df_tidy_positive_n<span class="sc">$</span>Model <span class="ot">&lt;-</span></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">factor</span>(df_tidy_positive_n<span class="sc">$</span>Model, <span class="at">levels =</span> model_order)</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>myColors <span class="ot">&lt;-</span></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colorRampPalette</span>(<span class="fu">brewer.pal</span>(<span class="dv">11</span>, <span class="st">"Spectral"</span>))(<span class="fu">length</span>(<span class="fu">unique</span>(df_tidy_positive_n<span class="sc">$</span>term)))</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_tidy_positive_n, <span class="fu">aes</span>(<span class="at">x =</span> Model, <span class="at">y =</span> estimate, <span class="at">color =</span> term)) <span class="sc">+</span></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> estimate <span class="sc">-</span> std.error, <span class="at">ymax =</span> estimate <span class="sc">+</span> std.error), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> myColors) <span class="sc">+</span> </span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>),</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>),</span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.4</span>, <span class="st">"cm"</span>)) <span class="sc">+</span></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Coefficient Plot of Regression Models (Negative Coefficients)"</span>,</span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Models"</span>,</span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Estimates"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1033,45 +1423,7 @@ Goal17\sim \beta_0 &amp;+ unemployment.rate*\beta_1 + MilitaryExpenditurePercent
 </div>
 </div>
 <p>In these plots, we can see that most of our variables are influencing positively and negatively our goals. I.e., unemployment.rate is influencing goal 10 &amp; 8 negatively, but positively our other goals. Nevertheless, some factors seems to influence only positively our goals. It is the case for the factors internet_usage. These results are due to the range of the objectives contained in the SDG: as each goal has a different objective, and that our factors are have also a wide range of action, we find different influence between our variables.</p>
-<div class="cell" data-layout-align="center" data-hash="question1_cache/html/unnamed-chunk-18_99255df251d0a05d8c7ac36ce41710b0">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### geom point #####</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># geom1 &lt;- ggplot(data_question1, aes(internet_usage, overallscore)) +</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and internet usage")</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># geom2 &lt;- ggplot(data_question1, aes(unemployment.rate, overallscore)) +</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and unemployment rate")</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co"># geom3 &lt;- ggplot(data_question1, aes(MilitaryExpenditurePercentGDP,overallscore)) +</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and military expenditure")</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co"># geom4 &lt;- ggplot(data_question1, aes(pf_security,overallscore)) +</span></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and pf_security")</span></span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="co"># geom5 &lt;-ggplot(data_question1, aes(pf_religion, overallscore)) +</span></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and pf_religion")</span></span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="co"># geom7 &lt;-ggplot(data_question1, aes(pf_identity, overallscore)) +</span></span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and pf_identity")</span></span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="co"># geom8 &lt;-ggplot(data_question1, aes(ef_legal, overallscore)) +</span></span>
-<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
-<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and ef_legal")</span></span>
-<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="co"># geom9 &lt;-ggplot(data_question1, aes(ef_trade, overallscore)) +</span></span>
-<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_point()+ geom_smooth(se = FALSE) +</span></span>
-<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a><span class="co">#   labs(title = "Scarplot overallscore and ef_trade")</span></span>
-<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a><span class="co"># grid.arrange(geom1, geom2, geom3, geom4, geom5, geom7, geom8, geom9, nrow=3, ncol=3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<!-- By checking the influence of the chosen variables over the overallscore, we can see that the functions are not linear. For some, such as internet_usage and ef_legal, we notice that the more the variable increase, the more it influence positively the overall score. For the others, the relations are more complex. I.e.: Unemployment.rate increase mostly the overallscore between 0 and 10%. pf_identity is slowly reducing the overallscore before going back up. -->
-<p>In conclusion, after reviewing which variables are correlating between eachother, after taking care of our multicollinearity problems and doing our regressions on our overall SDG score, we have been finally able to get a broad picture of the influence of our factors over our SDG.</p>
+<p>In conclusion, after reviewing which variables are correlating between eachother, after taking care of our multicollinearity problems and doing our regressions on our overall SDG score, we have been finally able to get a broad picture of the influence of our factors over our SDG. Unfortunately, because of poor explanated variance for some regression models, we have to be careful while doing any conclusions from the regressions.</p>
 </section>
 </section>
 

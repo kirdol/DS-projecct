@@ -1,6 +1,8 @@
 ## Focus on the influence of the factors over the SDG scores
 
 ```{r setup, echo = FALSE, message = FALSE, warning=FALSE}
+#### Initial setup ####
+
 source(here::here("scripts/Clean/setup.R"))
 source(here::here("scripts/EDA/EDA_4_SDG.R"))
 data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
@@ -41,19 +43,25 @@ long_df_hfi_distribution$Goal <- with(long_df_hfi_distribution,
                                       reorder(Category, Value, FUN = mean))
 
 # Plot density
-ggplot(long_df_goal_distribution, aes(x = Value, y = Goal, fill = ..density..)) +
-  geom_density_ridges_gradient(scale = 3, size = 0.3, rel_min_height = 0.01) +
+ggplot(long_df_goal_distribution,
+       aes(x = Value,
+           y = Goal,
+           fill = ..density..)) +
+  geom_density_ridges_gradient(scale = 3,
+                               size = 0.3,
+                               rel_min_height = 0.01) +
   scale_fill_viridis_c(option = "D") +
-  theme(plot.title = element_text(hjust = 0.5)) +  # Center the title
-  labs(x = 'Score', y = 'Goals', title = 'SDG Scores Distribution')
-
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(x = 'Score',
+       y = 'Goals',
+       title = 'SDG Scores Distribution')
 ```
 
 As we can see, most of our goals have a left-skewed distribution, which shows that for most of the country concerned implemented good strategies for targeting the goals objectives. Some distributions have a longer distribution than other, showing the variance of the scores between the countries, due to various reasons such as the inequality of the amount of money available to be invested for implementing solutions. In addition, we notice that the only right-skewed distribution is concerning the observations of the goal 9, which is promoting infrastructures, innovation and inclusive and sustainable industrialization.Therefore, it seems like many countries are encountering difficulties for implementing good solutions concerning this goal. Furthermore, we notice that the goal1 has the highest density, which means that for this SDG,most of the countries received the same scores. 
 
 Now let's focus on the distribution of the Human Freedom Index scores. Same ordering selection and color method as the previous distribution plot. 
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning=FALSE}
 
 ggplot(long_df_hfi_distribution, aes(x = Value,
                                      y = Category,
@@ -61,8 +69,9 @@ ggplot(long_df_hfi_distribution, aes(x = Value,
   geom_density_ridges_gradient(scale = 3,
                                size = 0.3,
                                rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "density", option = "D") +
-  theme(plot.title = element_text(hjust = 0.5), # Center the title
+  scale_fill_viridis_c(name = "density",
+                       option = "D") +
+  theme(plot.title = element_text(hjust = 0.5),
         plot.title.position = "plot") + 
   labs(x = 'Scores',
        title = 'Human Freedom Index Scores Distribution')
@@ -72,7 +81,7 @@ The distribution of the Human Freedom Index Score follows the same trend as the 
 
 Now let's consider the remaining variables of the dataset dedicated to answering the influence of factors over our SDG scores. 
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning=FALSE}
 #now, same for the remaining variables. No need to reshape our data as only one variable.
 unempl_d <- ggplot(Correlation_overall, aes(x = unemployment.rate,
                                             y = 1,
@@ -86,7 +95,7 @@ unempl_d <- ggplot(Correlation_overall, aes(x = unemployment.rate,
                                   size = 10), # Center the title
         plot.title.position = "plot") + 
   labs(y = 'Density',
-       x= 'Percentage',
+       x = 'Percentage',
        title = 'Distribution of Unemployment Rate')
 
 gdp_d <- ggplot(Correlation_overall,
@@ -137,7 +146,12 @@ internet_d <- ggplot(Correlation_overall,
        x = 'Values',
        title = 'Distribution of Internet Usage')
 
-grid.arrange(unempl_d,gdp_d,milit_d,internet_d, ncol = 2, nrow = 2)
+grid.arrange(unempl_d,
+             gdp_d,
+             milit_d,
+             internet_d,
+             ncol = 2,
+             nrow = 2)
 
 # set y = 1. This creates a single ridge line for each distribution. -> common approach when you want to visualize the distribution of a single variable without categorizing it by another variable.
 
@@ -183,7 +197,9 @@ Now, let's display the distribution of the different SDG achievement scores per 
 #Africa
 data_Q1_Africa <- data_question1 %>% #filtering Africa as continent
   filter(data_question1$continent == 'Africa') %>%
-  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5,
+                goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13,
+                goal15, goal16, goal17)
 
 data_Q1_Africa_long <- melt(data_Q1_Africa)
 
@@ -195,7 +211,9 @@ data_Q1_Africa_long <- data_Q1_Africa_long %>%
 #America
 data_Q1_Americas <- data_question1 %>%#filtering Americas as continent
   filter(data_question1$continent == 'Americas') %>%
-  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5,
+                goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13,
+                goal15, goal16, goal17)
 
 data_Q1_Americas_long <- melt(data_Q1_Americas)
 
@@ -207,7 +225,9 @@ data_Q1_Americas_long <- data_Q1_Americas_long %>%
 #Asia
 data_Q1_Asia <- data_question1 %>%
   filter(data_question1$continent == 'Asia') %>%#filtering Asia as continent
-  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5,
+                goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13,
+                goal15, goal16, goal17)
 
 data_Q1_Asia_long <- melt(data_Q1_Asia)
 
@@ -219,7 +239,9 @@ data_Q1_Asia_long <- data_Q1_Asia_long %>%
 #Europe
 data_Q1_Europe <- data_question1 %>%
   filter(data_question1$continent == 'Europe') %>% #filtering Europe as continent
-  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5,
+                goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13,
+                goal15, goal16, goal17)
 
 data_Q1_Europe_long <- melt(data_Q1_Europe)
 
@@ -231,7 +253,9 @@ data_Q1_Europe_long <- data_Q1_Europe_long %>%
 #Oceania
 data_Q1_Oceania <- data_question1 %>%
   filter(data_question1$continent == 'Oceania') %>% #filtering Oceania as continent
-  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5, goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13, goal15, goal16, goal17)
+  dplyr::select(continent, overallscore, goal1, goal2, goal3, goal4, goal5,
+                goal6, goal7, goal8, goal9, goal10, goal11, goal12, goal13,
+                goal15, goal16, goal17)
 
 data_Q1_Oceania_long <- melt(data_Q1_Oceania)
 
@@ -241,7 +265,9 @@ medians_OC <- data_Q1_Oceania_long %>% #median per variable
 data_Q1_Oceania_long <- data_Q1_Oceania_long %>%
                   left_join(medians_OC, by = "variable")
 # merge all medians
-medians_all <- rbind(data_Q1_Oceania_long, data_Q1_Americas_long,data_Q1_Africa_long,data_Q1_Asia_long,data_Q1_Europe_long)
+medians_all <- rbind(data_Q1_Oceania_long,
+                     data_Q1_Americas_long,data_Q1_Africa_long,
+                     data_Q1_Asia_long,data_Q1_Europe_long)
 
 medians_all$color <-
   ifelse(medians_all$median_value > 75, "3",
@@ -786,10 +812,10 @@ reg_goal15 <-
              nbest=10,
              method="forward")
 reg_goal16 <-
-  regsubsets(goal16 ~ unemployment.rate + GDPpercapita
-               MilitaryExpenditurePercentGDP + internet_usage + pf_law
-               pf_security + pf_movement + pf_religion + pf_assembly
-               pf_expression + pf_identity + ef_government + ef_legal
+  regsubsets(goal16 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion + pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
                ef_money + ef_trade + ef_regulation + population,
              data = data_question1,
              nbest=10,
