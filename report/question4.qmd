@@ -13,9 +13,9 @@ data_4 <- read.csv(here("scripts", "data", "data_question24.csv"))
 
 ### EDA: General visualization of the SDGs
 
-To better analyse the relationships between the SDGs, we will first visualize the correlation between the correlation between the SDGs with the help of a heatmap. We chose to set a threshold at |`r threshold_heatmap`| to concentrate our analysis on the most linked SDGs. We initially intended to use the Pearson correlation method, but our data is, as seen in previous chapter, not normally ditributed. We tryed to normalized our data through logarithmic or square root transformation, but it was not sufficient. For that reason, we chose to use th Spearman correlation. While not being an ideal method, the Spearman correaltion does not require the data to be normally ditributed.
+To better analyse the relationships between the SDGs, we will first visualize the correlation between the correlation between the SDGs with the help of a heatmap. We chose to set a threshold at |`r threshold_heatmap`| to concentrate our analysis on the most linked SDGs. We initially intended to use the Pearson correlation method, but our data is, as seen in previous chapter, not normally distributed. We tried to normalized our data through logarithmic or square root transformation, but it was not sufficient. For that reason, we chose to use th Spearman correlation. While not being an ideal method, the Spearman correlation does not require the data to be normally distributed.
 
-To do that, we select only the colums of interest and compute the correlation matrix using Spearman correlation. We then melt the matrix to be able to plot it. We then plot the heatmap using `ggplot2`.
+To do that, we select only the columns of interest and compute the correlation matrix using Spearman correlation. We then melt the matrix to be able to plot it. We then plot the heatmap using `ggplot2`.
 
 ```{r echo = TRUE, message = FALSE, warning = FALSE}
 #### Heatmap of the correlations ####
@@ -267,7 +267,7 @@ mod_17 <- lm(
   data = goals_data)
 ```
 
-Below, we create a graph to present our different model that the stepwise regression chose as best regression for each of our goals. As expected, the model that explain the variable overallscore is explained by the other goals at a similar coefficient for each of our goals. This make sense since the overallscore has been directly calculated with the 17 scores. We can see that none of the goals seems to be more used in the regression that the others. And that none of our explanatory variables received a high coefficient.
+Below, we create a graph to present our different model that the stepwise regression chose based on the $R^2\:adjusted$ as best regression for each of our goals. The $R^2\:adjusted$ measure the quality of the models and takes into account the number of dependent variables. As expected, the model that explain the variable overallscore is explained by the other goals at a similar coefficient for each of our goals. This make sense since the overallscore has been directly calculated with the 17 scores. We can see that none of the goals seems to be more used in the regression that the others. And that none of our explanatory variables received a high coefficient.
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 #### Graph of the different models ####
@@ -360,7 +360,7 @@ ggplot(mod_o,
   theme(legend.position = "none")
 ```
 
-As the we now from the nature of the overallscore variable. She has been calculated using the 17 goal scores. Hence, the stepwise regression did not struggle to find a model with good results. As we can see in the first graph, the residuals are well distributed around 0, the residual and the red line, representing the mean residual, is almost flat and very close to 0. Let's now look at the model that according to our stepwise regression, is the best model at explaining our goal 9 scores but in reality that does not perform well according to the residual versus fitted plot. The predicted model look as follow:
+As the we now from the nature of the overallscore variable. It has been calculated using the 17 goal scores. Hence, the stepwise regression did not struggle to find a model with good results. The $R^2\:adjusted$ of 0.98 of this model suggest that the model is good quality. As we can see in the first graph, the residuals vs. fitted plot also suggest a good quality. The residuals are well distributed around 0, the residual and the red line, representing the mean residual, is almost flat and very close to 0. Let's now look at the model that according to our stepwise regression, is the best model at explaining our goal 9 scores with a $R^2\:adjusted$ of 0.81 but in reality that does not perform well according to the residual versus fitted plot. The predicted model looks as follow:
 
 $$
 \begin{split}
@@ -397,3 +397,5 @@ ggplot(mod_9,
 ```
 
 As we can see in the graph, the model that tried to explain goal 9 is not as good. The mean residual is not flat and vary a lot. This could suggest non-linearity.
+
+To conclude this part, we have seen some interesting relationships between the SDGs scores. We found that if a country is performing well in some goals, it does not necessary mean that it will perform well in the others. Some goals are negatively correlated. We then interested our-self on regrouping some goals together with a principal components analysis and we found that the analysis suggested to regroup some goals that at first sight, would not have been regrouped together. We also performed some stepwise regression to see how thw individual goals could be explained by the other and found that in general the model does not select all variables to explain the given goals. This comes from the high correlation between some goals.
