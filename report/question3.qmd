@@ -372,7 +372,7 @@ initial_plotly
 
 Now that we could visualize which regions are the most impacted by these three events we can do correlations analysis per region to see if this events have indeed an impact on the evolution of SDG goals.
 
-## Focus on the correlation between the SDG scores and the different events.
+### Focus on the correlation between the SDG scores and the different events.
 
 Here you can see an extract of: 
 - Our correlation map between the climate disasters and the SDG goals in South and East Asia and North America as it was the regions that where the most impacted. We conclude that climate disasters do not really have a big impact on SDG scores per region. 
@@ -957,302 +957,123 @@ Our last idea is to see the regressions between the SDG scores and the variables
 
 Let's see the regressions for each score depending of each variable in the disasters dataset (total_affected and total_deaths)
 
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
-library(shiny)
+
+# Required libraries
+library(plotly)
 library(dplyr)
 library(ggplot2)
-library(scales)
 
 disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
 
+# Define the relevant columns
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "total_deaths")
-
 subset_data <- disaster_data[, relevant_columns]
 
 goal_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16")
 
+generate_regression_plot <- function(goal) {
+  # Your regression plot code here
+  # Return a ggplot object
+  plot <- ggplot(subset_data, aes_string(x = "total_affected", y = goal)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE) +
+    labs(title = paste("Regression plot for", goal, "vs Total Affected"))
+  
+  return(plot)
+}
 
-ui <- fluidPage(
-  titlePanel("SDG and Climate Disasters Regression Analysis"),
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("sdg", "Select SDG Goal:",
-                  choices = goal_columns,
-                  selected = goal_columns[1]),
-      actionButton("stopButton", "Stop Rendering"),
-      width = 3
-    ),
-    mainPanel(
-      width = 9,
-      plotOutput("regression_plot_affected"),
-      plotOutput("regression_plot_deaths")
+# List of goals
+goal_list <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16")
+
+# Create buttons for interactive plot
+buttons <- lapply(goal_list, function(goal) {
+  list(
+    method = "restyle",
+    args = list('transforms[0].target', goal),
+    label = goal
+  )
+})
+
+# Initial plot
+p <- generate_regression_plot(goal_list[1])
+p <- ggplotly(p)
+
+# Add transform for interactivity
+p <- p %>% layout(
+  updatemenus = list(
+    list(
+      type = "dropdown",
+      buttons = buttons
     )
   )
 )
 
-server <- function(input, output, session) {
-  observeEvent(input$stopButton, {
-    output$regression_plot_affected <- NULL
-    output$regression_plot_deaths <- NULL
-  })
-  
-  generate_regression_plot <- function(selected_goal) {
-    formula_affected <- as.formula(paste(selected_goal, "~ total_affected"))
-    formula_deaths <- as.formula(paste(selected_goal, "~ total_deaths"))
-    
-    lm_total_affected <- lm(formula_affected, data = subset_data)
-    lm_total_deaths <- lm(formula_deaths, data = subset_data)
-    
-    plot_total_affected <- ggplot(subset_data, aes(x = total_affected, y = !!as.name(selected_goal))) +
-      geom_point() +
-      geom_smooth(method = "lm", se = FALSE) +
-      labs(title = paste("Regression plot for", selected_goal, "vs Total Affected"),
-           x = "Total Affected", y = selected_goal) +
-      scale_x_continuous(labels = comma_format()) 
-    
-    plot_total_deaths <- ggplot(subset_data, aes(x = total_deaths, y = !!as.name(selected_goal))) +
-      geom_point() +
-      geom_smooth(method = "lm", se = FALSE) +
-      labs(title = paste("Regression plot for", selected_goal, "vs Total Deaths"),
-           x = "Total Deaths", y = selected_goal) +
-      scale_x_continuous(labels = comma_format()) 
-    
-    
-    list(plot_total_affected, plot_total_deaths)
-  }
-  
-  output$regression_plot_affected <- renderPlot({
-    req(input$sdg)
-    isolate({
-      selected_goal <- input$sdg
-      generate_regression_plot(selected_goal)[[1]]
-    })
-  })
-  
-  output$regression_plot_deaths <- renderPlot({
-    req(input$sdg)
-    isolate({
-      selected_goal <- input$sdg
-      generate_regression_plot(selected_goal)[[2]]
-    })
-  })
-}
-shinyApp(ui, server)
+# Transform settings
+p <- p %>% style(
+  transforms = list(
+    list(
+      type = 'filter',
+      target = ~goal,
+      operation = '=',
+      value = goal_list[1]
+    )
+  )
+)
+
+p
 ```
 
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
+library(plotly)
+library(dplyr)
+library(ggplot2)
+
+disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
+
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "total_deaths")
+subset_data <- disaster_data[, relevant_columns]
+
+# Effectuer la régression linéaire et créer les graphiques
+plots <- list()
+for (goal in relevant_columns[1:15]) {
+  # Pour total_affected
+  p_affected <- ggplot(subset_data, aes_string(x = "total_affected", y = goal)) +
+    geom_point(size = 0.1) +
+    geom_smooth(method = "lm", formula = y ~ x, se = FALSE, size = 0.5) +
+    labs(x = "Total Affected", y = paste("Goal", substr(goal, 5, 6)))
+
+  # Pour total_deaths
+  p_deaths <- ggplot(subset_data, aes_string(x = "total_deaths", y = goal)) +
+    geom_point(size = 0.1) +
+    geom_smooth(method = "lm", formula = y ~ x, se = FALSE, size = 0.5) +
+    labs(x = "Total Deaths", y = paste("Goal", substr(goal, 5, 6)))
+
+  # Ajouter les deux graphiques à la liste
+  plots[[goal]] <- list(ggplotly(p_affected), ggplotly(p_deaths))
+}
+
+# Afficher tous les graphiques
+subplot_plots <- lapply(plots, function(plot_pair) subplot(plot_pair[[1]], plot_pair[[2]], nrows = 1, margin = 0.05))
+subplot(subplot_plots, nrows = length(subplot_plots), margin = 0.05)
+
+
+
+```
 Most relationships between the goals and the variables ('total_affected' and 'total_deaths') are not statistically significant (indicated by p-values \> 0.05). More specifically, in several models, the coefficients for 'total_affected' and 'total_deaths' are small, indicating weak or negligible relationships with the respective goals. Some models have marginally significant p-values (close to 0.05) but still lack statistical significance. Goals 7, 8, 10, 13, 14, and 15 exhibit statistically significant relationships with 'total_affected,' indicating small to moderate positive relationships. Goals 7 and 8 also show statistically significant relationships with 'total_deaths,' indicating moderate negative relationships.
 
 These findings suggest that, in most cases, the relationships between the specified goals and Climate disasters variables (total affected and total deaths) are not statistically significant. However, some goals do indicate small to moderate associations with these variables.
 
-Let's see the regressions for each score depending of each variable in the COVID-19 dataset (stringency, cases_per_million and deaths_per_million).
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
+Now, we have made the same conclusions for the COVID-19 and Conflicts events, you can have a nice representation of each regression plot if you look at our Interactive_Matrix_Plots documents containing shiny apps, yo that you can have a closer look and choose which goals interests you the most.("C:/DS-project/report/See Interactive/Interactive_Matrix_Plots.qmd")
 
-covid_filtered <- Q3.2
 
-relevant_columns <- c(
-  "goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million"
-)
-subset_data <- covid_filtered[, relevant_columns]
-
-goal_columns <- c(
-  "goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16"
-)
-
-ui <- fluidPage(
-  titlePanel("SDG - COVID Regression Analysis"),
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("sdg", "Select SDG Goal:",
-                  choices = goal_columns,
-                  selected = goal_columns[1]),
-      actionButton("stopButton", "Stop Rendering"),
-      width = 3
-    ),
-    mainPanel(
-      width = 9,
-      plotOutput("regression_plot_stringency"),
-      plotOutput("regression_plot_cases"),
-      plotOutput("regression_plot_deaths")
-    )
-  )
-)
-
-server <- function(input, output, session) {
-  observeEvent(input$stopButton, {
-    output$regression_plot_stringency <- NULL
-    output$regression_plot_cases <- NULL
-    output$regression_plot_deaths <- NULL
-  })
-  
-  generate_regression_plot <- function(selected_goal) {
-    formula_stringency <- as.formula(paste(selected_goal, "~ stringency"))
-    formula_cases <- as.formula(paste(selected_goal, "~ cases_per_million"))
-    formula_deaths <- as.formula(paste(selected_goal, "~ deaths_per_million"))
-    
-    lm_stringency <- lm(formula_stringency, data = subset_data)
-    lm_cases <- lm(formula_cases, data = subset_data)
-    lm_deaths <- lm(formula_deaths, data = subset_data)
-    
-    plot_stringency <- ggplot(subset_data, aes(x = stringency, y = !!as.name(selected_goal))) +
-      geom_point() +
-      geom_smooth(method = "lm", se = FALSE) +
-      labs(title = paste("Regression plot for", selected_goal, "vs Stringency"),
-           x = "Stringency", y = selected_goal) +
-      scale_x_continuous(labels = comma_format()) +
-      theme(axis.title = element_text(size = 16), axis.text = element_text(size = 16), plot.title = element_text(size = 20))
-    
-    plot_cases <- ggplot(subset_data, aes(x = cases_per_million, y = !!as.name(selected_goal))) +
-      geom_point() +
-      geom_smooth(method = "lm", se = FALSE) +
-      labs(title = paste("Regression plot for", selected_goal, "vs Cases per Million"),
-           x = "Cases per Million", y = selected_goal) +
-      scale_x_continuous(labels = comma_format()) +
-      theme(axis.title = element_text(size = 16), axis.text = element_text(size = 16), plot.title = element_text(size = 20))
-    
-    plot_deaths <- ggplot(subset_data, aes(x = deaths_per_million, y = !!as.name(selected_goal))) +
-      geom_point() +
-      geom_smooth(method = "lm", se = FALSE) +
-      labs(title = paste("Regression plot for", selected_goal, "vs Deaths per Million"),
-           x = "Deaths per Million", y = selected_goal) +
-      scale_x_continuous(labels = comma_format()) +
-      theme(axis.title = element_text(size = 16), axis.text = element_text(size = 16),plot.title = element_text(size = 20))
-    
-    list(plot_stringency, plot_cases, plot_deaths)
-  }
-  
-  output$regression_plot_stringency <- renderPlot({
-    req(input$sdg)
-    isolate({
-      selected_goal <- input$sdg
-      generate_regression_plot(selected_goal)[[1]]
-    })
-  })
-  
-  output$regression_plot_cases <- renderPlot({
-    req(input$sdg)
-    isolate({
-      selected_goal <- input$sdg
-      generate_regression_plot(selected_goal)[[2]]
-    })
-  })
-  
-  output$regression_plot_deaths <- renderPlot({
-    req(input$sdg)
-    isolate({
-      selected_goal <- input$sdg
-      generate_regression_plot(selected_goal)[[3]]
-    })
-  })
-}
-
-shinyApp(ui, server)
-```
-
-For all Goals, the predictor variables (stringency, number of cases per million and number of deaths per million) show statistically significant relationships. However, when assessed individually, these predictors explain only a marginal fraction of the variance of the respective objectives, with explanatory percentages ranging from around 0.141% to 6.99%. Adjusted R-squared values consistently indicate limited explanatory power for these relationships, implying the influence of other factors not accounted for in the variations observed for each objective. Relying solely on rigor, cases per million and deaths per million results in modest predictive capabilities for each objective.
+Indeed, for all Goals, the predictor variables (stringency, number of cases per million and number of deaths per million) show statistically significant relationships. However, when assessed individually, these predictors explain only a marginal fraction of the variance of the respective objectives, with explanatory percentages ranging from around 0.141% to 6.99%. Adjusted R-squared values consistently indicate limited explanatory power for these relationships, implying the influence of other factors not accounted for in the variations observed for each objective. Relying solely on rigor, cases per million and deaths per million results in modest predictive capabilities for each objective.
 
 In summary, the statistical significance of stringency, cases per million and deaths per million in relation to each objective is clear. However, these predictive variables individually fail to explain the variations observed, highlighting the need to explore additional variables or unexplored factors in order to significantly improve predictive ability for each respective objective.
 
-Now, let's see the regressions for each SDG score depending of each variable in the Conflicts dataset (pop_affected and sum_deaths).
+Finally for the regressions for each SDG score depending of each variable in the Conflicts dataset (pop_affected and sum_deaths) we can say that all three predictors exhibited statistically significant relationships with the respective goals across the board. 'Maxintensity' generally demonstrated a relatively stronger association compared to 'Population Affected' and 'Deaths' in most analyses. But collectively, these predictors explained only a small to moderate portion of the variability observed in the different goals (adjusted R-squared ranging from approximately 1% to 9.48%). This suggests that there are other unaccounted factors not included in the analysis that significantly influence the outcomes of these goals.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
-
-conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Caucasus and Central Asia"), ]
-
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected", "sum_deaths", "maxintensity")
-
-subset_data <- conflicts_filtered[, relevant_columns]
-
-goal_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16"
-)
-
-ui <- fluidPage(
-  titlePanel("SDG - Conflicts Regression Analysis"),
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("sdg", "Select SDG Goal:",
-                  choices = goal_columns,
-                  selected = goal_columns[1]),
-      actionButton("stopButton", "Stop Rendering"),  # Adding a Stop button
-      width = 3
-    ),
-    mainPanel(
-      width = 9,
-      plotOutput("regression_plot_affected"),
-      plotOutput("regression_plot_deaths"),
-      plotOutput("regression_plot_maxintensity")
-    )
-  )
-)
-
-server <- function(input, output, session) {
-  observeEvent(input$stopButton, {
-    output$regression_plot_affected <- NULL
-    output$regression_plot_deaths <- NULL
-    output$regression_plot_maxintensity <- NULL
-  })
-  
-  generate_regression_plot <- function(selected_goal) {
-    formula_pop_affected <- as.formula(paste(selected_goal, "~ pop_affected"))
-    formula_sum_deaths <- as.formula(paste(selected_goal, "~ sum_deaths"))
-    formula_maxintensity <- as.formula(paste(selected_goal, "~maxintensity"))
-    
-    lm_pop_affected <- lm(formula_pop_affected, data = subset_data)
-    lm_sum_deaths <- lm(formula_sum_deaths, data = subset_data)
-    lm_maxintensity <- lm(formula_maxintensity, data = subset_data)
-    
-    plot_pop_affected <- ggplot(subset_data, aes(x = pop_affected, y = !!as.name(selected_goal))) +
-      geom_point() +
-      geom_smooth(method = "lm", se = FALSE) +
-      labs(title = paste("Regression plot for", selected_goal, "vs Population Affected"),
-           x = "Population Affected", y = selected_goal) +
-      scale_x_continuous(labels = comma_format()) +
-      theme(axis.title = element_text(size = 12), axis.text = element_text(size = 10))
-    
-    plot_sum_deaths <- ggplot(subset_data, aes(x = sum_deaths, y = !!as.name(selected_goal))) +
-      geom_point() +
-      geom_smooth(method = "lm", se = FALSE) +
-      labs(title = paste("Regression plot for", selected_goal, "vs Sum of Deaths"),
-           x = "Sum of Deaths", y = selected_goal) +
-      scale_x_continuous(labels = comma_format()) 
-    
-    plot_maxintensity <- ggplot(subset_data, aes(x = maxintensity, y = !!as.name(selected_goal))) +
-      geom_point() +
-      geom_smooth(method = "lm", se = FALSE) +
-      labs(title = paste("Regression plot for", selected_goal, "vs Maxintensity"),
-           x = "Maxintensity", y = selected_goal) +
-      scale_x_continuous(labels = comma_format()) 
-    
-    list(plot_pop_affected, plot_sum_deaths, plot_maxintensity)
-  }
-  
-  output$regression_plot_affected <- renderPlot({
-    req(input$sdg)
-    isolate({
-      selected_goal <- input$sdg
-      generate_regression_plot(selected_goal)[[1]]
-    })
-  })
-  
-  output$regression_plot_deaths <- renderPlot({
-    req(input$sdg)
-    isolate({
-      selected_goal <- input$sdg
-      generate_regression_plot(selected_goal)[[2]]
-    })
-  })
-  
-  output$regression_plot_maxintensity <- renderPlot({
-    req(input$sdg)
-    isolate({
-      selected_goal <- input$sdg
-      generate_regression_plot(selected_goal)[[3]]
-    })
-  })
-}
-
-shinyApp(ui, server)
-```
-
-All three predictors exhibited statistically significant relationships with the respective goals across the board. 'Maxintensity' generally demonstrated a relatively stronger association compared to 'Population Affected' and 'Deaths' in most analyses. But collectively, these predictors explained only a small to moderate portion of the variability observed in the different goals (adjusted R-squared ranging from approximately 1% to 9.48%). This suggests that there are other unaccounted factors not included in the analysis that significantly influence the outcomes of these goals. To conclude, while 'Population Affected,' 'Deaths,' and 'Maxintensity' consistently showed significant associations with the various goals analyzed, their combined effect explained only a fraction of the variance observed in these goals. Therefore, there are likely additional crucial factors beyond these predictors that play substantial roles in influencing the outcomes of the respective goals.
+To conclude, while 'Population Affected,' 'Deaths,' and 'Maxintensity' consistently showed significant associations with the various goals analyzed, their combined effect explained only a fraction of the variance observed in these goals. Therefore, there are likely additional crucial factors beyond these predictors that play substantial roles in influencing the outcomes of the respective goals.
