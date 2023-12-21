@@ -767,7 +767,6 @@ Goal17lm <- lm(goal17 ~ unemployment.rate + MilitaryExpenditurePercentGDP + inte
 
 #coefficient plot
 
-#library('broom')
 # Create a dataframe of tidy models
 model_list <- list(Goal1lm, Goal2lm, Goal3lm, Goal4lm, Goal5lm, Goal6lm, Goal7lm, Goal8lm, Goal9lm, Goal10lm, Goal11lm, Goal12lm, Goal13lm, Goal15lm, Goal16lm, Goal17lm)
 
@@ -782,11 +781,14 @@ significance_level <- 0.05
 
 # Filter for significant p-values
 df_tidy_significant <- df_tidy[df_tidy$p.value < significance_level, ]
+library(RColorBrewer)
 
+myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_significant$term)))
 # Plot
 ggplot(df_tidy_significant, aes(x = Model, y = estimate, color = term)) +
   geom_point() +
   geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error), width = 0.2) +
+  scale_color_manual(values = myColors) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         plot.title = element_text(hjust = 0.5), # Center the title
         plot.title.position = "plot",
@@ -800,14 +802,15 @@ ggplot(df_tidy_significant, aes(x = Model, y = estimate, color = term)) +
 Here is our general plot. For visualization purpose, let's also plot the positive and negative correlation plots
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
-
 #positive values only 
 df_tidy_positive_p <- df_tidy_significant[df_tidy_significant$estimate > 0, ]
 
+myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_positive_p$term)))
 # Plot only positive coefficients
 ggplot(df_tidy_positive_p, aes(x = Model, y = estimate, color = term)) +
   geom_point() +
   geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error), width = 0.2) +
+  scale_color_manual(values = myColors) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         plot.title = element_text(hjust = 0.5),
         plot.title.position = "plot",
@@ -819,10 +822,12 @@ ggplot(df_tidy_positive_p, aes(x = Model, y = estimate, color = term)) +
 
 #negative values only
 df_tidy_positive_n <- df_tidy_significant[df_tidy_significant$estimate < 0, ]
+myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_positive_n$term)))
 
 ggplot(df_tidy_positive_n, aes(x = Model, y = estimate, color = term)) +
   geom_point() +
   geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error), width = 0.2) +
+  scale_color_manual(values = myColors) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         plot.title = element_text(hjust = 0.5),
         plot.title.position = "plot",
