@@ -255,11 +255,11 @@ ggplot(medians_all,
            y = value,
            fill = color)) +
   geom_violin(trim = FALSE, bw = bandwidth_nrd) +
-  scale_fill_viridis_d(name = "",
+  scale_fill_viridis_d(name = "", direction = -1,
                        option = "D",
-                       labels = c("Low median",
+                       labels = c("High median",
                                   "Medium median",
-                                  "High median")) + 
+                                  "Low median")) + 
   labs(title = "SDG Distribution by Continent",
        x = "Goals",
        y = "Scores",
@@ -359,7 +359,7 @@ data_Q1_Oceania_HFI_long <- data_Q1_Oceania_HFI_long %>%
 medians_all_HFI <- rbind(data_Q1_Oceania_HFI_long, data_Q1_Americas_HFI_long,data_Q1_Africa_HFI_long,data_Q1_Asia_HFI_long,data_Q1_Europe_HFI_long)
 
 medians_all_HFI$color <- ifelse(medians_all_HFI$median_value > 7.5, "1", 
-                        ifelse(medians_all_HFI$median_value < 2.5, "3", '2'))
+                        ifelse(medians_all_HFI$median_value < 2.5, "2", '3'))
 
 bandwidth_nrd_HFI <- bw.nrd(medians_all_HFI$value)
 
@@ -548,12 +548,15 @@ As noticed earlier, there is a strong correlation among personal freedom variabl
 
 Again, we can see that GDP per capita, pf_law, ef_legal are highly correlated with some other variables. On another hand, we notice that pf_movement, pf_assembly, pf_expression are now also higly correlated with some of the other variables. In addition, we notice than the variables MilitaryExpenditurePercentGDP and ef_governement are negatively correlated with our other variables.
 
-In order to have a look at the influence of some factors over our dependent variables, let's conduct a Principal Component Analysis over the Human Freedom Index Scores.
+In order to have a look at the influence of our factors over our dependent variables, let's conduct a Principal Component Analysis.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### PCA and PCA Scree plot####
 
-myPCA_s <- PCA(data_question1[,29:40], graph = FALSE)
+#Select our data and effectuate our PCA analysis
+myPCA_s <- PCA(data_question1[,25:40], graph = FALSE)
+
+#scree plot
 fviz_eig(myPCA_s,
          addlabels = TRUE,
          linecolor = viridis(1,
@@ -572,6 +575,7 @@ summary(myPCA_s)
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### PCA Biplot ####
 
+#Biplot
 fviz_pca_biplot(myPCA_s,
                 label="var",
                 col.var = viridis(1,
@@ -585,9 +589,11 @@ fviz_pca_biplot(myPCA_s,
 
 ```
 
-Now concerning the Human Freedom Index scores, most of the variables are positively correlated to the dimension 1, slightly less for the PF religion, and finally the EF government variable is slighlty incorrelated to the dimension 1. With a eigenvalue bigger than 1 for the three first components, we conclude that there are 3 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance. Therefore, the rule of thumb would suggest us to take 4 dimensions into account.
+With a eigenvalue bigger than 1 for the four first components, we conclude that there are 4 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance. Therefore, the rule of thumb would suggest us to take 6 dimensions into account.
 
-According to the direction of the factors related to the dimension 1, the latter might be showing a fundamental contrast, such as between more regulated versus less regulated environments or between environments with more versus less government intervention. On another hand, dimension 2 might differentiate between aspects of freedoms, such as the rule of law versus personal liberties, or perhaps different types of regulation.
+By looking at the biplot, we notice that only some variables are not following the same trend: MilitaryExpenditurepenrcentGDP, which is negatively correlated with dim1/positively correlated to dim2, ef_government which is negatively correlated with dim1 and 2 and finally unemployment.rate which is slightly positively correlated with dim1 and dim2.
+
+As we can see, the presence of "GDPpercapita," "Internet_usage," and "ef_money" close to the X axis suggests that Dim1 may be associated with overall economic development and prosperity, as well as the freedoms that are typically associated with more developed economies, such as freedom of expression ("pf_expression"), movement ("pf_movement"), and assembly ("pf_assembly"). Now concerning Dim2, it could be contrasting socio-economic stability with factors that often increase with instability or conflict, such as higher military expenditure or unemployment rates.
 
 Let's try now to conduct a cluster analysis, using the Kmean method.
 
@@ -711,7 +717,8 @@ plot(reg_goal12, scale="adjr2") + theme_minimal() + title("Stepwise Regression G
 
 $$
 \begin{split}
-Goal12\sim \beta_0 &+ GDPpercapita*\beta_1 + PFlaw*\beta_2 + PFreligion*\beta_3 + PFexpression*\beta_4 \\ &+ PFidentity*\beta_5 + EFlegal*\beta_6 + EFtrade*\beta_7 + Population*\beta_8
+Goal12\sim \beta_0 &+ GDPpercapita*\beta_1 + PFlaw*\beta_2 + PFreligion*\beta_3 + PFexpression*\beta_4 \\ &+ PFidentity*\beta_5 + EFlegal*\beta_6 + EFtrade*\beta_7 + Population*\beta_8 + ε_i
+
 \end{split}
 $$
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
@@ -720,7 +727,7 @@ plot(reg_goal17, scale="adjr2") + theme_minimal() + title("Stepwise Regression G
 
 $$
 \begin{split}
-Goal17\sim \beta_0 &+ unemployment.rate*\beta_1 + MilitaryExpenditurePercentGDP*\beta_2 \\  &+ InternetUsage*\beta_3 + PFlaw*\beta_4 + PFmovement*\beta_5 \\&+ EFgovernment*\beta_6 + EFlegal*\beta_7 + Population*\beta_8
+Goal17\sim \beta_0 &+ unemployment.rate*\beta_1 + MilitaryExpenditurePercentGDP*\beta_2 \\  &+ InternetUsage*\beta_3 + PFlaw*\beta_4 + PFmovement*\beta_5 \\&+ EFgovernment*\beta_6 + EFlegal*\beta_7 + Population*\beta_8 + ε_i
 \end{split}
 $$
 
@@ -782,6 +789,10 @@ significance_level <- 0.05
 # Filter for significant p-values
 df_tidy_significant <- df_tidy[df_tidy$p.value < significance_level, ]
 library(RColorBrewer)
+model_order <- c("Goal1lm", "Goal2lm", "Goal3lm", "Goal4lm", "Goal5lm", "Goal6lm", "Goal7lm", "Goal8lm", 
+                 "Goal9lm", "Goal10lm", "Goal11lm", "Goal12lm", "Goal13lm", "Goal15lm", "Goal16lm", "Goal17lm")
+
+df_tidy_significant$Model <- factor(df_tidy_significant$Model, levels = model_order)
 
 myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_significant$term)))
 # Plot
@@ -805,6 +816,8 @@ Here is our general plot. For visualization purpose, let's also plot the positiv
 #positive values only 
 df_tidy_positive_p <- df_tidy_significant[df_tidy_significant$estimate > 0, ]
 
+df_tidy_positive_p$Model <- factor(df_tidy_positive_p$Model, levels = model_order)
+
 myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_positive_p$term)))
 # Plot only positive coefficients
 ggplot(df_tidy_positive_p, aes(x = Model, y = estimate, color = term)) +
@@ -822,6 +835,9 @@ ggplot(df_tidy_positive_p, aes(x = Model, y = estimate, color = term)) +
 
 #negative values only
 df_tidy_positive_n <- df_tidy_significant[df_tidy_significant$estimate < 0, ]
+
+df_tidy_positive_n$Model <- factor(df_tidy_positive_n$Model, levels = model_order)
+
 myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_positive_n$term)))
 
 ggplot(df_tidy_positive_n, aes(x = Model, y = estimate, color = term)) +
@@ -840,45 +856,5 @@ ggplot(df_tidy_positive_n, aes(x = Model, y = estimate, color = term)) +
 
 In these plots, we can see that most of our variables are influencing positively and negatively our goals. I.e., unemployment.rate is influencing goal 10 & 8 negatively, but positively our other goals. Nevertheless, some factors seems to influence only positively our goals. It is the case for the factors internet_usage. These results are due to the range of the objectives contained in the SDG: as each goal has a different objective, and that our factors are have also a wide range of action, we find different influence between our variables.  
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-##### geom point #####
-
-# geom1 <- ggplot(data_question1, aes(internet_usage, overallscore)) +
-#   geom_point()+ geom_smooth(se = FALSE) +
-#   labs(title = "Scarplot overallscore and internet usage")
-# 
-# geom2 <- ggplot(data_question1, aes(unemployment.rate, overallscore)) +
-#   geom_point()+ geom_smooth(se = FALSE) +
-#   labs(title = "Scarplot overallscore and unemployment rate")
-# 
-# geom3 <- ggplot(data_question1, aes(MilitaryExpenditurePercentGDP,overallscore)) +
-#   geom_point()+ geom_smooth(se = FALSE) +
-#   labs(title = "Scarplot overallscore and military expenditure")
-# 
-# geom4 <- ggplot(data_question1, aes(pf_security,overallscore)) +
-#   geom_point()+ geom_smooth(se = FALSE) +
-#   labs(title = "Scarplot overallscore and pf_security")
-# 
-# geom5 <-ggplot(data_question1, aes(pf_religion, overallscore)) +
-#   geom_point()+ geom_smooth(se = FALSE) +
-#   labs(title = "Scarplot overallscore and pf_religion")
-# 
-# geom7 <-ggplot(data_question1, aes(pf_identity, overallscore)) +
-#   geom_point()+ geom_smooth(se = FALSE) +
-#   labs(title = "Scarplot overallscore and pf_identity")
-# 
-# geom8 <-ggplot(data_question1, aes(ef_legal, overallscore)) +
-#   geom_point()+ geom_smooth(se = FALSE) +
-#   labs(title = "Scarplot overallscore and ef_legal")
-# 
-# geom9 <-ggplot(data_question1, aes(ef_trade, overallscore)) +
-#   geom_point()+ geom_smooth(se = FALSE) +
-#   labs(title = "Scarplot overallscore and ef_trade")
-# 
-# grid.arrange(geom1, geom2, geom3, geom4, geom5, geom7, geom8, geom9, nrow=3, ncol=3)
-```
-
-<!-- By checking the influence of the chosen variables over the overallscore, we can see that the functions are not linear. For some, such as internet_usage and ef_legal, we notice that the more the variable increase, the more it influence positively the overall score. For the others, the relations are more complex. I.e.: Unemployment.rate increase mostly the overallscore between 0 and 10%. pf_identity is slowly reducing the overallscore before going back up. -->
-
-In conclusion, after reviewing which variables are correlating between eachother, after taking care of our multicollinearity problems and doing our regressions on our overall SDG score, we have been finally able to get a broad picture of the influence of our factors over our SDG.
+In conclusion, after reviewing which variables are correlating between eachother, after taking care of our multicollinearity problems and doing our regressions on our overall SDG score, we have been finally able to get a broad picture of the influence of our factors over our SDG. Unfortunately, because of poor explanated variance for some regression models, we have to be careful while doing any conclusions from the regressions. 
 
