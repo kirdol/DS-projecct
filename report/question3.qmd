@@ -545,7 +545,7 @@ Here you can see an extract of:
 - Our correlation between conflicts affected population and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Caucasus & Central Asia. 
 - Our correlation between the regions having a maxintensity in conflicts and the SDG goals only for Caucasus & Central Asia, Eastern Europe, Middle east & north Africa, Sub-Saharan Africa, North America, South Asia, East Asia, Latin America & the Caribbean.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, fig.width=6, fig.height=2}
+```{r, echo = TRUE, message = FALSE, warning=FALSE}
 
 disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "total_deaths")
@@ -557,7 +557,9 @@ cor_melted <- reshape2::melt(correlation_matrix_subset)
 names(cor_melted) <- c("Variable2", "Variable1", "Correlation")
 ```
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.5}
+#### Correlation between the climate disasters and the SDG goals in South and East Asia and North America heatmap ####
+
 ggplot(data = cor_melted,
        aes(Variable1,
            Variable2,
@@ -565,12 +567,12 @@ ggplot(data = cor_melted,
   geom_tile(width = 1.05,
             height = 1.05) +
   scale_fill_viridis_c(name = "Spearman\nCorrelation",
-                       begin = 0.15,
+                       begin = 0,
                        limit = c(-1, 1)) +
   theme_minimal() +
   theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
          axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
-         plot.title = element_text(size = 11, margin = margin(b = 20), hjust = 0.5, 
+         plot.title = element_text(size = 11, margin = margin(b = 20), hjust = 0.5,
                                    vjust = 3.5, lineheight = 1),
                   legend.title = element_text(size = 9)) +
   coord_fixed() +
@@ -580,6 +582,8 @@ ggplot(data = cor_melted,
 ```
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
+#### ####
+
 covid_filtered <- Q3.2
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
 subset_data <- covid_filtered[, relevant_columns]
@@ -590,22 +594,26 @@ cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 ```
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.5}
+#### Correlation between COVID and the SDG goals heatmap ####
+
 ggplot(data = cor_melted,
        aes(Variable1,
            Variable2,
            fill = Correlation)) +
-  geom_tile(width = 8,
-            height = 1.05) +
+  geom_tile(height = 1.05,
+            width = 1.05) +
   scale_fill_viridis_c(name = "Spearman\nCorrelation",
-                       begin = 0.15,
+                       begin = 0,
                        limit = c(-1, 1)) +
   theme_minimal() +
-  theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
-         plot.title = element_text(size = 11, margin = margin(b = 20), hjust = 0.5, 
-                                   vjust = 3,5, lineheight = 1.5),
-                  legend.title = element_text(size = 9)) +
+  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+        plot.title = element_text(size = 11, margin = margin(b = 20),
+                                  hjust = 0.5,
+                                  vjust = 3,5,
+                                  lineheight = 1),
+        legend.title = element_text(size = 9)) +
   coord_fixed() +
   labs(x = '',
        y = '',
@@ -613,6 +621,8 @@ ggplot(data = cor_melted,
 ```
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
+#### ####
+
 conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean"), ]
 
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "sum_deaths")
@@ -625,7 +635,9 @@ cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 ```
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2}
+#### Correlation between Conflicts Deaths and the SDG goals heatmap ####
+
 ggplot(data = cor_melted,
        aes(Variable1,
            Variable2,
@@ -633,7 +645,7 @@ ggplot(data = cor_melted,
   geom_tile(width = 1.05,
             height = 1.05) +
   scale_fill_viridis_c(name = "Spearman\nCorrelation",
-                       begin = 0.15,
+                       begin = 0,
                        limit = c(-1, 1)) +
   theme_minimal() +
   theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
@@ -641,13 +653,15 @@ ggplot(data = cor_melted,
          plot.title = element_text(size = 11, margin = margin(b = 20), hjust = 0.5, 
                                    vjust = 6, lineheight = 2),
                   legend.title = element_text(size = 9)) +
-coord_fixed(ratio = 1) +
+  coord_fixed(ratio = 1) +
   labs(x = '',
        y = 'Deaths',
        title = 'Correlation between Conflicts Deaths and the SDG goals')
 ```
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
+#### ####
+
 conflicts_filtered <-
   Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa",
                           "South Asia", "Latin America & the Caribbean",
@@ -666,7 +680,9 @@ cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 ```
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2}
+#### Correlation between Conflicts Affected Population and the SDG goals ####
+
 ggplot(data = cor_melted,
        aes(Variable1,
            Variable2,
@@ -674,7 +690,7 @@ ggplot(data = cor_melted,
   geom_tile(width = 1.05,
             height = 1.05) +
   scale_fill_viridis_c(name = "Spearman\nCorrelation",
-                       begin = 0.15,
+                       begin = 0,
                        limit = c(-1, 1)) +
   theme_minimal() +
   theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
@@ -689,6 +705,8 @@ coord_fixed(ratio = 1) +
 ```
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
+#### ####
+
 conflicts_filtered <-
   Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa",
                           "South Asia", "Latin America & the Caribbean",
@@ -708,7 +726,9 @@ cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Maxintensity))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 ```
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2}
+#### Correlation between Maxintensity in Conflicts and the SDG goals ####
+
 ggplot(data = cor_melted,
        aes(Variable1,
            Variable2,
@@ -716,7 +736,7 @@ ggplot(data = cor_melted,
   geom_tile(width = 1.05,
             height = 1.05) +
   scale_fill_viridis_c(name = "Spearman\nCorrelation",
-                       begin = 0.15,
+                       begin = 0,
                        limit = c(-1, 1)) +
   theme_minimal() +
   theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
@@ -735,7 +755,8 @@ After looking at almost the same results, we asked ourselves if the fact that we
 
 Here you can see for example our correlation map between the climate disasters and the SDG goals in South and East Asia and North America with one year gap.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, fig.height=2}
+```{r, echo = TRUE, message = FALSE, warning=FALSE}
+#### ####
 
 disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", " North America"), ]
 
@@ -756,14 +777,18 @@ correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_total_affected",
 
 cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
 names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
+```
 
+```{r, echo = TRUE, message = FALSE, warning=FALSE, fig.height = 2.5}
+#### Correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap ####
 ggplot(data = cor_melted_lagged,
        aes(Variable1,
            Variable2,
            fill = Correlation)) +
   geom_tile() +
   scale_fill_viridis_c(name = "Spearman\nCorrelation",
-                       begin = 0.15) +
+                       begin = 0,
+                       limit = c(-1, 1)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, size = 7, hjust = 1),
         axis.text.y = element_text(vjust = 1, size = 7, hjust = 1),
@@ -785,10 +810,7 @@ Even with a year gap it doesn't seem that climate disaster with such consequence
 
 Here you can see an interactive map of the correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019).
 
-```{r, eval = TRUE, echo = FALSE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
-
-library(shiny)
-library(plotly)
+```{r, eval = TRUE, echo = FALSE, message = FALSE, warning=FALSE}
 
 Q3.1 <- Q3.1 %>%
   arrange(code, year) %>%
