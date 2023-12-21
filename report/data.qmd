@@ -1156,9 +1156,9 @@ ggplot(COVID1,
        x = "proportion of NAs",
        y = "Count of countries") +
   scale_fill_viridis_d(name = "Variables",
-                         na.value = "white",
-                         begin = 0.5,
-                         end = 1) +
+                       begin = 0.5,
+                       end = 1,
+                       direction = -1) +
   theme(plot.title=element_text(hjust=0.5))+
   theme_minimal()
 
@@ -2165,41 +2165,20 @@ There are no more missing values, thanks to the previous steps.
 
 ##### **SDGs 1 and 10**  {.unnumbered}
 
-We noticed earlier that there were only missing values for goals 1 and 10. As we did before, we have started to investigate where are located the NAs in our dataset for first goal1, then goal 10.
+Regarding the missing values in the goals, we noticed earlier that there were only missing values for goals 1 and 10. We will now investigate to find where these missing values are located. First, let's look at the missing values for goal 1.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### Goal1 and Goal10 missing values ####
+#### Goal1 missing values ####
 
-na_count <- sapply(data_question1, function(x) sum(is.na(x)))
+# Counting the missing values
+na_count_1 <- sapply(data_question1, function(x) sum(is.na(x)))
 
-na_count[17]
-
-na_count_df <- data.frame(variable = names(na_count),
-                          num_missing = na_count)
-na_count_df_filtered <- subset(na_count_df,
+na_count_df_1 <- data.frame(variable = names(na_count_1),
+                          num_missing = na_count_1)
+na_count_df_filtered_1 <- subset(na_count_df_1,
                                num_missing > 0)
-ggplot(na_count_df_filtered,
-       aes(x = num_missing,
-           y = variable,
-           fill = num_missing)) +
-    geom_bar(aes(fill = num_missing),
-             stat = "identity",
-             width = 0.8,
-             fill = 'lightblue') +
-    geom_text(aes(label = num_missing),
-              vjust = 0.5,
-              hjust = 1.1,
-              position = position_dodge(width = 0.9)) +
-    theme_minimal() +
-    theme(axis.text.y = element_text(hjust = 1, size=10 ), 
-          legend.text = element_text(size = 8),
-          legend.title = element_text(size = 10),
-          plot.title=element_text(hjust=0.5)) +
-    labs(title = "Number of remaining missing values per variable ",
-         x = "Number of NAs",
-         y = "Variables")
 
-# goal1
+# Remove missing values for goal 1
 question1_missing_goal1 <- data_question1 %>%
   group_by(code) %>%
   summarize(Na_goal1 = mean(is.na(goal1))) %>%
@@ -2207,14 +2186,22 @@ question1_missing_goal1 <- data_question1 %>%
 
 data_question1 <- data_question1 %>%
   filter(!code %in% question1_missing_goal1$code)
-# still 42 NA values goal10
+
+# Counting the missing values again
+na_count_10 <- sapply(data_question1, function(x) sum(is.na(x)))
+
+na_count_df_10 <- data.frame(variable = names(na_count_10),
+                          num_missing = na_count_10)
+na_count_df_filtered_10 <- subset(na_count_df_10,
+                               num_missing > 0)
 ```
 
-We found that there is `r na_count[8]` missing values for goal 1 and `r na_count[17]` missing values for goal 10.  The missing values were located in only 5 countries. So we have decided to get rid of them. At this stage, there were only 42 remaining missing values. Then, we redo the same steps for goal 10.
+We found that there is `r na_count_1[8]` missing values for goal 1. The missing values were located in only 5 countries. So we have decided to get rid of them. At this stage, there is only `r na_count_df_filtered_10[1,2]` remaining missing values for goal 10. Therefore, we also get rid of the observations with missing values for goal 10.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Goal10 missing values ####
 
+# Remove missing values for goal 10
 question1_missing_goal10 <- data_question1 %>%
   group_by(code) %>%
   summarize(Na_goal10 = mean(is.na(goal10))) %>%
@@ -2224,7 +2211,7 @@ data_question1 <- data_question1 %>%
   filter(!code %in% question1_missing_goal10$code)
 ```
 
-We have found the 2 lasts countries containing missing values. Now, our dataset is completely clean and ready to be used for our question 1.
+Our dataset is now completely clean and ready to be used for our question 1.
 
 #### Data for question 2 and 4  {.unnumbered}
 

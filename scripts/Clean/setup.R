@@ -59,6 +59,13 @@ for (pkg in packages) {
 for (pkg in packages) {
   library(pkg, character.only = TRUE)}
 
+#############################
+## Setting some parameters ##
+#############################
+
+threshold_heatmap <- 0.75
+p_value_threshold <- 0.05
+
 ######################################################
 ## The following sets a few colors for nice reports ##
 ######################################################
