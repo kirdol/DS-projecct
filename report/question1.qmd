@@ -479,10 +479,9 @@ By looking at our heatmap, we notice that most of our goals are strongely correl
 In order to answer the first question of our work, let's start by zooming on the correlation matrix heatmap made in our EDA part. Here are the correlations between the SDG and all the other variables except the SDG.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
-
 ### Correlation Matrix Heatmap SDG/Other variables ###
 
-#computing pvals of our interested variables
+# computing p-values of our interested variables
 corr_matrix <- cor(data_question1[7:40], method = "spearman", use = "everything")
 p_matrix2 <- matrix(nrow = ncol(data_question1[7:40]), ncol = ncol(data_question1[7:40]))
 for (i in 1:ncol(data_question1[7:40])) {
@@ -492,13 +491,13 @@ for (i in 1:ncol(data_question1[7:40])) {
   }
 }
 
-corr_matrix[which(p_matrix2 > 0.05)] <- NA #only keeping significant pval alpha = 0.05
+corr_matrix[which(p_matrix2 > p_value_threshold)] <- NA #only keeping significant pval alpha = 0.05
 
 melted_corr_matrix_GVar <- melt(corr_matrix[19:34,1:18])
 
 ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
   geom_tile() +
-  geom_text(aes(label = ifelse(!is.na(value) & abs(value) > 0.75, sprintf("%.2f", value), '')),
+  geom_text(aes(label = ifelse(!is.na(value) & abs(value) > threshold_heatmap, sprintf("%.2f", value), '')),
             color = "black", size = 2) +
   scale_fill_viridis_c(name = "Spearman\nCorrelation",
                        na.value = "white",
@@ -514,7 +513,7 @@ ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
        title = 'Correlations Heatmap between goals and our other variables')
 ```
 
-The numbers are representing the significant p-values between our variables. Here, we only displayed the correlations bigger than 0.75, in absolut values. The grey parts are the non significant p-values.
+The numbers are representing the significant p-values between our variables. Here, we only displayed the correlations bigger than `r threshold_heatmap`, in absolut values. The grey parts are the non significant p-values.
 
 GDP per capita, internet_usage, pf_law or ef_legal are strongely correlated with most of our SDG. This is mostly due to the large scope englobed in these variables. That makes them influence various sectors of our economies and thus, mostly impacting all our SDG goals. Therefore, we can think that these variables have a strong impact on the scores. Nevertheless, as correlation doesn't mean causality, we still cannot jump to conclusions.
 
@@ -528,7 +527,7 @@ Now let's zoom on the correlations between all our variables except the SDG:
 melted_corr_matrix_Var <- melt(corr_matrix[19:34,19:34])
 ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
   geom_tile() +
-  geom_text(aes(label = ifelse(!is.na(value) & abs(value) > 0.75, sprintf("%.2f", value), '')),
+  geom_text(aes(label = ifelse(!is.na(value) & abs(value) > threshold_heatmap, sprintf("%.2f", value), '')),
             color = "black", size = 1.7) +
   scale_fill_viridis_c(name = "Spearman\nCorrelation",
                        na.value = "white",
@@ -776,11 +775,8 @@ names(models_tidy) <- paste("Goal", c(1:13, 15:17), "lm", sep="")
 # Combine into a single dataframe
 df_tidy <- do.call(rbind, lapply(names(models_tidy), function(x) cbind(models_tidy[[x]], Model=x)))
 
-# Assuming 'p.value' is the column name for p-values in your dataframe
-significance_level <- 0.05
-
 # Filter for significant p-values
-df_tidy_significant <- df_tidy[df_tidy$p.value < significance_level, ]
+df_tidy_significant <- df_tidy[df_tidy$p.value < p_value_threshold, ]
 library(RColorBrewer)
 
 myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_significant$term)))

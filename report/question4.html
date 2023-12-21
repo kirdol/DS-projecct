@@ -86,7 +86,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>How are the different SDGs linked? (We want to see if some SDGs are linked in the fact that a high score on one implies a high score on the other, and thus if we can make groups of SDGs that are comparable in that way).</strong></p>
 <section id="eda-general-visualization-of-the-sdgs" class="level3">
 <h3 class="anchored" data-anchor-id="eda-general-visualization-of-the-sdgs">EDA: General visualization of the SDGs</h3>
-<p>To better analyse the relationships between the SDGs, we will first visualize the correlation between the correlation between the SDGs with the help of a heatmap. We chose to set a threshold at |0.65| to concentrate our analysis on the most linked SDGs. We initially intended to use the Pearson correlation method, but our data is, as seen in previous chapter, not normally ditributed. We tryed to normalized our data through logarithmic or square root transformation, but it was not sufficient. For that reason, we chose to use th Spearman correlation. While not being an ideal method, the Spearman correaltion does not require the data to be normally ditributed.</p>
+<p>To better analyse the relationships between the SDGs, we will first visualize the correlation between the correlation between the SDGs with the help of a heatmap. We chose to set a threshold at |0.75| to concentrate our analysis on the most linked SDGs. We initially intended to use the Pearson correlation method, but our data is, as seen in previous chapter, not normally ditributed. We tryed to normalized our data through logarithmic or square root transformation, but it was not sufficient. For that reason, we chose to use th Spearman correlation. While not being an ideal method, the Spearman correaltion does not require the data to be normally ditributed.</p>
 <p>To do that, we select only the colums of interest and compute the correlation matrix using Spearman correlation. We then melt the matrix to be able to plot it. We then plot the heatmap using <code>ggplot2</code>.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Heatmap of the correlations ####</span></span>
@@ -129,7 +129,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>              <span class="at">vjust =</span> <span class="fl">0.5</span>,</span>
 <span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>              <span class="at">size =</span> <span class="fl">2.5</span>) <span class="sc">+</span></span>
 <span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">"Spearman</span><span class="sc">\n</span><span class="st">Correlation"</span>,</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>                         <span class="at">begin =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>                         <span class="at">begin =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
 <span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
 <span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>,</span>
 <span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
@@ -147,7 +147,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The correlation can be read on the graph. The darker the color, the stronger the correlation. If there is not colors, it means that the goals correlation does not exceed our threshold of ±0.65.</p>
+<p>The correlation can be read on the graph. The darker the color, the stronger the correlation. If the correlation value is not shown, it means that the goals correlation does not exceed our threshold of ±0.75.</p>
 <p>It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals seems to be less interrelated compared to others. We can see that SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) have a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also have a weacker interconnection with the other SDGs. It is also interesting to note that some goals are negatively correlated with others. For instance, based on the Spearman correlation, goal 12 (Responsable Consumption and Production) and goal 13 (Climate Action) are negatively correlated with the others goals. This suggest that when the higher a goal other than goal 12 or 13 is, the lower the goals 12 and 13 are. Given their similar nature, it is not surprising that they are highly correlated with each other.</p>
 </section>
 <section id="analysis-factor-analysis-and-stepwise-regression-applied-to-the-sdgs" class="level3">
@@ -177,15 +177,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>                             <span class="at">option =</span> <span class="st">"B"</span>,</span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>                             <span class="at">begin =</span> <span class="fl">0.5</span>),</span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">barcolor =</span> <span class="st">"black"</span>,</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>         <span class="at">barfill =</span> <span class="fu">viridis</span>(<span class="dv">10</span>,</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>                           <span class="at">option =</span> <span class="st">"D"</span>,</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>                           <span class="at">begin =</span> <span class="dv">0</span>,</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>                           <span class="at">end =</span> <span class="fl">0.8</span>),) <span class="sc">+</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"                                          PCA - Scree plot"</span>) <span class="sc">+</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="co"># getting the eigenvalues</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>eigenvalues <span class="ot">&lt;-</span> pca_result<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>         <span class="at">barfill =</span> Fix_color) <span class="sc">+</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"                                          PCA - Scree plot"</span>) <span class="sc">+</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># getting the eigenvalues</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>eigenvalues <span class="ot">&lt;-</span> pca_result<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -444,7 +441,8 @@ Overallscore\sim \beta_0 &amp;+ Goal~2*\beta_1 + Goal~3*\beta_2 + Goal~4*\beta_3
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">color =</span> <span class="fu">viridis</span>(<span class="dv">1</span>,</span>
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>                             <span class="at">option =</span> <span class="st">"B"</span>,</span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>                             <span class="at">begin =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -483,7 +481,8 @@ Goal~9\sim \beta_0 &amp;+ Goal~1*\beta_1 + Goal~2*\beta_2 + Goal~3*\beta_3 + Goa
 <span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">color =</span> <span class="fu">viridis</span>(<span class="dv">1</span>,</span>
 <span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>                             <span class="at">option =</span> <span class="st">"B"</span>,</span>
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>                             <span class="at">begin =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
