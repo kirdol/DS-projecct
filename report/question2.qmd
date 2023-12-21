@@ -243,7 +243,7 @@ Third we create an interactive map of the world to be able to navigate from year
 #### Interactive map of the world showing the scores by contries ####
 
 # Load world map data
-world <- ne_countries(scale = "medium", returnclass = "sf")
+world <- ne_countries(scale = "medium",returnclass = "sf")
 
 # Merge data with the world map data
 data0 <- merge(world, data_question2, by.x = "iso_a3", by.y = "code", all.x = TRUE)
@@ -257,9 +257,17 @@ plot_ly(
   type = "choropleth",
   z = ~data0$overallscore[data0$year == 2000],
   locations = ~data0$iso_a3[data0$year == 2000],
-  text = ~paste("Country: ", data0$name[data0$year == 2000], "<br>Overall Score: ", data0$overallscore[data0$year == 2000]),
-  colors = c("darkred", "orange", "yellow", "darkgreen"),
-  colorbar = list(title = "Overall Score", cmin = 40, cmax = 87),
+  text = ~paste("Country: ",
+                data0$name[data0$year == 2000],
+                "<br>Overall Score: ",
+                data0$overallscore[data0$year == 2000]),
+  colors = c("darkred",
+             "orange",
+             "yellow",
+             "darkgreen"),
+  colorbar = list(title = "Overall Score",
+                  cmin = 40,
+                  cmax = 87),
   zmin = 40,
   zmax = 87,
   hoverinfo = "text") %>%
@@ -278,7 +286,10 @@ plot_ly(
               list(
                 z = list(data0$overallscore[data0$year == year]),
                 locations = list(data0$iso_a3[data0$year == year]),
-                text = list(~paste("Country: ", data0$name[data0$year == year], "<br>Overall Score: ", data0$overallscore[data0$year == year]))
+                text = list(~paste("Country: ",
+                                   data0$name[data0$year == year],
+                                   "<br>Overall Score: ",
+                                   data0$overallscore[data0$year == year]))
               )
             )
           )
@@ -344,7 +355,7 @@ After having visualized the improvements and declines of SDG overall score for t
 top_n_values <- 5
 
 # Test with ggpot2
-custom_colors <- c("blue", "darkblue", "cyan", "green", "darkgreen", "lightgreen", "lightblue","turquoise", "lightgrey", "darkgrey")
+custom_colors <- c(viridis(5), viridis(2, option = "B", begin = 0, end = 0.4), viridis(3, option = "B", begin = 0.6, end = 1))
 
 # Get unique regions in the dataset
 unique_regions <- unique(binary2015$region)
@@ -361,12 +372,20 @@ for (year in unique_years) {
     arrange(desc(year), desc(diff_overallscore)) %>%
     head(n = top_n_values)
   
-  plot <- ggplot(data = top_countries, mapping = aes(x = country, y = diff_overallscore, fill = region)) +
+  plot <- ggplot(data = top_countries,
+                 mapping = aes(x = country,
+                               y = diff_overallscore,
+                               fill = region)) +
     geom_bar(stat = "identity") +
     scale_fill_manual(values = region_colors) +  # Use the specified colors
-    labs(title = paste(year), x = NULL, y = NULL) +
+    labs(title = paste(year),
+         x = NULL,
+         y = NULL) +
     theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size= 6), axis.text.y = element_text(size= 6), legend.position = "none", plot.title = element_text(size = 10)) + 
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size= 6),
+          axis.text.y = element_text(size= 6),
+          legend.position = "none",
+          plot.title = element_text(size = 10)) + 
     scale_y_continuous(limits = c(0, 3.7))
   
   plots[[as.character(year)]] <- plot
@@ -386,8 +405,7 @@ legend_plot <- ggplot(legend_data, aes(x = region, fill = region)) +
   scale_fill_manual(values = region_colors) +
   theme(legend.position="top",
         legend.text = element_text(size = 6), 
-        legend.title = element_blank(), legend.key.size = unit(0.3, "cm")
-  )+
+        legend.title = element_blank(), legend.key.size = unit(0.3, "cm"))+
   guides(fill = guide_legend(nrow=2))
 
 legend <- cowplot::get_legend(legend_plot)
@@ -407,12 +425,19 @@ for (year in unique_years) {
     arrange(desc(year), diff_overallscore) %>%
     head(n = top_n_values)
   
-  plot <- ggplot(data = top_countries, mapping = aes(x = country, y = diff_overallscore, fill = region)) +
+  plot <- ggplot(data = top_countries,
+                 mapping = aes(x = country,
+                               y = diff_overallscore,
+                               fill = region)) +
     geom_bar(stat = "identity") +
     scale_fill_manual(values = region_colors) +  # Use the specified colors
-    labs(title = paste(year), x = NULL, y = NULL) +
+    labs(title = paste(year),
+         x = NULL,
+         y = NULL) +
     theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size=6), axis.text.y = element_text(size= 6), legend.position = "none", plot.title = element_text(size = 10)) + 
+    theme(axis.text.x = element_text(angle = 45,vjust = 1, hjust = 1, size=6),
+          axis.text.y = element_text(size= 6), legend.position = "none",
+          plot.title = element_text(size = 10)) + 
     scale_y_continuous(limits = c(-3,0))
   
   plots[[as.character(year)]] <- plot
@@ -450,7 +475,7 @@ plot_ly() %>%
     y = ~improvement[after2015 == 1 & goal == "diff_overallscore"],
     legendgroup = "after 2015",
     name = "after 2015",
-    marker = list(color = "blue", size = 10),
+    marker = list(color = Fix_color, size = 10),
     showlegend = TRUE
   ) %>%
   add_trace(
@@ -459,7 +484,7 @@ plot_ly() %>%
     y = ~improvement[after2015 == 0 & goal == "diff_overallscore"],
     legendgroup = "before 2015",
     name = "before 2015",
-    marker = list(color = "red", size = 10),
+    marker = list(color = viridis(1), size = 10),
     showlegend = TRUE
   ) %>%
   layout(
@@ -770,8 +795,8 @@ data_after_2015 <- filter(binary2015, as.numeric(year) >= 2015)
 data_before_2016 <- filter(binary2015, as.numeric(year) <= 2015)
 
 plotly::plot_ly() %>%
-  plotly::add_trace(data = data_after_2015, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_after_2015)), type = 'scatter', mode = 'lines', line = list(color = 'blue'), name = "After 2015") %>%
-  plotly::add_trace(data = data_before_2016, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_before_2016)), type = 'scatter', mode = 'lines', line = list(color = 'red'), name = "Before 2015") %>%
+  plotly::add_trace(data = data_after_2015, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_after_2015)), type = 'scatter', mode = 'lines', line = list(color = Fix_color), name = "After 2015") %>%
+  plotly::add_trace(data = data_before_2016, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_before_2016)), type = 'scatter', mode = 'lines', line = list(color = viridis(1)), name = "Before 2015") %>%
   plotly::layout(title = "Different patterns across SDGs before and after 2015",
          xaxis = list(title = "Year"),
          yaxis = list(title = "SDG achievement score", range = c(30, 90)),

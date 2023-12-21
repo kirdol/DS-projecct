@@ -76,10 +76,10 @@ Fix_color <- viridis(1, # specifying to the viridis function that we want 1 colo
 # Creation of a discrete color palette for the categorical variables
 Discrete_colors <- scale_color_paletteer_d("Polychrome::dark")
 
-colors <- c("red", "blue", "green", "orange", "purple", "pink",
-                   "lightblue", "gray", "cyan", "magenta", "yellow",
-                   "darkgreen", "darkblue", "darkred", "darkgrey",
-                   "darkcyan")
+colors <- c("red", "blue", "green", "orange", "purple", "pink","lightblue",
+            "gray", "cyan", "magenta", "yellow","darkgreen", "darkblue",
+            "darkred", "darkgrey", "darkcyan")
+
 colors_pal <- scale_color_manual(values = colors)
 
 # Creation of a continuous color palette for the percentage of missing values
