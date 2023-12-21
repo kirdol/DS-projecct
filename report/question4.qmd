@@ -8,11 +8,8 @@ source(here::here("scripts","Clean","setup.R"))
 data_4 <- read.csv(here("scripts", "data", "data_question24.csv"))
 
 # setting our correlation and p-value threshold for the heatmap
-threshold_heatmap <- 0.6
+threshold_heatmap <- 0.65
 p_value_threshold <- 0.05
-
-# laoding the leaps package for the stepwise regression
-library(leaps)
 ```
 
 ## Focus on the relationships among the SDGs
@@ -48,6 +45,9 @@ for (i in 1:n) {
       cor_matrix[i, j] <- test$estimate
       p_matrix[i, j] <- test$p.value}}}
 
+# print(cor_matrix)
+# All correlation are significant from 0 at alpha = 0.05
+
 # Melting the data for ggplot
 melted_corr <- melt(cor_matrix)
 
@@ -74,7 +74,7 @@ ggplot(melted_corr, aes(x = Var1,
          y = "")
 ```
 
-The correlation can be read on the graph. The darker the color, the stronger the correlation. If there is not colors, it means that the goals correlation does not exceed our threshold of ±`r threshold_heatmap`.
+The correlation can be read on the graph. The darker the color, the stronger the correlation. If the correlation value is not shown, it means that the goals correlation does not exceed our threshold of ±`r threshold_heatmap`.
 
 It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals seems to be less interrelated compared to others. We can see that SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) have a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also have a weacker interconnection with the other SDGs. It is also interesting to note that some goals are negatively correlated with others. For instance, based on the Spearman correlation, goal 12 (Responsable Consumption and Production) and goal 13 (Climate Action) are negatively correlated with the others goals. This suggest that when the higher a goal other than goal 12 or 13 is, the lower the goals 12 and 13 are. Given their similar nature, it is not surprising that they are highly correlated with each other.
 
@@ -90,30 +90,31 @@ goals_data <- data_4 %>%
   dplyr::select(goal1, goal2, goal3, goal4, goal5,
                 goal6,goal7, goal8, goal9, goal10, goal11, goal12,
                 goal13, goal15, goal16, goal17) %>%
-  
-  # Renaming the columns for clarity of the graph
   rename(G1 = goal1, G2 = goal2, G3 = goal3, G4 = goal4, G5 = goal5,
          G6 = goal6, G7 = goal7, G8 = goal8, G9 = goal9, G10 = goal10,
          G11 = goal11, G12 = goal12, G13 = goal13, G15 = goal15,
          G16 = goal16, G17 = goal17)
-goals_data_scaled <- scale(goals_data) # Scaling the data
-pca_result <- prcomp(goals_data_scaled) # Running PCA
+
+# Scaling the data and running PCA
+goals_data_scaled <- scale(goals_data)
+pca_result <- prcomp(goals_data_scaled)
 
 # Plotting Scree plot to visualize the importance of each principal component
-fviz_eig(pca_result, # specify the data used for the graph
+fviz_eig(pca_result,
          addlabels = TRUE,
-         linecolor = viridis(1, # specifying to the viridis function that we want 1 color
-                             option = "B", # we use a color from the magma palette
-                             begin = 0.5), # we want the "midel" color of that palette
-         barcolor = "black", # the contour of the bars
-         barfill = viridis(10, # specifying to the viridis function that we want 10 colors
-                           option = "D", # we use color from the viridis palette
+         linecolor = viridis(1,
+                             option = "B",
+                             begin = 0.5),
+         barcolor = "black",
+         barfill = viridis(10,
+                           option = "D",
                            begin = 0,
-                           end = 0.8),) + # we want to use the first 80% of the palette to avoid the yellowish colors
-  ggtitle("                                          PCA - Scree plot") + # adding title
-  theme_minimal() # applying a minimal theme to be consistant with our other graphs
+                           end = 0.8),) +
+  ggtitle("                                          PCA - Scree plot") +
+  theme_minimal()
 
-eigenvalues <- pca_result$sdev^2 # getting the third eigenvalue
+# getting the eigenvalues
+eigenvalues <- pca_result$sdev^2
 ```
 
 We see clearly that the first component is the most important one. Guided by the Kaiser criterion, which advises retaining only those components with eigenvalues exceeding 1, the initial three components emerge as candidates with the third components having a eigenvalue of `r eigenvalues[3]`. We now want to see how those our two first components look on in a biplot.
@@ -122,14 +123,14 @@ We see clearly that the first component is the most important one. Guided by the
 #### Biplot ####
 
 # Plotting Biplot to visualize the two main dimensions
-fviz_pca_biplot(pca_result, # specify the data used for the graph
-                label = "var", # we want to label the variables
+fviz_pca_biplot(pca_result,
+                label = "var",
                 col.var = Fix_color,
-                geom = "point", # we want to use points to represent the variables
-                pointsize = 0.1, # we want the points to be small
-                labelsize = 4) + # Specify the size of our labels
-  ggtitle("                                           PCA - Biplot") + # adding title
-  theme_minimal() # applying a minimal theme to be consistant with our other graphs
+                geom = "point",
+                pointsize = 0.1,
+                labelsize = 3) + 
+  ggtitle("                                           PCA - Biplot") +
+  theme_minimal()
 ```
 
 The biplot offers an interesting visualization that clearly illustrate the relationship between the various goals and the first two components. We can see that the second dimension is mostly correlated with Goals 10 (Reduced inequalities) and 15 (Life on Land). The rest of the variables are more correlated with Dimension 1. With the biplot, we can see three disinct groups of variables, each playing a unique role. We see a group that regroup Goals 12 (Responsible Consumption and Production) and 13 (Climate Action). It is not a surprise to see that they are in the opposite direction from the rest of the variable. This comportment is due to the negative correlation between them and the rest of the variables as discussed previously. Both depicte environmental issues. We also see a group that regroup Goals 10 (Reduced inequalities) and 15 (Life on Land) which is suprising. To group the goal that treat the inequalities (goal 10) and the goal that concern the life on land (goal 15) does not make any sense. The last group regroup the rest of the variables. This categorization helps to understand the distinct influences and interactions between the goals.
@@ -137,16 +138,13 @@ The biplot offers an interesting visualization that clearly illustrate the relat
 We also performed a stepwise regression trying to see more precisely how the goals are correlated with each other. We use the forward selection with the `leaps` package to do so.
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Preparation of the data ####
+#### Stepwise regression ####
 
+# Selecting only the goals and overallscore columns
 goals_data <- data_4 %>% # Selecting only the columns needed
   dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
                 goal6,goal7, goal8, goal9, goal10, goal11, goal12,
                 goal13, goal15, goal16, goal17)
-```
-
-```{r echo = TRUE, message = FALSE, warning=FALSE}
-#### Stepwise regression ####
 
 # Performing a stepwise regression trying to explain each variables with the others
 leaps_o <- regsubsets(overallscore ~ goal1 + goal2 + goal3 + goal4 + goal5 +
@@ -311,7 +309,7 @@ significance_level <- 0.05
 df_tidy_significant <-
   df_tidy[df_tidy$p.value < significance_level, ]
 
-# Plot
+# Plot graph with all models
 ggplot(df_tidy_significant,
        aes(x = Model,
            y = estimate,
@@ -323,10 +321,10 @@ ggplot(df_tidy_significant,
   ylim(-1, 1) +
   theme(axis.text.x = element_text(angle = 45,
                                    hjust = 1),
-        legend.position = "right", # You can change the position if needed
-        legend.text = element_text(size = 5), # Adjust text size
-        legend.title = element_text(size = 7), # Adjust title size
-        legend.key.size = unit(0.3, "cm")) +  # Adjust key size) +
+        legend.position = "right",
+        legend.text = element_text(size = 5),
+        legend.title = element_text(size = 7),
+        legend.key.size = unit(0.3, "cm")) +
   labs(title = "Coefficient Plot of Regression Models",
        x = "Models",
        y = "Estimates") +
