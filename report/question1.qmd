@@ -330,12 +330,14 @@ In addition, some distributions are quite dispersed, such as goal 13 in Oceania 
 Now let's display the boxplots for the different variables of the Human Freedom Index.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
-#for Human Freedom Index scores 
+#### Prepare then plot the Distribution of the HFI by continent ####
 
-#Africa
+# Preparing Africa data
 data_Q1_Africa_HFI <- data_question1 %>%
   filter(data_question1$continent == 'Africa') %>%
-  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion,
+                pf_assembly, pf_expression, pf_identity, ef_government,
+                ef_legal, ef_money, ef_trade, ef_regulation)
 
 data_Q1_Africa_HFI_long <- melt(data_Q1_Africa_HFI)
 
@@ -346,10 +348,13 @@ medians_AF_HFI <- data_Q1_Africa_HFI_long %>%
 data_Q1_Africa_HFI_long <- data_Q1_Africa_HFI_long %>%
                   left_join(medians_AF_HFI, by = "variable")
 
-#America
+
+# Preparing America data
 data_Q1_Americas_HFI <- data_question1 %>%
   filter(data_question1$continent == 'Americas') %>%
-  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion,
+                pf_assembly, pf_expression, pf_identity, ef_government,
+                ef_legal, ef_money, ef_trade, ef_regulation)
 
 data_Q1_Americas_HFI_long <- melt(data_Q1_Americas_HFI)
 
@@ -360,10 +365,13 @@ medians_AM_HFI <- data_Q1_Americas_HFI_long %>%
 data_Q1_Americas_HFI_long <- data_Q1_Americas_HFI_long %>%
                   left_join(medians_AM_HFI, by = "variable")
 
-#Asia
+
+# Preparing Asia data
 data_Q1_Asia_HFI <- data_question1 %>%
   filter(data_question1$continent == 'Asia') %>%
-  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion,
+                pf_assembly, pf_expression, pf_identity, ef_government,
+                ef_legal, ef_money, ef_trade, ef_regulation)
 
 data_Q1_Asia_HFI_long <- melt(data_Q1_Asia_HFI)
 
@@ -374,10 +382,13 @@ medians_AS_HFI <- data_Q1_Asia_HFI_long %>%
 data_Q1_Asia_HFI_long <- data_Q1_Asia_HFI_long %>%
                   left_join(medians_AS_HFI, by = "variable")
 
-#Europe
+
+# Preparing Europe data
 data_Q1_Europe_HFI <- data_question1 %>%
   filter(data_question1$continent == 'Europe') %>%
-  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion,
+                pf_assembly, pf_expression, pf_identity, ef_government,
+                ef_legal, ef_money, ef_trade, ef_regulation)
 
 data_Q1_Europe_HFI_long <- melt(data_Q1_Europe_HFI)
 
@@ -388,10 +399,13 @@ medians_EU_HFI <- data_Q1_Europe_HFI_long %>%
 data_Q1_Europe_HFI_long <- data_Q1_Europe_HFI_long %>%
                   left_join(medians_EU_HFI, by = "variable")
 
-#Oceania 
+
+# Preparing Oceania data
 data_Q1_Oceania_HFI <- data_question1 %>%
   filter(data_question1$continent == 'Oceania') %>%
-  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
+  dplyr::select(continent, pf_law, pf_security, pf_movement, pf_religion,
+                pf_assembly, pf_expression, pf_identity, ef_government,
+                ef_legal, ef_money, ef_trade, ef_regulation)
 
 data_Q1_Oceania_HFI_long <- melt(data_Q1_Oceania_HFI)
 
@@ -402,29 +416,44 @@ medians_OC_HFI <- data_Q1_Oceania_HFI_long %>%
 data_Q1_Oceania_HFI_long <- data_Q1_Oceania_HFI_long %>%
                   left_join(medians_OC_HFI, by = "variable")
 
-# merge all medians 
-medians_all_HFI <- rbind(data_Q1_Oceania_HFI_long, data_Q1_Americas_HFI_long,data_Q1_Africa_HFI_long,data_Q1_Asia_HFI_long,data_Q1_Europe_HFI_long)
 
+# Merge all medians 
+medians_all_HFI <- rbind(data_Q1_Oceania_HFI_long, 
+                         data_Q1_Americas_HFI_long,
+                         data_Q1_Africa_HFI_long,
+                         data_Q1_Asia_HFI_long,
+                         data_Q1_Europe_HFI_long)
+
+# Assing a color to each median value
 medians_all_HFI$color <- ifelse(medians_all_HFI$median_value > 7.5, "1", 
                         ifelse(medians_all_HFI$median_value < 2.5, "2", '3'))
 
 bandwidth_nrd_HFI <- bw.nrd(medians_all_HFI$value)
 
-# Create the plot
-ggplot(medians_all_HFI, aes(x = variable, y = value, fill = color)) +
-  geom_violin(trim = FALSE, bw = bandwidth_nrd_HFI) +
+# Plot the distribution of the HFI by continent
+ggplot(medians_all_HFI,
+       aes(x = variable,
+           y = value,
+           fill = color)) +
+  geom_violin(trim = FALSE,
+              bw = bandwidth_nrd_HFI) +
   scale_fill_viridis_d(name = "",
                        option = "D",
                        direction = -1,
                        labels = c(">7.5",
                                   "Between",
                                   "< 2.5")) +
-  labs(title = "Human Freedom Index Scores Distribution by Continent", x = "Variables", y = "Scores", fill = "Score Category") +
-  facet_grid(continent ~ ., scales = "free_y") +
+  labs(title = "Human Freedom Index Scores Distribution by Continent",
+       x = "Variables",
+       y = "Scores",
+       fill = "Score Category") +
+  facet_grid(continent ~ .,
+             scales = "free_y") +
   scale_y_continuous(labels = scales::label_number()) +
   theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5), # Center the title
-        plot.title.position = "plot", axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.title.position = "plot",
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
 Here we can notice the same results, except that no score has a median below 25%. Again, Europe is the continent with most of its median scores superior to 75. 
@@ -433,30 +462,51 @@ For space reason because of the different scales, we have decided not to make vi
 
 Now, let's have a closer look to the general correlation between our variables. Using our cleaned dataset, we will use a correlation heatmap to help us vizualising the informations. Given that most of our variables are not normally distributed, we will use the Spearman method to calculate the correlation.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, fig.height = 2}
 #### Correlations between variables Heatmap ####
 
-Correlation_overall <-data_question1 %>% # selection of the numerical data
+# Selecting the variables to be used
+Correlation_overall <-data_question1 %>%
       dplyr::select(population:ef_regulation)
 
-cor_matrix_sper <- # calculation of the correlation matrix
-  cor(Correlation_overall, method = "spearman", use = "everything")
+# Correlation matrix calculation
+cor_matrix_sper <-
+  cor(Correlation_overall,
+      method = "spearman",
+      use = "everything")
 
-cor_melted <- # wide to long transformation
+# Wide to long
+cor_melted <-
   melt(cor_matrix_sper)
 
-ggplot(data = cor_melted, aes(Var1, Var2, fill = value)) +
-  geom_tile() +
-  scale_fill_viridis_c(name = "Spearman\nCorrelation",
-                       direction = 1,
-                       begin = 0,
-                       end = 1) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 6, hjust = 1),
-        axis.text.y = element_text(size = 6),
-        plot.title = element_text(hjust = 0.5)) +
-  coord_fixed() +
-  labs(x = '', y = '', title = 'Correlation Matrix Heatmap')
+# Adding a new column for hover text
+cor_melted$hover_text <- paste("Variable 1: ",
+                               cor_melted$Var1,
+                               "\nVariable 2: ",
+                               cor_melted$Var2,
+                               "\nCorrelation between the variables: ",
+                               round(cor_melted$value, 2))
+
+# Plotting the heatmap
+plotly_heatmap <- plot_ly(data = cor_melted,
+                          x = ~Var1,
+                          y = ~Var2,
+                          type = "heatmap",
+                          z = ~value,
+                          text = ~hover_text,
+                          hoverinfo = "text") %>%
+  layout(title = list(text = 'Correlation Matrix Heatmap',
+                      font = list(size = 17)),
+         xaxis = list(title = '',
+                      tickangle = 45),
+         yaxis = list(title = ''),
+         colorbar = list(title = 'Spearman\nCorrelation',
+                         yanchor = "middle",
+                         y = 0.5))
+
+# Display the Plotly plot
+plotly_heatmap %>%
+  config(displayModeBar = FALSE)
 ```
 
 By looking at our heatmap, we notice that most of our goals are strongely correlated together and that some variables amongst the Human Freedom Index scores too (strong correlation among personal freedom variables (pf), reflecting scores from the Human Freedom Index on movement, religion, assembly, and expression). This could be explained by the fact that some of these goals/scores share partially similar objectifs, which could mean that a raise in the score of one of these goals will raise positively the score of another/some other goals. In addition, we notice that goals 12 and 13 (respectively "responsible consumption & production" and "climate action", therefore climate oriented goals) are strongely negatively correlated with most of our variables. For the moment, as correlation doesn't imply causality, we cannot deduce anything from these informations. We will see more in detail the correlations between our goals and variables in the analysis part of the influence of the factors over the Sustainable Development Goals.
