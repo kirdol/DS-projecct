@@ -23,6 +23,60 @@ To better analyse the relationships between the SDGs, we will first visualize th
 
 To do that, we select only the colums of interest and compute the correlation matrix using Spearman correlation. We then melt the matrix to be able to plot it. We then plot the heatmap using `ggplot2`.
 
+```{r echo = TRUE, message = FALSE, warning = FALSE}
+
+
+p_value_threshold <- 0.05
+
+# Selecting columns of interest
+data_4_goals <- data_4 %>%
+  dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
+                goal6, goal7, goal8, goal9, goal10, goal11, goal12,
+                goal13, goal15, goal16, goal17)
+
+# Initialize matrices for correlations and p-values
+n <- ncol(data_4_goals)
+cor_matrix <- matrix(NA, n, n)
+p_matrix <- matrix(NA, n, n)
+colnames(cor_matrix) <- colnames(data_4_goals)
+rownames(cor_matrix) <- colnames(data_4_goals)
+colnames(p_matrix) <- colnames(data_4_goals)
+rownames(p_matrix) <- colnames(data_4_goals)
+
+# Calculating correlations and p-values
+for (i in 1:n) {
+  for (j in 1:n) {
+    if (i != j) {
+      test <- cor.test(data_4_goals[[i]], data_4_goals[[j]], method = "spearman")
+      cor_matrix[i, j] <- test$estimate
+      p_matrix[i, j] <- test$p.value}}}
+
+# Applying a p-value threshold
+cor_matrix[which(p_matrix > p_value_threshold, arr.ind = TRUE)] <- NA
+
+# Melting the data
+melted_corr <- melt(cor_matrix, na.rm = TRUE)
+
+# Creation of the heatmap
+ggplot(data = melted_corr,
+       aes(x = Var1,
+           y = Var2,
+           fill = value)) +
+    geom_tile() +
+    geom_text(aes(label = sprintf("%.2f", value)), 
+              vjust = 0.5,
+              size = 2.5) +
+    scale_fill_viridis_c(name = "Spearman\nCorrelation",
+                         begin = 0.1,
+                         end = 1) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45,
+                                     hjust = 1)) +
+    labs(title = "Heatmap of Statistically Significant Spearman Correlations",
+         x = "",
+         y = "")
+```
+
 ```{r echo = TRUE, message = FALSE}
 #### Preparation of the data ####
 
