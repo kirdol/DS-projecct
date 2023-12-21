@@ -1,6 +1,8 @@
 ## Focus on the influence of events over the SDG scores
 
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
+#### Setup of the environment ####
+
 source(here::here("scripts","Clean","setup.R"))
 data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
 data_question24 <- read.csv(here("scripts", "data", "data_question24.csv"))
@@ -77,50 +79,55 @@ In order to have an overview of the relationship between the different events va
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE}
 
-lower.panel <- function(x, y, ...){
-   points(x,
-          y,
-          pch = 20,
-          col = Fix_color,
-          cex = 0.2)
-}
+# Function to create the lower triangle of the correlation matrix
+lower.panel <-
+  function(x, y, ...){
+    points(x,
+           y,
+           pch = 20,
+           col = Fix_color,
+           cex = 0.2)}
+
+# Function to create the histogram of the plot
+panel.hist <-
+  function(x, ...){
+    usr <- par("usr"); on.exit(par(usr))
+    par(usr = c(usr[1:2], 0, 1.5) )
+    h <- hist(x, plot = FALSE)
+    breaks <- h$breaks; nB <- length(breaks)
+    y <- h$counts; y <- y/max(y)
+    rect(breaks[-nB], 0, breaks[-1], y, col = Fix_color, ...)}
  
- panel.hist <- function(x, ...){
-   usr <- par("usr"); on.exit(par(usr))
-   par(usr = c(usr[1:2], 0, 1.5) )
-   h <- hist(x, plot = FALSE)
-   breaks <- h$breaks; nB <- length(breaks)
-   y <- h$counts; y <- y/max(y)
-   rect(breaks[-nB], 0, breaks[-1], y, col = Fix_color, ...)
- }
- 
- # panel.cor_stars function with stars alongside correlation coefficients
- panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) {
+# panel.cor_stars function with stars alongside correlation coefficients
+panel.cor_stars <-
+  function(x, y, digits = 2, prefix = "", cex.cor, ...) {
    usr <- par("usr"); on.exit(par(usr))
    par(usr = c(0, 1, 0, 1))
    r <- cor(x, y)
    p_value <- cor.test (x,y)$p.value
- 
+   
    if (p_value < 0.001){
-     stars <- "***"
-   } else if (p_value < 0.01) {
-     stars <- "**"
-   } else if (p_value < 0.05) {
-     stars <- "*"
-   } else {
-     stars <- ""
-   }
-   txt <- paste0(format(c(r, 0.123456789),
-                        digits = digits)[1],
-                 " ",
-                 stars)
+     stars <- "***"}
+   else if (p_value < 0.01) {
+     stars <- "**"}
+   else if (p_value < 0.05) {
+     stars <- "*"} else {
+       stars <- ""}
+   txt <-
+     paste0(format(c(r, 0.123456789),
+                   digits = digits)[1],
+            " ",
+            stars)
+   
    if(missing(cex.cor)) cex.cor <- 0.5/strwidth(txt)
    text(0.5,
         0.5,
         txt,
-        cex = cex.cor)
- }
- 
+        cex = cex.cor)}
+```
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE}
+#### Correlation table and distribution of Disaster variables ####
 
 pairs(data_question3_1[, c("overallscore",
                            "total_affected",
@@ -136,6 +143,7 @@ Meaning of the stars: \*\*\* : p_value \< 0.001; \*\* : p_value \< 0.01; \*: p_v
 The different variables used to materialize the impact of climate disasters do not seem to have important influence on the overall score. Indeed, the overallscore and total_affected have a correlation coefficient that suggests a very weak negative linear relationship between this variables and which is not statistically significant (p ≥ 0.05), and the overallscore and total_deaths have a correlation that also indicates a weak negative linear relationship that is statistically significant at p \< 0.05. But we will further explore for the different SDGs, since we believe that such disasters have a specific influence on some SDGs.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE}
+#### Correlation table and distribution of COVID variables ####
 
 pairs(data_question3_2[,c("overallscore",
                           "cases_per_million",
@@ -154,6 +162,7 @@ The different variables used to materialize the impact of COVID19 do not seem to
 Concerning the correlation effect between the COVID19 variables, we could have no surprises, Cases_per_million and deaths_per_million have a moderate to strong positive correlation suggesting a stronger relationship where an increase in the number of COVID-19 cases per million is associated with a substantial increase in the number of deaths per million. This indicates a significant correlation between case prevalence and mortality rate. Cases_per_million and stringency have a moderate positive correlation indicates that higher levels of cases per million are associated with slightly higher severity of health measures. This could mean that in regions where cases are more numerous, stricter sanitary measures can be put in place to control the spread of the virus. Finally, Deaths_per_million and stringency have a strong positive correlation indicating a robust relationship where higher mortality rates are associated with higher severity of sanitary measures. This suggest that in areas where deaths are higher, stricter sanitary measures are applied in an attempt to reduce the spread of the virus and mortality.
 
 ```{r, echo = TRUE, message = FALSE,warning = FALSE}
+#### Correlation table and distribution of conflicts variables ####
 
 pairs(data_question3_3[,c("overallscore",
                           "ongoing",
@@ -174,6 +183,7 @@ Negative values (ranging from -0.17 to -0.28) with three stars (\*\*\*) indicate
 To explore our data on events such as disasters, covid-19 and conflicts we have to first see which regions are the most touched by these. To do so, we made time-series analysis on this three events each time depending on different variables.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
+#### Date format conversion ####
 
 # Converted 'year' column to date format
 Q3.1$year <- as.numeric(format(as.Date(as.character(Q3.1$year),
@@ -188,10 +198,13 @@ These is our time-analysis concerning climatic disasters with total affected per
 
 We can see that the regions the most affected by the climate disasters are East Asia, North America and South Asia. We will concentrate more in this regions and that the regions the most affected by the climate disasters are East Asia, Latin America & the Caribbean and South Asia.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+#### Trend of Total Affected from Climatic Disasters Over Time graph ####
 
+# Replace all missing values with 0
 Q3.1[is.na(Q3.1)] <- 0
 
+# Create the graph
 ggplot(data = Q3.1,
        aes(x = year,
            y = total_affected,
@@ -212,11 +225,12 @@ ggplot(data = Q3.1,
         strip.text = element_text(size = 8),
         panel.spacing = unit(0.5, "lines"),
         plot.title = element_text(hjust = 0.5),
-        legend.position = "none"
-  ) +
+        legend.position = "none") +
   ggtitle("Trend of Total Affected from Climatic Disasters Over Time")
+```
 
-Q3.1[is.na(Q3.1)] <- 0
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+#### Trend of Total Deaths from Climatic Disasters Over Time graph ####
 
 ggplot(data = Q3.1,
        aes(x = year,
@@ -244,11 +258,13 @@ ggplot(data = Q3.1,
 
 These is our time-analysis concerning the COVID-19 cases per million, the COVID-19 deaths per million and the COVID-19 stringency by region between end 2018 and 2022.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+#### Trend of COVID-19 Cases per Million Over Time graph ####
 
-
+# filter data for year >= 2018
 covid_filtered <- Q3.2[Q3.2$year >= 2018, ]
 
+# Create the plot
 ggplot(data = covid_filtered,
        aes(x = year,
            y = cases_per_million,
@@ -272,8 +288,10 @@ ggplot(data = covid_filtered,
         panel.spacing = unit(1, "lines"),
         legend.position = "none") +
   ggtitle("Trend of COVID-19 Cases per Million Over Time")
+```
 
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+#### Trend of COVID-19 Deaths per Million Over Time graph ####
 
 ggplot(data = covid_filtered,
        aes(x = year,
@@ -297,8 +315,10 @@ ggplot(data = covid_filtered,
         plot.title = element_text(hjust = 0.5),
         legend.position = "none") +
   ggtitle("Trend of COVID-19 Deaths per Million Over Time")
+```
 
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+#### Trend of COVID-19 Stringency Over Time graph ####
 
 ggplot(data = covid_filtered,
        aes(x = year,
@@ -327,9 +347,13 @@ These is our time-analysis concerning conflicts deaths, conflicts affected popul
 
 We can see that the regions the most affected by the deaths are : Middle east and north Africa, Sub-Saharan Africa, South Asia, then very less America & the Caribbean and Eastern Europe. The regions the most affected by the affected population are : Middle east and north Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Caucasus and Central Asia. Finally, the regions having a maxintensity in conflicts are : Caucasus and Central Asia, Eastern Europe, Middle east and north Africa, Sub-Saharan Africa, North America, South Asia, East Asia just at one precise moment, Latin America & the Caribbean less.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+#### Trend of Conflicts Deaths Over Time graph ####
+
+# filter data for year over 2000 and lower than 2016
 conflicts_filtered <- Q3.3[Q3.3$year >= 2000 & Q3.3$year <= 2016, ]
 
+# Create the plot
 ggplot(data = conflicts_filtered,
        aes(x = year,
            y = sum_deaths,
@@ -351,8 +375,10 @@ ggplot(data = conflicts_filtered,
         plot.title = element_text(hjust = 0.5),
         legend.position = "none") +
   ggtitle("Trend of Deaths by Conflicts Over Time")
+```
 
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+#### Trend of Population Affected by Conflicts Over Time graph ####
 
 ggplot(data = conflicts_filtered,
        aes(x = year,
@@ -375,9 +401,11 @@ ggplot(data = conflicts_filtered,
         plot.title = element_text(hjust = 0.5),
         legend.position = "none") +
   ggtitle("Trend of Population Affected by Conflicts Over Time")
+```
 
 
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
+#### Trend of Maxintensity by Conflicts Over Time graph ####
 
 ggplot(data = conflicts_filtered,
        aes(x = year,
@@ -402,9 +430,7 @@ ggplot(data = conflicts_filtered,
   ggtitle("Trend of Maxintensity by Conflicts Over Time")
 ```
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-
-library(plotly)
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 
 # Function to generate different plots based on the choice
 generate_plot <- function(choice, conflicts_filtered) {
@@ -501,6 +527,10 @@ initial_plotly <- layout(initial_plotly,
                          )
 )
 
+# Hide the Modebar
+initial_plotly <- initial_plotly %>% config(displayModeBar = FALSE)
+
+# Show the graphs
 initial_plotly
 ```
 
@@ -515,7 +545,7 @@ Here you can see an extract of:
 - Our correlation between conflicts affected population and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Caucasus & Central Asia. 
 - Our correlation between the regions having a maxintensity in conflicts and the SDG goals only for Caucasus & Central Asia, Eastern Europe, Middle east & north Africa, Sub-Saharan Africa, North America, South Asia, East Asia, Latin America & the Caribbean.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, fig.width=6, fig.height=2, cache = TRUE, out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, fig.width=6, fig.height=2}
 
 disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "total_deaths")
@@ -525,7 +555,9 @@ correlation_matrix_subset <- cor(subset_data[, c("total_affected", "total_deaths
 
 cor_melted <- reshape2::melt(correlation_matrix_subset)
 names(cor_melted) <- c("Variable2", "Variable1", "Correlation")
+```
 
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 ggplot(data = cor_melted,
        aes(Variable1,
            Variable2,
@@ -545,9 +577,9 @@ ggplot(data = cor_melted,
   labs(x = '',
        y = '',
        title = 'Correlation between the climate disasters and the SDG goals\nin South and East Asia and North America')
+```
 
-
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 covid_filtered <- Q3.2
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
 subset_data <- covid_filtered[, relevant_columns]
@@ -556,10 +588,9 @@ correlation_matrix_Covid <- cor(subset_data, subset_data[, c("stringency", "case
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+```
 
-# Create the heatmap
-library(ggplot2)
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 ggplot(data = cor_melted,
        aes(Variable1,
            Variable2,
@@ -579,9 +610,9 @@ ggplot(data = cor_melted,
   labs(x = '',
        y = '',
        title = 'Correlation between COVID and the SDG goals')
+```
 
-
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean"), ]
 
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "sum_deaths")
@@ -592,7 +623,9 @@ correlation_matrix_Conflicts_Deaths <- cor(subset_data, subset_data[, c("sum_dea
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+```
 
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 ggplot(data = cor_melted,
        aes(Variable1,
            Variable2,
@@ -612,9 +645,9 @@ coord_fixed(ratio = 1) +
   labs(x = '',
        y = 'Deaths',
        title = 'Correlation between Conflicts Deaths and the SDG goals')
+```
 
-
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 conflicts_filtered <-
   Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa",
                           "South Asia", "Latin America & the Caribbean",
@@ -631,7 +664,9 @@ correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_af
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+```
 
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 ggplot(data = cor_melted,
        aes(Variable1,
            Variable2,
@@ -651,9 +686,9 @@ coord_fixed(ratio = 1) +
   labs(x = '',
        y = 'Affected Population',
        title = 'Correlation between Conflicts Affected Population and the SDG goals')
+```
 
-
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 conflicts_filtered <-
   Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa",
                           "South Asia", "Latin America & the Caribbean",
@@ -671,7 +706,9 @@ correlation_matrix_Conflicts_Maxintensity <- cor(subset_data, subset_data[, c("m
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Maxintensity))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+```
 
+```{r, echo = TRUE, message = FALSE, warning = FALSE}
 ggplot(data = cor_melted,
        aes(Variable1,
            Variable2,
@@ -686,7 +723,7 @@ ggplot(data = cor_melted,
          axis.text.y = element_text(vjust = 0, size = 8, hjust = 1),
          plot.title = element_text(size = 11, margin = margin(b = 20), hjust = 0.5, vjust = 6, lineheight = 2),
          legend.title = element_text(size = 9)) +
-coord_fixed(ratio = 1) +
+  coord_fixed(ratio = 1) +
   labs(x = '',
        y = 'Maxintensity',
        title = 'Correlation between Maxintensity in Conflicts and the SDG goals')
