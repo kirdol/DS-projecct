@@ -545,7 +545,7 @@ Here you can see an extract of:
 - Our correlation between conflicts affected population and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Caucasus & Central Asia. 
 - Our correlation between the regions having a maxintensity in conflicts and the SDG goals only for Caucasus & Central Asia, Eastern Europe, Middle east & north Africa, Sub-Saharan Africa, North America, South Asia, East Asia, Latin America & the Caribbean.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.5}
 
 disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "total_deaths")
@@ -555,9 +555,8 @@ correlation_matrix_subset <- cor(subset_data[, c("total_affected", "total_deaths
 
 cor_melted <- reshape2::melt(correlation_matrix_subset)
 names(cor_melted) <- c("Variable2", "Variable1", "Correlation")
-```
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.5}
+
 #### Correlation between the climate disasters and the SDG goals in South and East Asia and North America heatmap ####
 
 ggplot(data = cor_melted,
@@ -579,10 +578,9 @@ ggplot(data = cor_melted,
   labs(x = '',
        y = '',
        title = 'Correlation between the climate disasters and the SDG goals\nin South and East Asia and North America')
-```
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### ####
+
+#### Correlation between COVID and the SDG goals heatmap ####
 
 covid_filtered <- Q3.2
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
@@ -592,10 +590,6 @@ correlation_matrix_Covid <- cor(subset_data, subset_data[, c("stringency", "case
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-```
-
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.5}
-#### Correlation between COVID and the SDG goals heatmap ####
 
 ggplot(data = cor_melted,
        aes(Variable1,
@@ -618,10 +612,9 @@ ggplot(data = cor_melted,
   labs(x = '',
        y = '',
        title = 'Correlation between COVID and the SDG goals')
-```
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### ####
+
+#### Correlation between Conflicts Deaths and the SDG goals heatmap ####
 
 conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean"), ]
 
@@ -633,10 +626,6 @@ correlation_matrix_Conflicts_Deaths <- cor(subset_data, subset_data[, c("sum_dea
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-```
-
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2}
-#### Correlation between Conflicts Deaths and the SDG goals heatmap ####
 
 ggplot(data = cor_melted,
        aes(Variable1,
@@ -657,10 +646,9 @@ ggplot(data = cor_melted,
   labs(x = '',
        y = 'Deaths',
        title = 'Correlation between Conflicts Deaths and the SDG goals')
-```
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### ####
+
+#### Correlation between Conflicts Affected Population and the SDG goals ####
 
 conflicts_filtered <-
   Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa",
@@ -678,10 +666,6 @@ correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_af
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-```
-
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2}
-#### Correlation between Conflicts Affected Population and the SDG goals ####
 
 ggplot(data = cor_melted,
        aes(Variable1,
@@ -702,10 +686,9 @@ coord_fixed(ratio = 1) +
   labs(x = '',
        y = 'Affected Population',
        title = 'Correlation between Conflicts Affected Population and the SDG goals')
-```
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### ####
+
+#### Correlation between Maxintensity in Conflicts and the SDG goals ####
 
 conflicts_filtered <-
   Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa",
@@ -724,10 +707,6 @@ correlation_matrix_Conflicts_Maxintensity <- cor(subset_data, subset_data[, c("m
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Maxintensity))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-```
-
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2}
-#### Correlation between Maxintensity in Conflicts and the SDG goals ####
 
 ggplot(data = cor_melted,
        aes(Variable1,
@@ -755,8 +734,8 @@ After looking at almost the same results, we asked ourselves if the fact that we
 
 Here you can see for example our correlation map between the climate disasters and the SDG goals in South and East Asia and North America with one year gap.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE}
-#### ####
+```{r, echo = TRUE, message = FALSE, warning=FALSE, fig.height = 2.5}
+#### Correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap ####
 
 disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", " North America"), ]
 
@@ -777,10 +756,7 @@ correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_total_affected",
 
 cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
 names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
-```
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, fig.height = 2.5}
-#### Correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap ####
 ggplot(data = cor_melted_lagged,
        aes(Variable1,
            Variable2,
@@ -808,395 +784,92 @@ Even with a year gap it doesn't seem that climate disaster with such consequence
 
 ### Interactive map of the correlation between the different events and the SDG goals with 1 year gap.
 
-Here you can see an interactive map of the correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019).
+Here you can see an extrat of our interactive map of the correlation between the climate disasters and the SDG goals in South, East Asia and North America with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019). Unforthunatly, our shiny app is not supported in static R Markdown documents. For more details you can see our interactive maps in the "See Interactive" Folder, our document called "Interactive_Matrix_Plots.
 
-```{r, eval = TRUE, echo = FALSE, message = FALSE, warning=FALSE}
+<img src="Climate_Dis_year_gap.png" height="190px" width="520" style="display: block; margin: 60px auto 0;"/>
 
-Q3.1 <- Q3.1 %>%
-  arrange(code, year) %>%
-  group_by(code)
 
-disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
+here you can see the correlation between COVID-19 and the SDG goals with 1 year gap. And strangely, instead of having a negative correlation, we expected that the more cases and deaths happened because of COVID-19, the scores of the SDG would be negatively affected,but with the gap year we can see that the scores of the Goal3, Goal6, Goal9 and Goal16 are quite positively impacted by the COVID-19.
 
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6",
-                      "goal7", "goal8", "goal9", "goal10", "goal11", "goal12",
-                      "goal13", "goal15", "goal16", "total_affected",
-                      "total_deaths")
-
-subset_data <- disaster_data[, relevant_columns]
-
-lagged_subset_data <- subset_data %>%
-  mutate(
-    lagged_total_affected = lag(total_affected, default = NA),
-    lagged_total_deaths = lag(total_deaths, default = NA)
-  )
-
-correlation_matrix_lagged <-
-  cor(lagged_subset_data[, c("lagged_total_affected", "lagged_total_deaths")],
-      subset_data,
-      method = "spearman")
-
-cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
-names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
-
-ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap between the climate disasters and the SDG goals in South and East Asia with 1 year gap"),
-  plotlyOutput("heatmap"),
-  sliderInput("year", "Select Year", min = 2000, max = 2021, value = 2012, step = 1),
-  verbatimTextOutput("correlation_output"),
-  actionButton("stopButton", "Stop application")
-)
-
-server <- function(input, output, session) {
-  selected_data <- reactive({
-    filtered_data <- disaster_data[disaster_data$year == input$year, ]
-    subset_data <- filtered_data[, relevant_columns]
-    lagged_subset_data <- subset_data %>%
-      mutate(
-        lagged_total_affected = lag(total_affected, default = NA),
-        lagged_total_deaths = lag(total_deaths, default = NA)
-      )
-    
-    correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_total_affected", "lagged_total_deaths")], subset_data)
-    
-    cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
-    names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
-    
-    return(cor_melted_lagged)
-  })
-  
-  output$heatmap <- renderPlotly({
-    p <- plot_ly(data = selected_data(),
-                 x = ~Variable1,
-                 y = ~Variable2,
-                 z = ~Correlation, 
-                 type = "heatmap",
-                 colorscale = list(c(-1, "blue"), c(0, "white"), c(1, "red")),
-                 zmin = -1, zmax = 1)
-    
-    p <- p %>% layout(
-      title = "",
-      xaxis = list(title = ""),
-      yaxis = list(title = ""),
-      coloraxis = list(
-        colorbar = list(
-          title = "Correlation",  
-          tickvals = c(-1, 0, 1),  
-          ticktext = c("-1", "0", "1"),
-          len = 5,
-          thickness = 20,
-          x = 0,
-          xanchor = "left",
-          ticks = "outside" 
-        )
-      )
-    )
-    return(p)
-  })
-  
-  observeEvent(input$stopButton, {
-    stopApp()  
-  })
-}
-shinyApp(ui = ui, server = server)
-```
-
-here you can see an interactive map of the correlation between COVID-19 and the SDG goals with 1 year gap. And strangely, instead of having a negative correlation, we expected that the more cases and deaths happened because of COVID-19, the scores of the SDG would be negatively affected,but with the gap year we can see that the scores of the Goal3, Goal6, Goal9 and Goal16 are quite positively impacted by the COVID-19.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
-
-library(shiny)
-library(plotly)
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE,fig.height = 2.5, out.width="100%"}
 
 Q3.2 <- Q3.2 %>%
   arrange(code,year)%>%
   group_by(code)
 
+library(ggplot2)
+library(reshape2)
+library(dplyr)
+
 Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
 
-covid_filtered <- Q3.2
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6",
                       "goal7", "goal8", "goal9", "goal10", "goal11", "goal12",
                       "goal13", "goal15", "goal16", "stringency",
                       "cases_per_million", "deaths_per_million")
 
-subset_data <- covid_filtered[, relevant_columns]
+# Function to generate a lagged correlation matrix for a given year
+generate_lagged_correlation_plot_covid <- function(year, data, relevant_columns) {
+  # Filter data for the specified year
+  current_year_data <- data[data$year == year, relevant_columns]
 
-correlation_matrix_Covid <-
-  cor(subset_data, subset_data[, c("stringency", "cases_per_million", "deaths_per_million")])
+  # Lag the relevant COVID columns
+  lagged_data <- current_year_data %>%
+    mutate(
+      lagged_stringency = lag(stringency, default = NA),
+      lagged_cases_per_million = lag(cases_per_million, default = NA),
+      lagged_deaths_per_million = lag(deaths_per_million, default = NA)
+    ) %>%
+    select(-stringency, -cases_per_million, -deaths_per_million)  # Exclude non-lagged variables
 
-cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
-names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+  # Calculate the correlation matrix
+  correlation_matrix <- cor(lagged_data[, c("lagged_stringency", "lagged_cases_per_million", "lagged_deaths_per_million")],
+                            lagged_data, method = "spearman")
 
-ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap between COVID and the SDG goal with one year gap"),
-  plotlyOutput("heatmap"),
-  sliderInput("year", "Select Year", min = 2020, max = 2022, value = 2020, step = 1),
-  actionButton("stopButton", "Stop application")
-)
+  # Melt the correlation matrix for ggplot
+  cor_melted <- melt(correlation_matrix)
+  names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 
-server <- function(input, output, session) {
-  selected_covid_data <- reactive({
-    filtered_data <- covid_filtered[covid_filtered$year == input$year, ]
-    subset_data <- filtered_data[, relevant_columns]
-    return(subset_data)
-  })
-  
-  output$heatmap <- renderPlotly({
-    correlation_matrix_Covid <- cor(selected_covid_data(), selected_covid_data()[, c("stringency", "cases_per_million", "deaths_per_million")])
-    cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
-    names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-    
-    p <- plot_ly(data = cor_melted,
-                 x = ~Variable1,
-                 y = ~Variable2,
-                 z = ~Correlation,
-                 type = "heatmap", colorscale = list(c(0, "blue"), c(0.5, "white"), c(1, "red")),
-                 zmin = -1, zmax = 1)
-    
-    p <- p %>% layout(
-      title = "",
-      xaxis = list(title = "", tickfont = list(size = 16)),
-      yaxis = list(title = "", tickfont = list(size = 16)),
-      coloraxis = list(
-        colorbar = list(
-          title = "Correlation",
-          tickvals = c(-1, 0, 1), 
-          ticktext = c("-1", "0", "1"),
-          len = 5, 
-          thickness = 20, 
-          x = 0,
-          xanchor = "left", 
-          ticks = "outside"
-        )
-      )
-    )
-    return(p)
-  })
-  
-  observeEvent(input$stopButton, {
-    stopApp()  
-  })
+  # Create the ggplot
+  p <- ggplot(cor_melted, aes(Variable2, Variable1, fill = Correlation)) +
+    geom_tile() +
+    scale_fill_viridis_c(name = "Spearman\nCorrelation", limit = c(-1, 1)) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, size = 7, hjust = 1),
+          axis.text.y = element_text(vjust = 1, size = 7),
+          legend.title = element_text(size = 6),
+          plot.title = element_text(hjust = 0.5, size = 11, margin = margin(b = 15)),
+          legend.key.size = unit(0.4, "cm"),
+          legend.text = element_text(size = 6)) +
+    coord_fixed() +
+    labs(x = '', y = '', title = paste('Lagged Correlation for COVID-19 in Year', year))
+
+  return(p)
 }
-shinyApp(ui = ui, server = server)
+
+# Generate and display the plots for 2020, 2021, and 2022
+plot_2020 <- generate_lagged_correlation_plot_covid(2020, Q3.2, relevant_columns)
+plot_2021 <- generate_lagged_correlation_plot_covid(2021, Q3.2, relevant_columns)
+plot_2022 <- generate_lagged_correlation_plot_covid(2022, Q3.2, relevant_columns)
+
+plot_2020
+plot_2021
+plot_2022
 ```
 
-Finally, here you can see an interactive map of the correlation between respectively for the 3 different variables of the Conflict and the SDG goals with 1 year gap.
+Finally, here you can see an extract of our interactive map of the correlation between respectively for the 3 different variables of the Conflict and the SDG goals with 1 year gap. Once again, you can look for more details to our document containing our interactive correlation matrices.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
+<img src="Conflicts_Deaths_year_gap.png" height="190px" width="520" style="display: block; margin: 60px auto 0;"/>
 
-library(shiny)
-library(plotly)
+Here's the extract of our interactive map of the correlation between the affected population in conflicts and the SDG goals with 1 year gap.
 
-Q3.3 <- Q3.3 %>%
-  arrange(code,year)%>%
-  group_by(code)
+<img src="Conflicts_Affected_year_gap.png" height="190px" width="520" style="display: block; margin: 60px auto 0;"/>
 
-conflicts_filtered <-
-  Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean"), ]
 
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "sum_deaths")
+Here's the extrant of our interactive map of the correlation between the Maxintensity in conflicts and the SDG goals with 1 year gap.
 
-subset_data <- conflicts_filtered[, relevant_columns]
+<img src="Conflicts_Maxintensity_year_gap.png" height="190px" width="520" style="display: block; margin: 60px auto 0;"/>
 
-correlation_matrix_Conflicts_Deaths <- cor(subset_data, subset_data[, c("sum_deaths")])
-
-cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
-names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-
-ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap between Conflicts Deaths in selected regions and the SDG goal with one year gap"),
-  plotlyOutput("heatmap"),
-  sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1),
-  actionButton("stopButton", "Stop application")
-)
-
-server <- function(input, output, session) {
-  selected_conflicts_data <- reactive({
-    filtered_data <- conflicts_filtered[conflicts_filtered$year == input$year, ]
-    subset_data <- filtered_data[, relevant_columns]
-    return(subset_data)
-  })
-  
-  output$heatmap <- renderPlotly({
-    correlation_matrix_Conflicts_Deaths <- cor(selected_conflicts_data(), selected_conflicts_data()[, c("sum_deaths")])
-    cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
-    names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-    
-    p <- plot_ly(data = cor_melted, x = ~Variable1, y = ~Variable2, z = ~Correlation,
-                 type = "heatmap", colorscale = list(c(-1, "blue"), c(0, "white"), c(1, "red")),
-                 zmin = -1, zmax = 1)
-    
-    p <- p %>% layout(
-      title = "",
-      xaxis = list(title = ""),
-      yaxis = list(title = ""),
-      coloraxis = list(
-        colorbar = list(
-          title = "Correlation",
-          tickvals = c(-1, 0, 1), 
-          ticktext = c("-1", "0", "1"), 
-          len = 5,  
-          thickness = 20,  
-          x = 0,  
-          xanchor = "left", 
-          ticks = "outside" 
-        )
-      )
-    )
-    return(p)
-  })
-  
-  observeEvent(input$stopButton, {
-    stopApp() 
-  })
-}
-shinyApp(ui = ui, server = server)
-```
-
-Here's the interactive map of the correlation between the affected population in conflicts and the SDG goals with 1 year gap.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
-
-library(shiny)
-library(plotly)
-
-Q3.3 <- Q3.3 %>%
-  arrange(code,year)%>%
-  group_by(code)
-
-conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Caucasus & Central Asia"), ]
-
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "pop_affected")
-
-subset_data <- conflicts_filtered[, relevant_columns]
-
-correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected")])
-
-cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
-names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-
-ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap between population affected in conflicts in selected regions and the SDG goal with one year gap"),
-  plotlyOutput("heatmap"),
-  sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1),
-  actionButton("stopButton", "Stop application")
-)
-
-server <- function(input, output, session) {
-  selected_conflicts_data <- reactive({
-    filtered_data <- conflicts_filtered[conflicts_filtered$year == input$year, ]
-    subset_data <- filtered_data[, relevant_columns]
-    return(subset_data)
-  })
-  
-  output$heatmap <- renderPlotly({
-    correlation_matrix_Conflicts_Pop_Aff <- cor(selected_conflicts_data(), selected_conflicts_data()[, c("pop_affected")])
-    cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
-    names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-    
-    p <- plot_ly(data = cor_melted, x = ~Variable1, y = ~Variable2, z = ~Correlation,
-                 type = "heatmap", colorscale = list(c(-1, "blue"), c(0, "white"), c(1, "red")),
-                 zmin = -1, zmax = 1)
-    
-    p <- p %>% layout(
-      title = "",
-      xaxis = list(title = ""),
-      yaxis = list(title = ""),
-      coloraxis = list(
-        colorbar = list(
-          title = "Correlation",
-          tickvals = c(-1, 0, 1), 
-          ticktext = c("-1", "0", "1"), 
-          len = 5,  
-          thickness = 20,  
-          x = 0,  
-          xanchor = "left", 
-          ticks = "outside" 
-        )
-      )
-    )
-    return(p)
-  })
-  
-  observeEvent(input$stopButton, {
-    stopApp() 
-  })
-}
-shinyApp(ui = ui, server = server)
-```
-
-Here's the interactive map of the correlation between the Maxintensity in conflicts and the SDG goals with 1 year gap.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
-
-library(shiny)
-library(plotly)
-
-Q3.3 <- Q3.3 %>%
-  arrange(code,year)%>%
-  group_by(code)
-
-conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean", "Caucasus & Central Asia", "Eastern Europe", "North America", "East Asia"), ]
-
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "maxintensity")
-
-subset_data <- conflicts_filtered[, relevant_columns]
-
-correlation_matrix_Conflicts_Max <- cor(subset_data, subset_data[, c("maxintensity")])
-
-cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Max))
-names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-
-ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap between population affected in conflicts in selected regions and the SDG goal with one year gap"),
-  plotlyOutput("heatmap"),
-  sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1),
-  actionButton("stopButton", "Stop application")
-)
-
-server <- function(input, output, session) {
-  selected_conflicts_data <- reactive({
-    filtered_data <- conflicts_filtered[conflicts_filtered$year == input$year, ]
-    subset_data <- filtered_data[, relevant_columns]
-    return(subset_data)
-  })
-  
-  output$heatmap <- renderPlotly({
-    correlation_matrix_Conflicts_Max <- cor(selected_conflicts_data(), selected_conflicts_data()[, c("maxintensity")])
-    cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Max))
-    names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-    
-    p <- plot_ly(data = cor_melted, x = ~Variable1, y = ~Variable2, z = ~Correlation,
-                 type = "heatmap", colorscale = list(c(-1, "blue"), c(0, "white"), c(1, "red")),
-                 zmin = -1, zmax = 1)
-    
-    p <- p %>% layout(
-      title = "",
-      xaxis = list(title = ""),
-      yaxis = list(title = ""),
-      coloraxis = list(
-        colorbar = list(
-          title = "Correlation",
-          tickvals = c(-1, 0, 1), 
-          ticktext = c("-1", "0", "1"), 
-          len = 5,  
-          thickness = 20,  
-          x = 0,  
-          xanchor = "left", 
-          ticks = "outside" 
-        )
-      )
-    )
-    return(p)
-  })
-  
-  observeEvent(input$stopButton, {
-    stopApp() 
-  })
-}
-shinyApp(ui = ui, server = server)
-```
 
 The results seems logic because if the SDG scores continue to go higher and the conflicts remains the same or finishes we get a negative correlation
 
