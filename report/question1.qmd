@@ -705,7 +705,7 @@ While considering our regressions, we have noticed that we had high multicolinea
 
 Let's find the best model for each goal that does not involve severe multicollinearity (VIF > 5) and that has a variance well explained by our independent variable (an adjusted Rsquared over 0.7). Here are for example the selected models for the goals 12 and 17.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE}
+```{r, echo = TRUE, message = FALSE, warning=FALSE,fig.show='hide'}
 reg_goal1 <-
   regsubsets(goal1 ~ unemployment.rate + GDPpercapita +
                MilitaryExpenditurePercentGDP + internet_usage + pf_law +
@@ -836,7 +836,11 @@ reg_goal16 <-
   regsubsets(goal16 ~ unemployment.rate + GDPpercapita +
                MilitaryExpenditurePercentGDP + internet_usage + pf_law +
                pf_security + pf_movement + pf_religion + pf_assembly +
+<<<<<<< Updated upstream
                pf_expression + pf_identity + ef_government + ef_legal +
+=======
+               pf_expression + pf_identity + ef_government + ef_legal + 
+>>>>>>> Stashed changes
                ef_money + ef_trade + ef_regulation + population,
              data = data_question1,
              nbest=10,
@@ -939,9 +943,9 @@ plot(reg_goal12, scale="adjr2") + theme_minimal() + title("Stepwise Regression G
 $$
 \begin{split}
 Goal12\sim \beta_0 &+ GDPpercapita*\beta_1 + PFlaw*\beta_2 + PFreligion*\beta_3 + PFexpression*\beta_4 \\ &+ PFidentity*\beta_5 + EFlegal*\beta_6 + EFtrade*\beta_7 + Population*\beta_8 + ε_i
-
 \end{split}
 $$
+
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 plot(reg_goal17, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal17 Forward method, adj.R^2")
 ```
