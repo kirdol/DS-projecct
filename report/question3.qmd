@@ -557,7 +557,7 @@ subset_data <- disaster_data[, relevant_columns]
 
 correlation_matrix_subset <-
   cor(subset_data[, c("total_affected", "total_deaths")],
-      subset_data
+      subset_data,
       method = "spearman")
 
 cor_melted <- reshape2::melt(correlation_matrix_subset)
