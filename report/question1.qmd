@@ -577,10 +577,12 @@ fviz_pca_biplot(myPCA_s,
                 col.var = viridis(1,
                                   option = "D",
                                   begin = 0.5),
-                geom="point",
-                pointsize = 0.1,
-                labelsize = 5) +
+                geom="",
+                pointsize = 0.05,
+                labelsize = 3,
+                repel = TRUE) +
   theme_minimal()
+
 ```
 
 Now concerning the Human Freedom Index scores, most of the variables are positively correlated to the dimension 1, slightly less for the PF religion, and finally the EF government variable is slighlty incorrelated to the dimension 1. With a eigenvalue bigger than 1 for the three first components, we conclude that there are 3 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance. Therefore, the rule of thumb would suggest us to take 4 dimensions into account.
@@ -649,19 +651,9 @@ Our cluster analysis gives us one principal cluster (here in purple) --\> CENTER
 
 While considering our regressions, we have noticed that we had high multicolinearity between several dependent variables in our models, by conducting a VIF test. This is due to the numerous variables that we tried to take into account while computing our regressions. Therefore, we have decided to use the stepwise regression with the forward method and choose the model according to the adjusted R squared. 
 
-Let's find the best model for each goal that does not involve severe multicollinearity (VIF > 5) and that has a variance well explained by our independent variable (a good adjusted Rsquared).
+Let's find the best model for each goal that does not involve severe multicollinearity (VIF > 5) and that has a variance well explained by our independent variable (an adjusted Rsquared over 0.7). Here are for example the selected models for the goals 12 and 17.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
-# goals_data <- data_question1 %>%
-#   dplyr::select(overallscore, unemployment.rate, GDPpercapita, MilitaryExpenditurePercentGDP, internet_usage, pf_law, pf_security, pf_movement, pf_religion, pf_assembly, pf_expression, pf_identity, ef_government, ef_legal, ef_money, ef_trade, ef_regulation)
-
-# fit <- lm(overallscore ~ ., data = goals_data)
-# plot(fit)
-# leaps<-regsubsets(overallscore ~ .,data=goals_data,nbest=10, method="forward")
-# plot(leaps,scale="r2") + theme_minimal() + title("Stepwise Regression : Forward method - adjusted R^2")
-
-
-
+```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%", fig.show='hide'}
 reg_goal1 <- regsubsets(goal1 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
 reg_goal2 <- regsubsets(goal2 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
 reg_goal3 <- regsubsets(goal3 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
@@ -679,23 +671,62 @@ reg_goal15 <- regsubsets(goal15 ~ unemployment.rate + GDPpercapita + MilitaryExp
 reg_goal16 <- regsubsets(goal16 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
 reg_goal17 <- regsubsets(goal17 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
 
-plot(reg_goal1,scale="r2") + theme_minimal() + title("Stepwise Regression Goal1 Forward method, adj.R^2")
-plot(reg_goal2,scale="r2") + theme_minimal() + title("Stepwise Regression Goal2 Forward method, adj.R^2")
-plot(reg_goal3,scale="r2") + theme_minimal() + title("Stepwise Regression Goal3 Forward method, adj.R^2")
-plot(reg_goal4,scale="r2") + theme_minimal() + title("Stepwise Regression Goal4 Forward method, adj.R^2")
-plot(reg_goal5,scale="r2") + theme_minimal() + title("Stepwise Regression Goal5 Forward method, adj.R^2")
-plot(reg_goal6,scale="r2") + theme_minimal() + title("Stepwise Regression Goal6 Forward method, adj.R^2")
-plot(reg_goal7,scale="r2") + theme_minimal() + title("Stepwise Regression Goal7 Forward method, adj.R^2")
-plot(reg_goal8,scale="r2") + theme_minimal() + title("Stepwise Regression Goal8 Forward method, adj.R^2")
-plot(reg_goal9,scale="r2") + theme_minimal() + title("Stepwise Regression Goal9 Forward method, adj.R^2")
-plot(reg_goal10,scale="r2") + theme_minimal() + title("Stepwise Regression Goal10 Forward method, adj.R^2")
-plot(reg_goal11,scale="r2") + theme_minimal() + title("Stepwise Regression Goal11 Forward method, adj.R^2")
-plot(reg_goal12,scale="r2") + theme_minimal() + title("Stepwise Regression Goal12 Forward method, adj.R^2")
-plot(reg_goal13,scale="r2") + theme_minimal() + title("Stepwise Regression Goal13 Forward method, adj.R^2")
-plot(reg_goal15,scale="r2") + theme_minimal() + title("Stepwise Regression Goal15 Forward method, adj.R^2")
-plot(reg_goal16,scale="r2") + theme_minimal() + title("Stepwise Regression Goal16 Forward method, adj.R^2")
-plot(reg_goal17,scale="r2") + theme_minimal() + title("Stepwise Regression Goal17 Forward method, adj.R^2")
+plot(reg_goal1, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal1 Forward method, adj.R^2")
+
+plot(reg_goal2,scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal2 Forward method, adj.R^2")
+
+plot(reg_goal3,scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal3 Forward method, adj.R^2")
+
+plot(reg_goal4, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal4 Forward method, adj.R^2")
+
+plot(reg_goal5, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal5 Forward method, adj.R^2")
+
+plot(reg_goal6, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal6 Forward method, adj.R^2")
+
+plot(reg_goal7, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal7 Forward method, adj.R^2")
+
+plot(reg_goal8, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal8 Forward method, adj.R^2")
+
+plot(reg_goal9, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal9 Forward method, adj.R^2")
+
+plot(reg_goal10, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal10 Forward method, adj.R^2")
+
+plot(reg_goal11, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal11 Forward method, adj.R^2")
+
+plot(reg_goal12, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal12 Forward method, adj.R^2")
+
+plot(reg_goal13, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal13 Forward method, adj.R^2")
+
+plot(reg_goal15, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal15 Forward method, adj.R^2")
+
+plot(reg_goal16, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal16 Forward method, adj.R^2")
+
+plot(reg_goal17, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal17 Forward method, adj.R^2")
+
 ```
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
+plot(reg_goal12, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal12 Forward method, adj.R^2")
+```
+
+$$
+\begin{split}
+Goal12\sim \beta_0 &+ GDPpercapita*\beta_1 + PFlaw*\beta_2 + PFreligion*\beta_3 + PFexpression*\beta_4 \\ &+ PFidentity*\beta_5 + EFlegal*\beta_6 + EFtrade*\beta_7 + Population*\beta_8
+\end{split}
+$$
+```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
+plot(reg_goal17, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal17 Forward method, adj.R^2")
+```
+
+$$
+\begin{split}
+Goal17\sim \beta_0 &+ unemployment.rate*\beta_1 + MilitaryExpenditurePercentGDP*\beta_2 \\  &+ InternetUsage*\beta_3 + PFlaw*\beta_4 + PFmovement*\beta_5 \\&+ EFgovernment*\beta_6 + EFlegal*\beta_7 + Population*\beta_8
+\end{split}
+$$
+
+We can see that for goal12, the adjusted R squared of the model is good, which means that the independent variables fit well for explaining the dependent variable. Nevertheless, concerning goal17, the adjusted R squared is only equal to 0.5. Therefore, the lack of explanation of our variables can be caused by multiple factors, such as the non significant relationship between the chosen independent variables and the goal17, Omitted variable bias or overfitting.
+
+The stepwise regression done gave us 12 models out of 17 with an adjusted R squared of 0.6 and more. Therefore, we need to be careful with our interpretation of our results for the models with lower explanated variance. 
 
 Now that we have our optimal model for each goal, let's conduct our regressions and plot them to see the influence of each factor over our SDG.
 
@@ -736,7 +767,6 @@ Goal17lm <- lm(goal17 ~ unemployment.rate + MilitaryExpenditurePercentGDP + inte
 
 #coefficient plot
 
-#library('broom')
 # Create a dataframe of tidy models
 model_list <- list(Goal1lm, Goal2lm, Goal3lm, Goal4lm, Goal5lm, Goal6lm, Goal7lm, Goal8lm, Goal9lm, Goal10lm, Goal11lm, Goal12lm, Goal13lm, Goal15lm, Goal16lm, Goal17lm)
 
@@ -751,11 +781,14 @@ significance_level <- 0.05
 
 # Filter for significant p-values
 df_tidy_significant <- df_tidy[df_tidy$p.value < significance_level, ]
+library(RColorBrewer)
 
+myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_significant$term)))
 # Plot
 ggplot(df_tidy_significant, aes(x = Model, y = estimate, color = term)) +
   geom_point() +
   geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error), width = 0.2) +
+  scale_color_manual(values = myColors) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         plot.title = element_text(hjust = 0.5), # Center the title
         plot.title.position = "plot",
@@ -769,14 +802,15 @@ ggplot(df_tidy_significant, aes(x = Model, y = estimate, color = term)) +
 Here is our general plot. For visualization purpose, let's also plot the positive and negative correlation plots
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
-
 #positive values only 
 df_tidy_positive_p <- df_tidy_significant[df_tidy_significant$estimate > 0, ]
 
+myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_positive_p$term)))
 # Plot only positive coefficients
 ggplot(df_tidy_positive_p, aes(x = Model, y = estimate, color = term)) +
   geom_point() +
   geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error), width = 0.2) +
+  scale_color_manual(values = myColors) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         plot.title = element_text(hjust = 0.5),
         plot.title.position = "plot",
@@ -788,10 +822,12 @@ ggplot(df_tidy_positive_p, aes(x = Model, y = estimate, color = term)) +
 
 #negative values only
 df_tidy_positive_n <- df_tidy_significant[df_tidy_significant$estimate < 0, ]
+myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_positive_n$term)))
 
 ggplot(df_tidy_positive_n, aes(x = Model, y = estimate, color = term)) +
   geom_point() +
   geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error), width = 0.2) +
+  scale_color_manual(values = myColors) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         plot.title = element_text(hjust = 0.5),
         plot.title.position = "plot",

@@ -83,11 +83,17 @@ At this point, we saw that the goals were mostly correlated. We now want to see 
 ```{r echo = TRUE, message = FALSE}
 #### Scree Plot ####
 
-# Selecting only the goals columns
+# Selecting only the goals columns and renaming them
 goals_data <- data_4 %>%
   dplyr::select(goal1, goal2, goal3, goal4, goal5,
                 goal6,goal7, goal8, goal9, goal10, goal11, goal12,
-                goal13, goal15, goal16, goal17)
+                goal13, goal15, goal16, goal17) %>%
+  
+  # Renaming the columns for clarity of the graph
+  rename(G1 = goal1, G2 = goal2, G3 = goal3, G4 = goal4, G5 = goal5,
+         G6 = goal6, G7 = goal7, G8 = goal8, G9 = goal9, G10 = goal10,
+         G11 = goal11, G12 = goal12, G13 = goal13, G15 = goal15,
+         G16 = goal16, G17 = goal17)
 goals_data_scaled <- scale(goals_data) # Scaling the data
 pca_result <- prcomp(goals_data_scaled) # Running PCA
 
@@ -97,11 +103,12 @@ fviz_eig(pca_result, # specify the data used for the graph
          linecolor = viridis(1, # specifying to the viridis function that we want 1 color
                              option = "B", # we use a color from the magma palette
                              begin = 0.5), # we want the "midel" color of that palette
-         barcolor = "black", # the contour of th bars
+         barcolor = "black", # the contour of the bars
          barfill = viridis(10, # specifying to the viridis function that we want 10 colors
                            option = "D", # we use color from the viridis palette
                            begin = 0,
-                           end = 0.8)) + # we want to use the first 80% of the palette to avoid the yellowish colors
+                           end = 0.8),) + # we want to use the first 80% of the palette to avoid the yellowish colors
+  ggtitle("                                          PCA - Scree plot") + # adding title
   theme_minimal() # applying a minimal theme to be consistant with our other graphs
 
 eigenvalues <- pca_result$sdev^2 # getting the third eigenvalue
@@ -115,12 +122,11 @@ We see clearly that the first component is the most important one. Guided by the
 # Plotting Biplot to visualize the two main dimensions
 fviz_pca_biplot(pca_result, # specify the data used for the graph
                 label = "var", # we want to label the variables
-                col.var = viridis(1, # specifying to the viridis function that we want 1 color
-                                  option = "D", # we use the color from the viridis palette
-                                  begin = 0.5), # we want the "midel" color of that palette
+                col.var = Fix_color,
                 geom = "point", # we want to use points to represent the variables
                 pointsize = 0.1, # we want the points to be small
                 labelsize = 4) + # Specify the size of our labels
+  ggtitle("                                           PCA - Biplot") + # adding title
   theme_minimal() # applying a minimal theme to be consistant with our other graphs
 ```
 
@@ -278,10 +284,11 @@ model_list <-
   list(mod_o, mod_1, mod_2, mod_3, mod_4, mod_5, mod_6, mod_7, mod_8, mod_9,
        mod_10, mod_11, mod_12, mod_13, mod_15, mod_16, mod_17)
 
-
+# Create a dataframe with the coefficients of our models
 models_tidy <-
   lapply(model_list, tidy)
 
+# Rename the colums to be able to print them afterword on the graph
 names(models_tidy) <-
   c("Overallscore ~ others", "Goal1 ~ others", "Goal2 ~ others",
     "Goal3 ~ others", "Goal4 ~ others", "Goal5 ~ others", "Goal6 ~ others",
@@ -321,7 +328,7 @@ ggplot(df_tidy_significant,
   labs(title = "Coefficient Plot of Regression Models",
        x = "Models",
        y = "Estimates") +
-  scale_color_viridis_d()
+  Discrete_colors
 ```
 
 The following graphs show the Residuals versus our fitted values for our model that explained the overallscore and the goal 9. Let's first look at the model that explain the best the Overallscore variable:

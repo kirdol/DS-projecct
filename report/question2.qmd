@@ -10,7 +10,8 @@ We create one new variable per goal that captures the difference in SDG score be
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"))
-data_question2 <- data_question2 %>% dplyr::select(-X)
+data_question2 <- data_question2 %>%
+  dplyr::select(-X)
 
 data_question2 <- data_question2 %>% 
   group_by(code) %>%
@@ -22,67 +23,124 @@ data_question2 <- data_question2 %>%
 
 First, we look at the evolution of SDG achievement overall score over time by continent and by region and we see that the general evolution of SDG scores around the world is increasing over the years, but very slowly. We also plot the average improvements/decrease in overall score acros the years. Looking at the continents, we see that Europe is above the others, while Africa is below, but in general, all have increasing overall scores. In addition, we see that the different continent have quite steady score difference between the years, except Oceania that has greater fluctuations and has sometimes score decrease, for instance in 2010. But it also comes with the higher average increase in 2014. We also observe that toward the latest years (2021-2022), the improvements are smaller and that decrease are more frequent. However, we must keep in mind that all are very small differences, indeed, the higher improvement is a little above 1 point of percentage of the overall score in one year. 
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, fig.height=2.5}
-data1 <- data_question2 %>% group_by(year, continent) %>%
-  mutate(mean_overall_score_by_year=mean(overallscore))
+```{r, echo = TRUE, message = FALSE, warning=FALSE, fig.height=2.5}
+#### Mean overall SDG score and score difference by year ####
 
+data1 <- data_question2 %>%
+  group_by(year, continent) %>%
+  mutate(mean_overall_score_by_year = mean(overallscore))
+
+# Mean overall SDG achievement score by year plot
 plot1 <- ggplot(data1) +
-  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=continent), lwd=0.6) +
+  geom_line(mapping = aes(x = year,
+                        y = mean_overall_score_by_year,
+                        color = continent),
+            lwd = 0.6) +
   scale_y_continuous(limits = c(0, 100)) +
   labs(title = "Mean overall SDG \nachievement score",
        y = "Mean Overall SDG Score",
        x = "Year"
        ) +
-  theme(legend.position = "none", plot.title = element_text(hjust=0.5, size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8))
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5, size = 10),
+        axis.title.x = element_text(size = 8),
+        axis.title.y = element_text(size = 8)) +
+  Discrete_colors
 
-data2 <- data_question2 %>% group_by(year, continent) %>%
-  mutate(mean_diff_overall_score_by_year=mean(diff_overallscore))
+data2 <- data_question2 %>%
+  group_by(year, continent) %>%
+  mutate(mean_diff_overall_score_by_year = mean(diff_overallscore))
 
+
+# Mean score difference by year plot
 plot2 <- ggplot(data2) +
-  geom_line(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=continent), lwd=0.6) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "black") + 
+  geom_line(mapping=aes(x=year,
+                        y=mean_diff_overall_score_by_year,
+                        color=continent),
+            lwd=0.6) +
+  geom_hline(yintercept = 0,
+             linetype = "dashed",
+             color = "black") + 
   scale_y_continuous(limits = c(-0.4, 1.2)) +
   labs(title = "Score difference",
        y = "Mean Overall SDG Score difference",
        x = "Year"
        ) +
-  theme(legend.position = "right", plot.title = element_text(hjust=0.5, size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8), legend.text = element_text(size= 8),legend.title = element_text(size= 10))
+  theme(legend.position = "right",
+        plot.title = element_text(hjust = 0.5, size = 10),
+        axis.title.x = element_text(size = 8),
+        axis.title.y = element_text(size = 8),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10)) +
+  Discrete_colors
 
 plot1 + plot2
 ```
 
 This view that groups the countries by region gives us precision about the previous information. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below. Regarding the score difference from one year to another, we still see Oceania having the greater fluctuations, but Caucasus & Central Asia as well as Eastern Europe show a pick in the early two thousand's that we could not see before. South Asia also has a relatively high improvement in 2017. 
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
-data3 <- data_question2 %>% group_by(year, region) %>%
+```{r, echo = TRUE, message = FALSE, warning=FALSE}
+#### Evoloution of the mean overall score and socre diff by region ####
+
+data3 <- data_question2 %>%
+  group_by(year, region) %>%
   mutate(mean_overall_score_by_year=mean(overallscore))
 
+# Evolution of the mean overall SDG achievement score plot
 plot3 <- ggplot(data3) +
-  geom_line(mapping=aes(x=year, y=mean_overall_score_by_year, color=region), lwd=0.5) +
+  geom_line(mapping=aes(x = year,
+                        y = mean_overall_score_by_year,
+                        color = region),
+            lwd = 0.5) +
   scale_y_continuous(limits = c(0, 100)) +
   labs(title = "Evolution of the mean \noverall SDG achievement score",
        y = "Mean Overall SDG Score",
-       x = "Year"
-       ) +
-  theme(legend.position="none",plot.title = element_text(hjust=0.5, size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8), legend.text = element_text(size= 8),legend.title = element_text(size= 10))
+       x = "Year") +
+  theme(legend.position="none",
+        plot.title = element_text(hjust = 0.5, size = 10),
+        axis.title.x = element_text(size = 8),
+        axis.title.y = element_text(size = 8),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10)) +
+  colors_pal
 
-data4 <- data_question2 %>% group_by(year, region) %>%
-  mutate(mean_diff_overall_score_by_year=mean(diff_overallscore))
+data4 <- data_question2 %>%
+  group_by(year, region) %>%
+  mutate(mean_diff_overall_score_by_year = mean(diff_overallscore))
 
+# Evolution of the mean score difference plot
 plot4 <- ggplot(data4) +
-  geom_line(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=region), lwd=0.5) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  geom_line(mapping=aes(x = year,
+                        y = mean_diff_overall_score_by_year,
+                        color = region),
+            lwd = 0.5) +
+  geom_hline(yintercept = 0,
+             linetype = "dashed",
+             color = "black") +
   scale_y_continuous(limits = c(-0.4,1.2)) +
   labs(title = "Score difference",
        y = "Mean Overall SDG Score difference",
        x = "Year"
        ) +
-  theme(legend.position="none",plot.title = element_text(hjust=0.5, size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8), legend.text = element_text(size= 8),legend.title = element_text(size= 10))
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5, size = 10),
+        axis.title.x = element_text(size = 8),
+        axis.title.y = element_text(size = 8),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 10)) +
+  colors_pal
 
+# Creation of the legend
 legend <- ggplot(data4) +
-  geom_line(mapping=aes(x=year, y=mean_diff_overall_score_by_year, color=region), lwd=0.5) +
-  theme(legend.position="bottom",legend.text = element_text(size= 6),legend.title = element_text(size= 8))+
-  guides(color = guide_legend(nrow=4))
+  geom_line(mapping=aes(x = year,
+                        y = mean_diff_overall_score_by_year,
+                        color = region),
+            lwd = 0.5) +
+  theme(legend.position = "bottom",
+        legend.text = element_text(size = 6),
+        legend.title = element_text(size = 8))+
+  guides(color = guide_legend(nrow = 4)) +
+  colors_pal
 
 legend <- cowplot::get_legend(legend)
 
@@ -92,18 +150,19 @@ legend <- cowplot::get_legend(legend)
 Second, we look at the evolution of SDG achievement scores(16) over time for the whole world and by continent. We notice that all SDGs except from goal 9 (industry innovation and infrastructure) are close to one another in terms of level and growth. Goal 9 starts far below the others in 2000 and growths faster until exceeding 50%. In addition, some goals did not increase their scores much in the last two decades, for example goal 13 (climate action) and goal 12 (responsible consumption and production).
 The score differences are mostly contained between 0 and 0.5 point of percentage increase by year. Some of the goals have picks, these are goals 15, 3, 5, 17 and goal 9 has the highest of all average improvements in 2017 with an improvement of 4 points of percentage, which is almost two times higher than the other good improvements. Some goals have bad years, like goal 10 or goal 15, but never under -0.5, except goal 16 in 2022 that goes a little below. Finaly, some goals are very steady, for example goal 12 that stays around zero and goal 6 that is always a little above the zero (no change) line. 
 
-```{r, echo = TRUE, message = FALSE, cache = TRUE, warning = FALSE, out.height="200%"}
+```{r, echo = TRUE, message = FALSE,  warning = FALSE, out.height="200%"}
+#### Evolution  of the mean scores and score difference by year ####
+
 data5 <- data_question2 %>%
   group_by(year) %>%
   summarise(across(starts_with("goal"), mean, na.rm=TRUE)) %>%
   pivot_longer(cols = starts_with("goal"), names_to = "goal", values_to = "mean_value")
 
-color_palette <- c("red", "blue", "green", "orange", "purple", "pink", "lightblue", "gray", "cyan", "magenta", "yellow", "darkgreen", "darkblue", "darkred", "darkgrey", "darkcyan")
-
+# Evolution of the mean SDG achievement scores across the world plot
 plot5 <- ggplot(data = data5) +
   geom_line(mapping = aes(x = year, y = mean_value, color = goal), size = 0.7) +
   geom_point(mapping = aes(x = year, y = mean_value, color = goal), size = 1) +
-  scale_color_manual(values = color_palette) +
+  Discrete_colors +
   scale_y_continuous(limits = c(0, 100)) +
   labs(title = "Evolution of the mean SDG \nachievement scores across the world",
        y = "Mean SDG Scores",
@@ -116,11 +175,12 @@ data6 <- data_question2 %>%
   summarise(across(starts_with("diff_goal"), mean, na.rm=TRUE)) %>%
   pivot_longer(cols = starts_with("diff_goal"), names_to = "goal", values_to = "mean_diff_value")
 
+# Score difference plot
 plot6 <- ggplot(data = data6) +
   geom_line(mapping = aes(x = year, y = mean_diff_value, color = goal), size = 0.3) +
   #geom_point(mapping = aes(x = year, y = mean_diff_value, color = goal), size = 1) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
-  scale_color_manual(values = color_palette) +
+  Discrete_colors +
   scale_y_continuous(limits = c(-1.5, 4)) +
   labs(title = "Score difference",
        y = "Mean SDG Scores difference",
@@ -128,28 +188,34 @@ plot6 <- ggplot(data = data6) +
        ) +
   theme(legend.position="none", plot.title = element_text(hjust=0.5, size= 10), axis.title.x = element_text(size= 8), axis.title.y = element_text(size= 8), legend.text = element_text(size= 6),legend.title = element_text(size= 10))
 
+# Creation od the legend
 plot7 <- ggplot(data = data5) +
   geom_line(mapping = aes(x = year, y = mean_value, color = goal), size = 1) +
-  scale_color_manual(values = color_palette) +
+  Discrete_colors +
   theme(legend.position="bottom", legend.text = element_text(size= 8), legend.title = element_blank())+
   guides(color = guide_legend(nrow=3))
 
 legend <- cowplot::get_legend(plot7)
 
 (plot5 + plot6) / legend
-
 ```
 
 We continue with the graph that distinguishes continents to get more information.
 
-```{r, echo = TRUE, message = FALSE, cache = TRUE, warning=FALSE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
+#### Evolution of the mean scores by continent ####
+
 data5 <- data_question2 %>%
   group_by(year, continent) %>%
   summarise(across(starts_with("goal"), mean, na.rm=TRUE)) %>%
   pivot_longer(cols = starts_with("goal"), names_to = "goal", values_to = "mean_value")
 
+# Creation of the plot
 ggplot(data = data5) +
-  geom_line(mapping = aes(x = year, y = mean_value, color = continent), size = 0.7) +
+  geom_line(mapping = aes(x = year,
+                          y = mean_value,
+                          color = continent),
+            size = 0.7) +
   scale_y_continuous(limits = c(0, 100)) +
   labs(title = "Evolution of the mean SDG achievement scores by continent",
        y = "Mean SDG Scores",
@@ -157,7 +223,9 @@ ggplot(data = data5) +
   ) +
   facet_wrap(~ goal, nrow = 4) +
   theme_light() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 6), plot.title = element_text(hjust=0.5, size=10))
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 6),
+        plot.title = element_text(hjust=0.5, size=10)) +
+  colors_pal
 ```
 
 We observe that most of the time, Europe is at the top of the graph and Africa at the bottom, except for goals 12 and 13 that are linked to ecology. Some other information stand out:
@@ -171,8 +239,10 @@ We observe that most of the time, Europe is at the top of the graph and Africa a
 Third we create an interactive map of the world to be able to navigate from year 2000 to 2022, seeing the level of achievement of the SDGs (overall score) for each country.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=1.5}
+#### Interactive map of the world showing the scores by contries ####
+
 # Load world map data
-world <- ne_countries(scale = "medium", returnclass = "sf")
+world <- ne_countries(scale = "medium",returnclass = "sf")
 
 # Merge data with the world map data
 data0 <- merge(world, data_question2, by.x = "iso_a3", by.y = "code", all.x = TRUE)
@@ -186,13 +256,21 @@ plot_ly(
   type = "choropleth",
   z = ~data0$overallscore[data0$year == 2000],
   locations = ~data0$iso_a3[data0$year == 2000],
-  text = ~paste("Country: ", data0$name[data0$year == 2000], "<br>Overall Score: ", data0$overallscore[data0$year == 2000]),
-  colors = c("darkred", "orange", "yellow", "darkgreen"),
-  colorbar = list(title = "Overall Score", cmin = 40, cmax = 87),
+  text = ~paste("Country: ",
+                data0$name[data0$year == 2000],
+                "<br>Overall Score: ",
+                data0$overallscore[data0$year == 2000]),
+  colors =  viridis(4, direction = -1),
+  # colors = c("darkred",
+  #            "orange",
+  #            "yellow",
+  #            "darkgreen"),
+  colorbar = list(title = "Overall Score",
+                  cmin = 40,
+                  cmax = 87),
   zmin = 40,
   zmax = 87,
-  hoverinfo = "text"
-) %>%
+  hoverinfo = "text") %>%
   layout(
     title = "SDG overall score evolution",
     sliders = list(
@@ -208,7 +286,10 @@ plot_ly(
               list(
                 z = list(data0$overallscore[data0$year == year]),
                 locations = list(data0$iso_a3[data0$year == year]),
-                text = list(~paste("Country: ", data0$name[data0$year == year], "<br>Overall Score: ", data0$overallscore[data0$year == year]))
+                text = list(~paste("Country: ",
+                                   data0$name[data0$year == year],
+                                   "<br>Overall Score: ",
+                                   data0$overallscore[data0$year == year]))
               )
             )
           )
@@ -241,7 +322,7 @@ plot_ly() %>%
     type = "histogram", 
     data = binary2015, 
     x = ~diff_overallscore[year == 2009],
-    marker = list(color = "lightgreen", line = list(color = "black", width = 1))
+    marker = list(color = Fix_color, line = list(color = "black", width = 1))
   ) %>%
   layout(
     title = "Distribution of SDG evolution",
@@ -274,7 +355,7 @@ After having visualized the improvements and declines of SDG overall score for t
 top_n_values <- 5
 
 # Test with ggpot2
-custom_colors <- c("blue", "darkblue", "cyan", "green", "darkgreen", "lightgreen", "lightblue","turquoise", "lightgrey", "darkgrey")
+custom_colors <- c(viridis(5, begin = 0.2), "lightblue", "grey90", magma(3))
 
 # Get unique regions in the dataset
 unique_regions <- unique(binary2015$region)
@@ -291,12 +372,20 @@ for (year in unique_years) {
     arrange(desc(year), desc(diff_overallscore)) %>%
     head(n = top_n_values)
   
-  plot <- ggplot(data = top_countries, mapping = aes(x = country, y = diff_overallscore, fill = region)) +
+  plot <- ggplot(data = top_countries,
+                 mapping = aes(x = country,
+                               y = diff_overallscore,
+                               fill = region)) +
     geom_bar(stat = "identity") +
     scale_fill_manual(values = region_colors) +  # Use the specified colors
-    labs(title = paste(year), x = NULL, y = NULL) +
+    labs(title = paste(year),
+         x = NULL,
+         y = NULL) +
     theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size= 6), axis.text.y = element_text(size= 6), legend.position = "none", plot.title = element_text(size = 10)) + 
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size= 6),
+          axis.text.y = element_text(size= 6),
+          legend.position = "none",
+          plot.title = element_text(size = 10)) + 
     scale_y_continuous(limits = c(0, 3.7))
   
   plots[[as.character(year)]] <- plot
@@ -316,8 +405,7 @@ legend_plot <- ggplot(legend_data, aes(x = region, fill = region)) +
   scale_fill_manual(values = region_colors) +
   theme(legend.position="top",
         legend.text = element_text(size = 6), 
-        legend.title = element_blank(), legend.key.size = unit(0.3, "cm")
-  )+
+        legend.title = element_blank(), legend.key.size = unit(0.3, "cm"))+
   guides(fill = guide_legend(nrow=2))
 
 legend <- cowplot::get_legend(legend_plot)
@@ -337,12 +425,19 @@ for (year in unique_years) {
     arrange(desc(year), diff_overallscore) %>%
     head(n = top_n_values)
   
-  plot <- ggplot(data = top_countries, mapping = aes(x = country, y = diff_overallscore, fill = region)) +
+  plot <- ggplot(data = top_countries,
+                 mapping = aes(x = country,
+                               y = diff_overallscore,
+                               fill = region)) +
     geom_bar(stat = "identity") +
     scale_fill_manual(values = region_colors) +  # Use the specified colors
-    labs(title = paste(year), x = NULL, y = NULL) +
+    labs(title = paste(year),
+         x = NULL,
+         y = NULL) +
     theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1, size=6), axis.text.y = element_text(size= 6), legend.position = "none", plot.title = element_text(size = 10)) + 
+    theme(axis.text.x = element_text(angle = 45,vjust = 1, hjust = 1, size=6),
+          axis.text.y = element_text(size= 6), legend.position = "none",
+          plot.title = element_text(size = 10)) + 
     scale_y_continuous(limits = c(-3,0))
   
   plots[[as.character(year)]] <- plot
@@ -380,7 +475,7 @@ plot_ly() %>%
     y = ~improvement[after2015 == 1 & goal == "diff_overallscore"],
     legendgroup = "after 2015",
     name = "after 2015",
-    marker = list(color = "blue", size = 10),
+    marker = list(color = Fix_color, size = 10),
     showlegend = TRUE
   ) %>%
   add_trace(
@@ -389,7 +484,7 @@ plot_ly() %>%
     y = ~improvement[after2015 == 0 & goal == "diff_overallscore"],
     legendgroup = "before 2015",
     name = "before 2015",
-    marker = list(color = "red", size = 10),
+    marker = list(color = viridis(1), size = 10),
     showlegend = TRUE
   ) %>%
   layout(
@@ -700,8 +795,8 @@ data_after_2015 <- filter(binary2015, as.numeric(year) >= 2015)
 data_before_2016 <- filter(binary2015, as.numeric(year) <= 2015)
 
 plotly::plot_ly() %>%
-  plotly::add_trace(data = data_after_2015, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_after_2015)), type = 'scatter', mode = 'lines', line = list(color = 'blue'), name = "After 2015") %>%
-  plotly::add_trace(data = data_before_2016, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_before_2016)), type = 'scatter', mode = 'lines', line = list(color = 'red'), name = "Before 2015") %>%
+  plotly::add_trace(data = data_after_2015, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_after_2015)), type = 'scatter', mode = 'lines', line = list(color = Fix_color), name = "After 2015") %>%
+  plotly::add_trace(data = data_before_2016, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_before_2016)), type = 'scatter', mode = 'lines', line = list(color = viridis(1)), name = "Before 2015") %>%
   plotly::layout(title = "Different patterns across SDGs before and after 2015",
          xaxis = list(title = "Year"),
          yaxis = list(title = "SDG achievement score", range = c(30, 90)),

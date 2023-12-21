@@ -2,17 +2,6 @@
 ## The following loads the needed packages ##
 #############################################
 
-# Create a color palette for the percentage of missing values
-MPer_0_10 <- "#1abc9c"
-MPer_10_20 <- "#e5e419"
-MPer_20_30 <- "#fba537"
-MPer_30_100 <- "#e34e64"
-
-Fix_color <- "#1abc9c"
-
-# Creation of a continuous color palette for the percentage of missing values
-MPer_pal <- colorRampPalette(c(MPer_0_10, MPer_10_20, MPer_20_30, MPer_30_100))
-
 # load the required packages and install them if they are not.
 packages <- c(
   "here", # for the project's organization
@@ -68,6 +57,37 @@ for (pkg in packages) {
 
 for (pkg in packages) {
   library(pkg, character.only = TRUE)}
+
+######################################################
+## The following sets a few colors for nice reports ##
+######################################################
+
+# Create a color palette for the percentage of missing values
+MPer_0_10 <- viridis(1, begin = 0.5)
+MPer_10_20 <- "#e5e419"
+MPer_20_30 <- "#fba537"
+MPer_30_100 <- "#e34e64"
+
+# Create a fix color for graphs that need only one color
+Fix_color <- viridis(1, # specifying to the viridis function that we want 1 color
+                     option = "D", # we use the color from the viridis palette
+                     begin = 0.5) # we select the middle color
+
+# Creation of a discrete color palette for the categorical variables
+Discrete_colors <- scale_color_paletteer_d("Polychrome::dark")
+
+
+colors <- c("red", "blue", "green", "orange", "purple", "pink","lightblue",
+            "gray", "cyan", "magenta", "yellow","darkgreen", "darkblue",
+            "darkred", "darkgrey", "darkcyan")
+
+colors_pal <- scale_color_manual(values = colors)
+
+# Creation of a continuous color palette for the percentage of missing values
+MPer_pal <- colorRampPalette(c(MPer_0_10,
+                               MPer_10_20,
+                               MPer_20_30,
+                               MPer_30_100))
 
 
 ######################################################
