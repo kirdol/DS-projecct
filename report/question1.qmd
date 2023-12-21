@@ -658,56 +658,231 @@ While considering our regressions, we have noticed that we had high multicolinea
 
 Let's find the best model for each goal that does not involve severe multicollinearity (VIF > 5) and that has a variance well explained by our independent variable (an adjusted Rsquared over 0.7). Here are for example the selected models for the goals 12 and 17.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%", fig.show='hide'}
-reg_goal1 <- regsubsets(goal1 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-reg_goal2 <- regsubsets(goal2 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-reg_goal3 <- regsubsets(goal3 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-reg_goal4 <- regsubsets(goal4 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-reg_goal5 <- regsubsets(goal5 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-reg_goal6 <- regsubsets(goal6 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-reg_goal7 <- regsubsets(goal7 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-reg_goal8 <- regsubsets(goal8 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-reg_goal9 <- regsubsets(goal9 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-reg_goal10 <- regsubsets(goal10 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-reg_goal11 <- regsubsets(goal11 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-reg_goal12 <- regsubsets(goal12 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-reg_goal13 <- regsubsets(goal13 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-reg_goal15 <- regsubsets(goal15 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-reg_goal16 <- regsubsets(goal16 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
-reg_goal17 <- regsubsets(goal17 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_assembly + pf_expression + pf_identity + ef_government + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1, nbest=10, method="forward")
+```{r, echo = TRUE, message = FALSE, warning=FALSE}
+reg_goal1 <-
+  regsubsets(goal1 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion+ pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
+               ef_money + ef_trade+ ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
+reg_goal2 <-
+  regsubsets(goal2 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion + pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
+               ef_money + ef_trade + ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
+reg_goal3 <-
+  regsubsets(goal3 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion + pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
+               ef_money + ef_trade + ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
+reg_goal4 <-
+  regsubsets(goal4 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion + pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
+               ef_money + ef_trade + ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
+reg_goal5 <-
+  regsubsets(goal5 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion + pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
+               ef_money + ef_trade + ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
+reg_goal6 <-
+  regsubsets(goal6 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion + pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
+               ef_money + ef_trade + ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
+reg_goal7 <-
+  regsubsets(goal7 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion + pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
+               ef_money + ef_trade + ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
+reg_goal8 <-
+  regsubsets(goal8 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion + pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
+               ef_money + ef_trade + ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
+reg_goal9 <-
+  regsubsets(goal9 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion + pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
+               ef_money + ef_trade + ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
+reg_goal10 <-
+  regsubsets(goal10 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion + pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
+               ef_money + ef_trade + ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
+reg_goal11 <-
+  regsubsets(goal11 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion + pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
+               ef_money + ef_trade + ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
+reg_goal12 <-
+  regsubsets(goal12 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion + pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
+               ef_money + ef_trade + ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
+reg_goal13 <-
+  regsubsets(goal13 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion + pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
+               ef_money + ef_trade + ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
+reg_goal15 <-
+  regsubsets(goal15 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion + pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
+               ef_money + ef_trade + ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
+reg_goal16 <-
+  regsubsets(goal16 ~ unemployment.rate + GDPpercapita
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law
+               pf_security + pf_movement + pf_religion + pf_assembly
+               pf_expression + pf_identity + ef_government + ef_legal
+               ef_money + ef_trade + ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
+reg_goal17 <-
+  regsubsets(goal17 ~ unemployment.rate + GDPpercapita +
+               MilitaryExpenditurePercentGDP + internet_usage + pf_law +
+               pf_security + pf_movement + pf_religion + pf_assembly +
+               pf_expression + pf_identity + ef_government + ef_legal +
+               ef_money + ef_trade + ef_regulation + population,
+             data = data_question1,
+             nbest=10,
+             method="forward")
 
-plot(reg_goal1, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal1 Forward method, adj.R^2")
+plot(reg_goal1,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal1 Forward method, adj.R^2")
 
-plot(reg_goal2,scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal2 Forward method, adj.R^2")
+plot(reg_goal2,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal2 Forward method, adj.R^2")
 
-plot(reg_goal3,scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal3 Forward method, adj.R^2")
+plot(reg_goal3,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal3 Forward method, adj.R^2")
 
-plot(reg_goal4, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal4 Forward method, adj.R^2")
+plot(reg_goal4,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal4 Forward method, adj.R^2")
 
-plot(reg_goal5, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal5 Forward method, adj.R^2")
+plot(reg_goal5,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal5 Forward method, adj.R^2")
 
-plot(reg_goal6, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal6 Forward method, adj.R^2")
+plot(reg_goal6,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal6 Forward method, adj.R^2")
 
-plot(reg_goal7, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal7 Forward method, adj.R^2")
+plot(reg_goal7,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal7 Forward method, adj.R^2")
 
-plot(reg_goal8, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal8 Forward method, adj.R^2")
+plot(reg_goal8,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal8 Forward method, adj.R^2")
 
-plot(reg_goal9, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal9 Forward method, adj.R^2")
+plot(reg_goal9,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal9 Forward method, adj.R^2")
 
-plot(reg_goal10, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal10 Forward method, adj.R^2")
+plot(reg_goal10,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal10 Forward method, adj.R^2")
 
-plot(reg_goal11, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal11 Forward method, adj.R^2")
+plot(reg_goal11,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal11 Forward method, adj.R^2")
 
-plot(reg_goal12, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal12 Forward method, adj.R^2")
+plot(reg_goal12,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal12 Forward method, adj.R^2")
 
-plot(reg_goal13, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal13 Forward method, adj.R^2")
+plot(reg_goal13,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal13 Forward method, adj.R^2")
 
-plot(reg_goal15, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal15 Forward method, adj.R^2")
+plot(reg_goal15,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal15 Forward method, adj.R^2")
 
-plot(reg_goal16, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal16 Forward method, adj.R^2")
+plot(reg_goal16,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal16 Forward method, adj.R^2")
 
-plot(reg_goal17, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal17 Forward method, adj.R^2")
-
+plot(reg_goal17,
+     scale="adjr2") +
+  theme_minimal() +
+  title("Stepwise Regression Goal17 Forward method, adj.R^2")
 ```
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
@@ -739,62 +914,122 @@ Now that we have our optimal model for each goal, let's conduct our regressions 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 
 #Regressions 
-Goal1lm <- lm(goal1 ~ unemployment.rate + MilitaryExpenditurePercentGDP + internet_usage + pf_religion + pf_assembly + pf_identity + ef_government + ef_trade, data = data_question1)
+Goal1lm <- lm(goal1 ~ unemployment.rate + MilitaryExpenditurePercentGDP
+              + internet_usage + pf_religion + pf_assembly + pf_identity
+              + ef_government + ef_trade,
+              data = data_question1)
 
-Goal2lm <- lm(goal2 ~ MilitaryExpenditurePercentGDP + internet_usage + pf_identity + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+Goal2lm <- lm(goal2 ~ MilitaryExpenditurePercentGDP + internet_usage
+              + pf_identity + ef_money + ef_trade + ef_regulation + population,
+              data = data_question1)
 
-Goal3lm <- lm(goal3 ~ MilitaryExpenditurePercentGDP + internet_usage + pf_movement + pf_religion + pf_identity + ef_legal + ef_money + ef_trade, data = data_question1)
+Goal3lm <- lm(goal3 ~ MilitaryExpenditurePercentGDP + internet_usage
+              + pf_movement + pf_religion + pf_identity + ef_legal + ef_money
+              + ef_trade,
+              data = data_question1)
 
-Goal4lm <- lm(goal4 ~ GDPpercapita + internet_usage + pf_religion + pf_identity + ef_government + ef_legal + ef_trade + population, data = data_question1)
+Goal4lm <- lm(goal4 ~ GDPpercapita + internet_usage + pf_religion + pf_identity
+              + ef_government + ef_legal + ef_trade + population,
+              data = data_question1)
 
-Goal5lm <- lm(goal5 ~ MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_security + pf_religion + pf_identity + ef_government + ef_legal, data = data_question1)
+Goal5lm <- lm(goal5 ~ MilitaryExpenditurePercentGDP + internet_usage + pf_law
+              + pf_security + pf_religion + pf_identity + ef_government
+              + ef_legal,
+              data = data_question1)
 
-Goal6lm <- lm(goal6 ~ unemployment.rate + internet_usage + pf_identity + ef_legal + ef_money + ef_trade + ef_regulation + population, data = data_question1)
+Goal6lm <- lm(goal6 ~ unemployment.rate + internet_usage + pf_identity
+              + ef_legal + ef_money + ef_trade + ef_regulation + population,
+              data = data_question1)
 
-Goal7lm <- lm(goal7 ~ unemployment.rate + internet_usage + pf_religion + pf_assembly + pf_identity + ef_government + ef_trade + ef_regulation, data = data_question1)
+Goal7lm <- lm(goal7 ~ unemployment.rate + internet_usage + pf_religion
+              + pf_assembly + pf_identity + ef_government + ef_trade
+              + ef_regulation,
+              data = data_question1)
 
-Goal8lm <- lm(goal8 ~ unemployment.rate + internet_usage + pf_law + pf_expression + ef_legal + ef_trade + ef_regulation + population, data = data_question1)
+Goal8lm <- lm(goal8 ~ unemployment.rate + internet_usage + pf_law
+              + pf_expression + ef_legal + ef_trade + ef_regulation
+              + population,
+              data = data_question1)
 
-Goal9lm <- lm(goal9 ~ + GDPpercapita + MilitaryExpenditurePercentGDP + internet_usage + pf_law + ef_legal + ef_trade + ef_regulation + population, data = data_question1)
+Goal9lm <- lm(goal9 ~ + GDPpercapita + MilitaryExpenditurePercentGDP
+              + internet_usage + pf_law + ef_legal + ef_trade + ef_regulation
+              + population,
+              data = data_question1)
 
-Goal10lm <- lm(goal10 ~ unemployment.rate + internet_usage + pf_law + pf_security + pf_movement + pf_religion + pf_expression + population, data = data_question1)
+Goal10lm <- lm(goal10 ~ unemployment.rate + internet_usage + pf_law
+               + pf_security + pf_movement + pf_religion + pf_expression
+               + population,
+               data = data_question1)
 
-Goal11lm <- lm(goal11 ~ unemployment.rate + internet_usage + pf_movement + pf_religion + pf_identity + ef_legal + ef_trade + population, data = data_question1)
+Goal11lm <- lm(goal11 ~ unemployment.rate + internet_usage + pf_movement
+               + pf_religion + pf_identity + ef_legal + ef_trade
+               + population,
+               data = data_question1)
 
-Goal12lm <- lm(goal12 ~ + GDPpercapita + pf_law + pf_religion + pf_expression + pf_identity + ef_legal + ef_trade + population, data = data_question1)
+Goal12lm <- lm(goal12 ~ + GDPpercapita + pf_law + pf_religion + pf_expression
+               + pf_identity + ef_legal + ef_trade + population,
+               data = data_question1)
 
-Goal13lm <- lm(goal13 ~ unemployment.rate + GDPpercapita + MilitaryExpenditurePercentGDP + pf_law + pf_religion + pf_expression + pf_identity + ef_legal, data = data_question1)
+Goal13lm <- lm(goal13 ~ unemployment.rate + GDPpercapita
+               + MilitaryExpenditurePercentGDP + pf_law + pf_religion
+               + pf_expression + pf_identity + ef_legal,
+               data = data_question1)
 
-Goal15lm <- lm(goal15 ~ unemployment.rate + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_religion + ef_government + ef_money + population, data = data_question1)
+Goal15lm <- lm(goal15 ~ unemployment.rate + MilitaryExpenditurePercentGDP
+               + internet_usage + pf_law + pf_religion + ef_government
+               + ef_money + population, data = data_question1)
 
-Goal16lm <- lm(goal16 ~ pf_law + pf_security + pf_religion + pf_expression + pf_identity + ef_government + ef_legal + population, data = data_question1)
+Goal16lm <- lm(goal16 ~ pf_law + pf_security + pf_religion + pf_expression
+               + pf_identity + ef_government + ef_legal + population,
+               data = data_question1)
 
-Goal17lm <- lm(goal17 ~ unemployment.rate + MilitaryExpenditurePercentGDP + internet_usage + pf_law + pf_movement + ef_government + ef_legal + population, data = data_question1)
+Goal17lm <- lm(goal17 ~ unemployment.rate + MilitaryExpenditurePercentGDP
+               + internet_usage + pf_law + pf_movement + ef_government
+               + ef_legal + population,
+               data = data_question1)
 
 #coefficient plot
 
 # Create a dataframe of tidy models
-model_list <- list(Goal1lm, Goal2lm, Goal3lm, Goal4lm, Goal5lm, Goal6lm, Goal7lm, Goal8lm, Goal9lm, Goal10lm, Goal11lm, Goal12lm, Goal13lm, Goal15lm, Goal16lm, Goal17lm)
+model_list <- list(Goal1lm, Goal2lm, Goal3lm, Goal4lm, Goal5lm, Goal6lm,
+                   Goal7lm, Goal8lm, Goal9lm, Goal10lm, Goal11lm, Goal12lm,
+                   Goal13lm, Goal15lm, Goal16lm, Goal17lm)
 
 models_tidy <- lapply(model_list, tidy)
-names(models_tidy) <- paste("Goal", c(1:13, 15:17), "lm", sep="")
+names(models_tidy) <- paste("Goal",
+                            c(1:13, 15:17),
+                            "lm",
+                            sep="")
 
 # Combine into a single dataframe
-df_tidy <- do.call(rbind, lapply(names(models_tidy), function(x) cbind(models_tidy[[x]], Model=x)))
+df_tidy <-
+  do.call(rbind,
+          lapply(names(models_tidy),
+                 function(x) cbind(models_tidy[[x]],
+                                   Model=x)))
 
 # Filter for significant p-values
-df_tidy_significant <- df_tidy[df_tidy$p.value < p_value_threshold, ]
+df_tidy_significant <-
+  df_tidy[df_tidy$p.value < p_value_threshold, ]
 library(RColorBrewer)
-model_order <- c("Goal1lm", "Goal2lm", "Goal3lm", "Goal4lm", "Goal5lm", "Goal6lm", "Goal7lm", "Goal8lm", 
-                 "Goal9lm", "Goal10lm", "Goal11lm", "Goal12lm", "Goal13lm", "Goal15lm", "Goal16lm", "Goal17lm")
+model_order <- c("Goal1lm", "Goal2lm", "Goal3lm", "Goal4lm", "Goal5lm",
+                 "Goal6lm", "Goal7lm", "Goal8lm","Goal9lm", "Goal10lm",
+                 "Goal11lm", "Goal12lm", "Goal13lm", "Goal15lm",
+                 "Goal16lm", "Goal17lm")
 
-df_tidy_significant$Model <- factor(df_tidy_significant$Model, levels = model_order)
+df_tidy_significant$Model <-
+  factor(df_tidy_significant$Model, levels = model_order)
 
-myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_significant$term)))
+myColors <-
+  colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_significant$term)))
 # Plot
-ggplot(df_tidy_significant, aes(x = Model, y = estimate, color = term)) +
+ggplot(df_tidy_significant,
+       aes(x = Model,
+           y = estimate,
+           color = term)) +
   geom_point() +
-  geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error), width = 0.2) +
+  geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error),
+                width = 0.2) +
   scale_color_manual(values = myColors) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         plot.title = element_text(hjust = 0.5), # Center the title
@@ -803,7 +1038,9 @@ ggplot(df_tidy_significant, aes(x = Model, y = estimate, color = term)) +
         legend.text = element_text(size = 6), # Adjust text size
         legend.title = element_text(size = 7), # Adjust title size
         legend.key.size = unit(0.4, "cm")) +  # Adjust key size) +
-  labs(title = "Coefficient Plot of Regression Models", x = "Models", y = "Estimates")
+  labs(title = "Coefficient Plot of Regression Models",
+       x = "Models",
+       y = "Estimates")
 ```
 
 Here is our general plot. For visualization purpose, let's also plot the positive and negative correlation plots
@@ -816,9 +1053,13 @@ df_tidy_positive_p$Model <- factor(df_tidy_positive_p$Model, levels = model_orde
 
 myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_positive_p$term)))
 # Plot only positive coefficients
-ggplot(df_tidy_positive_p, aes(x = Model, y = estimate, color = term)) +
+ggplot(df_tidy_positive_p,
+       aes(x = Model,
+           y = estimate,
+           color = term)) +
   geom_point() +
-  geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error), width = 0.2) +
+  geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error),
+                width = 0.2) +
   scale_color_manual(values = myColors) + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         plot.title = element_text(hjust = 0.5),
@@ -827,14 +1068,19 @@ ggplot(df_tidy_positive_p, aes(x = Model, y = estimate, color = term)) +
         legend.text = element_text(size = 6),
         legend.title = element_text(size = 7),
         legend.key.size = unit(0.4, "cm")) +
-  labs(title = "Coefficient Plot of Regression Models (Positive Coefficients)", x = "Models", y = "Estimates")
+  labs(title = "Coefficient Plot of Regression Models (Positive Coefficients)",
+       x = "Models",
+       y = "Estimates")
 
 #negative values only
-df_tidy_positive_n <- df_tidy_significant[df_tidy_significant$estimate < 0, ]
+df_tidy_positive_n <-
+  df_tidy_significant[df_tidy_significant$estimate < 0, ]
 
-df_tidy_positive_n$Model <- factor(df_tidy_positive_n$Model, levels = model_order)
+df_tidy_positive_n$Model <-
+  factor(df_tidy_positive_n$Model, levels = model_order)
 
-myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_positive_n$term)))
+myColors <-
+  colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_positive_n$term)))
 
 ggplot(df_tidy_positive_n, aes(x = Model, y = estimate, color = term)) +
   geom_point() +
@@ -847,7 +1093,9 @@ ggplot(df_tidy_positive_n, aes(x = Model, y = estimate, color = term)) +
         legend.text = element_text(size = 6),
         legend.title = element_text(size = 7),
         legend.key.size = unit(0.4, "cm")) +
-  labs(title = "Coefficient Plot of Regression Models (Negative Coefficients)", x = "Models", y = "Estimates")
+  labs(title = "Coefficient Plot of Regression Models (Negative Coefficients)",
+       x = "Models",
+       y = "Estimates")
 ```
 
 In these plots, we can see that most of our variables are influencing positively and negatively our goals. I.e., unemployment.rate is influencing goal 10 & 8 negatively, but positively our other goals. Nevertheless, some factors seems to influence only positively our goals. It is the case for the factors internet_usage. These results are due to the range of the objectives contained in the SDG: as each goal has a different objective, and that our factors are have also a wide range of action, we find different influence between our variables.  
