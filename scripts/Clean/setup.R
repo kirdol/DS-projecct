@@ -70,17 +70,17 @@ MPer_20_30 <- "#fba537"
 MPer_30_100 <- "#e34e64"
 
 # Create a fix color for graphs that need only one color
-Fix_color <- viridis(1, # specifying to the viridis function that we want 1 color
-                     option = "D", # we use the color from the viridis palette
-                     begin = 0.5) # we select the middle color
+Fix_color <- viridis(1,
+                     option = "D",
+                     begin = 0.5)
 
 # Creation of a discrete color palette for the categorical variables
 Discrete_colors <- scale_color_paletteer_d("Polychrome::dark")
 
-
-colors <- c("red", "blue", "green", "orange", "purple", "pink","lightblue",
-            "gray", "cyan", "magenta", "yellow","darkgreen", "darkblue",
-            "darkred", "darkgrey", "darkcyan")
+# Creation of a discrete color palette for the categorical variables
+colors <- c("#20908c","#e5e419","#e34e64","lightblue","#8dce3e","darkgreen","darkred","darkblue","#e34e64","blue",
+            "#fba537","purple","pink",
+            "lightgray","magenta","cyan","darkgrey")
 
 colors_pal <- scale_color_manual(values = colors)
 

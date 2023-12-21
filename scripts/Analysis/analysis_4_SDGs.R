@@ -217,3 +217,53 @@ plotlyOutput("plot")
 # 
 # shinyApp(ui = ui, server = server)
 
+
+```{r echo = TRUE, message = FALSE}
+#### Preparation of the data ####
+
+# Keeping only the columns of interest for the correlation calculation
+data_4_goals <- data_4 %>%
+  dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
+                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
+                goal13, goal15, goal16, goal17)
+```
+
+```{r echo = TRUE, message = FALSE}
+#### Spearman Correlation ####
+
+# Calculate the correlation between our variables
+spearman_corr_4 <-cor(data_4_goals, # using only the columns of interest
+                      method = "spearman", # using the Spearman correlation
+                      use = "everything") # using all the data
+
+# Apply threshold and replace values below it with NAs
+spearman_corr_4[abs(spearman_corr_4) < threshold_heatmap] <- NA
+```
+
+```{r echo = TRUE, message = FALSE}
+#### Spearman Correlation Heatmap ####
+
+# Melting the data
+melted_corr_4 <- melt(spearman_corr_4, na.rm = TRUE)
+
+# Creation of the heatmap
+ggplot(data = melted_corr_4, # melted data
+       aes(x = Var1, # x axis
+           y = Var2, # y axis
+           fill = value)) +
+    geom_tile() + # Adding tiles
+    geom_text(aes(label = sprintf("%.2f", value)), # Adding the correlation values
+              vjust = 0.5,
+              size=2.5) +
+    scale_fill_viridis_c(name = "Spearman\nCorrelation", # Adding the color legend
+                         na.value = "white", # Setting the color for NAs
+                         begin = 0.1, # changing the color to prevent dark colors
+                         end = 1) +
+    theme_minimal() + # applying a minimal theme to be consistant with our other graphs
+    theme(axis.text.x = element_text(angle = 45, # Rotating the x axis labels 45 degrees
+                                     hjust = 1)) +
+    labs(title = "Heatmap of Spearman Correlations for Goals",  # Adding a title to our graph
+         x = "",
+         y = "")
+```
+

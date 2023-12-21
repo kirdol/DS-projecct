@@ -45,7 +45,7 @@ plot1 <- ggplot(data1) +
         plot.title = element_text(hjust = 0.5, size = 10),
         axis.title.x = element_text(size = 8),
         axis.title.y = element_text(size = 8)) +
-  Discrete_colors
+  colors_pal
 
 data2 <- data_question2 %>%
   group_by(year, continent) %>%
@@ -72,7 +72,7 @@ plot2 <- ggplot(data2) +
         axis.title.y = element_text(size = 8),
         legend.text = element_text(size = 8),
         legend.title = element_text(size = 10)) +
-  Discrete_colors
+  colors_pal
 
 plot1 + plot2
 ```
@@ -162,7 +162,7 @@ data5 <- data_question2 %>%
 plot5 <- ggplot(data = data5) +
   geom_line(mapping = aes(x = year, y = mean_value, color = goal), size = 0.7) +
   geom_point(mapping = aes(x = year, y = mean_value, color = goal), size = 1) +
-  Discrete_colors +
+  colors_pal +
   scale_y_continuous(limits = c(0, 100)) +
   labs(title = "Evolution of the mean SDG \nachievement scores across the world",
        y = "Mean SDG Scores",
@@ -177,10 +177,10 @@ data6 <- data_question2 %>%
 
 # Score difference plot
 plot6 <- ggplot(data = data6) +
-  geom_line(mapping = aes(x = year, y = mean_diff_value, color = goal), size = 0.3) +
+  geom_line(mapping = aes(x = year,y = mean_diff_value, color = goal), size = 0.3) +
   #geom_point(mapping = aes(x = year, y = mean_diff_value, color = goal), size = 1) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
-  Discrete_colors +
+  colors_pal +
   scale_y_continuous(limits = c(-1.5, 4)) +
   labs(title = "Score difference",
        y = "Mean SDG Scores difference",
@@ -191,7 +191,7 @@ plot6 <- ggplot(data = data6) +
 # Creation od the legend
 plot7 <- ggplot(data = data5) +
   geom_line(mapping = aes(x = year, y = mean_value, color = goal), size = 1) +
-  Discrete_colors +
+  colors_pal +
   theme(legend.position="bottom", legend.text = element_text(size= 8), legend.title = element_blank())+
   guides(color = guide_legend(nrow=3))
 
