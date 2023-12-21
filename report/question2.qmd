@@ -79,7 +79,7 @@ plot1 + plot2
 
 This view that groups the countries by region gives us precision about the previous information. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below. Regarding the score difference from one year to another, we still see Oceania having the greater fluctuations, but Caucasus & Central Asia as well as Eastern Europe show a pick in the early two thousand's that we could not see before. South Asia also has a relatively high improvement in 2017. 
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+```{r, echo = TRUE, message = FALSE, warning=FALSE}
 #### Evoloution of the mean overall score and socre diff by region ####
 
 data3 <- data_question2 %>%
@@ -150,7 +150,7 @@ legend <- cowplot::get_legend(legend)
 Second, we look at the evolution of SDG achievement scores(16) over time for the whole world and by continent. We notice that all SDGs except from goal 9 (industry innovation and infrastructure) are close to one another in terms of level and growth. Goal 9 starts far below the others in 2000 and growths faster until exceeding 50%. In addition, some goals did not increase their scores much in the last two decades, for example goal 13 (climate action) and goal 12 (responsible consumption and production).
 The score differences are mostly contained between 0 and 0.5 point of percentage increase by year. Some of the goals have picks, these are goals 15, 3, 5, 17 and goal 9 has the highest of all average improvements in 2017 with an improvement of 4 points of percentage, which is almost two times higher than the other good improvements. Some goals have bad years, like goal 10 or goal 15, but never under -0.5, except goal 16 in 2022 that goes a little below. Finaly, some goals are very steady, for example goal 12 that stays around zero and goal 6 that is always a little above the zero (no change) line. 
 
-```{r, echo = TRUE, message = FALSE, cache = TRUE, warning = FALSE, out.height="200%"}
+```{r, echo = TRUE, message = FALSE,  warning = FALSE, out.height="200%"}
 #### Evolution  of the mean scores and score difference by year ####
 
 data5 <- data_question2 %>%
@@ -198,12 +198,11 @@ plot7 <- ggplot(data = data5) +
 legend <- cowplot::get_legend(plot7)
 
 (plot5 + plot6) / legend
-
 ```
 
 We continue with the graph that distinguishes continents to get more information.
 
-```{r, echo = TRUE, message = FALSE, cache = TRUE, warning=FALSE, out.height="100%", out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 #### Evolution of the mean scores by continent ####
 
 data5 <- data_question2 %>%
@@ -261,10 +260,11 @@ plot_ly(
                 data0$name[data0$year == 2000],
                 "<br>Overall Score: ",
                 data0$overallscore[data0$year == 2000]),
-  colors = c("darkred",
-             "orange",
-             "yellow",
-             "darkgreen"),
+  colors =  viridis(4, direction = -1),
+  # colors = c("darkred",
+  #            "orange",
+  #            "yellow",
+  #            "darkgreen"),
   colorbar = list(title = "Overall Score",
                   cmin = 40,
                   cmax = 87),
@@ -355,7 +355,7 @@ After having visualized the improvements and declines of SDG overall score for t
 top_n_values <- 5
 
 # Test with ggpot2
-custom_colors <- c(viridis(5), viridis(2, option = "B", begin = 0, end = 0.4), viridis(3, option = "B", begin = 0.6, end = 1))
+custom_colors <- c(viridis(5, begin = 0.2), "lightblue", "grey90", magma(3))
 
 # Get unique regions in the dataset
 unique_regions <- unique(binary2015$region)

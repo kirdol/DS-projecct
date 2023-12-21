@@ -63,7 +63,7 @@ for (pkg in packages) {
 ######################################################
 
 # Create a color palette for the percentage of missing values
-MPer_0_10 <- "#1abc9c"
+MPer_0_10 <- viridis(1, begin = 0.5)
 MPer_10_20 <- "#e5e419"
 MPer_20_30 <- "#fba537"
 MPer_30_100 <- "#e34e64"
@@ -75,6 +75,7 @@ Fix_color <- viridis(1, # specifying to the viridis function that we want 1 colo
 
 # Creation of a discrete color palette for the categorical variables
 Discrete_colors <- scale_color_paletteer_d("Polychrome::dark")
+
 
 colors <- c("red", "blue", "green", "orange", "purple", "pink","lightblue",
             "gray", "cyan", "magenta", "yellow","darkgreen", "darkblue",
