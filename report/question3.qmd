@@ -547,11 +547,18 @@ Here you can see an extract of:
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.5}
 
-disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "total_deaths")
+disaster_data <-
+  Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
+relevant_columns <-
+  c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8",
+    "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16",
+    "total_affected", "total_deaths")
 subset_data <- disaster_data[, relevant_columns]
 
-correlation_matrix_subset <- cor(subset_data[, c("total_affected", "total_deaths")], subset_data, method = "spearman")
+correlation_matrix_subset <-
+  cor(subset_data[, c("total_affected", "total_deaths")],
+      subset_data,
+      method = "spearman")
 
 cor_melted <- reshape2::melt(correlation_matrix_subset)
 names(cor_melted) <- c("Variable2", "Variable1", "Correlation")
@@ -583,10 +590,18 @@ ggplot(data = cor_melted,
 #### Correlation between COVID and the SDG goals heatmap ####
 
 covid_filtered <- Q3.2
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "stringency", "cases_per_million", "deaths_per_million")
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6",
+                      "goal7", "goal8", "goal9", "goal10", "goal11", "goal12",
+                      "goal13", "goal15", "goal16", "stringency",
+                      "cases_per_million", "deaths_per_million")
 subset_data <- covid_filtered[, relevant_columns]
 
-correlation_matrix_Covid <- cor(subset_data, subset_data[, c("stringency", "cases_per_million", "deaths_per_million")], method = "spearman")
+correlation_matrix_Covid <-
+  cor(subset_data,
+      subset_data[, c("stringency",
+                      "cases_per_million",
+                      "deaths_per_million")],
+      method = "spearman")
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Covid))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
@@ -616,13 +631,20 @@ ggplot(data = cor_melted,
 
 #### Correlation between Conflicts Deaths and the SDG goals heatmap ####
 
-conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "South Asia", "Latin America & the Caribbean"), ]
+conflicts_filtered <-
+  Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa",
+                          "South Asia", "Latin America & the Caribbean"), ]
 
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "sum_deaths")
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6",
+                      "goal7", "goal8", "goal9", "goal10", "goal11", "goal12",
+                      "goal13", "goal15", "goal16", "sum_deaths")
 
 subset_data <- conflicts_filtered[, relevant_columns]
 
-correlation_matrix_Conflicts_Deaths <- cor(subset_data, subset_data[, c("sum_deaths")], method = "spearman")
+correlation_matrix_Conflicts_Deaths <-
+  cor(subset_data,
+      subset_data[, c("sum_deaths")],
+      method = "spearman")
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Deaths))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
@@ -662,7 +684,10 @@ relevant_columns <-
 
 subset_data <- conflicts_filtered[, relevant_columns]
 
-correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected")], method = "spearman")
+correlation_matrix_Conflicts_Pop_Aff <-
+  cor(subset_data,
+      subset_data[, c("pop_affected")],
+      method = "spearman")
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
@@ -679,8 +704,8 @@ ggplot(data = cor_melted,
   theme_minimal() +
   theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
          axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
-         plot.title = element_text(size = 11, margin = margin(b = 20), hjust = 0.5, 
-                                   vjust = 6, lineheight = 2),
+         plot.title = element_text(size = 11, margin = margin(b = 20),
+                                   hjust = 0.5, vjust = 6, lineheight = 2),
                   legend.title = element_text(size = 9)) +
 coord_fixed(ratio = 1) +
   labs(x = '',
@@ -703,7 +728,10 @@ relevant_columns <-
 
 subset_data <- conflicts_filtered[, relevant_columns]
 
-correlation_matrix_Conflicts_Maxintensity <- cor(subset_data, subset_data[, c("maxintensity")], method = "spearman")
+correlation_matrix_Conflicts_Maxintensity <-
+  cor(subset_data,
+      subset_data[, c("maxintensity")],
+      method = "spearman")
 
 cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Maxintensity))
 names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
@@ -720,7 +748,8 @@ ggplot(data = cor_melted,
   theme_minimal() +
   theme( axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
          axis.text.y = element_text(vjust = 0, size = 8, hjust = 1),
-         plot.title = element_text(size = 11, margin = margin(b = 20), hjust = 0.5, vjust = 6, lineheight = 2),
+         plot.title = element_text(size = 11, margin = margin(b = 20),
+                                   hjust = 0.5, vjust = 6, lineheight = 2),
          legend.title = element_text(size = 9)) +
   coord_fixed(ratio = 1) +
   labs(x = '',
@@ -737,7 +766,8 @@ Here you can see for example our correlation map between the climate disasters a
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, fig.height = 2.5}
 #### Correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap ####
 
-disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", " North America"), ]
+disaster_data <-
+  Q3.1[Q3.1$region %in% c("South Asia", "East Asia", " North America"), ]
 
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6",
                       "goal7", "goal8", "goal9", "goal10", "goal11", "goal12",
@@ -752,7 +782,11 @@ lagged_subset_data <- subset_data %>%
     lagged_total_deaths = lag(total_deaths, default = NA)
   )
 
-correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_total_affected", "lagged_total_deaths")], subset_data, method = "spearman")
+correlation_matrix_lagged <-
+  cor(lagged_subset_data[, c("lagged_total_affected",
+                             "lagged_total_deaths")],
+      subset_data,
+      method = "spearman")
 
 cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
 names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
@@ -831,9 +865,13 @@ generate_lagged_correlation_plot_covid <- function(year, data, relevant_columns)
   names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 
   # Create the ggplot
-  p <- ggplot(cor_melted, aes(Variable2, Variable1, fill = Correlation)) +
+  p <- ggplot(cor_melted,
+              aes(Variable2,
+                  Variable1,
+                  fill = Correlation)) +
     geom_tile() +
-    scale_fill_viridis_c(name = "Spearman\nCorrelation", limit = c(-1, 1)) +
+    scale_fill_viridis_c(name = "Spearman\nCorrelation",
+                         limit = c(-1, 1)) +
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 45, size = 7, hjust = 1),
           axis.text.y = element_text(vjust = 1, size = 7),
@@ -842,15 +880,21 @@ generate_lagged_correlation_plot_covid <- function(year, data, relevant_columns)
           legend.key.size = unit(0.4, "cm"),
           legend.text = element_text(size = 6)) +
     coord_fixed() +
-    labs(x = '', y = '', title = paste('Lagged Correlation for COVID-19 in Year', year))
-
-  return(p)
-}
+    labs(x = '',
+         y = '',
+         title = paste('Lagged Correlation for COVID-19 in Year', year))
+  return(p)}
 
 # Generate and display the plots for 2020, 2021, and 2022
-plot_2020 <- generate_lagged_correlation_plot_covid(2020, Q3.2, relevant_columns)
-plot_2021 <- generate_lagged_correlation_plot_covid(2021, Q3.2, relevant_columns)
-plot_2022 <- generate_lagged_correlation_plot_covid(2022, Q3.2, relevant_columns)
+plot_2020 <- generate_lagged_correlation_plot_covid(2020,
+                                                    Q3.2,
+                                                    relevant_columns)
+plot_2021 <- generate_lagged_correlation_plot_covid(2021,
+                                                    Q3.2,
+                                                    relevant_columns)
+plot_2022 <- generate_lagged_correlation_plot_covid(2022,
+                                                    Q3.2,
+                                                    relevant_columns)
 
 plot_2020
 plot_2021
@@ -886,31 +930,53 @@ library(ggplot2)
 
 disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
 
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "total_deaths")
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6",
+                      "goal7", "goal8", "goal9", "goal10", "goal11", "goal12",
+                      "goal13", "goal15", "goal16", "total_affected",
+                      "total_deaths")
 subset_data <- disaster_data[, relevant_columns]
 
 # Effectuer la régression linéaire et créer les graphiques
 plots <- list()
 for (goal in relevant_columns[1:15]) {
   # Pour total_affected
-  p_affected <- ggplot(subset_data, aes_string(x = "total_affected", y = goal)) +
+  p_affected <- ggplot(subset_data,
+                       aes_string(x = "total_affected", y = goal)) +
     geom_point(size = 0.1) +
-    geom_smooth(method = "lm", formula = y ~ x, se = FALSE, size = 0.5) +
-    labs(x = "Total Affected", y = paste("Goal", substr(goal, 5, 6)))
+    geom_smooth(method = "lm",
+                formula = y ~ x,
+                se = FALSE,
+                size = 0.5) +
+    labs(x = "Total Affected",
+         y = paste("Goal",
+                   substr(goal, 5, 6)))
 
   # Pour total_deaths
-  p_deaths <- ggplot(subset_data, aes_string(x = "total_deaths", y = goal)) +
+  p_deaths <- ggplot(subset_data,
+                     aes_string(x = "total_deaths",
+                                y = goal)) +
     geom_point(size = 0.1) +
-    geom_smooth(method = "lm", formula = y ~ x, se = FALSE, size = 0.5) +
-    labs(x = "Total Deaths", y = paste("Goal", substr(goal, 5, 6)))
+    geom_smooth(method = "lm",
+                formula = y ~ x,
+                se = FALSE,
+                size = 0.5) +
+    labs(x = "Total Deaths",
+         y = paste("Goal",
+                   substr(goal, 5, 6)))
 
   # Ajouter les deux graphiques à la liste
-  plots[[goal]] <- list(ggplotly(p_affected), ggplotly(p_deaths))
+  plots[[goal]] <- list(ggplotly(p_affected),
+                        ggplotly(p_deaths))
 }
 
 # Afficher tous les graphiques
-subplot_plots <- lapply(plots, function(plot_pair) subplot(plot_pair[[1]], plot_pair[[2]], nrows = 1, margin = 0.05))
-subplot(subplot_plots, nrows = length(subplot_plots), margin = 0.05)
+subplot_plots <- lapply(plots, function(plot_pair) subplot(plot_pair[[1]],
+                                                           plot_pair[[2]],
+                                                           nrows = 1,
+                                                           margin = 0.05))
+subplot(subplot_plots,
+        nrows = length(subplot_plots),
+        margin = 0.05)
 ```
 
 Most relationships between the goals and the variables ('total_affected' and 'total_deaths') are not statistically significant (indicated by p-values \> 0.05). More specifically, in several models, the coefficients for 'total_affected' and 'total_deaths' are small, indicating weak or negligible relationships with the respective goals. Some models have marginally significant p-values (close to 0.05) but still lack statistical significance. Goals 7, 8, 10, 13, 14, and 15 exhibit statistically significant relationships with 'total_affected,' indicating small to moderate positive relationships. Goals 7 and 8 also show statistically significant relationships with 'total_deaths,' indicating moderate negative relationships.
