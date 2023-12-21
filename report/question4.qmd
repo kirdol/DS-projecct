@@ -7,8 +7,9 @@ source(here::here("scripts","Clean","setup.R"))
 # Import of our dataset for or question on the SDGs
 data_4 <- read.csv(here("scripts", "data", "data_question24.csv"))
 
-# setting our correlation threshold for the heatmap
-threshold_heatmap <- 0.5
+# setting our correlation and p-value threshold for the heatmap
+threshold_heatmap <- 0.6
+p_value_threshold <- 0.05
 
 # laoding the leaps package for the stepwise regression
 library(leaps)
@@ -24,9 +25,7 @@ To better analyse the relationships between the SDGs, we will first visualize th
 To do that, we select only the colums of interest and compute the correlation matrix using Spearman correlation. We then melt the matrix to be able to plot it. We then plot the heatmap using `ggplot2`.
 
 ```{r echo = TRUE, message = FALSE, warning = FALSE}
-
-
-p_value_threshold <- 0.05
+#### Heatmap of the correlations ####
 
 # Selecting columns of interest
 data_4_goals <- data_4 %>%
@@ -34,14 +33,12 @@ data_4_goals <- data_4 %>%
                 goal6, goal7, goal8, goal9, goal10, goal11, goal12,
                 goal13, goal15, goal16, goal17)
 
-# Initialize matrices for correlations and p-values
+# Initialize matrices for correlations, p-values, and significance
 n <- ncol(data_4_goals)
-cor_matrix <- matrix(NA, n, n)
+cor_matrix <- matrix(1, n, n)
 p_matrix <- matrix(NA, n, n)
 colnames(cor_matrix) <- colnames(data_4_goals)
 rownames(cor_matrix) <- colnames(data_4_goals)
-colnames(p_matrix) <- colnames(data_4_goals)
-rownames(p_matrix) <- colnames(data_4_goals)
 
 # Calculating correlations and p-values
 for (i in 1:n) {
@@ -51,82 +48,33 @@ for (i in 1:n) {
       cor_matrix[i, j] <- test$estimate
       p_matrix[i, j] <- test$p.value}}}
 
-# Applying a p-value threshold
-cor_matrix[which(p_matrix > p_value_threshold, arr.ind = TRUE)] <- NA
+# Melting the data for ggplot
+melted_corr <- melt(cor_matrix)
 
-# Melting the data
-melted_corr <- melt(cor_matrix, na.rm = TRUE)
-
-# Creation of the heatmap
-ggplot(data = melted_corr,
-       aes(x = Var1,
-           y = Var2,
-           fill = value)) +
+# Creating the heatmap
+ggplot(melted_corr, aes(x = Var1,
+                        y = Var2, 
+                        fill = value)) +
     geom_tile() +
-    geom_text(aes(label = sprintf("%.2f", value)), 
+    geom_text(aes(label = ifelse(abs(value) > threshold_heatmap,
+                                 sprintf("%.2f", value),
+                                 "")), 
               vjust = 0.5,
               size = 2.5) +
     scale_fill_viridis_c(name = "Spearman\nCorrelation",
-                         begin = 0.1,
-                         end = 1) +
+                         begin = 0.1) +
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 45,
                                      hjust = 1)) +
-    labs(title = "Heatmap of Statistically Significant Spearman Correlations",
+    labs(title = paste("Heatmap of Spearman Correlations \n(Only correlation values higher ",
+                       threshold_heatmap,
+                       " are shown)",
+                       sep = ""),
          x = "",
          y = "")
 ```
 
-```{r echo = TRUE, message = FALSE}
-#### Preparation of the data ####
-
-# Keeping only the columns of interest for the correlation calculation
-data_4_goals <- data_4 %>%
-  dplyr::select(overallscore, goal1, goal2, goal3, goal4, goal5,
-                goal6,goal7, goal8, goal9, goal10, goal11, goal12,
-                goal13, goal15, goal16, goal17)
-```
-
-```{r echo = TRUE, message = FALSE}
-#### Spearman Correlation ####
-
-# Calculate the correlation between our variables
-spearman_corr_4 <-cor(data_4_goals, # using only the columns of interest
-                      method = "spearman", # using the Spearman correlation
-                      use = "everything") # using all the data
-
-# Apply threshold and replace values below it with NAs
-spearman_corr_4[abs(spearman_corr_4) < threshold_heatmap] <- NA
-```
-
-```{r echo = TRUE, message = FALSE}
-#### Spearman Correlation Heatmap ####
-
-# Melting the data
-melted_corr_4 <- melt(spearman_corr_4, na.rm = TRUE)
-
-# Creation of the heatmap
-ggplot(data = melted_corr_4, # melted data
-       aes(x = Var1, # x axis
-           y = Var2, # y axis
-           fill = value)) +
-    geom_tile() + # Adding tiles
-    geom_text(aes(label = sprintf("%.2f", value)), # Adding the correlation values
-              vjust = 0.5,
-              size=2.5) +
-    scale_fill_viridis_c(name = "Spearman\nCorrelation", # Adding the color legend
-                         na.value = "white", # Setting the color for NAs
-                         begin = 0.1, # changing the color to prevent dark colors
-                         end = 1) +
-    theme_minimal() + # applying a minimal theme to be consistant with our other graphs
-    theme(axis.text.x = element_text(angle = 45, # Rotating the x axis labels 45 degrees
-                                     hjust = 1)) +
-    labs(title = "Heatmap of Spearman Correlations for Goals",  # Adding a title to our graph
-         x = "",
-         y = "")
-```
-
-The correlation can be read on the graph. The darker the color, the stronger the correlation. If there is not colors, it means that the goals correlation does not exceed our threashold of ±`r threshold_heatmap`.
+The correlation can be read on the graph. The darker the color, the stronger the correlation. If there is not colors, it means that the goals correlation does not exceed our threshold of ±`r threshold_heatmap`.
 
 It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals seems to be less interrelated compared to others. We can see that SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) have a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also have a weacker interconnection with the other SDGs. It is also interesting to note that some goals are negatively correlated with others. For instance, based on the Spearman correlation, goal 12 (Responsable Consumption and Production) and goal 13 (Climate Action) are negatively correlated with the others goals. This suggest that when the higher a goal other than goal 12 or 13 is, the lower the goals 12 and 13 are. Given their similar nature, it is not surprising that they are highly correlated with each other.
 
@@ -382,7 +330,7 @@ ggplot(df_tidy_significant,
   labs(title = "Coefficient Plot of Regression Models",
        x = "Models",
        y = "Estimates") +
-  Discrete_colors
+  colors_pal
 ```
 
 The following graphs show the Residuals versus our fitted values for our model that explained the overallscore and the goal 9. Let's first look at the model that explain the best the Overallscore variable:
