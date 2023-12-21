@@ -16,7 +16,8 @@ As one might expect, SDG adoption fosters increased partnerships over the goals 
 We had to delete several countries due to a high percentage of missing values, which means that some interesting countries are not analyzed for every research question. For example we removed Afghanistan and Somalia from the data used to analyze the different factors impacting the SDG scores. 
 
 In addition, we chose some variables as events and factors for our analysis based on our knowledge and ideas on what would have the most interesting impacts, but there are an infinity of possibilities. It is thus difficult to know if we focused on the most important variables to explain the different SDG scores across the world. 
-Finally, we encountered many cases of multicolinearity...
+
+Finally, following the regression analyses on our SDG score, we have been able to gain a comprehensive understanding of how different factors impact our SDG. However, due to the low explanatory power of some of the regression models probably cause by non significant relationship between the chosen independent variables and some goals Omitted variable bias or over-fitting, we must exercise caution when drawing any conclusions from these results.
 
 ## Future work
 
