@@ -199,339 +199,203 @@ These is our time-analysis concerning climatic disasters with total affected per
 We can see that the regions the most affected by the climate disasters are East Asia, North America and South Asia. We will concentrate more in this regions and that the regions the most affected by the climate disasters are East Asia, Latin America & the Caribbean and South Asia.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### Trend of Total Affected from Climatic Disasters Over Time graph ####
+
+#### Trend of Climatic Disasters Variables Over Time graph ####
+
+library(ggplot2)
+library(plotly)
 
 # Replace all missing values with 0
 Q3.1[is.na(Q3.1)] <- 0
 
-# Create the graph
-ggplot(data = Q3.1,
-       aes(x = year,
-           y = total_affected,
-           group = region,
-           color = region)) +
-  geom_smooth(method = "loess", 
-              se = FALSE,
-              span = 0.7,
-              size = 0.5) +
-  colors_pal +
-  labs(x = "Year",
-       y = "Total Affected") +
-  facet_wrap(~ region,
-             nrow = 5) +
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+# Create a combined ggplot
+combined_ggplot <- ggplot() +
+  geom_smooth(data = Q3.1, aes(x = year, y = total_affected, group = region, color = region),
+              method = "loess", se = FALSE, span = 0.7, size = 0.5) +
+  geom_smooth(data = Q3.1, aes(x = year, y = total_deaths, group = region, color = region),
+              method = "loess", se = FALSE, span = 0.7, size = 0.6) +
+  facet_wrap(~ region, nrow = 5, scales = "fixed") +
+  labs(x = "Year", y = "") +
+  theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
         strip.text = element_text(size = 8),
         panel.spacing = unit(0.5, "lines"),
         plot.title = element_text(hjust = 0.5),
-        legend.position = "none") +
-  ggtitle("Trend of Total Affected from Climatic Disasters Over Time")
-```
+        legend.position = "none")
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### Trend of Total Deaths from Climatic Disasters Over Time graph ####
+# Convert the ggplot to a Plotly object
+combined_plotly <- ggplotly(combined_ggplot, dynamicTicks = TRUE)
 
-ggplot(data = Q3.1,
-       aes(x = year,
-           y = total_deaths,
-           group = region,
-           color = region)) +
-  geom_smooth(method = "loess", 
-              se = FALSE,
-              span = 0.7,
-              size = 0.5) +
-  colors_pal +
-  labs(x = "Year",
-       y = "Total Deaths") +
-  facet_wrap(~ region,
-             nrow = 5) +
-  scale_y_continuous(labels = function(x) format(x,scientific = FALSE)) +
-  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
-        strip.text = element_text(size = 8),
-        panel.spacing = unit(0.5, "lines"),
-        plot.title = element_text(hjust = 0.5),
-        legend.position = "none") +
-  ggtitle("Trend of Total Deaths from Climatic Disasters Over Time")
+# Function to create a visibility vector
+make_visibility_vector <- function(total_traces, position) {
+  c(rep(position == 1, total_traces / 2),
+    rep(position == 2, total_traces / 2))
+}
+
+# Add interactive buttons to the Plotly layout
+combined_plotly <- combined_plotly %>%
+  layout(
+    title = "Trend of Total Affected and Deaths from Climatic Disasters Over Time",
+    updatemenus = list(
+      list(
+        type = "buttons",
+        direction = "down",
+        showactive = TRUE,
+        buttons = list(
+          list(method = "restyle",
+               args = list("visible", make_visibility_vector(length(combined_plotly$x$data), 1)),
+               label = "Total Affected"),
+          list(method = "restyle",
+               args = list("visible", make_visibility_vector(length(combined_plotly$x$data), 2)),
+               label = "Total Deaths")
+        )
+      )
+    ),
+    showlegend = FALSE
+  )
+
+# Display the interactive plot
+combined_plotly
+
+
 ```
 
 These is our time-analysis concerning the COVID-19 cases per million, the COVID-19 deaths per million and the COVID-19 stringency by region between end 2018 and 2022.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### Trend of COVID-19 Cases per Million Over Time graph ####
 
-# filter data for year >= 2018
+#### Trend of COVID-19 Variables Over Time graph ####
+
+library(ggplot2)
+library(plotly)
+
+# Assuming conflicts_filtered is already defined
 covid_filtered <- Q3.2[Q3.2$year >= 2018, ]
 
-# Create the plot
-ggplot(data = covid_filtered,
-       aes(x = year,
-           y = cases_per_million,
-           group = region,
-           color = region)) +
-  geom_smooth(method = "loess",
-              se = FALSE,
-              span = 0.8,
-              size = 0.6) +
-  colors_pal +
-  labs(x = "Year",
-       y = "Cases per Million") +
-  facet_wrap(~ region,
-             ncol = 3,
-             strip.position = "top") +
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
-  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
-        strip.text = element_text(size = 8),
-        plot.title = element_text(hjust = 0.5),
-        panel.spacing = unit(1, "lines"),
-        legend.position = "none") +
-  ggtitle("Trend of COVID-19 Cases per Million Over Time")
-```
-
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### Trend of COVID-19 Deaths per Million Over Time graph ####
-
-ggplot(data = covid_filtered,
-       aes(x = year,
-           y = deaths_per_million,
-           group = region,
-           color = region)) +
-  geom_smooth(method = "loess",
-              se = FALSE,
-              span = 0.8,
-              size = 0.6) +
-  colors_pal +
-  labs(x = "Year",
-       y = "Deaths per Million") +
-  facet_wrap(~ region,
-             nrow = 5,
-             strip.position = "top") +
-  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
+# Create a combined ggplot
+combined_ggplot <- ggplot() +
+  geom_smooth(data = covid_filtered, aes(x = year, y = cases_per_million, group = region, color = region),
+              method = "loess", se = FALSE, span = 0.3, size = 0.6) +
+  geom_smooth(data = covid_filtered, aes(x = year, y = deaths_per_million, group = region, color = region),
+              method = "loess", se = FALSE, span = 0.3, size = 0.6) +
+  geom_smooth(data = covid_filtered, aes(x = year, y = stringency, group = region, color = region),
+              method = "loess", se = FALSE, span = 0.3, size = 0.6) +
+  facet_wrap(~ region, nrow = 5) +
+  labs(x = "Year", y = "") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(hjust = 1),
         strip.text = element_text(size = 8),
         panel.spacing = unit(0.5, "lines"),
         plot.title = element_text(hjust = 0.5),
-        legend.position = "none") +
-  ggtitle("Trend of COVID-19 Deaths per Million Over Time")
+        legend.position = "none")
+
+# Convert the ggplot to a Plotly object
+combined_plotly <- ggplotly(combined_ggplot, dynamicTicks = TRUE)
+
+# Function to create a visibility vector
+make_visibility_vector <- function(total_traces, position) {
+  c(rep(position == 1, total_traces / 3),
+    rep(position == 2, total_traces / 3),
+    rep(position == 3, total_traces / 3))
+}
+
+# Add interactive buttons to the Plotly layout
+combined_plotly <- combined_plotly %>%
+  layout(
+    title = "Trend of COVID-19 Over Time",
+    updatemenus = list(
+      list(
+        type = "buttons",
+        direction = "down",
+        showactive = TRUE,
+        buttons = list(
+          list(method = "restyle",
+               args = list("visible", make_visibility_vector(length(combined_plotly$x$data), 1)),
+               label = "Cases per Million"),
+          list(method = "restyle",
+               args = list("visible", make_visibility_vector(length(combined_plotly$x$data), 2)),
+               label = "Deaths per Million"),
+          list(method = "restyle",
+               args = list("visible", make_visibility_vector(length(combined_plotly$x$data), 3)),
+               label = "Stringency")
+        )
+      )
+    ),
+    showlegend = FALSE
+  )
+
+# Display the interactive plot
+combined_plotly
 ```
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### Trend of COVID-19 Stringency Over Time graph ####
 
-ggplot(data = covid_filtered,
-       aes(x = year,
-           y = stringency,
-           group = region,
-           color = region)) +
-  geom_smooth(method = "loess",
-              se = FALSE,
-              span = 0.7,
-              size = 0.6) +
-  colors_pal +
-  labs(x = "Year",
-       y = "Stringency") +
-  facet_wrap(~ region,
-             nrow = 5) +
-  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
-        strip.text = element_text(size = 8),
-        panel.spacing = unit(0.5, "lines"),
-        plot.title = element_text(hjust = 0.5),
-        legend.position = "none") +
-  ggtitle("Trend of COVID-19 Stringency Over Time")
-```
+
 
 These is our time-analysis concerning conflicts deaths, conflicts affected population and maxintensity conflicts per region between 2000 and 2016
 
 We can see that the regions the most affected by the deaths are : Middle east and north Africa, Sub-Saharan Africa, South Asia, then very less America & the Caribbean and Eastern Europe. The regions the most affected by the affected population are : Middle east and north Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Caucasus and Central Asia. Finally, the regions having a maxintensity in conflicts are : Caucasus and Central Asia, Eastern Europe, Middle east and north Africa, Sub-Saharan Africa, North America, South Asia, East Asia just at one precise moment, Latin America & the Caribbean less.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### Trend of Conflicts Deaths Over Time graph ####
+#### Trend of Conflicts Variables Over Time graph ####
 
-# filter data for year over 2000 and lower than 2016
-conflicts_filtered <- Q3.3[Q3.3$year >= 2000 & Q3.3$year <= 2016, ]
-
-# Create the plot
-ggplot(data = conflicts_filtered,
-       aes(x = year,
-           y = sum_deaths,
-           group = region,
-           color = region)) +
-  geom_smooth(method = "loess",
-              se = FALSE,
-              span = 0.3,
-              size = 0.6) +
-  colors_pal +
-  labs(x = "Year",
-       y = "Sum 0f Deaths") +
-  facet_wrap(~ region,
-             nrow = 5) +
-  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
-        strip.text = element_text(size = 8),
-        panel.spacing = unit(0.5, "lines"),
-        plot.title = element_text(hjust = 0.5),
-        legend.position = "none") +
-  ggtitle("Trend of Deaths by Conflicts Over Time")
-```
-
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### Trend of Population Affected by Conflicts Over Time graph ####
-
-ggplot(data = conflicts_filtered,
-       aes(x = year,
-           y = pop_affected,
-           group = region,
-           color = region)) +
-  geom_smooth(method = "loess",
-              se = FALSE,
-              span = 0.3,
-              size = 0.6) +
-  colors_pal +
-  labs(x = "Year",
-       y = "Population affected") +
-  facet_wrap(~ region,
-             nrow = 5) +
-  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
-        strip.text = element_text(size = 8),
-        panel.spacing = unit(0.5, "lines"),
-        plot.title = element_text(hjust = 0.5),
-        legend.position = "none") +
-  ggtitle("Trend of Population Affected by Conflicts Over Time")
-```
-
-
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-#### Trend of Maxintensity by Conflicts Over Time graph ####
-
-ggplot(data = conflicts_filtered,
-       aes(x = year,
-           y = maxintensity,
-           group = region,
-           color = region)) +
-  geom_smooth(method = "loess",
-              se = FALSE,
-              span = 0.3,
-              size = 0.6) +
-  colors_pal +
-  labs(x = "Year",
-       y = "Maxintensity") +
-  facet_wrap(~ region,
-             nrow = 5) +
-  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
-        axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
-        strip.text = element_text(size = 8),
-        panel.spacing = unit(0.5, "lines"),
-        plot.title = element_text(hjust = 0.5),
-        legend.position = "none") +
-  ggtitle("Trend of Maxintensity by Conflicts Over Time")
-```
-
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-
-# Function to generate different plots based on the choice
-generate_plot <- function(choice, conflicts_filtered) {
-  if (choice == "Deaths by Conflicts") {
-    plot <- ggplot(data = conflicts_filtered,
-                   aes(x = year,
-                       y = sum_deaths,
-                       group = region,
-                       color = region)) +
-      geom_smooth(method = "loess",
-                  se = FALSE,
-                  span = 0.3,
-                  size = 0.6) +
-      labs(x = "Year",
-           y = "Sum of Deaths") +
-      facet_wrap(~ region,
-                 nrow = 5) +
-      theme_minimal() +
-      ggtitle("Trend of Deaths by Conflicts Over Time")
-  } else if (choice == "Population Affected") {
-    plot <- ggplot(data = conflicts_filtered,
-                   aes(x = year,
-                       y = pop_affected,
-                       group = region,
-                       color = region)) +
-      geom_smooth(method = "loess",
-                  se = FALSE,
-                  span = 0.3,
-                  size = 0.6) +
-      labs(x = "Year",
-           y = "Population Affected") +
-      facet_wrap(~ region,
-                 nrow = 5) +
-      theme_minimal() +
-      ggtitle("Trend of Population Affected by Conflicts Over Time")
-  } else if (choice == "Maxintensity") {
-    plot <- ggplot(data = conflicts_filtered,
-                   aes(x = year,
-                       y = maxintensity,
-                       group = region,
-                       color = region)) +
-      geom_smooth(method = "loess",
-                  se = FALSE,
-                  span = 0.3,
-                  size = 0.6) +
-      labs(x = "Year",
-           y = "Maxintensity") +
-      facet_wrap(~ region,
-                 nrow = 5) +
-      theme_minimal() +
-      ggtitle("Trend of Maxintensity by Conflicts Over Time")
-  } else {
-    plot <- ggplot() + ggtitle("No valid choice made")
-  }
-  return(plot)}
+library(ggplot2)
+library(plotly)
 
 conflicts_filtered <- Q3.3[Q3.3$year >= 2000 & Q3.3$year <= 2016, ]
 
+combined_ggplot <- ggplot() +
+  geom_smooth(data = conflicts_filtered, aes(x = year, y = sum_deaths, group = region, color = region),
+              method = "loess", se = FALSE, span = 0.3, size = 0.6) +
+  geom_smooth(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region, color = region),
+              method = "loess", se = FALSE, span = 0.3, size = 0.6) +
+  geom_smooth(data = conflicts_filtered, aes(x = year, y = maxintensity, group = region, color = region),
+              method = "loess", se = FALSE, span = 0.3, size = 0.6) +
+  facet_wrap(~ region, nrow = 5) +
+  labs(x = "Year", y = "") + 
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(hjust = 1),
+        strip.text = element_text(size = 8),
+        panel.spacing = unit(0.5, "lines"),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none")
 
-# Create initial plot
-initial_choice <- "Deaths by Conflicts"
-initial_plot <- generate_plot(initial_choice, conflicts_filtered)
+combined_plotly <- ggplotly(combined_ggplot, dynamicTicks = TRUE)
 
-# Convert the ggplot to a plotly object
-initial_plotly <- ggplotly(initial_plot)
+make_visibility_vector <- function(total_traces, position) {
+  c(rep(position == 1, total_traces / 3),
+    rep(position == 2, total_traces / 3),
+    rep(position == 3, total_traces / 3))
+}
 
-num_regions <- length(unique(conflicts_filtered$region))
+combined_plotly <- combined_plotly %>%
+  layout(
+    title = "Trend of Conflicts Over Time",
+    updatemenus = list(
+      list(
+        type = "buttons",
+        direction = "down",
+        showactive = TRUE,
+        buttons = list(
+          list(method = "restyle",
+               args = list("visible", make_visibility_vector(length(combined_plotly$x$data), 1)),
+               label = "Deaths by Conflicts"),
+          list(method = "restyle",
+               args = list("visible", make_visibility_vector(length(combined_plotly$x$data), 2)),
+               label = "Population Affected"),
+          list(method = "restyle",
+               args = list("visible", make_visibility_vector(length(combined_plotly$x$data), 3)),
+               label = "Maxintensity")
+        )
+      )
+    ),
+    showlegend = FALSE
+  )
 
-# Create a function to generate visibility lists
-make_visibility_vector <- function(position) {
-  c(rep(FALSE, num_regions * (position - 1)), 
-    rep(TRUE, num_regions), 
-    rep(FALSE, num_regions * (3 - position)))}
+combined_plotly
 
-# Modify the layout
-initial_plotly <- layout(initial_plotly,
-                         showlegend = FALSE,
-                         updatemenus = list(
-                           list(
-                             buttons = list(
-                               list(method = "restyle",
-                                    args = list("visible", make_visibility_vector(1)),
-                                    label = "Deaths by Conflicts"),
-                               list(method = "restyle",
-                                    args = list("visible", make_visibility_vector(2)),
-                                    label = "Population Affected"),
-                               list(method = "restyle",
-                                    args = list("visible", make_visibility_vector(3)),
-                                    label = "Maxintensity")
-                             ),
-                             direction = "down",
-                             showactive = TRUE
-                           )
-                         )
-)
-
-# Hide the Modebar
-initial_plotly <- initial_plotly %>% config(displayModeBar = FALSE)
-
-# Show the graphs
-initial_plotly
 ```
 
 Now that we could visualize which regions are the most impacted by these three events we can do correlations analysis per region to see if this events have indeed an impact on the evolution of SDG goals.
