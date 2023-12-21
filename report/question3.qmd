@@ -1217,16 +1217,9 @@ library(ggplot2)
 
 disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
 
-<<<<<<< HEAD
 # Define the relevant columns
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "total_affected", "total_deaths")
-=======
-relevant_columns <-
-  c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8",
-    "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16",
-    "total_affected", "total_deaths")
 
->>>>>>> 9be45b774657ecca6795f220dfc0530dd183c7ad
 subset_data <- disaster_data[, relevant_columns]
 
 goal_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6",
@@ -1321,6 +1314,7 @@ subplot(subplot_plots, nrows = length(subplot_plots), margin = 0.05)
 
 
 ```
+
 Most relationships between the goals and the variables ('total_affected' and 'total_deaths') are not statistically significant (indicated by p-values \> 0.05). More specifically, in several models, the coefficients for 'total_affected' and 'total_deaths' are small, indicating weak or negligible relationships with the respective goals. Some models have marginally significant p-values (close to 0.05) but still lack statistical significance. Goals 7, 8, 10, 13, 14, and 15 exhibit statistically significant relationships with 'total_affected,' indicating small to moderate positive relationships. Goals 7 and 8 also show statistically significant relationships with 'total_deaths,' indicating moderate negative relationships.
 
 These findings suggest that, in most cases, the relationships between the specified goals and Climate disasters variables (total affected and total deaths) are not statistically significant. However, some goals do indicate small to moderate associations with these variables.
