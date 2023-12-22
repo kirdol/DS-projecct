@@ -467,20 +467,6 @@ variable_names <- colnames(D1_0_SDG)
 prop_missing_data <- data.frame(variable = variable_names,
                                 prop_missing = propmissing)
 
-# Define a function to assign colors based on missing percentages
-get_fill_color <- function(prop_missing) {
-  if (prop_missing >= 0 && prop_missing < 0.1) {
-    return(MPer_0_10)
-  } else if (prop_missing >= 0.1 && prop_missing < 0.2) {
-    return(MPer_10_20)
-  } else if (prop_missing >= 0.2 && prop_missing < 0.3) {
-    return(MPer_20_30)
-  } else {
-    return(MPer_30_100)}}
-
-# Apply the function to create a new column for colors
-prop_missing_data$fill_color <- sapply(prop_missing_data$prop_missing, get_fill_color)
-
 # Preparation of the graph labels
 prop_missing_data$hover_text <-
   paste("Variable: ",
@@ -493,9 +479,9 @@ prop_missing_data$hover_text <-
 gg_prop_missing <- ggplot(prop_missing_data,
                           aes(x = reorder(variable, prop_missing),
                               y = prop_missing,
-                              fill = fill_color,
                               text = hover_text)) +
-  geom_bar(stat = "identity") +
+  geom_bar(stat = "identity",
+           fill = Fix_color) +
   scale_fill_identity() +
   labs(title = "NAs by columns in the main dataset",
        x = "Variable",
@@ -1600,20 +1586,6 @@ missing_data_summary <- data.frame(
 missing_data_summary <- missing_data_summary %>%
   mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))
 
-# Define a function to assign colors based on missing percentages
-get_fill_color <- function(missing_percentage) {
-  if (missing_percentage >= 0 && missing_percentage < 10) {
-    return(MPer_0_10)
-  } else if (missing_percentage >= 10 && missing_percentage < 20) {
-    return(MPer_10_20)
-  } else if (missing_percentage >= 20 && missing_percentage < 30) {
-    return(MPer_20_30)
-  } else {
-    return(MPer_30_100)}}
-
-# Apply the function to create a new column for colors
-missing_data_summary$fill_color <- sapply(missing_data_summary$Missing_Percentage, get_fill_color)
-
 # Add a column with the number of missing values for the hover function
 missing_data_summary$hover_text <- paste("Variable: ",
                                          missing_data_summary$Variable,
@@ -1624,10 +1596,9 @@ missing_data_summary$hover_text <- paste("Variable: ",
 p <- ggplot(data = missing_data_summary,
             aes(x = reorder(VariableGroup, Missing_Percentage),
                 y = Missing_Percentage,
-                fill = fill_color,
                 text = hover_text)) +
-  geom_bar(stat = "identity") +
-  scale_fill_manual(values = unique(missing_data_summary$fill_color)) +
+  geom_bar(stat = "identity",
+           fill = Fix_color) +
   labs(title = "Percentage of Missing Values by Variable",
        x = "Variable",
        y = "Missing Percentage") +
@@ -2310,29 +2281,13 @@ missing_data_summary$hover_text <- paste("Variable: ",
                                          "%",
                                          sep = "")
 
-# Assign colors to each variable given their proportion of missing values
-get_fill_color <- function(Missing_Percentage) {
-  if (Missing_Percentage >= 0 && Missing_Percentage < 10) {
-    return(MPer_0_10)
-  } else if (Missing_Percentage >= 10 && Missing_Percentage < 20) {
-    return(MPer_10_20)
-  } else if (Missing_Percentage >= 20 && Missing_Percentage < 30) {
-    return(MPer_20_30)
-  } else {
-    return(MPer_30_100)}}
-
-# Apply the functions to our data
-missing_data_summary$fill_color <- sapply(missing_data_summary$Missing_Percentage, get_fill_color)
-
 # Creation of the plot
 p <- ggplot(missing_data_summary,
             aes(x = reorder(VariableGroup, Missing_Percentage),
                 y = Missing_Percentage,
-                fill = fill_color,
                 text = hover_text)) +
-  geom_bar(stat = "identity") +
-  scale_fill_manual(name = "hello0",
-                    values = unique(missing_data_summary$fill_color)) +
+  geom_bar(stat = "identity",
+           fill = Fix_color) +
   labs(title = "Proportion of missing values per variable",
        x = "Variable",
        y = "Proportion of missing values") +
@@ -2340,7 +2295,8 @@ p <- ggplot(missing_data_summary,
   theme(axis.text.y = element_text(hjust = 1),
         plot.title = element_text(hjust = 0.5)) +
   guides(fill = FALSE) +
-  coord_flip()
+  coord_flip() +
+  guides(fill = FALSE)
 
 # convert the gg plot into a plotly graph
 p_plotly <- ggplotly(p,
@@ -2353,7 +2309,7 @@ p_plotly
 
 In this particular case, even if there are many missing values in our disaster dataset, we made the hypothesis that disaster events can not happen every year for every country given that these are uncontrollable and non-recurring events. Therefore the NAs that we encounter will become zeroes, implying that there have been no climatic disasters.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 #### Replacing NAs by 0 ####
 
 data_question3_1[is.na(data_question3_1)] <- 0
