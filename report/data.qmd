@@ -9,7 +9,7 @@ source(here::here("scripts","Clean","setup.R"))
 
 ## Sources
 
-We are collecting our Data from the sustainability development report (SDG), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn't find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next section. Utilizing the `kableExtra` package, we provide a comprehensive list and corresponding links to our sources, as outlined below:
+We are collecting our Data from the sustainability development report (UN), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn't find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next section. Utilizing the `kableExtra` package, we provide a comprehensive list and corresponding links to our sources, as outlined below:
 
 ```{r}
 #### Source Table ####
@@ -51,7 +51,7 @@ source_info %>%
 
 ## Description
 
-During the wrangling process, we added data to our table (D1_1_SDG) from different other datasets and match them based on the country code, and the year. The tables below show all the variables present in our 9 databases. We will then merge them to have our final table for the analysis.
+During the wrangling process, we pre-cleaned the different datasets and then merged them with our main table (D1_1_SDG) matching them based on the country code, and the year. The tables below show all the variables present in our 9 databases. We will then merge them to have our final table for the analysis.
 
 ### Our databases
 
@@ -439,10 +439,8 @@ makenumSDG <- function(D1_0_SDG) {
   for (i in 1:17) {
     varname <- paste("goal", i, sep = "")
     D1_0_SDG[[varname]] <-
-      as.double(gsub(",", ".", D1_0_SDG[[varname]]))
-  }
-  return(D1_0_SDG)
-}
+      as.double(gsub(",", ".", D1_0_SDG[[varname]]))}
+  return(D1_0_SDG)}
 
 # Applying the function to the 1_0_SDG dataset
 D1_0_SDG <- makenumSDG(D1_0_SDG)
@@ -450,69 +448,96 @@ D1_0_SDG <- makenumSDG(D1_0_SDG)
 
 We proceed by examining the missing values.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=3.5}
-#### D1_0_SDG missing values ####
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 1.5}
+#### D1_0_SDG missing values preparation and the graph ####
 
+# Creation of an empty vector with the same length as our dataset
 propmissing <- numeric(length(D1_0_SDG))
 
+# For loop to get the proportion of missing values in each columns
 for (i in 1:length(D1_0_SDG)){
   proportion <- mean(is.na(D1_0_SDG[[i]]))
-  propmissing[i] <- proportion
-}
-variable_names <- colnames(D1_0_SDG)
- 
-prop_missing_data <- data.frame(variable = variable_names, prop_missing = propmissing)
+  propmissing[i] <- proportion}
 
-ggplot(prop_missing_data,
-       aes(x = variable,
-           y = prop_missing)) +
-   geom_bar(stat = "identity",
-            fill = Fix_color,
-            aes(fill = prop_missing),
-            color = "black") +
-   labs(title = "NAs by columns in the main dataset",
-        x = "Variable",
-        y = "Proportion of Missing Values") +
-   theme(plot.title = element_text(size = 10, hjust = 0.5),
-         axis.title.x = element_text(size = 8),
-         axis.title.y = element_text(size = 8)) +
-   theme_minimal() +
+# Vector containing all columns names of our dataset
+variable_names <- colnames(D1_0_SDG)
+
+# prepare our data for plotting
+prop_missing_data <- data.frame(variable = variable_names,
+                                prop_missing = propmissing)
+
+# Preparation of the graph labels
+prop_missing_data$hover_text <-
+  paste("Variable: ",
+        prop_missing_data$variable,
+        "\nMissing percentage: ",
+        round((prop_missing_data$prop_missing)*100, 2),
+        "%", sep = "")
+
+# Creation of the plot to see the proportion of missing values per column
+gg_prop_missing <- ggplot(prop_missing_data,
+                          aes(x = variable,
+                              y = prop_missing,
+                              text = hover_text)) +
+  geom_bar(stat = "identity",
+           fill = Fix_color,
+           aes(fill = prop_missing),
+           color = "black") +
+  labs(title = "NAs by columns in the main dataset",
+       x = "Variable",
+       y = "Proportion of Missing Values") +
+  theme(plot.title = element_text(size = 10, hjust = 0.5),
+        axis.title.x = element_text(size = 8),
+        axis.title.y = element_text(size = 8)) +
+  theme_minimal() +
   coord_flip() +
   guides(fill = FALSE)
+
+# Convert ggplot object to plotly and remove the Modebar
+plotly_prop_missing <- ggplotly(gg_prop_missing,
+                                tooltip = "text") %>%
+  config(displayModeBar = FALSE)
+
+# Print the plotly object
+plotly_prop_missing
 ```
 
-Observing that the 'population' column contains numerous NAs, we investigate and discover that missing values are common, as some observations represent regions, not countries. Therefore, we can safely exclude these observations.
+Observing that the 'population' column contains numerous NAs, we investigate and discover that missing values are common. This come from observations representing regions and not countries. Therefore, we can safely exclude these observations.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=2.5}
 #### D1_0_SDG missing values in population ####
 
+# Find the missing proportion of the population varibales across the regions
 SDG0 <- D1_0_SDG %>%
   group_by(code) %>%
   select(population) %>%
   summarize(NaPop = mean(is.na(population))) %>%
   filter(NaPop != 0)
 
+# plot the graph
 ggplot(SDG0,
        aes(x = code,
            y = NaPop)) +
   geom_bar(stat = "identity",
            fill = Fix_color,
            color = "black") +
-  labs(title = "NAs by row in population variable are for regions and not countries",
-       x = "Code",
+  labs(title = "Proportion of population information missing in the region observations",
+       x = "Region code",
        y = "Proportion of NAs") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45,
                                    hjust = 1),
-        plot.title = element_text(hjust = 0.5))
+        plot.title = element_text(hjust = 0.5,
+                                  size = 10))
 
+# Remove the lines where the 'code' start with an "_" (the region)
 D1_0_SDG <- D1_0_SDG %>%
   filter(!str_detect(code, "^_"))
 ```
 
-Now, there are no missing values in the 'population' variable, and we observe that it contains information on `r length(unique(D1_0_SDG$country))` countries.
+Now that we have eliminated all missing values in the 'population' variable, we observe that our dataframe contains information on `r length(unique(D1_0_SDG$country))` countries.
 
-We notice that NAs are present in only three SDG scores: 1, 10, and 14. Additionally, when a country has NAs, they occur across all years or not at all. Consequently, we decide to conduct further investigations on these three SDG scores to determine whether to include them in our analysis.
+We now move to analysing the missing values for the SDGs and we find that NAs are only present in three SDG scores: 1, 10, and 14. Additionally, when a country has NAs, they occur across all years or not at all. Consequently, we decide to conduct further investigations on these three SDG scores to determine whether to include them in our analysis.
 
 For goal 1, there are only 9.04% missing values in 15 different countries. Goal 1 being "End poverty", we decide to keep it and only remove the countries with no information for the analysis.
 
