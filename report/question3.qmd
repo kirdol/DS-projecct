@@ -32,8 +32,7 @@ shapiro_results <- data.frame(
 
 print(shapiro_results)
 ```
-
-The value of W are very close to zero (W = 0.06 and W=0.03) for the disasters variables, this suggests that the data diverge considerably from a normal distribution.
+The test statistic in the Shapiro-Wilk test is denoted as "W_value." It is a numerical value that summarizes how well the data fits a normal distribution. The value of W suggest whether there is a significant deviation from normality (if low value) or not (if high value). Here they are very close to zero (W = 0.06 and W=0.03) for the disasters variables, this suggests that the data diverge considerably from a normal distribution.
 
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 
@@ -73,7 +72,7 @@ print(shapiro_results_3)
 ```
 The value of W are close to zero (W = 0.433, W= 0.137, W= 0.327, W= 0.288 and W=0.453) for the conflicts variables, this suggests that the data concerning conflicts diverge from a normal distribution.
 
-To sum this results, it means that for further analysis between these events and the SDG goals we will use other methods, such as Spearman's rank correlation.
+To sum this results, it means that for further analysis between these events and the SDG scores we will use other methods, such as Spearman's rank correlation.
 
 In order to have an overview of the relationship between the different events variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
 
@@ -364,11 +363,11 @@ combined_plotly <- combined_plotly %>%
 combined_plotly
 ```
 
-Now that we could visualize which regions are the most impacted by these three events we can do correlations analysis per region to see if these events have indeed an impact on the evolution of SDG goals.
+Now that we could visualize which regions are the most impacted by these three events we can do correlations analysis per region to see if these events have indeed an impact on the evolution of SDG scores.
 
 ### Focus on the correlation between the SDG scores and the different events.
 
-Here you can see an extract containing all the variables that we find important to keep and each SDG goal of:
+Here you can see an extract containing all the variables that we find important to keep and each SDG score of:
 
 \- Our correlation map between climate disasters and SDG scores in South and East Asia and North America as it was the regions that where the most impacted. We conclude that climate disasters do not really have a big impact on SDG scores per region.
 
@@ -381,7 +380,7 @@ Here you can see an extract containing all the variables that we find important 
 \- Our correlation map between the regions having a maxintensity in conflicts and the SDG scores only for Caucasus & Central Asia, Eastern Europe, Middle east & north Africa, Sub-Saharan Africa, North America, South Asia, East Asia, Latin America & the Caribbean.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.5}
-#### Correlation between the climate disasters and the SDG goals in South and East Asia and North America heatmap ####
+#### Correlation between the climate disasters and the SDG scores in South and East Asia and North America heatmap ####
 
 disaster_data <-
   Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
@@ -417,10 +416,10 @@ ggplot(data = cor_melted,
   coord_fixed() +
   labs(x = '',
        y = '',
-       title = 'Correlation between the climate disasters and the SDG goals\nin South and East Asia and North America')
+       title = 'Correlation between the climate disasters and the SDG scores\nin South and East Asia and North America')
 
 
-#### Correlation between COVID and the SDG goals heatmap ####
+#### Correlation between COVID and the SDG scores heatmap ####
 
 covid_filtered <- Q3.2
 relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6",
@@ -459,10 +458,10 @@ ggplot(data = cor_melted,
   coord_fixed() +
   labs(x = '',
        y = '',
-       title = 'Correlation between COVID and the SDG goals')
+       title = 'Correlation between COVID and the SDG scores')
 
 
-#### Correlation between Conflicts Deaths and the SDG goals heatmap ####
+#### Correlation between Conflicts Deaths and the SDG scores heatmap ####
 
 conflicts_filtered <-
   Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa",
@@ -500,10 +499,10 @@ ggplot(data = cor_melted,
   coord_fixed(ratio = 1) +
   labs(x = '',
        y = 'Deaths',
-       title = 'Correlation between Conflicts Deaths and the SDG goals')
+       title = 'Correlation between Conflicts Deaths and the SDG scores')
 
 
-#### Correlation between Conflicts Affected Population and the SDG goals ####
+#### Correlation between Conflicts Affected Population and the SDG scores ####
 
 conflicts_filtered <-
   Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa",
@@ -543,10 +542,10 @@ ggplot(data = cor_melted,
 coord_fixed(ratio = 1) +
   labs(x = '',
        y = 'Affected Population',
-       title = 'Correlation between Conflicts Affected Population and the SDG goals')
+       title = 'Correlation between Conflicts Affected Population and the SDG scores')
 
 
-#### Correlation between Maxintensity in Conflicts and the SDG goals ####
+#### Correlation between Maxintensity in Conflicts and the SDG scores ####
 
 conflicts_filtered <-
   Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa",
@@ -587,7 +586,7 @@ ggplot(data = cor_melted,
   coord_fixed(ratio = 1) +
   labs(x = '',
        y = 'Maxintensity',
-       title = 'Correlation between Maxintensity in Conflicts and the SDG goals')
+       title = 'Correlation between Maxintensity in Conflicts and the SDG scores')
 ```
 
 After looking at almost the same results, we asked ourselves if the fact that we do not see any correlations is because the consequences of this disasters arrive later on, so we decided to remake the same correlations with 1 year gap.
@@ -597,7 +596,7 @@ After looking at almost the same results, we asked ourselves if the fact that we
 Here you can see for example our correlation map between the climate disasters and the SDG scores in South and East Asia and North America with one year gap.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, fig.height = 2.5}
-#### Correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap ####
+#### Correlation between the climate disasters and the SDG scores in South and East Asia with 1 year gap ####
 
 disaster_data <-
   Q3.1[Q3.1$region %in% c("South Asia", "East Asia", " North America"), ]
@@ -644,14 +643,14 @@ ggplot(data = cor_melted_lagged,
   coord_fixed() +
   labs(x = '',
        y = '',
-       title = 'Correlation between the climate disasters \nand the SDG goals in South and East Asia with 1 year gap')
+       title = 'Correlation between the climate disasters \nand the SDG scores in South and East Asia with 1 year gap')
 ```
 
 Even with a year gap it does not seem that climate disasters with such consequences as the population that gets affected and dies has an impact on the SDG scores as we would have thought. But we are still a little bit optimistic and thought why not look at the correlations with a gap year over the years.
 
 ### Interactive map of the correlation between the different events and the SDG scores with 1 year gap.
 
-Here you can see an extract of our interactive map of the correlation between the climate disasters and the SDG goals in South, East Asia and North America with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019). Unfortunately, our shiny app is not supported in static R Markdown documents. For more details you can see our interactive maps in the "See Interactive" folder, our document is called "Interactive_Matrix_Plots".
+Here you can see an extract of our interactive map of the correlation between the climate disasters and the SDG scores in South, East Asia and North America with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019). Unfortunately, our shiny app is not supported in static R Markdown documents. For more details you can see our interactive maps in the "See Interactive" folder, our document is called "Interactive_Matrix_Plots".
 
 ![Extract of the correlation between the climate disasters and the SDG scores with 1 year gap](Q3_Climate_Dis_year_gap.png)
 
@@ -728,15 +727,15 @@ plot_2022
 
 Finally, you can see an extract of our interactive map of the correlation between the 3 different variables of the Conflict dataset and the SDG scores with 1 year gap. Once again, you can look for more details to our document containing our interactive correlation matrices.
 
-![Extract of the correlation between the conflicts deaths and the SDG goals with 1 year gap](Q3_Conflicts_Deaths_year_gap.png)
+![Extract of the correlation between the conflicts deaths and the SDG scores with 1 year gap](Q3_Conflicts_Deaths_year_gap.png)
 
 Here is the extract of our interactive map of the correlation between the affected population in conflicts and the SDG scores with 1 year gap.
 
-![Extract of the correlation between the conflicts affected and the SDG goals with 1 year gap](Q3_Conflicts_Affected_year_gap.png)
+![Extract of the correlation between the conflicts affected and the SDG scores with 1 year gap](Q3_Conflicts_Affected_year_gap.png)
 
 Here is the extract of our interactive map of the correlation between the Maxintensity in conflicts and the SDG scores with 1 year gap.
 
-![Extract of the correlation between the conflicts maxintensity and the SDG goals with 1 year gap](Q3_Conflicts_Maxintensity_year_gap.png)The results seems logical, because if the SDG scores continue to go higher and the conflicts remains the same or finishes we get a negative correlation.
+![Extract of the correlation between the conflicts maxintensity and the SDG scores with 1 year gap](Q3_Conflicts_Maxintensity_year_gap.png)The results seems logical, because if the SDG scores continue to go higher and the conflicts remains the same or finishes we get a negative correlation.
 
 Our last idea is to make regressions between the SDG scores and the variables of each event that we thought interesting.
 
