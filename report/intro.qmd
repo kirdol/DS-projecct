@@ -22,7 +22,7 @@ The impact of different events on SDGs have been studied. For example, Shulla et
 
 1.  **Focus on factors**: What can explain the state of the countries regarding their sustainable development?
 
-We will analyse different factors: scores from the Human Freedom Index, GDP per capita, military expenditures in % of GDP/government expenditure, unemployment rate, internet usage. You will find more precise informations about our chosen factors in data description section.
+We will analyse different factors: scores from the Human Freedom Index, GDP per capita, military expenditures in percentage of GDP, unemployment rate, internet usage. You will find more precise informations about our chosen factors in data description section.
 
 2.  **Focus on relationship between SDGs**: How are the different SDGs linked?
 

@@ -2,6 +2,11 @@
 
 ## Focus on the influence of the factors over the SDG scores
 
+  **Focus on factors**: What can explain the state of the countries regarding their sustainable development?
+
+We will analyse different factors: scores from the Human Freedom Index, GDP per capita, military expenditures in percentage of GDP, unemployment rate, internet usage. You will find more precise informations about our chosen factors in data description section.
+
+
 ```{r setup, echo = FALSE, message = FALSE, warning=FALSE}
 #### Initial setup ####
 
@@ -406,7 +411,7 @@ medians_all_HFI <- rbind(data_Q1_Oceania_HFI_long,
 
 # Assing a color to each median value
 medians_all_HFI$color <- ifelse(medians_all_HFI$median_value > 7.5, "1", 
-                        ifelse(medians_all_HFI$median_value < 2.5, "2", '3'))
+                        ifelse(medians_all_HFI$median_value < 2.5, "3", "2"))
 
 bandwidth_nrd_HFI <- bw.nrd(medians_all_HFI$value)
 

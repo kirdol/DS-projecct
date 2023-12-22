@@ -9,7 +9,10 @@ data_4 <- read.csv(here("scripts", "data", "data_question24.csv"))
 ```
 
 ## Focus on the relationships among the SDGs
-**How are the different SDGs linked? (We want to see if some SDGs are linked in the fact that a high score on one implies a high score on the other, and thus if we can make groups of SDGs that are comparable in that way).**
+
+**Focus on relationship between SDGs**: How are the different SDGs linked?
+
+We aim to determine whether certain Sustainable Development Goals (SDGs) are interconnected, such that a high score in one SDG might imply a high score in another, and if we can make groups of SDGs that are comparable in that way.
 
 ### EDA: General visualization of the SDGs
 
