@@ -532,9 +532,9 @@ ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
        title = 'Correlations Heatmap between goals and our other variables')
 ```
 
-The numbers are representing the significant p-values between our variables. Here, we only displayed the correlations bigger than `r threshold_heatmap`, in absolut values. The uncolored parts are the non significant p-values.
+For vizualization purpose, we have decided to only display the correlations bigger than `r threshold_heatmap` in absolute values. The uncolored parts are the non significant p-values.
 
-GDP per capita, internet_usage, pf_law or ef_legal are strongly correlated with most of our SDG. This is mostly due to the large scope englobed in these variables. That makes them influence various sectors of our economies and thus, mostly impacting all our SDG goals. Therefore, we can think that these variables have a strong impact on the scores. Nevertheless, as correlation doesn't mean causality, we still cannot jump to conclusions.
+Firstly, we can see that most of our correlations between our variables are significant. Also, GDP per capita, internet_usage, pf_law or ef_legal are strongly correlated with most of our SDG. This is mostly due to the large scope englobed in these variables. That makes them influence various sectors of our economies and thus, mostly impacting all our SDG goals. Therefore, we can think that these variables have a strong impact on the scores. Nevertheless, as correlation doesn't mean causality, we still cannot jump to conclusions.
 
 As we can see, our goals 12 & 13 (responsible consumption & production and climate action) are negatively correlated with most of our variables, as is the economic freedom government variable to our SDG. Nevertheless, goals 12 & 13 and ef_government are positively correlated together.
 
@@ -614,119 +614,9 @@ By looking at the biplot, we notice that only some variables are not following t
 
 As we can see, the presence of "GDPpercapita," "Internet_usage," and "ef_money" close to the X axis suggests that Dim1 may be associated with overall economic development and prosperity, as well as the freedoms that are typically associated with more developed economies, such as freedom of expression ("pf_expression"), movement ("pf_movement"), and assembly ("pf_assembly"). Now concerning Dim2, it could be contrasting socio-economic stability with factors that often increase with instability or conflict, such as higher military expenditure or unemployment rates.
 
-Let's try now to conduct a cluster analysis, using the Kmean method.
+While considering our regressions, we have noticed that we had high multicollinearity between several dependent variables in our models, by conducting a VIF test. This is due to the numerous variables that we tried to take into account while computing our regressions. Therefore, we have decided to use the stepwise regression with the forward method and choose the model according to the adjusted R squared. 
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-data_kmean_country <- data_question1 %>%
-  dplyr::select(-c(X,code,year,continent,region, population))
-
-#filter data different than 0 and dropping observations equal to 0
-filtered_data <- data_kmean_country %>%
-  group_by(country) %>%
-  filter_if(is.numeric, all_vars(sd(.) != 0)) %>%
-  ungroup()
-
-scale_by_country <- filtered_data %>% #scale data
-  group_by(country) %>% 
-  summarise_all(~ scale(.))
-
-means_by_country <- scale_by_country %>% #mean by country
-  group_by(country) %>%
-  summarise_all(~ mean(., na.rm = TRUE))
-
-rownames(means_by_country) <- seq_along(row.names(means_by_country))
-
-# Your existing elbow plot
-elbow_plot <- fviz_nbclust(means_by_country[,-1],
-                           kmeans,
-                           method="wss",
-                           linecolor = viridis(1,
-                                               begin = 0.5))
-
-# Add a vertical line at the elbow point (4 clusters)
-elbow_plot_with_line <- elbow_plot + 
-  geom_vline(xintercept=4,
-             linetype="dashed",
-             color = viridis(1,
-                             option = "B",
-                             begin = 0.5))
-
-print(elbow_plot_with_line)
-```
-
-After adapting the data for conducting our cluster analysis, we can see that according the the elbow method that we would only need 4 clusters in our analysis.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-kmean <- kmeans(means_by_country[,-1],
-                4,
-                nstart = 25)
-
-fviz_cluster(kmean,
-             data = means_by_country[,-1],
-             repel=FALSE,
-             depth =NULL,
-             ellipse.type = "norm",
-             labelsize = 10,
-             pointsize = 0.5)
-```
-
-Our cluster analysis gives us one principal cluster (here in purple) --\> CENTERED ON 0 BECAUSE AFTER DATA SCALED-\> REALLY SMALL VALUES --\> HOW TO DEAL WITH IT? I TRIED TO TAKE ONLY HFI INTO ACCOUNT BUT NOT WORKING NEITHER. STILL CENTERED ON 0.
-
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
-# matrix_means <- as.matrix(means_by_country)
-# 
-# # Transpose the matrix
-# transposed_means <- t(matrix_means)
-# 
-# # Convert back to a data frame, setting the row names (goals) as a column
-# transposed_means_df <- as.data.frame(transposed_means, row.names = NULL)
-# 
-# # Rename the first column to 'Goals' (assuming the goals are the row names in your original data)
-# colnames(transposed_means_df)[1] <- 'Goals'
-# 
-# transposed_means_df <- transposed_means_df[3:18,]
-# 
-# # If the column is a simple list, unlist and convert to numeric
-# numeric_vector <- as.numeric(unlist(transposed_means_df))
-# 
-# # If the list is more complex, use sapply to convert each element
-# numeric_vector <- sapply(transposed_means_df, function(x) as.numeric(x[[1]]))
-# 
-# # If the entire dataframe is a list of lists, convert each element
-# data_kmean_country <- lapply(transposed_means_df, function(x) as.numeric(unlist(x)))
-# 
-# 
-# # Your existing elbow plot
-# elbow_plot <- fviz_nbclust(transposed_means_df,
-#                            kmeans,
-#                            method="wss",
-#                            linecolor = viridis(1,
-#                                                begin = 0.5))
-# 
-# # Add a vertical line at the elbow point (4 clusters)
-# elbow_plot_with_line <- elbow_plot + 
-#   geom_vline(xintercept=4,
-#              linetype="dashed",
-#              color = viridis(1,
-#                              option = "B",
-#                              begin = 0.5))
-# 
-# kmean <- kmeans(transposed_means_df,
-#                 4,
-#                 nstart = 25)
-# 
-# fviz_cluster(kmean,
-#              data = transposed_means_df,
-#              repel=FALSE,
-#              depth =NULL,
-#              ellipse.type = "norm",
-#              labelsize = 10,
-#              pointsize = 0.5)
-```
-
-While considering our regressions, we have noticed that we had high multicolinearity between several dependent variables in our models, by conducting a VIF test. This is due to the numerous variables that we tried to take into account while computing our regressions. Therefore, we have decided to use the stepwise regression with the forward method and choose the model according to the adjusted R squared. 
-
-Let's find the best model for each goal that does not involve severe multicollinearity (VIF > 5) and that has a variance well explained by our independent variable (an adjusted Rsquared over 0.7). Here are for example the selected models for the goals 12 and 17.
+Let's find the best model for each goal that does not involve severe multicollinearity (VIF > 5) and that has a variance well explained by our independent variable (an adjusted R squared over 0.7). Here are for example the selected models for the goals 12 and 17.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE,fig.show='hide'}
 reg_goal1 <-
