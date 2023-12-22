@@ -60,7 +60,7 @@ ggplot(long_df_goal_distribution,
        title = 'SDG Scores Distribution')
 ```
 
-As we can see, most of our goals have a left-skewed distribution, which shows that for most of the country concerned implemented good strategies for targeting the goals objectives. Some distributions have a longer distribution than other, showing the variance of the scores between the countries, due to various reasons such as the inequality of the amount of money available to be invested for implementing solutions. In addition, we notice that the only right-skewed distribution is concerning the observations of the goal 9, which is promoting infrastructures, innovation and inclusive and sustainable industrialization.Therefore, it seems like many countries are encountering difficulties for implementing good solutions concerning this goal. Furthermore, we notice that the goal1 has the highest density, which means that for this SDG,most of the countries received the same scores. 
+As we can see, most of our goals have a left-skewed distribution, which shows that for most of the country concerned implemented good strategies for targeting the goals objectives. Some distributions have a longer distribution than other, showing the variance of the scores between the countries, due to various reasons such as the inequality of the amount of money available to be invested for implementing solutions. In addition, we notice that the only right-skewed distribution is concerning the observations of the goal 9, which is promoting infrastructures, innovation and inclusive and sustainable industrialization.Therefore, it seems like many countries are encountering difficulties for implementing good solutions concerning this goal. Furthermore, we notice that the goal1 has the highest density, which means that in general the countries tend to have good scores. 
 
 Now let's focus on the distribution of the Human Freedom Index scores. Same ordering selection and color method as the previous distribution plot. 
 
@@ -81,7 +81,7 @@ ggplot(long_df_hfi_distribution, aes(x = Value,
        title = 'Human Freedom Index Scores Distribution')
 ```
 
-The distribution of the Human Freedom Index Score follows the same trend as the SDG goal one. Most of the scores are left-skewed, which means that countries tend to have in general good scores. The only scores not following the trend are pf_law and ef_legal, which tend to have in average lower scores. There could be multipl reasons why it is the case. One could be , i.e., legal system for civilians and countries is evolving slowly because it has a lot of implications over the situation within a country/between countries and because of the divergence of opinions. Therefore, investing money for raising these variable could be more difficult than raising the scores of other goals. Furthermore, the highest density is contained in the factor pf_movement, which mean that most of our observations received the same high score. 
+The distribution of the Human Freedom Index Score follows the same trend as the SDG goal one. Most of the scores are left-skewed, which means that countries tend to have in general good scores. The only scores not following the trend are pf_law and ef_legal, which tend to have in average lower scores. There could be multipl reasons why it is the case. One could be , i.e., legal system for civilians and countries is evolving slowly because it has a lot of implications over the situation within a country/between countries and because of the divergence of opinions. Therefore, investing money for raising these variable could be more difficult than raising the scores of other goals. Furthermore, the highest density is contained in the factor pf_movement, which mean that in general the countries tend to have good scores. 
 
 Now let's consider the remaining variables of the dataset dedicated to answering the influence of factors over our SDG scores. 
 
@@ -91,7 +91,7 @@ Now let's consider the remaining variables of the dataset dedicated to answering
 # Unemployment rate plot
 unempl_d <- ggplot(Correlation_overall,
                    aes(x = unemployment.rate,
-                       y = 1,
+                       y = 1, # set y = 1 to visualize the distribution of a single variable without categorizing it by another variable.
                        fill = ..density..)) +
   geom_density_ridges_gradient(scale = 3,
                                size = 0.3,
@@ -163,23 +163,9 @@ grid.arrange(unempl_d,
              internet_d,
              ncol = 2,
              nrow = 2)
-
-# set y = 1. This creates a single ridge line for each distribution. -> common approach when you want to visualize the distribution of a single variable without categorizing it by another variable.
-
-# it can be normal for the scale of the density legend in a density plot to have a range that extends beyond the typical range of the variable itself, like going from 0 to 12 in the case of unemployment.rate. This can happen due to the way density is calculated and represented in the plot. Here are a few points to understand why this occurs:
-# 
-# Density Calculation: The density in a density plot is a probability density, not a simple frequency or proportion. It represents the probability per unit on the x-axis (in your case, the unemployment rate). Probability densities can exceed 1 because they are not probabilities themselves but rather rates at which probability is accumulating at each point.
-# 
-# Normalization: Density plots typically normalize the area under the curve to sum up to 1. This normalization can result in density values that are greater than 1, especially if the data is concentrated in a narrow range.
-# 
-# Kernel Smoothing: Density plots use kernel smoothing to estimate the probability density function of a random variable. The height of the density curve (y-axis) depends on how concentrated the data points are around each value of the variable. A high peak (high density value) means a lot of data points are concentrated in that area.
-# 
-# Interpreting Density Values: The actual numerical value of the density on the y-axis is less important than the shape of the density curve. It's the relative height and the area under the curve that provide insights into the data distribution, not the absolute density values.
-# 
-# Different Variables, Different Scales: Each variable will have its own density scale depending on its distribution. Variables with a more concentrated distribution will have higher density values.
-# 
-# In summary, for your unemployment.rate plot, a density scale going up to 12 is a reflection of how the data is distributed and how the density is calculated, and it's not unusual. The key is to focus on the shape and peaks of the density plot to understand the distribution of your data.
 ```
+
+Due to density calculations and normalization, some densities exceed 1 because they are not probabilities themselves but rather rates at which probability is accumulating at each point.
 
 All these variables have a right-skewed distribution. Taking the mode into account, most of the concerned countries in our data have an unemployment rate between 2 to 7%, a distribution of GDP per capita between $1'000-\$10'000, a distribution of military expenditure in percentage of the GDP 10% to 20% and finally a internet usage between 0 and 10%.
 
@@ -199,6 +185,7 @@ data_Q1_Africa <- data_question1 %>%
 
 data_Q1_Africa_long <- melt(data_Q1_Africa)
 
+#median for Africa
 medians_AF <- data_Q1_Africa_long %>%
   group_by(variable) %>%
   summarize(median_value = median(value))
@@ -215,6 +202,7 @@ data_Q1_Americas <- data_question1 %>%
 
 data_Q1_Americas_long <- melt(data_Q1_Americas)
 
+#median for Americas
 medians_AM <- data_Q1_Americas_long %>%
   group_by(variable) %>%
   summarize(median_value = median(value))
@@ -231,6 +219,7 @@ data_Q1_Asia <- data_question1 %>%
 
 data_Q1_Asia_long <- melt(data_Q1_Asia)
 
+#median for Asia
 medians_AS <- data_Q1_Asia_long %>%
   group_by(variable) %>%
   summarize(median_value = median(value))
@@ -247,6 +236,7 @@ data_Q1_Europe <- data_question1 %>%
 
 data_Q1_Europe_long <- melt(data_Q1_Europe)
 
+#median for Europa 
 medians_EU <- data_Q1_Europe_long %>%
   group_by(variable) %>%
   summarize(median_value = median(value))
@@ -263,6 +253,7 @@ data_Q1_Oceania <- data_question1 %>%
 
 data_Q1_Oceania_long <- melt(data_Q1_Oceania)
 
+#median for Oceania
 medians_OC <- data_Q1_Oceania_long %>%
   group_by(variable) %>%
   summarize(median_value = median(value))
@@ -489,7 +480,8 @@ plotly_heatmap <- plot_ly(data = cor_melted,
          xaxis = list(title = '',
                       tickangle = -45),
          yaxis = list(title = '',
-                      tickangle = -45),
+                      tickangle = 0,
+                      tickfont = list(size = 7)),
          colorbar = list(title = 'Spearman\nCorrelation',
                          yanchor = "middle",
                          y = 0.5))
@@ -499,67 +491,7 @@ plotly_heatmap %>%
   config(displayModeBar = FALSE)
 ```
 
-By looking at our heatmap, we notice that most of our goals are strongely correlated together and that some variables amongst the Human Freedom Index scores too (strong correlation among personal freedom variables (pf), reflecting scores from the Human Freedom Index on movement, religion, assembly, and expression). This could be explained by the fact that some of these goals/scores share partially similar objectifs, which could mean that a raise in the score of one of these goals will raise positively the score of another/some other goals. In addition, we notice that goals 12 and 13 (respectively "responsible consumption & production" and "climate action", therefore climate oriented goals) are strongely negatively correlated with most of our variables. For the moment, as correlation doesn't imply causality, we cannot deduce anything from these informations. We will see more in detail the correlations between our goals and variables in the analysis part of the influence of the factors over the Sustainable Development Goals.
-
-<!-- In order to have an overview of the relationship between our independent variables and the SDG overall score, we make several graphs containing the Spearman correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable. --\> -->
-
-<!-- ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"} -->
-<!-- #### Spearman's correlation coeff #### -->
-
-<!-- lower.panel <- function(x, y, ...){ -->
-<!--    points(x, -->
-<!--           y, -->
-<!--           pch = 20, -->
-<!--           cex = 0.2, -->
-<!--           col = viridis(1, option = "D", -->
-<!--                         begin = 0.5)) -->
-<!-- } -->
-
-<!--  panel.hist <- function(x, ...){ -->
-<!--    usr <- par("usr"); on.exit(par(usr)) -->
-<!--    par(usr = c(usr[1:2], 0, 1.5) ) -->
-<!--    h <- hist(x, plot = FALSE) -->
-<!--    breaks <- h$breaks; nB <- length(breaks) -->
-<!--    y <- h$counts; y <- y/max(y) -->
-<!--    rect(breaks[-nB], 0, breaks[-1], y, col = viridis(10, -->
-<!--                                                      option = "D",  -->
-<!--                                                      begin = 0.4), ...) -->
-<!--  } -->
-
-<!--  # panel.cor_stars function with stars alongside correlation coefficients -->
-<!--  panel.cor_stars <- function(x, y, digits = 2, prefix = "", cex.cor, ...) { -->
-<!--    usr <- par("usr"); on.exit(par(usr)) -->
-<!--    par(usr = c(0, 1, 0, 1)) -->
-<!--    r <- cor(x, y) -->
-<!--    p_value <- cor.test (x,y)$p.value -->
-
-<!--    if (p_value < 0.001){ -->
-<!--      stars <- "***" -->
-<!--    } else if (p_value < 0.01) { -->
-<!--      stars <- "**" -->
-<!--    } else if (p_value < 0.05) { -->
-<!--      stars <- "*" -->
-<!--    } else { -->
-<!--      stars <- "" -->
-<!--    } -->
-<!--    txt <- paste0(format(c(r, 0.123456789), digits = digits)[1], " ", stars) -->
-<!--    if(missing(cex.cor)) cex.cor <- 0.5/strwidth(txt) -->
-<!--    text(0.5, 0.5, txt, cex = cex.cor) -->
-<!--  } -->
-
-<!--  # # Independent variables -->
-<!--  pairs(Correlation_overall[,c("overallscore", "unemployment.rate", "GDPpercapita", "MilitaryExpenditurePercentGDP", "internet_usage")], upper.panel=panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of various variables") -->
-
-<!--  # pairs(Correlation_overall[,c("overallscore", "pf_law", "pf_security", "pf_movement", "pf_religion", "pf_assembly" ,"pf_expression" ,"pf_identity", "ef_government", "ef_legal", "ef_money", "ef_trade", "ef_regulation")], upper.panel=panel.cor_stars, diag.panel=panel.hist, lower.panel = lower.panel, main="Correlation table and distribution of HFI variables") -->
-<!-- ``` -->
-
-<!-- Meaning of the stars: \*\*\* : p_value \< 0.001; \*\* : p_value \< 0.01; \*: p_value \<0.05; no star if p_value is higher. -->
-
-<!-- The overall SDG achievement score is highly correlated with the percentage of people using the internet (r=.79) and GDP per capita (r=.60). The unemployement rate as well as the military expenditures in percentage of GDP per capita do not seem to play a role. However, this is only for the overall score. -->
-
-<!-- The overall SDG achievement score is highly correlated with "personal freedom: law" (p=.69) and "personal freedom: identity" (p=.62). The other dimensions of personal freedom do not seem to have important influence. Regarding the distribution of the personal freedom variables, we notice that except for law, all have right-skewed distributions meaning that most of the countries have high scores. -->
-
-<!-- The overall SDG achievement score is highly correlated with "economical freedom: legal" (p=.77), "economical trade: legal" (p=.67) and "economical freedom: money" (p=.6), while the other dimensions of economic freedom do not seem to have important influence. Regarding the distribution of the economic freedom variables, we notice more heterogeneous distributions and scores across the various countries than for personal freedom. -->
+By looking at our heatmap, we notice that most of our goals are strongely correlated together and that some variables amongst the Human Freedom Index scores too (strong correlation among personal freedom variables (pf), reflecting scores from the Human Freedom Index on movement, religion, assembly, and expression). This could be explained by the fact that some of these goals/scores share partially similar objectifs, which could mean that a raise in the score of one of these goals will raise positively the score of another/some other goals. In addition, we notice that goals 12 and 13 (respectively "responsible consumption & production" and "climate action", therefore climate oriented goals) are strongly negatively correlated with most of our variables. For the moment, as correlation doesn't imply causality, we cannot deduce anything from these informations. We will see more in detail the correlations between our goals and variables in the analysis part of the influence of the factors over the Sustainable Development Goals.
 
 ### Analysis: Influence of the factors over the SDG
 
@@ -600,13 +532,11 @@ ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
        title = 'Correlations Heatmap between goals and our other variables')
 ```
 
-The numbers are representing the significant p-values between our variables. Here, we only displayed the correlations bigger than `r threshold_heatmap`, in absolut values. The grey parts are the non significant p-values.
+The numbers are representing the significant p-values between our variables. Here, we only displayed the correlations bigger than `r threshold_heatmap`, in absolut values. The uncolored parts are the non significant p-values.
 
-GDP per capita, internet_usage, pf_law or ef_legal are strongely correlated with most of our SDG. This is mostly due to the large scope englobed in these variables. That makes them influence various sectors of our economies and thus, mostly impacting all our SDG goals. Therefore, we can think that these variables have a strong impact on the scores. Nevertheless, as correlation doesn't mean causality, we still cannot jump to conclusions.
+GDP per capita, internet_usage, pf_law or ef_legal are strongly correlated with most of our SDG. This is mostly due to the large scope englobed in these variables. That makes them influence various sectors of our economies and thus, mostly impacting all our SDG goals. Therefore, we can think that these variables have a strong impact on the scores. Nevertheless, as correlation doesn't mean causality, we still cannot jump to conclusions.
 
 As we can see, our goals 12 & 13 (responsible consumption & production and climate action) are negatively correlated with most of our variables, as is the economic freedom government variable to our SDG. Nevertheless, goals 12 & 13 and ef_government are positively correlated together.
-
-<!-- ((In that sens, we could understand it as having a higher Human Freedom Index Score would influence more negatively the SDG scores of these two goals, i.e. the more people in a country can access and afford civil justice, the more it impact negatively the score of these two SDG.)) but correlation doesn't implie causality -->
 
 Now let's zoom on the correlations between all our variables except the SDG:
 
