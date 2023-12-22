@@ -7,7 +7,7 @@ source(here::here("scripts/Clean/setup.R"))
 
 In conclusion, our data analytics research project reveals a gradual global progress in achieving the Sustainable Development Goals (SDGs), with notable variations across continents. While Europe emerges as a leader in SDG accomplishment, Africa lags behind, while Asia, the Americas and Oceania demonstrate diverse performance trends. 
 
-After carefully choosing our models, we have been able to show the influence of factors on goals. The coefficient of the dependent variables will depend on the objective of the concerned SDGs. The principal trend showed that most of the goals are influenced positively by our chosen variables. Nevertheless, concerning climate oriented SDGs (12 & 13), we have been able to show that the influence of most of their variables in their models will influence their score negatively.
+After carefully choosing our models, we have been able to show the influence of factors on goals. The coefficient of the dependent variables will depend on the objective of the concerned SDGs. The principal trend showed that most of the goals are influenced positively by our chosen variables. Nevertheless, concerning climate oriented SDGs (12 & 13), we have been able to show that the influence of most of their variables in their models will influence their score negatively. Nevertheless, due to the limited selected factors, climate related factors could have helped us to explain better how these two goals have the two best average score among all SDGs. 
 
 The interconnectedness of SDGs is evident, with high achievement in one goal often correlating with success in others. The analysis indicates that the impact of climate disasters on SDG achievement is notably weak, with limited associations found between climate-related variables and specific goals. Although variables related to COVID-19 and conflicts show significance in SDG achievement, they explain limited variance for each objective.
 
@@ -23,7 +23,7 @@ Finally, following the regression analyses on our SDG score, we have been able t
 
 ## Future work
 
-Our research serves as an overview of the different characteristics of a country, as well as uncontrollable events that can affect the 17 SDG scores. In this regard, future work could investigate other factors' effects such as the type of country governance (dictatorship, democracy, etc.) or the tourism rate. It could additionally focus on other events, including financial crises and elections. 
+Our research serves as an overview of the different characteristics of a country, their evolution thought time, as well as uncontrollable events that can affect the 17 SDG scores. In this regard, future work could investigate other factors' effects such as the type of country governance (dictatorship, democracy, etc.) or the tourism rate. Additionally, we could implement in our work more global factors (social/climate related) and focus on other kinds of events, including financial crises and elections. 
 
 We kept our analysis on the goal level, however, each goal has several targets and indicators that help keep track of the achievement and set subgoals. It would be interesting to dive in each goal separately to study more specifically these different targets and indicators in order to get a more precise view of what aspect of each goal is impacted by the different factors. 
 
