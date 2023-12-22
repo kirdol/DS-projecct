@@ -20,9 +20,9 @@ Correlation_overall <- data_question1 %>%
 ```
 
 
-### Interactive map of the correlation between the different events and the SDG goals with 1 year gap.
+### Interactive map of the correlation between the different events and the SDG scores with 1 year gap.
 
-Here you can see an interactive map of the correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019).
+Here you can see an interactive map of the correlation between the climate disasters and the SDG scores in South and East Asia with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019).
 
 ```{r, eval = TRUE, echo = FALSE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
@@ -51,7 +51,7 @@ cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
 names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
 
 ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap between the climate disasters and the SDG goals in South and East Asia with 1 year gap"),
+  titlePanel("Interactive Correlation Heatmap between the climate disasters and the SDG scores in South and East Asia with 1 year gap"),
   plotlyOutput("heatmap"),
   sliderInput("year", "Select Year", min = 2000, max = 2021, value = 2012, step = 1),
   verbatimTextOutput("correlation_output"),
@@ -121,7 +121,7 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 ```
 
-here you can see an interactive map of the correlation between COVID-19 and the SDG goals with 1 year gap. And strangely, instead of having a negative correlation, we expected that the more cases and deaths happened because of COVID-19, the scores of the SDG would be negatively affected,but with the gap year we can see that the scores of the Goal3, Goal6, Goal9 and Goal16 are quite positively impacted by the COVID-19.
+here you can see an interactive map of the correlation between COVID-19 and the SDG scores with 1 year gap. And strangely, instead of having a negative correlation, we expected that the more cases and deaths happened because of COVID-19, the scores of the SDG would be negatively affected,but with the gap year we can see that the scores of the Goal3, Goal6, Goal9 and Goal16 are quite positively impacted by the COVID-19.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
@@ -156,7 +156,7 @@ names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
 
 
 ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap between COVID and the SDG goal with one year gap"),
+  titlePanel("Interactive Correlation Heatmap between COVID and the SDG scores with one year gap"),
   plotlyOutput("heatmap"),
   sliderInput("year", "Select Year", min = 2020, max = 2022, value = 2020, step = 1),
   actionButton("stopButton", "Stop application")
@@ -225,7 +225,7 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 ```
 
-Finally, here you can see an interactive map of the correlation between respectively for the 3 different variables of the Conflict and the SDG goals with 1 year gap.
+Finally, here you can see an interactive map of the correlation between respectively for the 3 different variables of the Conflict and the SDG scores with 1 year gap.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
@@ -253,7 +253,7 @@ cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
 names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
 
 ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap between Conflicts Deaths in selected regions and the SDG goal with one year gap"),
+  titlePanel("Interactive Correlation Heatmap between Conflicts Deaths in selected regions and the SDG score with one year gap"),
   plotlyOutput("heatmap"),
   sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1),
   actionButton("stopButton", "Stop application")
@@ -318,7 +318,7 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 ```
 
-Here's the interactive map of the correlation between the affected population in conflicts and the SDG goals with 1 year gap.
+Here's the interactive map of the correlation between the affected population in conflicts and the SDG scores with 1 year gap.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
@@ -346,7 +346,7 @@ cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
 names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
 
 ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap between population affected in conflicts in selected regions and the SDG goal with one year gap"),
+  titlePanel("Interactive Correlation Heatmap between population affected in conflicts in selected regions and the SDG scores with one year gap"),
   plotlyOutput("heatmap"),
   sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1),
   actionButton("stopButton", "Stop application")
@@ -411,7 +411,7 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 ```
 
-Here's the interactive map of the correlation between the maxintensity in conflicts and the SDG goals with 1 year gap.
+Here's the interactive map of the correlation between the maxintensity in conflicts and the SDG scores with 1 year gap.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
@@ -439,7 +439,7 @@ cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
 names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
 
 ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap between the maxintensity in conflicts in selected regions and the SDG goal with one year gap"),
+  titlePanel("Interactive Correlation Heatmap between the maxintensity in conflicts in selected regions and the SDG scores with one year gap"),
   plotlyOutput("heatmap"),
   sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1),
   actionButton("stopButton", "Stop application")
@@ -532,7 +532,7 @@ ui <- fluidPage(
   titlePanel("SDG and Climate Disasters Regression Analysis"),
   sidebarLayout(
     sidebarPanel(
-      selectInput("sdg", "Select SDG Goal:",
+      selectInput("sdg", "Select SDG Score:",
                   choices = goal_columns,
                   selected = goal_columns[1]),
       actionButton("stopButton", "Stop Rendering"),
@@ -615,7 +615,7 @@ ui <- fluidPage(
   titlePanel("SDG - COVID Regression Analysis"),
   sidebarLayout(
     sidebarPanel(
-      selectInput("sdg", "Select SDG Goal:",
+      selectInput("sdg", "Select SDG Score:",
                   choices = goal_columns,
                   selected = goal_columns[1]),
       actionButton("stopButton", "Stop Rendering"),
@@ -719,7 +719,7 @@ ui <- fluidPage(
   titlePanel("SDG - Conflicts Regression Analysis"),
   sidebarLayout(
     sidebarPanel(
-      selectInput("sdg", "Select SDG Goal:",
+      selectInput("sdg", "Select SDG Score:",
                   choices = goal_columns,
                   selected = goal_columns[1]),
       actionButton("stopButton", "Stop Rendering"),  # Adding a Stop button

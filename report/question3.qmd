@@ -743,7 +743,7 @@ Our last idea is to make regressions between the SDG scores and the variables of
 
 Let's see the regressions for each score depending on each variable in the disasters dataset (total_affected and total_deaths).
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 3, out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 5.7, out.width="100%"}
 library(plotly)
 library(dplyr)
 library(ggplot2)
@@ -758,7 +758,6 @@ subset_data <- disaster_data[, relevant_columns]
 
 plots <- list()
 for (goal in relevant_columns[1:15]) {
-  # Pour total_affected
   p_affected <- ggplot(subset_data,
                        aes_string(x = "total_affected", y = goal)) +
     geom_point(size = 0.1) +
@@ -789,12 +788,16 @@ for (goal in relevant_columns[1:15]) {
 subplot_plots <- lapply(plots, function(plot_pair) subplot(plot_pair[[1]],
                                                            plot_pair[[2]],
                                                            nrows = 1,
-                                                           margin = 0.05))
-subplot(subplot_plots,
-        nrows = length(subplot_plots),
-        margin = 0.05)
-```
+                                                           margin = 0.06))
+combined_plots <- subplot(subplot_plots, nrows = length(subplot_plots), margin = 0.06)
 
+# Add a main title using the layout function
+final_plot <- layout(combined_plots, 
+                     title = "Analysis of Disaster Variables Data per Goals<br><sub>Left: Total Affected Variable | Right: Total Deaths Variable</sub>", margin = list(t = 100))
+
+# Print or save the final plot
+final_plot
+```
 Most relationships between the goals and the variables ('total_affected' and 'total_deaths') are not statistically significant (indicated by p-values \> 0.05). More specifically, in several models, the coefficients for 'total_affected' and 'total_deaths' are small, indicating weak or negligible relationships with the respective goals. Some models have marginally significant p-values (close to 0.05) but still lack statistical significance. Goals 7, 8, 10, 13, 14, and 15 exhibit statistically significant relationships with 'total_affected,' indicating small to moderate positive relationships. Goals 7 and 8 also show statistically significant relationships with 'total_deaths,' indicating moderate negative relationships.
 
 These findings suggest that, in most cases, the relationships between the specified goals and Climate disasters variables (total affected and total deaths) are not statistically significant. However, some goals do indicate small to moderate associations with these variables.
