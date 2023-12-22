@@ -260,12 +260,12 @@ These is our time-analysis concerning the COVID-19 cases per million, the COVID-
 covid_filtered <- Q3.2[Q3.2$year >= 2018, ]
 
 combined_ggplot <- ggplot() +
-  geom_smooth(data = covid_filtered, aes(x = year, y = cases_per_million, group = region, color = "lightblue"),
-              method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 2) +
-  geom_smooth(data = covid_filtered, aes(x = year, y = deaths_per_million, group = region, color = "#20908c"),
-              method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 2) +
-  geom_smooth(data = covid_filtered, aes(x = year, y = stringency, group = region, color = "darkblue"),
-              method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 2) +
+  geom_smooth(data = covid_filtered, aes(x = year, y = cases_per_million, group = region), 
+              color = "lightblue", method = "loess", se = FALSE, span = 0.3, size = 0.6) +
+  geom_smooth(data = covid_filtered, aes(x = year, y = deaths_per_million, group = region), color =
+                "#20908c",method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 2) +
+  geom_smooth(data = covid_filtered, aes(x = year, y = stringency, group = region), color =
+                "darkblue", method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 2) +
   facet_wrap(~ region, nrow = 5) +
   labs(x = "Year", y = "") +
   theme_minimal() +
@@ -319,12 +319,12 @@ We can see that the regions the most affected by the deaths are : Middle east an
 conflicts_filtered <- Q3.3[Q3.3$year >= 2000 & Q3.3$year <= 2016, ]
 
 combined_ggplot <- ggplot() +
-  geom_smooth(data = conflicts_filtered, aes(x = year, y = sum_deaths, group = region, color = "darkred"),
-              method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 3) +
-  geom_smooth(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region, color = "red"),
-              method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 3) +
-  geom_smooth(data = conflicts_filtered, aes(x = year, y = maxintensity, group = region, color = "#e34e64"),
-              method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 3) +
+  geom_smooth(data = conflicts_filtered, aes(x = year, y = sum_deaths, group = region), color =
+                "darkred", method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 3) +
+  geom_smooth(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region), color =
+                "red",method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 3) +
+  geom_smooth(data = conflicts_filtered, aes(x = year, y = maxintensity, group = region), color =
+                "#e34e64", method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 3) +
   facet_wrap(~ region, nrow = 5) +
   labs(x = "Year", y = "") + 
   theme_minimal() +
