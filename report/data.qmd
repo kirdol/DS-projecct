@@ -9,7 +9,7 @@ source(here::here("scripts","Clean","setup.R"))
 
 ## Sources
 
-We are collecting our Data from the sustainability development report (SDG), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn't find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next section. Utilizing the `kableExtra` package, we provide a comprehensive list and corresponding links to our sources, as outlined below:
+We are collecting our Data from the sustainability development report (UN), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn't find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next section. Utilizing the `kableExtra` package, we provide a comprehensive list and corresponding links to our sources, as outlined below:
 
 ```{r}
 #### Source Table ####
@@ -51,7 +51,7 @@ source_info %>%
 
 ## Description
 
-During the wrangling process, we added data to our table (D1_1_SDG) from different other datasets and match them based on the country code, and the year. The tables below show all the variables present in our 9 databases. We will then merge them to have our final table for the analysis.
+During the wrangling process, we pre-cleaned the different datasets and then merged them with our main table (D1_1_SDG) matching them based on the country code, and the year. The tables below show all the variables present in our 9 databases. We will then merge them to have our final table for the analysis.
 
 ### Our databases
 
@@ -439,10 +439,8 @@ makenumSDG <- function(D1_0_SDG) {
   for (i in 1:17) {
     varname <- paste("goal", i, sep = "")
     D1_0_SDG[[varname]] <-
-      as.double(gsub(",", ".", D1_0_SDG[[varname]]))
-  }
-  return(D1_0_SDG)
-}
+      as.double(gsub(",", ".", D1_0_SDG[[varname]]))}
+  return(D1_0_SDG)}
 
 # Applying the function to the 1_0_SDG dataset
 D1_0_SDG <- makenumSDG(D1_0_SDG)
@@ -450,69 +448,115 @@ D1_0_SDG <- makenumSDG(D1_0_SDG)
 
 We proceed by examining the missing values.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=3.5}
-#### D1_0_SDG missing values ####
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 1.5}
+#### D1_0_SDG missing values preparation and the graph ####
 
+# Creation of an empty vector with the same length as our dataset
 propmissing <- numeric(length(D1_0_SDG))
 
+# For loop to get the proportion of missing values in each columns
 for (i in 1:length(D1_0_SDG)){
   proportion <- mean(is.na(D1_0_SDG[[i]]))
-  propmissing[i] <- proportion
-}
-variable_names <- colnames(D1_0_SDG)
- 
-prop_missing_data <- data.frame(variable = variable_names, prop_missing = propmissing)
+  propmissing[i] <- proportion}
 
-ggplot(prop_missing_data,
-       aes(x = variable,
-           y = prop_missing)) +
-   geom_bar(stat = "identity",
-            fill = Fix_color,
-            aes(fill = prop_missing),
-            color = "black") +
-   labs(title = "NAs by columns in the main dataset",
-        x = "Variable",
-        y = "Proportion of Missing Values") +
-   theme(plot.title = element_text(size = 10, hjust = 0.5),
-         axis.title.x = element_text(size = 8),
-         axis.title.y = element_text(size = 8)) +
-   theme_minimal() +
+# Vector containing all columns names of our dataset
+variable_names <- colnames(D1_0_SDG)
+
+
+# prepare our data for plotting
+prop_missing_data <- data.frame(variable = variable_names,
+                                prop_missing = propmissing)
+
+# Define a function to assign colors based on missing percentages
+get_fill_color <- function(prop_missing) {
+  if (prop_missing >= 0 && prop_missing < 0.1) {
+    return(MPer_0_10)
+  } else if (prop_missing >= 0.1 && prop_missing < 0.2) {
+    return(MPer_10_20)
+  } else if (prop_missing >= 0.2 && prop_missing < 0.3) {
+    return(MPer_20_30)
+  } else {
+    return(MPer_30_100)}}
+
+# Apply the function to create a new column for colors
+prop_missing_data$fill_color <- sapply(prop_missing_data$prop_missing, get_fill_color)
+
+# Preparation of the graph labels
+prop_missing_data$hover_text <-
+  paste("Variable: ",
+        prop_missing_data$variable,
+        "\nMissing percentage: ",
+        round((prop_missing_data$prop_missing)*100, 2),
+        "%", sep = "")
+
+# Creation of the plot to see the proportion of missing values per column
+gg_prop_missing <- ggplot(prop_missing_data,
+                          aes(x = reorder(variable, prop_missing),
+                              y = prop_missing,
+                              fill = fill_color,
+                              text = hover_text)) +
+  geom_bar(stat = "identity") +
+  scale_fill_identity() +
+  labs(title = "NAs by columns in the main dataset",
+       x = "Variable",
+       y = "Proportion of Missing Values") +
+  theme(plot.title = element_text(size = 10, hjust = 0.5),
+        axis.title.x = element_text(size = 8),
+        axis.title.y = element_text(size = 8)) +
+  theme_minimal() +
   coord_flip() +
   guides(fill = FALSE)
+
+# Convert ggplot object to plotly and remove the Modebar
+plotly_prop_missing <- ggplotly(gg_prop_missing,
+                                tooltip = "text") %>%
+  config(displayModeBar = FALSE)
+
+# Print the plotly object
+plotly_prop_missing
 ```
 
-Observing that the 'population' column contains numerous NAs, we investigate and discover that missing values are common, as some observations represent regions, not countries. Therefore, we can safely exclude these observations.
+Observing that the 'population' column contains numerous NAs, we investigate and discover that missing values are common. This come from observations representing regions and not countries. Therefore, we can safely exclude these observations.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=2.5}
 #### D1_0_SDG missing values in population ####
 
+# Find the missing proportion of the population varibales across the regions
 SDG0 <- D1_0_SDG %>%
   group_by(code) %>%
   select(population) %>%
   summarize(NaPop = mean(is.na(population))) %>%
   filter(NaPop != 0)
 
+
+
+
+# plot the graph
 ggplot(SDG0,
        aes(x = code,
            y = NaPop)) +
   geom_bar(stat = "identity",
-           fill = Fix_color,
-           color = "black") +
-  labs(title = "NAs by row in population variable are for regions and not countries",
-       x = "Code",
+           fill = Fix_color) +
+  labs(title = "Proportion of population information \nmissing in the region observations",
+       x = "Region code",
        y = "Proportion of NAs") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45,
-                                   hjust = 1),
-        plot.title = element_text(hjust = 0.5))
+                                   hjust = 1, 
+                                   size=10),
+        plot.title = element_text(hjust = 0.5,
+                                  size = 12),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10))
 
+# Remove the lines where the 'code' start with an "_" (the region)
 D1_0_SDG <- D1_0_SDG %>%
   filter(!str_detect(code, "^_"))
 ```
 
-Now, there are no missing values in the 'population' variable, and we observe that it contains information on `r length(unique(D1_0_SDG$country))` countries.
+Now that we have eliminated all missing values in the 'population' variable, we observe that our dataframe contains information on `r length(unique(D1_0_SDG$country))` countries.
 
-We notice that NAs are present in only three SDG scores: 1, 10, and 14. Additionally, when a country has NAs, they occur across all years or not at all. Consequently, we decide to conduct further investigations on these three SDG scores to determine whether to include them in our analysis.
+We now move to analysing the missing values for the SDGs and we find that NAs are only present in three SDG scores: 1, 10, and 14. Additionally, when a country has NAs, they occur across all years or not at all. Consequently, we decide to conduct further investigations on these three SDG scores to determine whether to include them in our analysis.
 
 For goal 1, there are only 9.04% missing values in 15 different countries. Goal 1 being "End poverty", we decide to keep it and only remove the countries with no information for the analysis.
 
@@ -1450,7 +1494,7 @@ datatable(all_Merge, options = list(pageLength = 5,
 
 We load our final database and we visualize the missing values.We see that some variables have many NAs and that some patterns regarding row missingness emerge. 
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%", out.height="75%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=4.5}
 #### Loading the final database to be cleaned ####
 
 # Import the final database
@@ -1538,8 +1582,6 @@ data_question3_3 <- all_Merge %>%
 
 #### Data for question 1 {.unnumbered}
 
-
-
 ##### Dealing with missing values in colomns {.unnumbered}
 
 We begin by visualizing the missing values. To have a less messy graph we group all the goals wihtout NAs into one single variable. We decide to remove MilitaryExpenditurePercentGovExp, because it has too many missing values and it contains similar information to MilitaryExpenditurePercentGDP.We also remove hf_score, pf_score and ef_score, because there are many missing values and since these variables summarize the other ones, deleting them will not make us loose information.
@@ -1560,6 +1602,20 @@ missing_data_summary <- data.frame(
 missing_data_summary <- missing_data_summary %>%
   mutate(VariableGroup = ifelse(startsWith(Variable, "goal") & Missing_Percentage == 0, "Goals without NAs", as.character(Variable)))
 
+# Define a function to assign colors based on missing percentages
+get_fill_color <- function(missing_percentage) {
+  if (missing_percentage >= 0 && missing_percentage < 10) {
+    return(MPer_0_10)
+  } else if (missing_percentage >= 10 && missing_percentage < 20) {
+    return(MPer_10_20)
+  } else if (missing_percentage >= 20 && missing_percentage < 30) {
+    return(MPer_20_30)
+  } else {
+    return(MPer_30_100)}}
+
+# Apply the function to create a new column for colors
+missing_data_summary$fill_color <- sapply(missing_data_summary$Missing_Percentage, get_fill_color)
+
 # Add a column with the number of missing values for the hover function
 missing_data_summary$hover_text <- paste("Variable: ",
                                          missing_data_summary$Variable,
@@ -1570,29 +1626,25 @@ missing_data_summary$hover_text <- paste("Variable: ",
 p <- ggplot(data = missing_data_summary,
             aes(x = reorder(VariableGroup, Missing_Percentage),
                 y = Missing_Percentage,
-                fill = Missing_Percentage,
+                fill = fill_color,
                 text = hover_text)) +
   geom_bar(stat = "identity") +
-  scale_fill_gradientn(colors = MPer_pal(100)) +
+  scale_fill_manual(values = unique(missing_data_summary$fill_color)) +
   labs(title = "Percentage of Missing Values by Variable",
        x = "Variable",
        y = "Missing Percentage") +
   theme_minimal() +
-  theme(axis.text.y = element_text(hjust = 1,
-                                   size=6),
-        axis.text.x = element_text(angle = 45,
-                                   hjust = 1,
-                                   size=8),
+  theme(axis.text.y = element_text(hjust = 1, size=8),
+        axis.text.x = element_text(hjust = 1, size=8),
         legend.text = element_text(size = 8),
         legend.title = element_text(size = 10),
-        plot.title=element_text(hjust=0.5)) +
-        guides(fill = FALSE)
+        plot.title = element_text(hjust = 0.5)) +
+  guides(fill = FALSE) +
+  coord_flip()
 
 # Convert to plotly and specify what to display when hovering the graph
-ggplotly(p,
-         tooltip = "text") %>%
-  config(plot_ly,
-         displayModeBar = FALSE)
+ggplotly(p, tooltip = "text") %>%
+  config(plot_ly, displayModeBar = FALSE)
 
 data_question1 <- data_question1 %>%
   select(-c(MiliratyExpenditurePercentGovExp, hf_score, pf_score, ef_score))
@@ -1651,7 +1703,7 @@ print(p_plotly)
 
 We also look at patterns of missing values in the rows and see that except for the two goals with NAs that we discussed earlier and for the triplet "ef_money", "ef_trade" and "ef_regulation" there are not well defined patterns. We removes the countries that have NAs in the three variables mentioned at the same time.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=5}
 #### Visualizing the missing values in the rows ####
 
 gg_miss_upset(data_question1,
@@ -2239,7 +2291,7 @@ We create a column with the number of missing values by country over all the var
 
 We begin by visualizing the missing values.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=2}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=1.25}
 #### Visualizing missing values ####
 
 variable_names <- names(data_question3_1)
@@ -2309,7 +2361,7 @@ COVID4 <- data_question3_2 %>%
 g1 <- ggplot(COVID4, aes(x = reorder(code, Na_deaths), y = Na_deaths)) +
   geom_bar(stat = "identity",
            fill = MPer_30_100,
-           color = "black") +
+           color = Fix_color) +
   labs(title = "NAs by country: \ndeaths per million",
        x = "Country code",
        y = "% NAs") +
@@ -2326,7 +2378,7 @@ g2 <- ggplot(COVID4,
                  y = Na_cases)) +
   geom_bar(stat = "identity",
            fill = MPer_30_100,
-           color = "black") +
+           color = Fix_color) +
   labs(title = "NAs by country: \ncases per million",
        x = "Country code",
        y = "% NAs") +
@@ -2342,8 +2394,7 @@ g3 <- ggplot(COVID4,
              aes(x = reorder(code, Na_stringency),
                  y = Na_stringency)) +
   geom_bar(stat = "identity",
-           fill = Fix_color,
-           color = "black") +
+           fill = Fix_color) +
   labs(title = "NAs by country: \nstringency",
        x = "Country code",
        y = "% NAs") +

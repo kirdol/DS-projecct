@@ -71,7 +71,7 @@ ggplot(long_df_hfi_distribution, aes(x = Value,
   geom_density_ridges_gradient(scale = 3,
                                size = 0.3,
                                rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "density",
+  scale_fill_viridis_c(name = "Density",
                        option = "D") +
   theme(plot.title = element_text(hjust = 0.5),
         plot.title.position = "plot") + 
@@ -94,7 +94,7 @@ unempl_d <- ggplot(Correlation_overall,
   geom_density_ridges_gradient(scale = 3,
                                size = 0.3,
                                rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "",
+  scale_fill_viridis_c(name = "Density",
                        option = "D") +
   theme(plot.title = element_text(hjust = 0.5,
                                   size = 10),
@@ -111,7 +111,7 @@ gdp_d <- ggplot(Correlation_overall,
   geom_density_ridges_gradient(scale = 3,
                                size = 0.3,
                                rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "",
+  scale_fill_viridis_c(name = "Density",
                        option = "D") +
   theme(plot.title = element_text(hjust = 0.5,
                                   size = 10),
@@ -128,7 +128,7 @@ milit_d <- ggplot(Correlation_overall,
   geom_density_ridges_gradient(scale = 3,
                                size = 0.3,
                                rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "",
+  scale_fill_viridis_c(name = "Density",
                        option = "D") +
   theme(plot.title = element_text(hjust = 0.5,
                                   size = 10), # Center the title
@@ -145,7 +145,7 @@ internet_d <- ggplot(Correlation_overall,
   geom_density_ridges_gradient(scale = 3,
                                size = 0.3,
                                rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "",
+  scale_fill_viridis_c(name = "Density",
                        option = "D") + 
   theme(plot.title = element_text(hjust = 0.5,
                                   size = 10),
@@ -165,19 +165,6 @@ grid.arrange(unempl_d,
 # set y = 1. This creates a single ridge line for each distribution. -> common approach when you want to visualize the distribution of a single variable without categorizing it by another variable.
 
 # it can be normal for the scale of the density legend in a density plot to have a range that extends beyond the typical range of the variable itself, like going from 0 to 12 in the case of unemployment.rate. This can happen due to the way density is calculated and represented in the plot. Here are a few points to understand why this occurs:
-# 
-# Density Calculation: The density in a density plot is a probability density, not a simple frequency or proportion. It represents the probability per unit on the x-axis (in your case, the unemployment rate). Probability densities can exceed 1 because they are not probabilities themselves but rather rates at which probability is accumulating at each point.
-# 
-# Normalization: Density plots typically normalize the area under the curve to sum up to 1. This normalization can result in density values that are greater than 1, especially if the data is concentrated in a narrow range.
-# 
-# Kernel Smoothing: Density plots use kernel smoothing to estimate the probability density function of a random variable. The height of the density curve (y-axis) depends on how concentrated the data points are around each value of the variable. A high peak (high density value) means a lot of data points are concentrated in that area.
-# 
-# Interpreting Density Values: The actual numerical value of the density on the y-axis is less important than the shape of the density curve. It's the relative height and the area under the curve that provide insights into the data distribution, not the absolute density values.
-# 
-# Different Variables, Different Scales: Each variable will have its own density scale depending on its distribution. Variables with a more concentrated distribution will have higher density values.
-# 
-# In summary, for your unemployment.rate plot, a density scale going up to 12 is a reflection of how the data is distributed and how the density is calculated, and it's not unusual. The key is to focus on the shape and peaks of the density plot to understand the distribution of your data.
-# Yes, it can be normal for the scale of the density legend in a density plot to have a range that extends beyond the typical range of the variable itself, like going from 0 to 12 in the case of unemployment.rate. This can happen due to the way density is calculated and represented in the plot. Here are a few points to understand why this occurs:
 # 
 # Density Calculation: The density in a density plot is a probability density, not a simple frequency or proportion. It represents the probability per unit on the x-axis (in your case, the unemployment rate). Probability densities can exceed 1 because they are not probabilities themselves but rather rates at which probability is accumulating at each point.
 # 
@@ -498,7 +485,7 @@ plotly_heatmap <- plot_ly(data = cor_melted,
   layout(title = list(text = 'Correlation Matrix Heatmap',
                       font = list(size = 17)),
          xaxis = list(title = '',
-                      tickangle = 45),
+                      tickangle = -45),
          yaxis = list(title = '',
                       tickangle = -45),
          colorbar = list(title = 'Spearman\nCorrelation',
@@ -664,7 +651,9 @@ fviz_eig(myPCA_s,
                            option = "D",
                            begin = 0,
                            end = 0.8)) +
-  theme_minimal()
+  theme_minimal() + 
+  ggtitle("                                          PCA - Scree plot")
+
 
 summary(myPCA_s)
 ```
@@ -682,7 +671,8 @@ fviz_pca_biplot(myPCA_s,
                 pointsize = 0.05,
                 labelsize = 3,
                 repel = TRUE) +
-  theme_minimal()
+  theme_minimal() + 
+  ggtitle("                                          PCA - Biplot")
 
 ```
 
@@ -698,7 +688,7 @@ Let's try now to conduct a cluster analysis, using the Kmean method.
 data_kmean_country <- data_question1 %>%
   dplyr::select(-c(X,code,year,continent,region, population))
 
-#filter data different than 0 and dropping observations 
+#filter data different than 0 and dropping observations equal to 0
 filtered_data <- data_kmean_country %>%
   group_by(country) %>%
   filter_if(is.numeric, all_vars(sd(.) != 0)) %>%
@@ -750,7 +740,57 @@ fviz_cluster(kmean,
 
 Our cluster analysis gives us one principal cluster (here in purple) --\> CENTERED ON 0 BECAUSE AFTER DATA SCALED-\> REALLY SMALL VALUES --\> HOW TO DEAL WITH IT? I TRIED TO TAKE ONLY HFI INTO ACCOUNT BUT NOT WORKING NEITHER. STILL CENTERED ON 0.
 
-<!-- Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough. -->
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+# matrix_means <- as.matrix(means_by_country)
+# 
+# # Transpose the matrix
+# transposed_means <- t(matrix_means)
+# 
+# # Convert back to a data frame, setting the row names (goals) as a column
+# transposed_means_df <- as.data.frame(transposed_means, row.names = NULL)
+# 
+# # Rename the first column to 'Goals' (assuming the goals are the row names in your original data)
+# colnames(transposed_means_df)[1] <- 'Goals'
+# 
+# transposed_means_df <- transposed_means_df[3:18,]
+# 
+# # If the column is a simple list, unlist and convert to numeric
+# numeric_vector <- as.numeric(unlist(transposed_means_df))
+# 
+# # If the list is more complex, use sapply to convert each element
+# numeric_vector <- sapply(transposed_means_df, function(x) as.numeric(x[[1]]))
+# 
+# # If the entire dataframe is a list of lists, convert each element
+# data_kmean_country <- lapply(transposed_means_df, function(x) as.numeric(unlist(x)))
+# 
+# 
+# # Your existing elbow plot
+# elbow_plot <- fviz_nbclust(transposed_means_df,
+#                            kmeans,
+#                            method="wss",
+#                            linecolor = viridis(1,
+#                                                begin = 0.5))
+# 
+# # Add a vertical line at the elbow point (4 clusters)
+# elbow_plot_with_line <- elbow_plot + 
+#   geom_vline(xintercept=4,
+#              linetype="dashed",
+#              color = viridis(1,
+#                              option = "B",
+#                              begin = 0.5))
+# 
+# kmean <- kmeans(transposed_means_df,
+#                 4,
+#                 nstart = 25)
+# 
+# fviz_cluster(kmean,
+#              data = transposed_means_df,
+#              repel=FALSE,
+#              depth =NULL,
+#              ellipse.type = "norm",
+#              labelsize = 10,
+#              pointsize = 0.5)
+```
 
 While considering our regressions, we have noticed that we had high multicolinearity between several dependent variables in our models, by conducting a VIF test. This is due to the numerous variables that we tried to take into account while computing our regressions. Therefore, we have decided to use the stepwise regression with the forward method and choose the model according to the adjusted R squared. 
 
@@ -1120,25 +1160,26 @@ df_tidy_significant$Model <-
 
 myColors <-
   colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_significant$term)))
-# Plot
+
+# All models graph
 ggplot(df_tidy_significant,
-       aes(x = Model,
-           y = estimate,
+       aes(y = Model,
+           x = estimate,
            color = term)) +
   geom_point() +
-  geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error),
+  geom_errorbar(aes(xmin = estimate - std.error, xmax = estimate + std.error),
                 width = 0.2) +
   scale_color_manual(values = myColors) + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.title = element_text(hjust = 0.5), # Center the title
+  theme(axis.text.y = element_text(angle = 0, hjust = 1),
+        plot.title = element_text(hjust = 0.5),
         plot.title.position = "plot",
-        legend.position = "right", # You can change the position if needed
-        legend.text = element_text(size = 6), # Adjust text size
-        legend.title = element_text(size = 7), # Adjust title size
-        legend.key.size = unit(0.4, "cm")) +  # Adjust key size) +
+        legend.position = "bottom", 
+        legend.text = element_text(size = 6), 
+        legend.title = element_text(size = 7),
+        legend.key.size = unit(0.4, "cm")) +
   labs(title = "Coefficient Plot of Regression Models",
-       x = "Models",
-       y = "Estimates")
+       y = "Models",
+       x = "Estimates")
 ```
 
 Here is our general plot. For visualization purpose, let's also plot the positive and negative correlation plots
@@ -1152,23 +1193,23 @@ df_tidy_positive_p$Model <- factor(df_tidy_positive_p$Model, levels = model_orde
 myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_positive_p$term)))
 # Plot only positive coefficients
 ggplot(df_tidy_positive_p,
-       aes(x = Model,
-           y = estimate,
+       aes(y = Model,
+           x = estimate,
            color = term)) +
   geom_point() +
-  geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error),
+  geom_errorbar(aes(xmin = estimate - std.error, xmax = estimate + std.error),
                 width = 0.2) +
   scale_color_manual(values = myColors) + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+  theme(axis.text.y = element_text(angle = 0, hjust = 1),
         plot.title = element_text(hjust = 0.5),
         plot.title.position = "plot",
-        legend.position = "right",
+        legend.position = "bottom",
         legend.text = element_text(size = 6),
         legend.title = element_text(size = 7),
         legend.key.size = unit(0.4, "cm")) +
   labs(title = "Coefficient Plot of Regression Models (Positive Coefficients)",
-       x = "Models",
-       y = "Estimates")
+       y = "Models",
+       x = "Estimates")
 
 #negative values only
 df_tidy_positive_n <-
@@ -1180,20 +1221,20 @@ df_tidy_positive_n$Model <-
 myColors <-
   colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_positive_n$term)))
 
-ggplot(df_tidy_positive_n, aes(x = Model, y = estimate, color = term)) +
+ggplot(df_tidy_positive_n, aes(y = Model, x = estimate, color = term)) +
   geom_point() +
-  geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error), width = 0.2) +
+  geom_errorbar(aes(xmin = estimate - std.error, xmax = estimate + std.error), width = 0.2) +
   scale_color_manual(values = myColors) + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+  theme(axis.text.y = element_text(angle = 0, hjust = 1),
         plot.title = element_text(hjust = 0.5),
         plot.title.position = "plot",
-        legend.position = "right",
+        legend.position = "bottom",
         legend.text = element_text(size = 6),
         legend.title = element_text(size = 7),
         legend.key.size = unit(0.4, "cm")) +
   labs(title = "Coefficient Plot of Regression Models (Negative Coefficients)",
-       x = "Models",
-       y = "Estimates")
+       y = "Models",
+       x = "Estimates")
 ```
 
 In these plots, we can see that most of our variables are influencing positively and negatively our goals. I.e., unemployment.rate is influencing goal 10 & 8 negatively, but positively our other goals. Nevertheless, some factors seems to influence only positively our goals. It is the case for the factors internet_usage. These results are due to the range of the objectives contained in the SDG: as each goal has a different objective, and that our factors are have also a wide range of action, we find different influence between our variables.  

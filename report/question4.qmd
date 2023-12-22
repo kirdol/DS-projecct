@@ -13,7 +13,7 @@ data_4 <- read.csv(here("scripts", "data", "data_question24.csv"))
 
 ### EDA: General visualization of the SDGs
 
-To better analyse the relationships between the SDGs, we will first visualize the correlation between the correlation between the SDGs with the help of a heatmap. We chose to set a threshold at |`r threshold_heatmap`| to concentrate our analysis on the most linked SDGs. We initially intended to use the Pearson correlation method, but our data is, as seen in previous chapter, not normally distributed. We tried to normalized our data through logarithmic or square root transformation, but it was not sufficient. For that reason, we chose to use th Spearman correlation. While not being an ideal method, the Spearman correlation does not require the data to be normally distributed.
+To better analyse the relationships between the SDGs, we will first visualize the correlation between the SDGs with the help of a heatmap. We chose to set a threshold at |`r threshold_heatmap`| to concentrate our analysis on the most linked SDGs. We initially intended to use the Pearson correlation method, but our data is, as seen in previous chapter, not normally distributed. We tried to normalized our data through logarithmic or square root transformation, but it was not sufficient. For that reason, we chose to use th Spearman correlation. While not being an ideal method, the Spearman correlation does not require the data to be normally distributed.
 
 To do that, we select only the columns of interest and compute the correlation matrix using Spearman correlation. We then melt the matrix to be able to plot it. We then plot the heatmap using `ggplot2`.
 
@@ -110,7 +110,7 @@ fviz_eig(pca_result,
 eigenvalues <- pca_result$sdev^2
 ```
 
-We see clearly that the first component is the most important one. Guided by the Kaiser criterion, which advises retaining only those components with eigenvalues exceeding 1, the initial three components emerge as candidates with the third components having a eigenvalue of `r eigenvalues[3]`. We now want to see how those our two first components look on in a biplot.
+We clearly see that the first component is the most important one. Guided by the Kaiser criterion, which advises retaining only those components with eigenvalues exceeding 1, the initial three components emerge as candidates with the third components having a eigenvalue of `r eigenvalues[3]`. We now want to see how those our two first components look on in a biplot.
 
 ```{r echo = TRUE, message = FALSE}
 #### Biplot ####
@@ -121,7 +121,8 @@ fviz_pca_biplot(pca_result,
                 col.var = Fix_color,
                 geom = "point",
                 pointsize = 0.1,
-                labelsize = 3) + 
+                labelsize = 3,
+                repel = TRUE) + 
   ggtitle("                                           PCA - Biplot") +
   theme_minimal()
 ```
@@ -304,24 +305,20 @@ df_tidy_significant <-
 
 # Plot graph with all models
 ggplot(df_tidy_significant,
-       aes(x = Model,
-           y = estimate,
+       aes(y = Model,
+           x = estimate,
            color = term)) +
   geom_point() +
-  geom_errorbar(aes(ymin = estimate - std.error,
-                    ymax = estimate + std.error),
-                width = 0.2) +
-  ylim(-1, 1) +
-  theme(axis.text.x = element_text(angle = 45,
-                                   hjust = 1,
-                                   size = 10),
-        legend.position = "right",
+  xlim(-1, 1) + # Changed from ylim to xlim
+  theme(axis.text.y = element_text(angle = 0, vjust = 1, size = 8),
+        axis.text.x = element_text(angle = 45, vjust = 1, size = 8),
+        legend.position = "bottom",
         legend.text = element_text(size = 6.5),
         legend.title = element_text(size = 7),
         legend.key.size = unit(0.3, "cm")) +
   labs(title = "Coefficient Plot of Regression Models",
-       x = "Models",
-       y = "Estimates") +
+       y = "Models", # Swapped x and y labels
+       x = "Estimates") +
   colors_pal
 ```
 
