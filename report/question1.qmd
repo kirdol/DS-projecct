@@ -116,10 +116,9 @@ gdp_d <- ggplot(Correlation_overall,
                     fill = ..density..)) +
   geom_density_ridges_gradient(scale = 3,
                                size = 0.3,
-                               rel_min_height = 0.001) +
+                               rel_min_height = 0.01) +
   scale_fill_viridis_c(name = "Density",
                        option = "D") +
-  scale_y_continuous(labels = label_number(accuracy = 0.01)) + # Format y-axis labels with 2 decimal places
   theme(plot.title = element_text(hjust = 0.5,
                                   size = 10),
         plot.title.position = "plot") + 
