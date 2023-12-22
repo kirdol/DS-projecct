@@ -305,24 +305,20 @@ df_tidy_significant <-
 
 # Plot graph with all models
 ggplot(df_tidy_significant,
-       aes(x = Model,
-           y = estimate,
+       aes(y = Model,
+           x = estimate,
            color = term)) +
   geom_point() +
-  geom_errorbar(aes(ymin = estimate - std.error,
-                    ymax = estimate + std.error),
-                width = 0.2) +
-  ylim(-1, 1) +
-  theme(axis.text.x = element_text(angle = 45,
-                                   hjust = 1,
-                                   size = 10),
-        legend.position = "right",
+  xlim(-1, 1) + # Changed from ylim to xlim
+  theme(axis.text.y = element_text(angle = 0, vjust = 1, size = 8),
+        axis.text.x = element_text(angle = 45, vjust = 1, size = 8),
+        legend.position = "bottom",
         legend.text = element_text(size = 6.5),
         legend.title = element_text(size = 7),
         legend.key.size = unit(0.3, "cm")) +
   labs(title = "Coefficient Plot of Regression Models",
-       x = "Models",
-       y = "Estimates") +
+       y = "Models", # Swapped x and y labels
+       x = "Estimates") +
   colors_pal
 ```
 

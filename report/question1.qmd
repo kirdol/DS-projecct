@@ -498,7 +498,7 @@ plotly_heatmap <- plot_ly(data = cor_melted,
   layout(title = list(text = 'Correlation Matrix Heatmap',
                       font = list(size = 17)),
          xaxis = list(title = '',
-                      tickangle = 45),
+                      tickangle = -45),
          yaxis = list(title = '',
                       tickangle = -45),
          colorbar = list(title = 'Spearman\nCorrelation',
@@ -1173,25 +1173,26 @@ df_tidy_significant$Model <-
 
 myColors <-
   colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_significant$term)))
-# Plot
+
+# All models graph
 ggplot(df_tidy_significant,
-       aes(x = Model,
-           y = estimate,
+       aes(y = Model,
+           x = estimate,
            color = term)) +
   geom_point() +
-  geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error),
+  geom_errorbar(aes(xmin = estimate - std.error, xmax = estimate + std.error),
                 width = 0.2) +
   scale_color_manual(values = myColors) + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.title = element_text(hjust = 0.5), # Center the title
+  theme(axis.text.y = element_text(angle = 0, hjust = 1),
+        plot.title = element_text(hjust = 0.5),
         plot.title.position = "plot",
-        legend.position = "right", # You can change the position if needed
-        legend.text = element_text(size = 6), # Adjust text size
-        legend.title = element_text(size = 7), # Adjust title size
-        legend.key.size = unit(0.4, "cm")) +  # Adjust key size) +
+        legend.position = "bottom", 
+        legend.text = element_text(size = 6), 
+        legend.title = element_text(size = 7),
+        legend.key.size = unit(0.4, "cm")) +
   labs(title = "Coefficient Plot of Regression Models",
-       x = "Models",
-       y = "Estimates")
+       y = "Models",
+       x = "Estimates")
 ```
 
 Here is our general plot. For visualization purpose, let's also plot the positive and negative correlation plots
@@ -1205,23 +1206,23 @@ df_tidy_positive_p$Model <- factor(df_tidy_positive_p$Model, levels = model_orde
 myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_positive_p$term)))
 # Plot only positive coefficients
 ggplot(df_tidy_positive_p,
-       aes(x = Model,
-           y = estimate,
+       aes(y = Model,
+           x = estimate,
            color = term)) +
   geom_point() +
-  geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error),
+  geom_errorbar(aes(xmin = estimate - std.error, xmax = estimate + std.error),
                 width = 0.2) +
   scale_color_manual(values = myColors) + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+  theme(axis.text.y = element_text(angle = 0, hjust = 1),
         plot.title = element_text(hjust = 0.5),
         plot.title.position = "plot",
-        legend.position = "right",
+        legend.position = "bottom",
         legend.text = element_text(size = 6),
         legend.title = element_text(size = 7),
         legend.key.size = unit(0.4, "cm")) +
   labs(title = "Coefficient Plot of Regression Models (Positive Coefficients)",
-       x = "Models",
-       y = "Estimates")
+       y = "Models",
+       x = "Estimates")
 
 #negative values only
 df_tidy_positive_n <-
@@ -1233,20 +1234,20 @@ df_tidy_positive_n$Model <-
 myColors <-
   colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_positive_n$term)))
 
-ggplot(df_tidy_positive_n, aes(x = Model, y = estimate, color = term)) +
+ggplot(df_tidy_positive_n, aes(y = Model, x = estimate, color = term)) +
   geom_point() +
-  geom_errorbar(aes(ymin = estimate - std.error, ymax = estimate + std.error), width = 0.2) +
+  geom_errorbar(aes(xmin = estimate - std.error, xmax = estimate + std.error), width = 0.2) +
   scale_color_manual(values = myColors) + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+  theme(axis.text.y = element_text(angle = 0, hjust = 1),
         plot.title = element_text(hjust = 0.5),
         plot.title.position = "plot",
-        legend.position = "right",
+        legend.position = "bottom",
         legend.text = element_text(size = 6),
         legend.title = element_text(size = 7),
         legend.key.size = unit(0.4, "cm")) +
   labs(title = "Coefficient Plot of Regression Models (Negative Coefficients)",
-       x = "Models",
-       y = "Estimates")
+       y = "Models",
+       x = "Estimates")
 ```
 
 In these plots, we can see that most of our variables are influencing positively and negatively our goals. I.e., unemployment.rate is influencing goal 10 & 8 negatively, but positively our other goals. Nevertheless, some factors seems to influence only positively our goals. It is the case for the factors internet_usage. These results are due to the range of the objectives contained in the SDG: as each goal has a different objective, and that our factors are have also a wide range of action, we find different influence between our variables.  
