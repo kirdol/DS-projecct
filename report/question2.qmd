@@ -415,7 +415,7 @@ grid.draw(legend)
 
 ```
 
-We continue by looking at the worst 5 countries in terms of decline in SDG overall score each year and we see that the years with the worst declines are those closer to us. Indeed the declines were generally no more than 1%, until 2018, where these became more frequent. We notice that the adoption of SDGs in 2015 may have had a good impact, because during the two years that follow, the worst SDG score declines were low (no more than 1% in 2016 and no more 0.5% in 2017). It was stabilizing, but it was of short duration, because then come the more extreme deteriotations. Interestingly, the regions that had were the worst in terms of decline during the past twelve years were very different, the only pattern appears during the last four years, where most of them are in Latin America and the Caribbean.
+We continue by looking at the worst 5 countries in terms of decline in SDG overall score each year and we see that the years with the worst declines are those closer to us. Indeed, the declines were generally not higher than 1%, until 2018, where these became more frequent. We notice that the adoption of SDGs in 2015 may have had a good impact, because during the two years that follow, the worst SDG score declines were low (not more than 1% in 2016 and not more than 0.5% in 2017). It was stabilizing, but it was of short duration, because then come the more extreme deteriotations. Interestingly, the regions that were the worst in terms of decline during the past twelve years were very different, the only pattern appears during the last four years, where most of them are in Latin America and the Caribbean.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 plots <- list()
@@ -456,7 +456,7 @@ grid.draw(legend)
 
 ```
 
-We move on to the specific SDG scores and look at the 20 best improvements by score. We additionally differentiate between the improvements than occurred before and after 2015. We want to see which goals get the best improvements and which countries put more effort into it.
+We move on to the specific SDG scores and look at the 20 best improvements by score. We additionally differentiate between the improvements that occurred before and after 2015. We want to see which goals get the best improvements and which countries put more effort into it.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%", out.height="75%"}
 # Best improvements
@@ -777,17 +777,17 @@ plot_ly() %>%
 
 We notice various patterns, among them:
 
--   Goals 2 (zero hunger), 3 (good health and well-being), 6 (clean water and sanitation), 8 (decent work and economic growth), 12 (responsible consumption and production), 16 (peace, justice and strong institutions) have very low improvements per year. Indeed, even the best ones are below 10%.
+-   Goals 2 (zero hunger), 3 (good health and well-being), 6 (clean water and sanitation), 8 (decent work and economic growth), 12 (responsible consumption and production) and 16 (peace, justice and strong institutions) have very low improvements per year. Indeed, even the best ones are below 10%.
 
 -   Goal 10 (reduced inequalities) has the best improvements, all 20 best improvements are above 20% and it goes up to 45%.
 
--   Some goals clearly had most of their best improvements before 2015: goals 3 (good health and well-being), 5 (gender equality), 6 (clean water and sanitation), 7 (affordable and clean energy).
+-   Some goals clearly had most of their best improvements before 2015: goals 3 (good health and well-being), 5 (gender equality), 6 (clean water and sanitation) and 7 (affordable and clean energy).
 
--   Some goals clearly had most of their best improvements after 2015: goals 8 (decent work and economic growth), 12 (responsible consumption and production).
+-   Some goals clearly had most of their best improvements after 2015: goals 8 (decent work and economic growth) and 12 (responsible consumption and production).
 
 -   Goal 9 (industry, innovation and infrastructure) has all of its 20 best improvements after 2015.
 
-Regarding the impact of the adoption of SDGs in 2015, we can not tell that it had a positive impact, because there are not more big improvements after 2015 than before, even a little bit less. In addition, the most impressive improvements mostly occurred before 2015. These conclusions are supported by the next graph: we fit two different regression lines (before and after 2015) to see if there is a jump after the adoption of the SDGs and if the the SDG scores increase faster. We decided to cut the y-axis in order to have a better visual of the different scores. Since the regressions lines (taking into account all of the goals) go between 30% and 85% we only kept those values.
+Regarding the impact of the adoption of SDGs in 2015, we can not tell that it had a positive impact, because there are not more "big improvements" after 2015 than before, even a little bit less. In addition, the most impressive improvements mostly occurred before 2015. These conclusions are supported by the next graph: we fit two different linear regression lines (before and after 2015) to see if there is a jump after the adoption of the SDGs and if the SDG scores increase faster. We decide to cut the y-axis in order to have a better visual of the different scores. Since the regressions lines (taking into account all of the goals) go between 30% and 85% we only kept those values.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 # Graphs to show the jump (or not) in 2015
@@ -982,7 +982,7 @@ We notice various patterns, among them:
 
 -   Goals 1, 4, 3, and 15 increase faster before 2015 than after.
 
--   Except for goal 17, none seem to increase faster after the adoption of SDGs. Since goal 17 is about collaboration of the countries for SDGs achievement, it is no surprise that before the adoption, there were no increase. It is thus disappointing to see that it is the only goal that has a improvement rate after 2015.
+-   Except for goal 17, none seem to increase faster after the adoption of SDGs. Since goal 17 is about collaboration of the countries for SDGs achievement, it is not surprising that before the adoption, there were no increase. It is thus disappointing to see that it is the only goal that has a higher improvement rate after 2015.
 
 -   Goal 17 also has a small downward jump in 2015, but since it immediately increases in the following years, it is due to the fitting of the lines.
 
