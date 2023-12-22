@@ -4,8 +4,7 @@
 
 **What can explain the state of the countries regarding their sustainable development?**
 
-We will analyse different factors: scores from the Human Freedom Index, GDP per capita, military expenditures in percentage of GDP, unemployment rate, internet usage. You will find more precise informations about our chosen factors in data description section.
-
+We will analyse different factors: scores from the Human Freedom Index, GDP per capita, military expenditures in percentage of GDP, unemployment rate and internet usage. You will find more precise information about our chosen factors in the data description section.
 
 ```{r setup, echo = FALSE, message = FALSE, warning=FALSE}
 #### Initial setup ####
@@ -28,7 +27,7 @@ Correlation_overall <- data_question1 %>%
 
 ### EDA: general exploratory data analysis
 
-For this first part of our EDA, let's try to check first the distribution of the SDG. The following variables are ordered by decreasing order of the average of the scores. The color represent the density of the observations: more the color is bright, more the density is high.
+For this first part of our EDA, we check the distribution of the SDG scores. The following variables are ordered by decreasing order of the average score. The color represents the density of the observations: the more the color is bright, the more the density is high.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE}
 #### Reshape then plot the distribution of the SDG scores ####
@@ -65,9 +64,9 @@ ggplot(long_df_goal_distribution,
        title = 'SDG Scores Distribution')
 ```
 
-As we can see, most of our goals have a left-skewed distribution, which shows that for most of the country concerned implemented good strategies for targeting the goals objectives. Some distributions have a longer distribution than other, showing the variance of the scores between the countries, due to various reasons such as the inequality of the amount of money available to be invested for implementing solutions. In addition, we notice that the only right-skewed distribution is concerning the observations of the goal 9, which is promoting infrastructures, innovation and inclusive and sustainable industrialization.Therefore, it seems like many countries are encountering difficulties for implementing good solutions concerning this goal. Furthermore, we notice that the goal1 has the highest density, which means that in general the countries tend to have good scores. 
+As we can see, most of our goals have a left-skewed distribution, which shows that most of the countries concerned implemented good strategies for targeting the goals' objectives. Some distributions have a wider distribution than others, showing the variance of the scores between the countries, due to various reasons such as the inequality regarding the amount of money available to be invested for implementing solutions. In addition, we notice that the only right-skewed distribution is for goal 9, which is promoting infrastructures, innovation and inclusive and sustainable industrialization. Therefore, it seems like many countries are encountering difficulties for implementing good solutions regarding this goal. Furthermore, we notice that goal 1 has the highest density, which means that in general the countries tend to have good scores, but it also has a very dispersed distribution on the low score side, which reveals high inequalities when it comes to countries with low scores. 
 
-Now let's focus on the distribution of the Human Freedom Index scores. Same ordering selection and color method as the previous distribution plot. 
+Now let's focus on the distribution of the Human Freedom Index scores. We use the same ordering selection and color method as for the previous distribution plot. 
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE}
 #### Human Freedom Index Scores Distribution plot ####
@@ -86,9 +85,9 @@ ggplot(long_df_hfi_distribution, aes(x = Value,
        title = 'Human Freedom Index Scores Distribution')
 ```
 
-The distribution of the Human Freedom Index Score follows the same trend as the SDG goal one. Most of the scores are left-skewed, which means that countries tend to have in general good scores. The only scores not following the trend are pf_law and ef_legal, which tend to have in average lower scores. There could be multipl reasons why it is the case. One could be , i.e., legal system for civilians and countries is evolving slowly because it has a lot of implications over the situation within a country/between countries and because of the divergence of opinions. Therefore, investing money for raising these variable could be more difficult than raising the scores of other goals. Furthermore, the highest density is contained in the factor pf_movement, which mean that in general the countries tend to have good scores. 
+The distribution of the Human Freedom Index Score follows the same trend as the SDG goaes. Most of the scores are left-skewed, which means that countries tend to have good scores. The only scores not following this trend are pf_law and ef_legal, which tend to have in average lower scores. There could be multiple reasons why it is the case. One could be, i.e., that the legal system for civilians and countries is evolving slowly, because it has a lot of implications over the situation within a country/between countries, and because of the divergence of opinions. Therefore, investing money for raising these variables could be more difficult than raising the scores of other goals. Furthermore, the highest density is contained in the factor pf_movement, which means that in general the countries have good and similar scores. 
 
-Now let's consider the remaining variables of the dataset dedicated to answering the influence of factors over our SDG scores. 
+Now let's consider the remaining variables of the dataset dedicated to answering our question about the influence of factors over our SDG scores. 
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE}
 #### Distribution of the remaining variables ####
@@ -170,13 +169,13 @@ grid.arrange(unempl_d,
              nrow = 2)
 ```
 
-Due to density calculations and normalization, some densities exceed 1 because they are not probabilities themselves but rather rates at which probability is accumulating at each point.
+Due to density calculations and normalization, some densities exceed 1, because they are not probabilities themselves but rather rates at which probability is accumulating at each point.
 
-All these variables have a right-skewed distribution. Taking the mode into account, most of the concerned countries in our data have an unemployment rate between 2 to 7%, a distribution of GDP per capita between $1'000-\$10'000, a distribution of military expenditure in percentage of the GDP 10% to 20% and finally a internet usage between 0 and 10%.
+All these variables have a right-skewed distribution. Taking the mode into account, most of the concerned countries in our database have an unemployment rate between 2 and 7%, a distribution of GDP per capita between $1'000-\$10'000, a distribution of military expenditure in percentage of the GDP from 10% to 20% and finally a internet usage between 0 and 10%.
 
-These variables shows us even more the inequalities between the countries in our dataset. While most of our countries have low internet usage or/and a low GDP per capita, few countries are more developed, thus probably more wealthy, and therefore have better chances of getting higher scores.
+These variables show us even more inequalities between the countries in our dataset. While most of our countries have low internet usage or/and a low GDP per capita, few countries are more developed, thus probably more wealthy, and therefore have better chances of getting higher scores.
 
-Now, let's display the distribution of the different SDG achievement scores per continent, using violin boxplots to have an overview of the mods, the range and the outliers of our observations. To do so, we used the median of each goal per continent.
+Now, let's display the distribution of the different SDG achievement scores per continent, using violin boxplots to have an overview of the mods, the range and the outliers. To do so, we use the median of each goal per continent.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 #### Prepare then plot the Distribution of the SDG by continent ####
@@ -306,11 +305,11 @@ ggplot(medians_all,
                                    vjust = 0.5, hjust=1))
 ```
 
-We notice that Europe is the continent with most of its goals having a median score superior to 75 (represented by the dark blue color. We notice that only two goals have a median score lower than 25, which is for goal 9 for Africa and goal 10 for America. As seen before, goal 9 is generally having lower scores than the other goals. That could mean that the access to technology and sustainable/resilient infrastructures/industrialization is harder in Africa, due to various reasons such as the economical situation of these countries, corruption,...
+We notice that Europe is the continent with most of its goals having a median score superior to 75 (represented by the dark blue color. We notice that only two goals have a median score lower than 25, which are goal 9 for Africa and goal 10 for America. As seen before, goal 9 is generally having lower scores than the other goals. It could mean that access to technology and sustainable/resilient infrastructures/industrialization is harder in Africa, due to various reasons such as the economical situation of these countries, corruption,...
 
-The goal 10 concerns the reduction of inequalities within and amongst countries. Therefore, we presume that the investments made in the Americas to implement solutions for getting better scores towards this goal is maybe less effective due to for instance culture difference with other continent, or simply less money spent for solving the issue. 
+Goal 10 is about the reduction of inequalities within and among countries. Therefore, we presume that the investments made in the Americas to implement solutions for getting better scores towards this goal is maybe less effective due to for instance culture difference with other continent, or simply less money spent for solving the issue. 
 
-In addition, some distributions are quite dispersed, such as goal 13 in Oceania and goal 10 in Africa. That could show inequalities within countries or again less investment made to raise the scores by different countries of the same continent.
+In addition, some distributions are quite dispersed, such as goal 13 in Oceania and goal 10 in Africa. That could show inequalities within countries or again less investments made to raise the scores by different countries of the same continent.
 
 Now let's display the boxplots for the different variables of the Human Freedom Index.
 
@@ -441,11 +440,11 @@ ggplot(medians_all_HFI,
         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
-Here we can notice the same results, except that no score has a median below 25%. Again, Europe is the continent with most of its median scores superior to 75. 
+Here we notice the same results, except that no score has a median below 25%. Again, Europe is the continent with most of its median scores superior to 75. 
 
-For space reason because of the different scales, we have decided not to make violin boxplot per continent for the remaining variables. Nevertheless, their distribution can be seen in the general distribution seen prior to that.
+For space reasons, because of the different scales, we decided not to make violin boxplots per continent for the remaining variables. Nevertheless, their distributions can be seen in the general distribution displayed above.
 
-Now, let's have a closer look to the general correlation between our variables. Using our cleaned dataset, we will use a correlation heatmap to help us vizualising the informations. Given that most of our variables are not normally distributed, we will use the Spearman method to calculate the correlation.
+Now, let's have a closer look at the general correlation between our variables. Using our cleaned dataset, we will use a correlation heatmap to help us visualize the information. Given that most of our variables are not normally distributed, we will use the Spearman method to calculate the correlations.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, fig.height = 2}
 #### Correlations between variables Heatmap ####
@@ -496,11 +495,11 @@ plotly_heatmap %>%
   config(displayModeBar = FALSE)
 ```
 
-By looking at our heatmap, we notice that most of our goals are strongely correlated together and that some variables amongst the Human Freedom Index scores too (strong correlation among personal freedom variables (pf), reflecting scores from the Human Freedom Index on movement, religion, assembly, and expression). This could be explained by the fact that some of these goals/scores share partially similar objectifs, which could mean that a raise in the score of one of these goals will raise positively the score of another/some other goals. In addition, we notice that goals 12 and 13 (respectively "responsible consumption & production" and "climate action", therefore climate oriented goals) are strongly negatively correlated with most of our variables. For the moment, as correlation doesn't imply causality, we cannot deduce anything from these informations. We will see more in detail the correlations between our goals and variables in the analysis part of the influence of the factors over the Sustainable Development Goals.
+By looking at our heatmap, we notice that most of our goals are strongly correlated together and that some variables among the Human Freedom Index scores too (strong correlation among personal freedom variables (pf), reflecting scores from the Human Freedom Index on movement, religion, assembly, and expression). This could be explained by the fact that some of these goals/scores share partially similar objectives, which could mean that a raise in the score of one of these goals will raise the score of another/some other goals. In addition, we notice that goals 12 and 13 (respectively "responsible consumption & production" and "climate action", therefore climate oriented goals) are strongly negatively correlated with most of our variables. For the moment, as correlation does not imply causality, we cannot deduce anything from this information. We will see more in details the correlations between our goals and variables in the analysis part of the influence of the factors over the Sustainable Development Goals.
 
-### Analysis: Influence of the factors over the SDG
+### Analysis: Influence of the factors over the SDG scores
 
-In order to answer the first question of our work, let's start by zooming on the correlation matrix heatmap made in our EDA part. Here are the correlations between the SDG and all the other variables except the SDG.
+In order to answer the first question of our work, let's start by zooming on the correlation matrix heatmap made in our EDA section. Here are the correlations between the SDG scores and all the other variables except the SDGs.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 ### Correlation Matrix Heatmap SDG/Other variables ###
@@ -537,13 +536,13 @@ ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
        title = 'Correlations Heatmap between goals and our other variables')
 ```
 
-For vizualization purpose, we have decided to only display the correlations bigger than `r threshold_heatmap` in absolute values. The uncolored parts are the non significant p-values.
+For visualization purpose, we decided to only display the correlations bigger than `r threshold_heatmap` in absolute values. The uncolored parts are the non significant p-values.
 
-Firstly, we can see that most of our correlations between our variables are significant. Also, GDP per capita, internet_usage, pf_law or ef_legal are strongly correlated with most of our SDG. This is mostly due to the large scope englobed in these variables. That makes them influence various sectors of our economies and thus, mostly impacting all our SDG goals. Therefore, we can think that these variables have a strong impact on the scores. Nevertheless, as correlation doesn't mean causality, we still cannot jump to conclusions.
+Firstly, we can see that most of the correlations between the variables are significant. Also, GDP per capita, internet_usage, pf_law or ef_legal are strongly correlated with most of the SDGs. This is mostly due to the large scope of these variables. It makes them influence various sectors of our economies and thus, mostly impacting all the SDG scores. Therefore, we can think that these variables have a strong impact on the scores. Nevertheless, as correlation does not mean causality, we still can not jump to conclusions.
 
-As we can see, our goals 12 & 13 (responsible consumption & production and climate action) are negatively correlated with most of our variables, as is the economic freedom government variable to our SDG. Nevertheless, goals 12 & 13 and ef_government are positively correlated together.
+As we can see, goals 12 and 13 (responsible consumption & production and climate action) are negatively correlated with most of our variables, as is the economic freedom government variable to the SDGs. Nevertheless, goals 12 and 13 and ef_government are positively correlated together.
 
-Now let's zoom on the correlations between all our variables except the SDG:
+Now, let's zoom on the correlations between all our variables except the SDG:
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 melted_corr_matrix_Var <- melt(corr_matrix[19:34,19:34])
@@ -567,7 +566,7 @@ ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
 
 As noticed earlier, there is a strong correlation among personal freedom variables (pf), reflecting scores from the Human Freedom Index on movement, religion, assembly, and expression.
 
-Again, we can see that GDP per capita, pf_law, ef_legal are highly correlated with some other variables. On another hand, we notice that pf_movement, pf_assembly, pf_expression are now also higly correlated with some of the other variables. In addition, we notice than the variables MilitaryExpenditurePercentGDP and ef_governement are negatively correlated with our other variables.
+Again, we can see that GDP per capita, pf_law and ef_legal are highly correlated with some other variables. On another hand, we notice that pf_movement, pf_assembly and pf_expression are now also highly correlated with some of the other variables. In addition, we notice that MilitaryExpenditurePercentGDP and ef_governement are negatively correlated with the other variables.
 
 In order to have a look at the influence of our factors over our dependent variables, let's conduct a Principal Component Analysis.
 
@@ -613,15 +612,15 @@ fviz_pca_biplot(myPCA_s,
 
 ```
 
-With a eigenvalue bigger than 1 for the four first components, we conclude that there are 4 dimensions to take into account. Nevertheless, again, they are explaining less than 80% of cumulated variance. Therefore, the rule of thumb would suggest us to take 6 dimensions into account.
+With an eigenvalue bigger than 1 for the four first components, we conclude that there are 4 dimensions to take into account. Nevertheless, they are only explaining less than 80% of the variance. Therefore, the rule of thumb would suggest us to take 6 dimensions into account.
 
-By looking at the biplot, we notice that only some variables are not following the same trend: MilitaryExpenditurepenrcentGDP, which is negatively correlated with dim1/positively correlated to dim2, ef_government which is negatively correlated with dim1 and 2 and finally unemployment.rate which is slightly positively correlated with dim1 and dim2.
+By looking at the biplot, we notice that only some variables are not following the same trend: MilitaryExpenditurepenrcentGDP, which is negatively correlated with dimension 1/positively correlated to dimension 2, ef_government which is negatively correlated with dimensions 1 and 2 and finally unemployment.rate, which is slightly positively correlated with dimensions 1 and 2.
 
-As we can see, the presence of "GDPpercapita," "Internet_usage," and "ef_money" close to the X axis suggests that Dim1 may be associated with overall economic development and prosperity, as well as the freedoms that are typically associated with more developed economies, such as freedom of expression ("pf_expression"), movement ("pf_movement"), and assembly ("pf_assembly"). Now concerning Dim2, it could be contrasting socio-economic stability with factors that often increase with instability or conflict, such as higher military expenditure or unemployment rates.
+The presence of "GDPpercapita," "Internet_usage," and "ef_money" close to the X axis suggests that the first dimension may be associated with overall economic development and prosperity, as well as the freedom that is typically associated with more developed economies, such as freedom of expression ("pf_expression"), movement ("pf_movement"), and assembly ("pf_assembly"). Now concerning the second dimension, it could be contrasting socio-economic stability with factors that often increase with instability or conflict, such as higher military expenditure or unemployment rates.
 
-While considering our regressions, we have noticed that we had high multicollinearity between several dependent variables in our models, by conducting a VIF test. This is due to the numerous variables that we tried to take into account while computing our regressions. Therefore, we have decided to use the stepwise regression with the forward method and choose the model according to the adjusted R squared. 
+While considering our regressions, we noticed that there was high multicollinearity between several dependent variables in our models, by conducting a VIF test. This is due to the numerous variables that we tried to take into account while computing our regressions. Therefore, we decided to use the stepwise regression with the forward method and chose the models according to the adjusted R squared. 
 
-Let's find the best model for each goal that does not involve severe multicollinearity (VIF > 5) and that has a variance well explained by our independent variable (an adjusted R squared over 0.7). Here are for example the selected models for the goals 12 and 17.
+Let's find the best model for each goal that does not involve severe multicollinearity (VIF > 5) and that has a variance well explained by our independent variable (an adjusted R squared over 0.7). Here are for example the selected models for goals 12 and 17.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE,fig.show='hide'}
 reg_goal1 <-
@@ -870,11 +869,11 @@ Goal17\sim \beta_0 &+ unemployment.rate*\beta_1 + MilitaryExpenditurePercentGDP*
 \end{split}
 $$
 
-We can see that for goal12, the adjusted R squared of the model is good, which means that the independent variables fit well for explaining the dependent variable. Nevertheless, concerning goal17, the adjusted R squared is only equal to 0.5. Therefore, the lack of explanation of our variables can be caused by multiple factors, such as the non significant relationship between the chosen independent variables and the goal17, Omitted variable bias or overfitting.
+We see that for goal 12, the adjusted R squared of the model is good, which means that the independent variables explain well the dependent variable. Nevertheless, for goal 17, the adjusted R squared is only equal to 0.5. Therefore, the lack of explanation of our variables can be caused by multiple factors, such as the non significant relationship between the chosen independent variables and goal 17, Omitted variable bias or overfitting.
 
-The stepwise regression done gave us 12 models out of 17 with an adjusted R squared of 0.6 and more. Therefore, we need to be careful with our interpretation of our results for the models with lower explanated variance. 
+The stepwise regressions gave us 12 models out of 17 with an adjusted R squared of 0.6 and more. Therefore, we need to be careful with our interpretation of the results for the models with lower explained variance. 
 
-Now that we have our optimal model for each goal, let's conduct our regressions and plot them to see the influence of each factor over our SDG.
+Now that we have our optimal model for each goal, let's conduct our regressions and plot them to see the influence of each factor over the SDG scores.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 
@@ -1013,7 +1012,7 @@ ggplot(df_tidy_significant,
        x = "Estimates")
 ```
 
-Here is our general plot. For visualization purpose, let's also plot the positive and negative correlation plots
+Here is our general plot. For visualization purpose, let's also plot the positive and negative correlation plots.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 #positive values only 
@@ -1076,9 +1075,9 @@ ggplot(df_tidy_positive_n, aes(y = Model, x = estimate, color = term)) +
        x = "Estimates")
 ```
 
-In these plots, we can see that most of our variables are influencing positively and negatively our goals. I.e., unemployment.rate is influencing goal 10 & 8 negatively, but positively our other goals. Nevertheless, some factors seems to influence only positively our goals. It is the case for the factors internet_usage. These results are due to the range of the objectives contained in the SDG: as each goal has a different objective, and that our factors are have also a wide range of action, we find different influence between our variables.  
+In these plots, we can see that most of our variables are influencing positively and negatively our goals. I.e., unemployment.rate is influencing goals 10 and 8 negatively, but positively other goals. Nevertheless, some factors seem to influence only positively our goals. It is the case for internet_usage. These results are due to the range of the objectives contained in the SDGs: as each goal has a different objective, and that our factors also have a wide range of action, we find different impacts between our variables.  
 
-Earlier in our study, we had noticed a negative correlation between the goals 12 & 13 with the rest of the selected factors. Now that we have selected our models for these SDGs, we can see that most of their dependent factors are influencing negatively their scores, which is the opposite trend of the remaining goals. Without taking into account the intercept, only pf_religion and population is influencing positively goal 12, and pf_religion & unemployment.rate for goal 13. Therefore, with the selected factors of our two models and their adjusted R squared both superior to 0.75, we can show that the influence of *GDPpercapita*, *PFlaw*, *PFexpression*, *PFidentity*, *EFlegal* and EFtrade will influence negatively goal 12 (Responsible consumption and production) and that *GDPpercapita*, MilitaryExpenditurePercentGDP, *pf_law*, *pf_expression*, *pf_identity* and *ef_legal* will influence negatively goal 13. 
+Earlier in our study, we noticed a negative correlation between goals 12 and 13 with the rest of the selected factors. Now that we have selected our models for these SDGs, we can see that most of their dependent factors are influencing negatively their scores, which is the opposite trend of the remaining goals. Without taking into account the intercept, only pf_religion and population is influencing positively goal 12, and pf_religion and unemployment.rate for goal 13. Therefore, with the selected factors of our two models and their adjusted R squared both superior to 0.75, we can show that the influence of *GDPpercapita*, *PFlaw*, *PFexpression*, *PFidentity*, *EFlegal* and *EFtrade* will influence negatively goal 12 (Responsible consumption and production) and that *GDPpercapita*, *MilitaryExpenditurePercentGDP*, *pf_law*, *pf_expression*, *pf_identity* and *ef_legal* will influence negatively goal 13. 
 
-In conclusion, after reviewing which variables are correlating between eachother, after taking care of our multicollinearity problems and doing our regressions on our overall SDG score, we have been finally able to get a broad picture of the influence of our factors over our SDG. Unfortunately, because of poor explanated variance for some regression models (Goals 2/10/15/17), we have to be careful while doing any conclusions from the regressions. 
+In conclusion, after reviewing which variables are correlated with each other, after taking care of our multicollinearity problems and doing our regressions on our overall SDG scores, we have finally been able to get a broad picture of the influence of our factors over the SDGs. Unfortunately, because of poor explained variance for some regression models (Goals 2/10/15/17), we have to be careful while drawing any conclusions from the regressions. 
 
