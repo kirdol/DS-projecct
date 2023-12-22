@@ -844,9 +844,7 @@ Our last idea is to make regressions between the SDG scores and the variables of
 Let's see the regressions for each score depending on each variable in the disasters dataset (total_affected and total_deaths).
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 5.7, out.width="100%"}
-library(plotly)
-library(dplyr)
-library(ggplot2)
+#### Analysis of Disaster Variables Data per Goals ####
 
 disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
 
@@ -881,8 +879,10 @@ for (goal in relevant_columns[1:15]) {
          y = paste("Goal",
                    substr(goal, 5, 6)))
 
-  plots[[goal]] <- list(ggplotly(p_affected),
-                        ggplotly(p_deaths))
+  plots[[goal]] <- list(ggplotly(p_affected) %>%
+  config(displayModeBar = FALSE),
+                        ggplotly(p_deaths) %>%
+  config(displayModeBar = FALSE))
 }
 
 subplot_plots <- lapply(plots, function(plot_pair) subplot(plot_pair[[1]],
