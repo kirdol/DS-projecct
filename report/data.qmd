@@ -481,8 +481,7 @@ gg_prop_missing <- ggplot(prop_missing_data,
                               text = hover_text)) +
   geom_bar(stat = "identity",
            fill = Fix_color,
-           aes(fill = prop_missing),
-           color = "black") +
+           aes(fill = prop_missing)) +
   labs(title = "NAs by columns in the main dataset",
        x = "Variable",
        y = "Proportion of Missing Values") +
@@ -519,16 +518,18 @@ ggplot(SDG0,
        aes(x = code,
            y = NaPop)) +
   geom_bar(stat = "identity",
-           fill = Fix_color,
-           color = "black") +
-  labs(title = "Proportion of population information missing in the region observations",
+           fill = Fix_color) +
+  labs(title = "Proportion of population information \nmissing in the region observations",
        x = "Region code",
        y = "Proportion of NAs") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45,
-                                   hjust = 1),
+                                   hjust = 1, 
+                                   size=10),
         plot.title = element_text(hjust = 0.5,
-                                  size = 10))
+                                  size = 12),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10))
 
 # Remove the lines where the 'code' start with an "_" (the region)
 D1_0_SDG <- D1_0_SDG %>%
@@ -1475,7 +1476,7 @@ datatable(all_Merge, options = list(pageLength = 5,
 
 We load our final database and we visualize the missing values.We see that some variables have many NAs and that some patterns regarding row missingness emerge. 
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%", out.height="75%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=4.5}
 #### Loading the final database to be cleaned ####
 
 # Import the final database
@@ -1563,8 +1564,6 @@ data_question3_3 <- all_Merge %>%
 
 #### Data for question 1 {.unnumbered}
 
-
-
 ##### Dealing with missing values in colomns {.unnumbered}
 
 We begin by visualizing the missing values. To have a less messy graph we group all the goals wihtout NAs into one single variable. We decide to remove MilitaryExpenditurePercentGovExp, because it has too many missing values and it contains similar information to MilitaryExpenditurePercentGDP.We also remove hf_score, pf_score and ef_score, because there are many missing values and since these variables summarize the other ones, deleting them will not make us loose information.
@@ -1598,20 +1597,20 @@ p <- ggplot(data = missing_data_summary,
                 fill = Missing_Percentage,
                 text = hover_text)) +
   geom_bar(stat = "identity") +
-  scale_fill_gradientn(colors = MPer_pal(100)) +
+  scale_fill_gradientn(colors = Fix_color) +
   labs(title = "Percentage of Missing Values by Variable",
        x = "Variable",
        y = "Missing Percentage") +
   theme_minimal() +
   theme(axis.text.y = element_text(hjust = 1,
-                                   size=6),
-        axis.text.x = element_text(angle = 45,
-                                   hjust = 1,
+                                   size=8),
+        axis.text.x = element_text(hjust = 1,
                                    size=8),
         legend.text = element_text(size = 8),
         legend.title = element_text(size = 10),
         plot.title=element_text(hjust=0.5)) +
-        guides(fill = FALSE)
+        guides(fill = FALSE)+
+  coord_flip()
 
 # Convert to plotly and specify what to display when hovering the graph
 ggplotly(p,
@@ -1676,8 +1675,11 @@ print(p_plotly)
 
 We also look at patterns of missing values in the rows and see that except for the two goals with NAs that we discussed earlier and for the triplet "ef_money", "ef_trade" and "ef_regulation" there are not well defined patterns. We removes the countries that have NAs in the three variables mentioned at the same time.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=5}
 #### Visualizing the missing values in the rows ####
+
+title <- ggtitle("Patterns of missing values in the rows")
+title
 
 gg_miss_upset(data_question1,
               nsets=10,
@@ -2264,7 +2266,7 @@ We create a column with the number of missing values by country over all the var
 
 We begin by visualizing the missing values.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=2}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=1.25}
 #### Visualizing missing values ####
 
 variable_names <- names(data_question3_1)
@@ -2334,7 +2336,7 @@ COVID4 <- data_question3_2 %>%
 g1 <- ggplot(COVID4, aes(x = reorder(code, Na_deaths), y = Na_deaths)) +
   geom_bar(stat = "identity",
            fill = MPer_30_100,
-           color = "black") +
+           color = Fix_color) +
   labs(title = "NAs by country: \ndeaths per million",
        x = "Country code",
        y = "% NAs") +
@@ -2351,7 +2353,7 @@ g2 <- ggplot(COVID4,
                  y = Na_cases)) +
   geom_bar(stat = "identity",
            fill = MPer_30_100,
-           color = "black") +
+           color = Fix_color) +
   labs(title = "NAs by country: \ncases per million",
        x = "Country code",
        y = "% NAs") +
@@ -2367,8 +2369,7 @@ g3 <- ggplot(COVID4,
              aes(x = reorder(code, Na_stringency),
                  y = Na_stringency)) +
   geom_bar(stat = "identity",
-           fill = Fix_color,
-           color = "black") +
+           fill = Fix_color) +
   labs(title = "NAs by country: \nstringency",
        x = "Country code",
        y = "% NAs") +
