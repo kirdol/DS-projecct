@@ -7,9 +7,9 @@ source(here::here("scripts/Clean/setup.R"))
 
 In conclusion, our data analytics research project reveals a gradual global progress in achieving the Sustainable Development Goals (SDGs), with notable variations across continents. While Europe emerges as a leader in SDG accomplishment, Africa lags behind, while Asia, the Americas and Oceania demonstrate diverse performance trends. 
 
-After carefuly choosing our models, we have been able to show the influence of factors on goals. The coefficent of the dependent variables will depend on the objective of the concerned SDGs. The principal trend showed that most of the goals are influenced positively by our chosen variables. Nevertheless, concerning climat oriented SDGs (12 & 13), we have been able to show that the influence of most of their variables in their models will influence their score negatively.
+After carefully choosing our models, we have been able to show the influence of factors on goals. The coefficient of the dependent variables will depend on the objective of the concerned SDGs. The principal trend showed that most of the goals are influenced positively by our chosen variables. Nevertheless, concerning climate oriented SDGs (12 & 13), we have been able to show that the influence of most of their variables in their models will influence their score negatively.
 
-The interconnectedness of SDGs is evident, with high achievement in one goal often correlating with success in others. The analysis indicates that the impact of climate disasters on SDG achievement is notably weak, with limited associations found between climate-related variables and specific goals. Although variables related to Covid-19 and conflicts show significance in SDG achievement, they explain limited variance for each objective.
+The interconnectedness of SDGs is evident, with high achievement in one goal often correlating with success in others. The analysis indicates that the impact of climate disasters on SDG achievement is notably weak, with limited associations found between climate-related variables and specific goals. Although variables related to COVID-19 and conflicts show significance in SDG achievement, they explain limited variance for each objective.
 
 As one might expect, SDG adoption fosters increased partnerships over the goals (goal 17), while Goal 9, focusing on industry, innovation, and infrastructure, exhibits a faster rate of advancement compared to other goals, being before or after 2015. Overall, our findings underscore the complex dynamics influencing global progress on SDGs and emphasize the need for continued efforts and strategic partnerships to address the interconnected challenges and disparities across different regions and goals.
 
@@ -19,7 +19,7 @@ We had to delete several countries due to a high percentage of missing values, w
 
 In addition, we chose some variables as events and factors for our analysis based on our knowledge and ideas on what would have the most interesting impacts, but there are an infinity of possibilities. It is thus difficult to know if we focused on the most important variables to explain the different SDG scores across the world. 
 
-Finally, following the regression analyses on our SDG score, we have been able to gain a comprehensive understanding of how different factors impact our SDG. However, due to the low explanatory power of some of the regression models probably cause by non significant relationship between the chosen independent variables and some goals Omitted variable bias or over-fitting, we must exercise caution when drawing any conclusions from these results.
+Finally, following the regression analyses on our SDG score, we have been able to gain a comprehensive understanding of how different factors impact our SDG. However, due to the low explanatory power of some of the regression models probably cause by non significant relationship between the chosen independent variables and some goals omitted variable bias or over-fitting, we must exercise caution when drawing any conclusions from these results.
 
 ## Future work
 
