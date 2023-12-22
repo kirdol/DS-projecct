@@ -268,8 +268,8 @@ medians_all <- rbind(data_Q1_Oceania_long,
 
 # Assing a color to each median group
 medians_all$color <-
-  ifelse(medians_all$median_value > 75, "3",
-         ifelse(medians_all$median_value < 25, "1", '2'))
+  ifelse(medians_all$median_value > 75, "1",
+         ifelse(medians_all$median_value < 25, "3", '2'))
 
 bandwidth_nrd <- bw.nrd(medians_all$value)
 
