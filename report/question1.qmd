@@ -701,7 +701,7 @@ Let's try now to conduct a cluster analysis, using the Kmean method.
 data_kmean_country <- data_question1 %>%
   dplyr::select(-c(X,code,year,continent,region, population))
 
-#filter data different than 0 and dropping observations 
+#filter data different than 0 and dropping observations equal to 0
 filtered_data <- data_kmean_country %>%
   group_by(country) %>%
   filter_if(is.numeric, all_vars(sd(.) != 0)) %>%
@@ -753,7 +753,57 @@ fviz_cluster(kmean,
 
 Our cluster analysis gives us one principal cluster (here in purple) --\> CENTERED ON 0 BECAUSE AFTER DATA SCALED-\> REALLY SMALL VALUES --\> HOW TO DEAL WITH IT? I TRIED TO TAKE ONLY HFI INTO ACCOUNT BUT NOT WORKING NEITHER. STILL CENTERED ON 0.
 
-<!-- Due to the large number of data, the visualization of the clusters using the kmean method is not really relevant. In addition, by clustering our data, we are trying to get group that differ from eachother but with little variation of the observations within the same cluster. Here, only 60.6% of the variance is explained by the variation between clusters. This is not enough. -->
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.height="100%", out.width="100%"}
+# matrix_means <- as.matrix(means_by_country)
+# 
+# # Transpose the matrix
+# transposed_means <- t(matrix_means)
+# 
+# # Convert back to a data frame, setting the row names (goals) as a column
+# transposed_means_df <- as.data.frame(transposed_means, row.names = NULL)
+# 
+# # Rename the first column to 'Goals' (assuming the goals are the row names in your original data)
+# colnames(transposed_means_df)[1] <- 'Goals'
+# 
+# transposed_means_df <- transposed_means_df[3:18,]
+# 
+# # If the column is a simple list, unlist and convert to numeric
+# numeric_vector <- as.numeric(unlist(transposed_means_df))
+# 
+# # If the list is more complex, use sapply to convert each element
+# numeric_vector <- sapply(transposed_means_df, function(x) as.numeric(x[[1]]))
+# 
+# # If the entire dataframe is a list of lists, convert each element
+# data_kmean_country <- lapply(transposed_means_df, function(x) as.numeric(unlist(x)))
+# 
+# 
+# # Your existing elbow plot
+# elbow_plot <- fviz_nbclust(transposed_means_df,
+#                            kmeans,
+#                            method="wss",
+#                            linecolor = viridis(1,
+#                                                begin = 0.5))
+# 
+# # Add a vertical line at the elbow point (4 clusters)
+# elbow_plot_with_line <- elbow_plot + 
+#   geom_vline(xintercept=4,
+#              linetype="dashed",
+#              color = viridis(1,
+#                              option = "B",
+#                              begin = 0.5))
+# 
+# kmean <- kmeans(transposed_means_df,
+#                 4,
+#                 nstart = 25)
+# 
+# fviz_cluster(kmean,
+#              data = transposed_means_df,
+#              repel=FALSE,
+#              depth =NULL,
+#              ellipse.type = "norm",
+#              labelsize = 10,
+#              pointsize = 0.5)
+```
 
 While considering our regressions, we have noticed that we had high multicolinearity between several dependent variables in our models, by conducting a VIF test. This is due to the numerous variables that we tried to take into account while computing our regressions. Therefore, we have decided to use the stepwise regression with the forward method and choose the model according to the adjusted R squared. 
 
