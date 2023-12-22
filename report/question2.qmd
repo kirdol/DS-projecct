@@ -492,8 +492,11 @@ plot_ly() %>%
   ) %>%
   layout(
     title = paste("Top 20 countries per SDG Score evolution"),
-    yaxis = list(title = "Year difference SDG score", range = c(0, 50)),
-    xaxis = list(title = "Countries", categoryorder = "total ascending", tickangle = -45),
+    yaxis = list(title = "Year difference SDG score",
+                 range = c(0, 50)),
+    xaxis = list(title = "Countries",
+                 categoryorder = "total ascending",
+                 tickangle = -45),
     barmode = "stack",
     updatemenus = list(
       list(

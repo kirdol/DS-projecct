@@ -1,3 +1,5 @@
+# EDA and Analysis of the data
+
 ## Focus on the influence of the factors over the SDG scores
 
 ```{r setup, echo = FALSE, message = FALSE, warning=FALSE}
@@ -67,7 +69,7 @@ Now let's focus on the distribution of the Human Freedom Index scores. Same orde
 
 ggplot(long_df_hfi_distribution, aes(x = Value,
                                      y = Category,
-                                     fill = ..count..)) +
+                                     fill = ..density..)) +
   geom_density_ridges_gradient(scale = 3,
                                size = 0.3,
                                rel_min_height = 0.01) +
@@ -165,19 +167,6 @@ grid.arrange(unempl_d,
 # set y = 1. This creates a single ridge line for each distribution. -> common approach when you want to visualize the distribution of a single variable without categorizing it by another variable.
 
 # it can be normal for the scale of the density legend in a density plot to have a range that extends beyond the typical range of the variable itself, like going from 0 to 12 in the case of unemployment.rate. This can happen due to the way density is calculated and represented in the plot. Here are a few points to understand why this occurs:
-# 
-# Density Calculation: The density in a density plot is a probability density, not a simple frequency or proportion. It represents the probability per unit on the x-axis (in your case, the unemployment rate). Probability densities can exceed 1 because they are not probabilities themselves but rather rates at which probability is accumulating at each point.
-# 
-# Normalization: Density plots typically normalize the area under the curve to sum up to 1. This normalization can result in density values that are greater than 1, especially if the data is concentrated in a narrow range.
-# 
-# Kernel Smoothing: Density plots use kernel smoothing to estimate the probability density function of a random variable. The height of the density curve (y-axis) depends on how concentrated the data points are around each value of the variable. A high peak (high density value) means a lot of data points are concentrated in that area.
-# 
-# Interpreting Density Values: The actual numerical value of the density on the y-axis is less important than the shape of the density curve. It's the relative height and the area under the curve that provide insights into the data distribution, not the absolute density values.
-# 
-# Different Variables, Different Scales: Each variable will have its own density scale depending on its distribution. Variables with a more concentrated distribution will have higher density values.
-# 
-# In summary, for your unemployment.rate plot, a density scale going up to 12 is a reflection of how the data is distributed and how the density is calculated, and it's not unusual. The key is to focus on the shape and peaks of the density plot to understand the distribution of your data.
-# Yes, it can be normal for the scale of the density legend in a density plot to have a range that extends beyond the typical range of the variable itself, like going from 0 to 12 in the case of unemployment.rate. This can happen due to the way density is calculated and represented in the plot. Here are a few points to understand why this occurs:
 # 
 # Density Calculation: The density in a density plot is a probability density, not a simple frequency or proportion. It represents the probability per unit on the x-axis (in your case, the unemployment rate). Probability densities can exceed 1 because they are not probabilities themselves but rather rates at which probability is accumulating at each point.
 # 
@@ -1180,6 +1169,10 @@ ggplot(df_tidy_significant,
            x = estimate,
            color = term)) +
   geom_point() +
+  geom_vline(xintercept = 0,
+             linetype = "solid",
+             size = 0.5,
+             color = viridis(1, option = "B", begin = 0.5)) +
   geom_errorbar(aes(xmin = estimate - std.error, xmax = estimate + std.error),
                 width = 0.2) +
   scale_color_manual(values = myColors) + 
@@ -1210,6 +1203,10 @@ ggplot(df_tidy_positive_p,
            x = estimate,
            color = term)) +
   geom_point() +
+  geom_vline(xintercept = 0,
+             linetype = "solid",
+             size = 0.5,
+             color = viridis(1, option = "B", begin = 0.5)) +
   geom_errorbar(aes(xmin = estimate - std.error, xmax = estimate + std.error),
                 width = 0.2) +
   scale_color_manual(values = myColors) + 
@@ -1236,6 +1233,10 @@ myColors <-
 
 ggplot(df_tidy_positive_n, aes(y = Model, x = estimate, color = term)) +
   geom_point() +
+  geom_vline(xintercept = 0,
+             linetype = "solid",
+             size = 0.5,
+             color = viridis(1, option = "B", begin = 0.5)) +
   geom_errorbar(aes(xmin = estimate - std.error, xmax = estimate + std.error), width = 0.2) +
   scale_color_manual(values = myColors) + 
   theme(axis.text.y = element_text(angle = 0, hjust = 1),
