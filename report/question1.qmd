@@ -67,7 +67,7 @@ Now let's focus on the distribution of the Human Freedom Index scores. Same orde
 
 ggplot(long_df_hfi_distribution, aes(x = Value,
                                      y = Category,
-                                     fill = ..count..)) +
+                                     fill = ..density..)) +
   geom_density_ridges_gradient(scale = 3,
                                size = 0.3,
                                rel_min_height = 0.01) +
