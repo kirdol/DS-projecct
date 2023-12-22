@@ -1,3 +1,5 @@
+# EDA and Analysis of the data
+
 ## Focus on the influence of the factors over the SDG scores
 
 ```{r setup, echo = FALSE, message = FALSE, warning=FALSE}
