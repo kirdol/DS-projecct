@@ -2098,7 +2098,7 @@ question1_missing_ef_trade <- data_question1 %>%
 
 We look at the evolution of the variable over time. For the countries where this evolution is linear, we fill in the missing values using linear interpolation.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="75%", fig.height=3}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 3}
 #### Evolution of economic freedom: trade over time ####
 
 question1_missing_ef_trade <- data_question1 %>%
@@ -2152,7 +2152,7 @@ for (i in list_code) {
 
 Then, we look at the distribution of the variable per region. Seeing that the only region that still has missing values is a centered distribution, we decide to replace the missing values using the mean of the region.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="50%", fig.height=3}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 3}
 #### Distribution of ef_trade missing values ####
 
 question1_missing_ef_trade <- data_question1 %>%
@@ -2353,7 +2353,7 @@ p_plotly
 
 In this particular case, even if there are many missing values in our disaster dataset, we made the hypothesis that disaster events can not happen every year for every country given that these are uncontrollable and non-recurring events. Therefore the NAs that we encounter will become zeroes, implying that there have been no climatic disasters.
 
-```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE}
 #### Replacing NAs by 0 ####
 
 data_question3_1[is.na(data_question3_1)] <- 0
