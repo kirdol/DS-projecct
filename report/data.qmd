@@ -1862,11 +1862,13 @@ There are never more than 30% of NAs. We look at the evolution of the variable o
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=4}
 #### Evolution of the variable over time ####
 
+# Preparing the data before ploting
 question1_missing_Internet <- data_question1 %>%
   group_by(code) %>%
   mutate(PercentageMissing = mean(is.na(internet_usage))) %>% # Column % NAs
   filter(code %in% question1_missing_Internet$code)
 
+# Evolution of internet usage over time plot
 Evol_Missing_Internet <- ggplot(data = question1_missing_Internet) +
   geom_line(aes(x = year,
                 y = internet_usage,
@@ -1897,16 +1899,18 @@ Evol_Missing_Internet <- ggplot(data = question1_missing_Internet) +
         plot.title=element_text(hjust=0.5))+
   facet_wrap(~ code, nrow = 4)
 
+# showing the plot
 print(Evol_Missing_Internet)
+
 
 list_code <- setdiff(unique(question1_missing_Internet$code), "CIV")
 for (i in list_code) {
   country_data <- data_question1 %>%
     filter(code == i)
   interpolated_data <- na.interp(country_data$internet_usage)
-  data_question1[data_question1$code == i, "internet_usage"] <- interpolated_data
-}
+  data_question1[data_question1$code == i, "internet_usage"] <- interpolated_data}
 
+# deleting Ivory Coast country
 data_question1 <- data_question1 %>%
   filter(code!="CIV")
 ```
@@ -1920,6 +1924,7 @@ The variable pf_law has (many) NAs, but only for one country: BLZ, so we decide 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### pf_law has NAs only for BLZ ####
 
+# removing Belize country
 data_question1 <- data_question1 %>%
   filter(code!="BLZ")
 ```
