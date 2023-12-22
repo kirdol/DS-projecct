@@ -1953,9 +1953,10 @@ We look at the evolution of the variable over time, and for the countries with a
 
 question1_missing_ef_money <- data_question1 %>%
   group_by(code) %>%
-  mutate(PercentageMissing = mean(is.na(ef_money))) %>% # Column % NAs
+  mutate(PercentageMissing = mean(is.na(ef_money))) %>%
   filter(code %in% question1_missing_ef_money$code)
 
+# Evolution of economic freedom: money over time graph
 Evol_Missing_ef_money <- ggplot(data = question1_missing_ef_money) +
   geom_line(aes(x = year,
                 y = ef_money, 
@@ -1986,16 +1987,18 @@ Evol_Missing_ef_money <- ggplot(data = question1_missing_ef_money) +
   facet_wrap(~ code, nrow = 1) +
   scale_y_continuous(limits = c(0, 10))
 
+# printing the plot
 print(Evol_Missing_ef_money)
 
+# list with Georgia and North Macedonia
 list_code <- c("GEO",
                "MKD")
+
 for (i in list_code) {
   country_data <- data_question1 %>%
     filter(code == i)
   interpolated_data <- na.interp(country_data$ef_money)
-  data_question1[data_question1$code == i, "ef_money"] <- interpolated_data
-}
+  data_question1[data_question1$code == i, "ef_money"] <- interpolated_data}
 ```
 
 Then, we look at the distribution of the variable per region. Seeing that all are skewed distributions, we decide to replace the missing values using the median by region.
@@ -2003,6 +2006,7 @@ Then, we look at the distribution of the variable per region. Seeing that all ar
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=2}
 #### Evolution of economic freedom: money ####
 
+# preparing the data for the plot
 question1_missing_ef_money <- data_question1 %>%
   group_by(code) %>%
   mutate(PercentageMissing = mean(is.na(ef_money))) %>% # Column % NAs
@@ -2010,6 +2014,7 @@ question1_missing_ef_money <- data_question1 %>%
   group_by(region) %>%
   filter(sum(PercentageMissing, na.rm = TRUE) > 0)
 
+# Distribution of economic freedom: money graph
 Freq_Missing_ef_money <- ggplot(data = question1_missing_ef_money) +
   geom_histogram(aes(x = ef_money, 
                      fill = cut(PercentageMissing,
@@ -2043,8 +2048,7 @@ print(Freq_Missing_ef_money)
 data_question1 <- data_question1 %>%
   group_by(code) %>%
   mutate(
-    PercentageMissingByCode = mean(is.na(ef_money))
-  ) %>%
+    PercentageMissingByCode = mean(is.na(ef_money))) %>%
   ungroup() %>% 
   group_by(region) %>%
   mutate(
@@ -2052,8 +2056,7 @@ data_question1 <- data_question1 %>%
     ef_money = ifelse(
       PercentageMissingByCode < 0.3 & !is.na(ef_money),
       ef_money,
-      ifelse(PercentageMissingByCode < 0.3, MedianByRegion, ef_money)
-    )) %>%
+      ifelse(PercentageMissingByCode < 0.3, MedianByRegion, ef_money))) %>%
   select(-PercentageMissingByCode, -MedianByRegion)
 ```
 
@@ -2066,9 +2069,8 @@ Six countries have missing values, but the percentage of missing values is alway
 
 question1_missing_ef_trade <- data_question1 %>%
   group_by(code) %>%
-  summarize(Na_ef_trade = mean(is.na(ef_trade))) %>% # Column % NAs
+  summarize(Na_ef_trade = mean(is.na(ef_trade))) %>%
   filter(Na_ef_trade != 0)
-
 ```
 
 We look at the evolution of the variable over time. For the countries where this evolution is linear, we fill in the missing values using linear interpolation.
@@ -2076,11 +2078,13 @@ We look at the evolution of the variable over time. For the countries where this
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 3}
 #### Evolution of economic freedom: trade over time ####
 
+# preparing the data for the plot
 question1_missing_ef_trade <- data_question1 %>%
   group_by(code) %>%
   mutate(PercentageMissing = mean(is.na(ef_trade))) %>% # Column % NAs
   filter(code %in% question1_missing_ef_trade$code)
 
+# Evolution of economic freedom: trade over time graph
 Evol_Missing_ef_trade <- ggplot(data = question1_missing_ef_trade) +
   geom_line(aes(x = year,
                 y = ef_trade, 
@@ -2111,9 +2115,10 @@ Evol_Missing_ef_trade <- ggplot(data = question1_missing_ef_trade) +
   facet_wrap(~ code, nrow = 2) +
   scale_y_continuous(limits = c(0, 10))
 
+# showing the plot
 print(Evol_Missing_ef_trade)
 
-# Linear interpolation for "AZE", "BFA", "ETH", "GEO", "VNH"
+# Linear interpolation for "Azerbaijan, Georgia, North Macedonia and Mongolia
 list_code <- c("AZE",
                "GEO",
                "MKD",
@@ -2121,8 +2126,7 @@ list_code <- c("AZE",
 for (i in list_code) {
   country_data <- data_question1 %>% filter(code == i)
   interpolated_data <- na.interp(country_data$ef_trade)
-  data_question1[data_question1$code == i, "ef_trade"] <- interpolated_data
-}
+  data_question1[data_question1$code == i, "ef_trade"] <- interpolated_data}
 ```
 
 Then, we look at the distribution of the variable per region. Seeing that the only region that still has missing values is a centered distribution, we decide to replace the missing values using the mean of the region.
