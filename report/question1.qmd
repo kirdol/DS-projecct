@@ -2,7 +2,7 @@
 
 ## Focus on the influence of the factors over the SDG scores
 
-  **Focus on factors**: What can explain the state of the countries regarding their sustainable development?
+**What can explain the state of the countries regarding their sustainable development?**
 
 We will analyse different factors: scores from the Human Freedom Index, GDP per capita, military expenditures in percentage of GDP, unemployment rate, internet usage. You will find more precise informations about our chosen factors in data description section.
 

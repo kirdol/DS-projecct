@@ -1,6 +1,6 @@
 ## Focus on the influence of events over the SDG scores
 
-**Focus on events**: Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crises and natural disasters?
+**Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crises and natural disasters?** 
 
 We will analyse the impact of the COVID, natural disasters and conflicts (# deaths, damages, etc.) on the SDG scores. You will find more precise informations about how the impact of these events are materialized into our data description section.
 
