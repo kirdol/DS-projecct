@@ -86,7 +86,7 @@ Fix_color <- viridis(1,
 
 # Creation of a discrete color palette for the categorical variables
 colors <- c("#20908c","#e5e419","#e34e64","lightblue","#8dce3e","darkgreen"
-            ,"darkred","darkblue","#e34e64","blue","#fba537","purple","pink",
+            ,"darkred","darkblue","red","blue","#fba537","purple","pink",
             "lightgray","magenta","cyan","darkgrey")
 
 colors_pal <- scale_color_manual(values = colors)
