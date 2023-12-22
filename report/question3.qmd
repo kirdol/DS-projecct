@@ -1,12 +1,13 @@
 ## Focus on the influence of events over the SDG scores
 
+**Is the evolution in sustainable development influenced by uncontrollable events, such as economic crisis, health crises and natural disasters?**
+
+We will analyse the impact of the COVID, natural disasters and conflicts (# deaths, damages, etc.) on the SDG scores. You will find more precise information about how the impact of these events are materialized into our data description section.
+
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 #### Setup of the environment ####
 
 source(here::here("scripts","Clean","setup.R"))
-data_question1 <- read.csv(here("scripts","data","data_question1.csv"))
-data_question24 <- read.csv(here("scripts", "data", "data_question24.csv"))
-data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"))
 data_question3_1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
 data_question3_2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
 data_question3_3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
@@ -14,8 +15,6 @@ Q3.1 <- read.csv(here("scripts", "data", "data_question3_1.csv"))
 Q3.2 <- read.csv(here("scripts", "data", "data_question3_2.csv"))
 Q3.3 <- read.csv(here("scripts", "data", "data_question3_3.csv"))
 data <- read.csv(here("scripts", "data", "all_Merge.csv"))
-Correlation_overall <- data_question1 %>% 
-      dplyr::select(population:ef_regulation)
 ```
 
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
@@ -53,7 +52,7 @@ shapiro_results_2 <- data.frame(
 print(shapiro_results_2)
 ```
 
-The value of W are close to zero (W = 0.2, W=0.2 and W=0.4) for the Covid-19 variables, this suggests that the data diverge from a normal distribution.
+The value of W are close to zero (W = 0.2, W=0.2 and W=0.4) for the COVID-19 variables, this suggests that the data diverge from a normal distribution.
 
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
 variables_to_test <- data_question3_3[, c("ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")]
@@ -72,14 +71,14 @@ shapiro_results_3 <- data.frame(
 
 print(shapiro_results_3)
 ```
+The value of W are close to zero (W = 0.433, W= 0.137, W= 0.327, W= 0.288 and W=0.453) for the conflicts variables, this suggests that the data concerning conflicts diverge from a normal distribution.
 
-The value of W are close to zero (W = 0.433, W= 0.137, W= 0.327, W= 0.288 and W=0.453) for the conflicts variables, this suggests that the data diverge from a normal distribution.
+To sum this results, it means that for further analysis between these events and the SDG goals we will use other methods, such as Spearman's rank correlation.
 
 In order to have an overview of the relationship between the different events variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE}
 
-# Function to create the lower triangle of the correlation matrix
 lower.panel <-
   function(x, y, ...){
     points(x,
@@ -88,7 +87,6 @@ lower.panel <-
            col = Fix_color,
            cex = 0.2)}
 
-# Function to create the histogram of the plot
 panel.hist <-
   function(x, ...){
     usr <- par("usr"); on.exit(par(usr))
@@ -98,7 +96,6 @@ panel.hist <-
     y <- h$counts; y <- y/max(y)
     rect(breaks[-nB], 0, breaks[-1], y, col = Fix_color, ...)}
  
-# panel.cor_stars function with stars alongside correlation coefficients
 panel.cor_stars <-
   function(x, y, digits = 2, prefix = "", cex.cor, ...) {
    usr <- par("usr"); on.exit(par(usr))
@@ -137,7 +134,6 @@ pairs(data_question3_1[, c("overallscore",
       lower.panel = lower.panel,
       main = "Correlation table and distribution of Disaster variables")
 ```
-
 Meaning of the stars: \*\*\* : p_value \< 0.001; \*\* : p_value \< 0.01; \*: p_value \<0.05; no star if p_value is higher.
 
 The different variables used to materialize the impact of climate disasters do not seem to have important influence on the overall score. Indeed, the overallscore and total_affected have a correlation coefficient that suggests a very weak negative linear relationship between this variables and which is not statistically significant (p ≥ 0.05), and the overallscore and total_deaths have a correlation that also indicates a weak negative linear relationship that is statistically significant at p \< 0.05. But we will further explore for the different SDGs, since we believe that such disasters have a specific influence on some SDGs.
@@ -154,10 +150,9 @@ pairs(data_question3_2[,c("overallscore",
       lower.panel = lower.panel,
       main="Correlation table and distribution of COVID variables")
 ```
-
 Meaning of the stars: \*\*\* : p_value \< 0.001; \*\* : p_value \< 0.01; \*: p_value \<0.05; no star if p_value is higher.
 
-The different variables used to materialize the impact of COVID19 do not seem to have important influence on the overall score, we can see that Overallscore and cases_per_million/deaths_per_million/stringency have a correlation coefficient indicating a weak positive linear relationship that is highly statistically significant at p \< 0.001. But we will further explore for the different SDGs, since we believe that COVID19 had a specific influence on some SDGs, for instance "good health and well-being" or "decent work and economic growth".
+The different variables used to materialize the impact of COVID-19 do not seem to have important influence on the overall score, we can see that Overallscore and cases_per_million/ deaths_per_million/ stringency have a correlation coefficient indicating a weak positive linear relationship that is highly statistically significant at p \< 0.001. But we will further explore for the different SDGs, since we believe that COVID-19 had a specific influence on some SDGs, for instance "good health and well-being" or "decent work and economic growth".
 
 Concerning the correlation effect between the COVID19 variables, we could have no surprises, Cases_per_million and deaths_per_million have a moderate to strong positive correlation suggesting a stronger relationship where an increase in the number of COVID-19 cases per million is associated with a substantial increase in the number of deaths per million. This indicates a significant correlation between case prevalence and mortality rate. Cases_per_million and stringency have a moderate positive correlation indicates that higher levels of cases per million are associated with slightly higher severity of health measures. This could mean that in regions where cases are more numerous, stricter sanitary measures can be put in place to control the spread of the virus. Finally, Deaths_per_million and stringency have a strong positive correlation indicating a robust relationship where higher mortality rates are associated with higher severity of sanitary measures. This suggest that in areas where deaths are higher, stricter sanitary measures are applied in an attempt to reduce the spread of the virus and mortality.
 
@@ -175,12 +170,11 @@ pairs(data_question3_3[,c("overallscore",
       lower.panel = lower.panel,
       main="Correlation table and distribution of conflicts variables")
 ```
-
 Meaning of the stars: \*\*\* : p_value \< 0.001; \*\* : p_value \< 0.01; \*: p_value \<0.05; no star if p_value is higher.
 
 Negative values (ranging from -0.17 to -0.28) with three stars (\*\*\*) indicate a strong and statistically significant negative correlation between the overall index (Overallscore) and the various conflict-related variables (Ongoing, sum_deaths, pop_affected, area_affected, maxintensity). A strong negative correlation means that an increase in the Overallscore is associated with a decrease in the values of the other variables. But we have to take into account that correlation does not necessarily imply direct causation.
 
-To explore our data on events such as disasters, covid-19 and conflicts we have to first see which regions are the most touched by these. To do so, we made time-series analysis on this three events each time depending on different variables.
+To explore our data on events such as disasters, COVID-19 and conflicts we have to first see which regions are the most touched by these. To do so, we made time-series analysis on this three events each time depending on different variables.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 #### Date format conversion ####
@@ -193,10 +187,9 @@ Q3.2$year <- as.numeric(format(as.Date(as.character(Q3.2$year),
 Q3.3$year <- as.numeric(format(as.Date(as.character(Q3.3$year),
                                        format = "%Y"), "%Y"))
 ```
-
 These is our time-analysis concerning climatic disasters with total affected per region and with total deaths per region.
 
-We can see that the regions the most affected by the climate disasters are East Asia, North America and South Asia. We will concentrate more in this regions and that the regions the most affected by the climate disasters are East Asia, Latin America & the Caribbean and South Asia.
+We can see that the regions the most affected by the climate disasters are East Asia, North America and South Asia. We will then concentrate for further analysis in this regions.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.3}
 #### Trend of Climatic Disasters Variables Over Time graph ####
@@ -251,8 +244,7 @@ combined_plotly <- combined_plotly %>%
 
 combined_plotly
 ```
-
-These is our time-analysis concerning the COVID-19 cases per million, the COVID-19 deaths per million and the COVID-19 stringency by region between end 2018 and 2022.
+These is our time-analysis concerning the COVID-19 cases per million, the COVID-19 deaths per million and the COVID-19 stringency by region between end 2018 and 2022. We will keep all the regions as they are all impacted by the COVID-19.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.3}
 #### Trend of COVID-19 Variables Over Time graph ####
@@ -311,7 +303,7 @@ combined_plotly
 ```
 These is our time-analysis concerning conflicts deaths, conflicts affected population and maxintensity conflicts per region between 2000 and 2016
 
-We can see that the regions the most affected by the deaths are : Middle east and north Africa, Sub-Saharan Africa, South Asia, then very less America & the Caribbean and Eastern Europe. The regions the most affected by the affected population are : Middle east and north Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Caucasus and Central Asia. Finally, the regions having a maxintensity in conflicts are : Caucasus and Central Asia, Eastern Europe, Middle east and north Africa, Sub-Saharan Africa, North America, South Asia, East Asia just at one precise moment, Latin America & the Caribbean less.
+We can see that the regions the most affected by the deaths are : Middle east and north Africa, Sub-Saharan Africa, South Asia, then very less America & the Caribbean and Eastern Europe. The most affected population per region are : Middle east and north Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Caucasus and Central Asia. Finally, the regions having a high maxintensity in conflicts are : Caucasus and Central Asia, Eastern Europe, Middle east and north Africa, Sub-Saharan Africa, North America, South Asia, East Asia just at one precise moment, Latin America & the Caribbean less.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.3}
 #### Trend of Conflicts Variables Over Time graph ####
@@ -372,12 +364,17 @@ Now that we could visualize which regions are the most impacted by these three e
 
 ### Focus on the correlation between the SDG scores and the different events.
 
-Here you can see an extract of: 
-- Our correlation map between the climate disasters and the SDG goals in South and East Asia and North America as it was the regions that where the most impacted. We conclude that climate disasters do not really have a big impact on SDG scores per region. 
-- Our correlation map between the COVID-19 and the SDG goals only during COVID-19 time. We have the same conclusions, it is still not significant, and that's surprising. 
-- Our correlation map between the conflicts deaths and the SDG goals in Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean as it was the regions that where the most impacted. 
-- Our correlation between conflicts affected population and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Caucasus & Central Asia. 
-- Our correlation between the regions having a maxintensity in conflicts and the SDG goals only for Caucasus & Central Asia, Eastern Europe, Middle east & north Africa, Sub-Saharan Africa, North America, South Asia, East Asia, Latin America & the Caribbean.
+Here you can see an extract containing all the variables that we find important to keep and each SDG goal of:
+
+\- Our correlation map between the climate disasters and the SDG goals in South and East Asia and North America as it was the regions that where the most impacted. We conclude that climate disasters do not really have a big impact on SDG scores per region.
+
+\- Our correlation map between the COVID-19 and the SDG goals only during COVID-19 time. We have the same conclusions, it is still not significant, and that's quite surprising.
+
+\- Our correlation map between the conflicts deaths and the SDG goals in Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean as it was the regions that where the most impacted and still do not seem to find a significant relationship.
+
+\- Our correlation between conflicts affected population and the SDG goals only for the Middle East & North Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Caucasus & Central Asia.
+
+\- Our correlation between the regions having a maxintensity in conflicts and the SDG goals only for Caucasus & Central Asia, Eastern Europe, Middle east & north Africa, Sub-Saharan Africa, North America, South Asia, East Asia, Latin America & the Caribbean.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.5}
 #### Correlation between the climate disasters and the SDG goals in South and East Asia and North America heatmap ####
@@ -588,7 +585,6 @@ ggplot(data = cor_melted,
        y = 'Maxintensity',
        title = 'Correlation between Maxintensity in Conflicts and the SDG goals')
 ```
-
 After looking at almost the same results, we asked ourselves if the fact that we do not see any correlations is because the consequences of this disasters arrive later on, so we decided to remake the same correlations with 1 year gap.
 
 ### Correlations for each event with one year gap
@@ -645,19 +641,15 @@ ggplot(data = cor_melted_lagged,
        y = '',
        title = 'Correlation between the climate disasters \nand the SDG goals in South and East Asia with 1 year gap')
 ```
-
 Even with a year gap it doesn't seem that climate disaster with such consequences as the population that gets affected and dies has an impact on the SDG scores as we would have though. But we are still a little bit optimistic and though why not look at the correlations with a gap year over the years.
 
 ### Interactive map of the correlation between the different events and the SDG goals with 1 year gap.
 
-Here you can see an extrat of our interactive map of the correlation between the climate disasters and the SDG goals in South, East Asia and North America with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019). Unforthunatly, our shiny app is not supported in static R Markdown documents. For more details you can see our interactive maps in the "See Interactive" Folder, our document called "Interactive_Matrix_Plots.
+Here you can see an extract of our interactive map of the correlation between the climate disasters and the SDG goals in South, East Asia and North America with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019). Unfortunately, our shiny app is not supported in static R Markdown documents. For more details you can see our interactive maps in the "See Interactive" folder, our document is called "Interactive_Matrix_Plots".
 
-![Extract of the correlation between the climate disasters and the SDG goals with 1 yeat gap](report/pictures question3/Climate_Dis_year_gap.png) 
+![Extract of the correlation between the climate disasters and the SDG goals with 1 year gap](Q3_Climate_Dis_year_gap.png)
 
-" height="190px" width="520" style="display: block; margin: 60px auto 0;"/>
-
-
-here you can see the correlation between COVID-19 and the SDG goals with 1 year gap. And strangely, instead of having a negative correlation, we expected that the more cases and deaths happened because of COVID-19, the scores of the SDG would be negatively affected,but with the gap year we can see that the scores of the Goal3, Goal6, Goal9 and Goal16 are quite positively impacted by the COVID-19.
+Here you can see the correlation between COVID-19 and the SDG goals with 1 year gap. And strangely, instead of having a negative correlation, we expected that the more cases and deaths happened because of COVID-19, the scores of the SDG would be negatively affected,but with the gap year we can see that the scores of the Goal3, Goal6, Goal9 and Goal16 are quite positively impacted by the COVID-19. The Goal6 could be explained by the fact that during COVID-19, the majority of the countries put rules to stay at home, meaning that we stop contributing to water pollution. However, the fact that the relationship with the others goals is relatively positive is quite odd. In 2022, the Goals 12 and 13 are quite negatively impacted by the COVID-19, "Responsible Consumption and Production" and "Climate action".
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE,fig.height = 2.5, out.width="100%"}
 
@@ -727,30 +719,25 @@ plot_2020
 plot_2021
 plot_2022
 ```
-
 Finally, here you can see an extract of our interactive map of the correlation between respectively for the 3 different variables of the Conflict and the SDG goals with 1 year gap. Once again, you can look for more details to our document containing our interactive correlation matrices.
 
-<img src="Conflicts_Deaths_year_gap.png" height="190px" width="520" style="display: block; margin: 60px auto 0;"/>
+![Extract of the correlation between the conflicts deaths and the SDG goals with 1 year gap](Q3_Conflicts_Deaths_year_gap.png)
 
 Here's the extract of our interactive map of the correlation between the affected population in conflicts and the SDG goals with 1 year gap.
 
-<img src="Conflicts_Affected_year_gap.png" height="190px" width="520" style="display: block; margin: 60px auto 0;"/>
+![Extract of the correlation between the conflicts affected and the SDG goals with 1 year gap](Q3_Conflicts_Affected_year_gap.png)
 
+Here's the extract of our interactive map of the correlation between the Maxintensity in conflicts and the SDG goals with 1 year gap.
 
-Here's the extrant of our interactive map of the correlation between the Maxintensity in conflicts and the SDG goals with 1 year gap.
-
-<img src="Conflicts_Maxintensity_year_gap.png" height="190px" width="520" style="display: block; margin: 60px auto 0;"/>
-
-
-The results seems logic because if the SDG scores continue to go higher and the conflicts remains the same or finishes we get a negative correlation
+![Extract of the correlation between the conflicts maxintensity and the SDG goals with 1 year gap](Q3_Conflicts_Maxintensity_year_gap.png)The results seems logic because if the SDG scores continue to go higher and the conflicts remains the same or finishes we get a negative correlation.
 
 Our last idea is to see the regressions between the SDG scores and the variables of each event that we thought interesting.
 
 ### Regressions between the SDG scores and the events variables.
 
-Let's see the regressions for each score depending of each variable in the disasters dataset (total_affected and total_deaths)
+Let's see the regressions for each score depending of each variable in the disasters dataset (total_affected and total_deaths).
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2,5, out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 3, out.width="100%"}
 library(plotly)
 library(dplyr)
 library(ggplot2)
@@ -763,7 +750,6 @@ relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6",
                       "total_deaths")
 subset_data <- disaster_data[, relevant_columns]
 
-# Effectuer la régression linéaire et créer les graphiques
 plots <- list()
 for (goal in relevant_columns[1:15]) {
   # Pour total_affected
@@ -778,7 +764,6 @@ for (goal in relevant_columns[1:15]) {
          y = paste("Goal",
                    substr(goal, 5, 6)))
 
-  # Pour total_deaths
   p_deaths <- ggplot(subset_data,
                      aes_string(x = "total_deaths",
                                 y = goal)) +
@@ -791,12 +776,10 @@ for (goal in relevant_columns[1:15]) {
          y = paste("Goal",
                    substr(goal, 5, 6)))
 
-  # Ajouter les deux graphiques à la liste
   plots[[goal]] <- list(ggplotly(p_affected),
                         ggplotly(p_deaths))
 }
 
-# Afficher tous les graphiques
 subplot_plots <- lapply(plots, function(plot_pair) subplot(plot_pair[[1]],
                                                            plot_pair[[2]],
                                                            nrows = 1,
@@ -805,23 +788,20 @@ subplot(subplot_plots,
         nrows = length(subplot_plots),
         margin = 0.05)
 ```
-
 Most relationships between the goals and the variables ('total_affected' and 'total_deaths') are not statistically significant (indicated by p-values \> 0.05). More specifically, in several models, the coefficients for 'total_affected' and 'total_deaths' are small, indicating weak or negligible relationships with the respective goals. Some models have marginally significant p-values (close to 0.05) but still lack statistical significance. Goals 7, 8, 10, 13, 14, and 15 exhibit statistically significant relationships with 'total_affected,' indicating small to moderate positive relationships. Goals 7 and 8 also show statistically significant relationships with 'total_deaths,' indicating moderate negative relationships.
 
 These findings suggest that, in most cases, the relationships between the specified goals and Climate disasters variables (total affected and total deaths) are not statistically significant. However, some goals do indicate small to moderate associations with these variables.
 
-
-Now, we have made the same conclusions for the COVID-19 and Conflicts events, you can have a nice representation of each regression plot if you look at our Interactive_Matrix_Plots documents containing shiny apps, yo that you can have a closer look and choose which goals interests you the most.("C:/DS-project/report/See Interactive/Interactive_Matrix_Plots.qmd")
-
-
-Indeed, for all Goals, the predictor variables (stringency, number of cases per million and number of deaths per million) show statistically significant relationships. However, when assessed individually, these predictors explain only a marginal fraction of the variance of the respective objectives, with explanatory percentages ranging from around 0.141% to 6.99%. Adjusted R-squared values consistently indicate limited explanatory power for these relationships, implying the influence of other factors not accounted for in the variations observed for each objective. Relying solely on rigor, cases per million and deaths per million results in modest predictive capabilities for each objective.
+Now, we have made the same conclusions for the COVID-19 and Conflicts events, you can have a nice representation of each regression plot if you look at our Interactive_Matrix_Plots document containing shiny apps, so that you can have a closer look and choose which goals interests you the most.("report/See Interactive/Interactive_Matrix_Plots.qmd")
 
 For all Goals, the predictor variables (stringency, number of cases per million and number of deaths per million) show statistically significant relationships. However, when assessed individually, these predictors explain only a marginal fraction of the variance of the respective objectives, with explanatory percentages ranging from around 0.141% to 6.99%. Adjusted R-squared values consistently indicate limited explanatory power for these relationships, implying the influence of other factors not accounted for in the variations observed for each objective. Relying solely on rigor, cases per million and deaths per million results in modest predictive capabilities for each objective.
 
-In summary, the statistical significance of stringency, cases per million and deaths per million in relation to each objective is clear. However, these predictive variables individually fail to explain the variations observed, highlighting the need to explore additional variables or unexplored factors in order to significantly improve predictive ability for each respective objective.
+For all Goals, the predictor variables (stringency, number of cases per million and number of deaths per million) show statistically significant relationships. However, when assessed individually, these predictors explain only a marginal fraction of the variance of the respective objectives, with explanatory percentages ranging from around 0.141% to 6.99%. Adjusted R-squared values consistently indicate limited explanatory power for these relationships, implying the influence of other factors not accounted for in the variations observed for each objective. Relying solely on rigor, cases per million and deaths per million results in modest predictive capabilities for each objective.
+
+The statistical significance of stringency, cases per million and deaths per million in relation to each objective is clear. However, these predictive variables individually fail to explain the variations observed, highlighting the need to explore additional variables or unexplored factors in order to significantly improve predictive ability for each respective objective.
 
 Finally for the regressions for each SDG score depending of each variable in the Conflicts dataset (pop_affected and sum_deaths) we can say that all three predictors exhibited statistically significant relationships with the respective goals across the board. 'Maxintensity' generally demonstrated a relatively stronger association compared to 'Population Affected' and 'Deaths' in most analyses. But collectively, these predictors explained only a small to moderate portion of the variability observed in the different goals (adjusted R-squared ranging from approximately 1% to 9.48%). This suggests that there are other unaccounted factors not included in the analysis that significantly influence the outcomes of these goals.
 
-To conclude, while 'Population Affected,' 'Deaths,' and 'Maxintensity' consistently showed significant associations with the various goals analyzed, their combined effect explained only a fraction of the variance observed in these goals. Therefore, there are likely additional crucial factors beyond these predictors that play substantial roles in influencing the outcomes of the respective goals.
+While 'Population Affected,' 'Deaths,' and 'Maxintensity' consistently showed significant associations with the various goals analyzed, their combined effect explained only a fraction of the variance observed in these goals. Therefore, there are likely additional crucial factors beyond these predictors that play substantial roles in influencing the outcomes of the respective goals.
 
-All three predictors exhibited statistically significant relationships with the respective goals across the board. 'Maxintensity' generally demonstrated a relatively stronger association compared to 'Population Affected' and 'Deaths' in most analyses. But collectively, these predictors explained only a small to moderate portion of the variability observed in the different goals (adjusted R-squared ranging from approximately 1% to 9.48%). This suggests that there are other unaccounted factors not included in the analysis that significantly influence the outcomes of these goals. To conclude, while 'Population Affected,' 'Deaths,' and 'Maxintensity' consistently showed significant associations with the various goals analyzed, their combined effect explained only a fraction of the variance observed in these goals. Therefore, there are likely additional crucial factors beyond these predictors that play substantial roles in influencing the outcomes of the respective goals.
+All three predictors exhibited statistically significant relationships with the respective goals across the board. 'Maxintensity' generally demonstrated a relatively stronger association compared to 'Population Affected' and 'Deaths' in most analyses. But collectively, these predictors explained only a small to moderate portion of the variability observed in the different goals (adjusted R-squared ranging from approximately 1% to 9.48%). This suggests that there are other unaccounted factors not included in the analysis that significantly influence the outcomes of these goals. While 'Population Affected,' 'Deaths,' and 'Maxintensity' consistently showed significant associations with the various goals analyzed, their combined effect explained only a fraction of the variance observed in these goals. Therefore, there are likely additional crucial factors beyond these predictors that play substantial roles in influencing the outcomes of the respective goals.
