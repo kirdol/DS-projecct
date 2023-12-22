@@ -37,7 +37,7 @@ long_df_goal_distribution <- pivot_longer(Correlation_overall,
                                           cols = starts_with("goal"),
                                           names_to = "Goal",
                                           values_to = "Value")
-
+# Arranging data
 long_df_goal_distribution$Goal <- with(long_df_goal_distribution,
                                        reorder(Goal, Value, FUN = mean))
 
@@ -45,7 +45,7 @@ long_df_hfi_distribution <- pivot_longer(Correlation_overall,
                                          cols = pf_law:ef_regulation,
                                          names_to = "Category",
                                          values_to = "Value")
-
+# Arranging data
 long_df_hfi_distribution$Goal <- with(long_df_hfi_distribution,
                                       reorder(Category, Value, FUN = mean))
 
@@ -516,8 +516,10 @@ for (i in 1:ncol(data_question1[7:40])) {
 
 corr_matrix[which(p_matrix2 > p_value_threshold)] <- NA #only keeping significant pval alpha = 0.05
 
+# transformation melted 
 melted_corr_matrix_GVar <- melt(corr_matrix[19:34,1:18])
 
+#Heatmap 
 ggplot(melted_corr_matrix_GVar, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   geom_text(aes(label = ifelse(!is.na(value) & abs(value) > threshold_heatmap, sprintf("%.2f", value), '')),
@@ -545,7 +547,11 @@ As we can see, goals 12 and 13 (responsible consumption & production and climate
 Now, let's zoom on the correlations between all our variables except the SDG:
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
+### Correlation Matrix Heatmap other variables ###
+
 melted_corr_matrix_Var <- melt(corr_matrix[19:34,19:34])
+
+#heatmap
 ggplot(melted_corr_matrix_Var, aes(Var1, Var2, fill = value)) +
   geom_tile() +
   geom_text(aes(label = ifelse(!is.na(value) & abs(value) > threshold_heatmap, sprintf("%.2f", value), '')),
@@ -623,6 +629,8 @@ While considering our regressions, we noticed that there was high multicollinear
 Let's find the best model for each goal that does not involve severe multicollinearity (VIF > 5) and that has a variance well explained by our independent variable (an adjusted R squared over 0.7). Here are for example the selected models for goals 12 and 17.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE,fig.show='hide'}
+### Model selection for each goal using regsubset() function, forward method ###
+
 reg_goal1 <-
   regsubsets(goal1 ~ unemployment.rate + GDPpercapita +
                MilitaryExpenditurePercentGDP + internet_usage + pf_law +
@@ -768,6 +776,7 @@ reg_goal17 <-
              nbest=10,
              method="forward")
 
+#plots for each goal
 plot(reg_goal1,
      scale="adjr2") +
   theme_minimal() +
@@ -850,6 +859,7 @@ plot(reg_goal17,
 ```
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
+#plot goal 12
 plot(reg_goal12, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal12 Forward method, adj.R^2")
 ```
 
@@ -860,6 +870,7 @@ Goal12\sim \beta_0 &+ GDPpercapita*\beta_1 + PFlaw*\beta_2 + PFreligion*\beta_3 
 $$
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
+#plot goal 17
 plot(reg_goal17, scale="adjr2") + theme_minimal() + title("Stepwise Regression Goal17 Forward method, adj.R^2")
 ```
 
@@ -876,8 +887,8 @@ The stepwise regressions gave us 12 models out of 17 with an adjusted R squared 
 Now that we have our optimal model for each goal, let's conduct our regressions and plot them to see the influence of each factor over the SDG scores.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
+### Regressions ###
 
-#Regressions 
 Goal1lm <- lm(goal1 ~ unemployment.rate + MilitaryExpenditurePercentGDP
               + internet_usage + pf_religion + pf_assembly + pf_identity
               + ef_government + ef_trade,
@@ -952,7 +963,7 @@ Goal17lm <- lm(goal17 ~ unemployment.rate + MilitaryExpenditurePercentGDP
                + ef_legal + population,
                data = data_question1)
 
-#coefficient plot
+# Main coefficient plot
 
 # Create a dataframe of tidy models
 model_list <- list(Goal1lm, Goal2lm, Goal3lm, Goal4lm, Goal5lm, Goal6lm,
@@ -975,19 +986,22 @@ df_tidy <-
 # Filter for significant p-values
 df_tidy_significant <-
   df_tidy[df_tidy$p.value < p_value_threshold, ]
-library(RColorBrewer)
+
+# arrange order variables
 model_order <- c("Goal1lm", "Goal2lm", "Goal3lm", "Goal4lm", "Goal5lm",
                  "Goal6lm", "Goal7lm", "Goal8lm","Goal9lm", "Goal10lm",
                  "Goal11lm", "Goal12lm", "Goal13lm", "Goal15lm",
                  "Goal16lm", "Goal17lm")
 
+# Arrange order variables
 df_tidy_significant$Model <-
   factor(df_tidy_significant$Model, levels = model_order)
 
+# color palette
 myColors <-
   colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_significant$term)))
 
-# All models graph
+# All models plot
 ggplot(df_tidy_significant,
        aes(y = Model,
            x = estimate,
@@ -1015,12 +1029,17 @@ ggplot(df_tidy_significant,
 Here is our general plot. For visualization purpose, let's also plot the positive and negative correlation plots.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
-#positive values only 
+### Coefficient plot (positive values only) ###
+
+# Filter estimates superior to 0
 df_tidy_positive_p <- df_tidy_significant[df_tidy_significant$estimate > 0, ]
 
+# Arrange order variables
 df_tidy_positive_p$Model <- factor(df_tidy_positive_p$Model, levels = model_order)
 
+# Color palette
 myColors <- colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_positive_p$term)))
+
 # Plot only positive coefficients
 ggplot(df_tidy_positive_p,
        aes(y = Model,
@@ -1045,16 +1064,21 @@ ggplot(df_tidy_positive_p,
        y = "Models",
        x = "Estimates")
 
-#negative values only
+### Coefficient plot (negative values only) ###
+
+# Filter estimates inferior to 0
 df_tidy_positive_n <-
   df_tidy_significant[df_tidy_significant$estimate < 0, ]
 
+# Arrange order variables
 df_tidy_positive_n$Model <-
   factor(df_tidy_positive_n$Model, levels = model_order)
 
+# Color palette
 myColors <-
   colorRampPalette(brewer.pal(11, "Spectral"))(length(unique(df_tidy_positive_n$term)))
 
+# Plot only negative coefficients
 ggplot(df_tidy_positive_n, aes(y = Model, x = estimate, color = term)) +
   geom_point() +
   geom_vline(xintercept = 0,
