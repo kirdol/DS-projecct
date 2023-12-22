@@ -312,6 +312,7 @@ ggplot(df_tidy_significant,
            x = estimate,
            color = term)) +
   geom_point() +
+  geom_vline(xintercept = 0, linetype = "solid", size = 0.5, color = viridis(1, option = "B", begin = 0.5)) +
   xlim(-1, 1) + # Changed from ylim to xlim
   theme(axis.text.y = element_text(angle = 0, vjust = 1, size = 8),
         axis.text.x = element_text(angle = 45, vjust = 1, size = 8),

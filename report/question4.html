@@ -193,7 +193,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>We clearly see that the first component is the most important one. Guided by the Kaiser criterion, which advises to retain only components with an eigenvalues exceeding 1, the initial three components emerge as candidates with their respective eigenvalue being 9.727, 1.28 and 1.016. We now want to see how those our two first components look on in a biplot.</p>
+<p>We clearly see that the first component is the most important one. Guided by the Kaiser criterion, which advises to retain only components with an eigenvalues exceeding 1, the initial three components emerge as candidates with their respective eigenvalue being 9.727, 1.28 and 1.016. We now want to see how our two first components look on in a biplot.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Biplot ####</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -215,7 +215,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The biplot offers an interesting visualization that clearly illustrate the relationship between the various goals and the first two components. We can see that the second dimension is mostly correlated with Goals 10 (Reduced inequalities) and 15 (Life on Land). The rest of the variables are more correlated with Dimension 1. With the biplot, we can see three disinct groups of variables, each playing a unique role. We see a group that regroup Goals 12 (Responsible Consumption and Production) and 13 (Climate Action). It is not a surprise to see that they are in the opposite direction from the rest of the variable. This comportment is due to the negative correlation between them and the rest of the variables as discussed previously. Both depicte environmental issues. We also see a group that regroup Goals 10 (Reduced inequalities) and 15 (Life on Land) which is suprising. To group the goal that treat the inequalities (goal 10) and the goal that concern the life on land (goal 15) does not make any sense. The last group regroup the rest of the variables. This categorization helps to understand the distinct influences and interactions between the goals.</p>
+<p>The biplot offers an interesting visualization that clearly illustrate the relationship between the various goals and the first two components. We can see that the second dimension is mostly correlated with Goals 10 (Reduced inequalities) and 15 (Life on Land). The rest of the variables are more correlated with Dimension 1. With the biplot, we can see three distinct groups of variables, each playing a unique role. We see a group that regroup Goals 12 (Responsible Consumption and Production) and 13 (Climate Action). It is not a surprise to see that they are in the opposite direction from the rest of the variable. This comportment is due to the negative correlation between them and the rest of the variables as discussed previously. Both depict environmental issues. We also see a group that regroup Goals 10 (Reduced inequalities) and 15 (Life on Land) which is surprising. To group the goal that treat the inequalities (goal 10) and the goal that concern the life on land (goal 15) does not make any sense. The last group regroup the rest of the variables. This categorization helps to understand the distinct influences and interactions between the goals.</p>
 <p>We also performed a stepwise regression trying to see more precisely how the goals are correlated with each other. We use the forward selection with the <code>leaps</code> package to do so.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Stepwise regression ####</span></span>
@@ -377,32 +377,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>df_tidy <span class="ot">&lt;-</span></span>
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(rbind,</span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>          <span class="fu">lapply</span>(<span class="fu">names</span>(models_tidy),</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>                 <span class="cf">function</span>(x) <span class="fu">cbind</span>(models_tidy[[x]], <span class="at">Model=</span>x)))</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming 'p.value' is the column name for p-values in your dataframe</span></span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>significance_level <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for significant p-values</span></span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>df_tidy_significant <span class="ot">&lt;-</span></span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>  df_tidy[df_tidy<span class="sc">$</span>p.value <span class="sc">&lt;</span> significance_level, ]</span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot graph with all models</span></span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_tidy_significant,</span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> Model,</span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> estimate,</span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> term)) <span class="sc">+</span></span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">+</span> <span class="co"># Changed from ylim to xlim</span></span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>),</span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>),</span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">6.5</span>),</span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>),</span>
-<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.3</span>, <span class="st">"cm"</span>)) <span class="sc">+</span></span>
-<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Coefficient Plot of Regression Models"</span>,</span>
-<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Models"</span>, <span class="co"># Swapped x and y labels</span></span>
-<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Estimates"</span>) <span class="sc">+</span></span>
-<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>  colors_pal</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>                 <span class="cf">function</span>(x) <span class="fu">cbind</span>(models_tidy[[x]],</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">Model=</span>x)))</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming 'p.value' is the column name for p-values in your dataframe</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>significance_level <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for significant p-values</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>df_tidy_significant <span class="ot">&lt;-</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  df_tidy[df_tidy<span class="sc">$</span>p.value <span class="sc">&lt;</span> significance_level, ]</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot graph with all models</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_tidy_significant,</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">y =</span> Model,</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> estimate,</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> term)) <span class="sc">+</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">size =</span> <span class="fl">0.75</span>, <span class="at">color =</span> <span class="fu">viridis</span>(<span class="dv">1</span>, <span class="at">option =</span> <span class="st">"B"</span>, <span class="at">begin =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">+</span> <span class="co"># Changed from ylim to xlim</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">6.5</span>),</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>),</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.3</span>, <span class="st">"cm"</span>)) <span class="sc">+</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Coefficient Plot of Regression Models"</span>,</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Models"</span>, <span class="co"># Swapped x and y labels</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Estimates"</span>) <span class="sc">+</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>  colors_pal</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -411,7 +413,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The following graphs show the Residuals versus our fitted values for our model that explained the overallscore and the goal 9. Let’s first look at the model that explain the best the Overallscore variable:</p>
+<p>The following graphs show the Residuals versus our fitted values for our model that explained the overallscore and the goal 9. Let’s first look at the model that explain the best the overallscore variable:</p>
 <p><span class="math display">\[
 \begin{split}
 Overallscore\sim \beta_0 &amp;+ Goal~2*\beta_1 + Goal~3*\beta_2 + Goal~4*\beta_3 + Goal~6*\beta_4 \\ &amp;+ Goal~7*\beta_5 + Goal~10*\beta_6 + Goal~15*\beta_7 + Goal~17*\beta_8
@@ -420,7 +422,7 @@ Overallscore\sim \beta_0 &amp;+ Goal~2*\beta_1 + Goal~3*\beta_2 + Goal~4*\beta_3
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Residuals vs Fitted plot for overallscore ####</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Overallscore ~ others variables</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Overallscore ~ others variables plot</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mod_o,</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> .fitted,</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
@@ -451,7 +453,7 @@ Overallscore\sim \beta_0 &amp;+ Goal~2*\beta_1 + Goal~3*\beta_2 + Goal~4*\beta_3
 </div>
 </div>
 </div>
-<p>As the we now from the nature of the overallscore variable. It has been calculated using the 17 goal scores. Hence, the stepwise regression did not struggle to find a model with good results. The <span class="math inline">\(R^2\:adjusted\)</span> of 0.98 of this model suggest that the model is good quality. As we can see in the first graph, the residuals vs.&nbsp;fitted plot also suggest a good quality. The residuals are well distributed around 0, the residual and the red line, representing the mean residual, is almost flat and very close to 0. Let’s now look at the model that according to our stepwise regression, is the best model at explaining our goal 9 scores with a <span class="math inline">\(R^2\:adjusted\)</span> of 0.81 but in reality that does not perform well according to the residual versus fitted plot. The predicted model looks as follow:</p>
+<p>As we know from the nature of the overallscore variable. It has been calculated using the 17 goal scores. Hence, the stepwise regression did not struggle to find a model with good results. The <span class="math inline">\(R^2\:adjusted\)</span> of 0.98 of this model suggest that the model is good quality. As we can see in the first graph, the residuals vs.&nbsp;fitted plot also suggest a good quality. The residuals are well distributed around 0, the residual and the red line, representing the mean residual line is almost flat and very close to 0. Let’s now look at the model that according to our stepwise regression, is the best model at explaining our goal 9 scores with a <span class="math inline">\(R^2\:adjusted\)</span> of 0.81 but in reality does not perform well according to the residual versus fitted plot. The predicted model looks as follow:</p>
 <p><span class="math display">\[
 \begin{split}
 Goal~9\sim \beta_0 &amp;+ Goal~1*\beta_1 + Goal~2*\beta_2 + Goal~3*\beta_3 + Goal~8*\beta_4 \\ &amp;+ Goal~10*\beta_5 + Goal~12*\beta_6 + Goal~15*\beta_7 + Goal~17*\beta_8
@@ -460,7 +462,7 @@ Goal~9\sim \beta_0 &amp;+ Goal~1*\beta_1 + Goal~2*\beta_2 + Goal~3*\beta_3 + Goa
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### Residuals vs Fitted plot for goal 9 ####</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Goal 9 ~ others variables</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Goal 9 ~ others variables plot</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mod_9,</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> .fitted,</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> .resid)) <span class="sc">+</span></span>
@@ -491,8 +493,8 @@ Goal~9\sim \beta_0 &amp;+ Goal~1*\beta_1 + Goal~2*\beta_2 + Goal~3*\beta_3 + Goa
 </div>
 </div>
 </div>
-<p>As we can see in the graph, the model that tried to explain goal 9 is not as good. The mean residual is not flat and vary a lot. This could suggest non-linearity.</p>
-<p>To conclude this part, we have seen some interesting relationships between the SDGs scores. We found that if a country is performing well in some goals, it does not necessary mean that it will perform well in the others. Some goals are negatively correlated. We then interested our-self on regrouping some goals together with a principal components analysis and we found that the analysis suggested to regroup some goals that at first sight, would not have been regrouped together. We also performed some stepwise regression to see how thw individual goals could be explained by the other and found that in general the model does not select all variables to explain the given goals. This comes from the high correlation between some goals.</p>
+<p>As we can see in the graph, the model that tries to explain goal 9 is not as good. The mean residual is not flat and vary a lot. This could suggest non-linearity.</p>
+<p>To conclude this part, we have seen some interesting relationships between the SDGs scores. We found that if a country is performing well in some goals, it does not necessary mean that it will perform well in the others. Some goals are negatively correlated. We then interested our-self on regrouping some goals together with a principal components analysis and we found that the analysis suggested to regroup some goals that at first sight, would not have been regrouped together. We also performed some stepwise regression to see how the individual goals could be explained by the other and found that in general the model does not select all variables to explain the given goals. This comes from the high correlation between some goals.</p>
 </section>
 </section>
 
