@@ -6,7 +6,7 @@ source(here::here("scripts/Clean/setup.R"))
 
 **How has the adoption of the SDGs in 2015 influenced the achievement of SDGs?**
 
-We create one new variable per goal that captures the difference in SDG score between the year of the observation and the previous year. This will allow us to see how the countries improve (or not) on SDG scores each year.
+We create a new variable per goal that captures the difference in SDG score between the year of the observation and the previous year. This will allow us to see how the countries improve (or not) on SDG scores each year.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, out.height="100%", out.width="100%"}
 data_question2 <- read.csv(here("scripts", "data", "data_question24.csv"))
@@ -21,7 +21,7 @@ data_question2 <- data_question2 %>%
 
 ### EDA: General time evolution of SDG socres
 
-First, we look at the evolution of SDG achievement overall score over time by continent and by region and we see that the general evolution of SDG scores around the world is increasing over the years, but very slowly. We also plot the average improvements/decrease in overall score acros the years. Looking at the continents, we see that Europe is above the others, while Africa is below, but in general, all have increasing overall scores. In addition, we see that the different continent have quite steady score difference between the years, except Oceania that has greater fluctuations and has sometimes score decrease, for instance in 2010. But it also comes with the higher average increase in 2014. We also observe that toward the latest years (2021-2022), the improvements are smaller and that decrease are more frequent. However, we must keep in mind that all are very small differences, indeed, the higher improvement is a little above 1 point of percentage of the overall score in one year. 
+First, we look at the evolution of SDG achievement overall score over time by continent and by region and we see that the general evolution of SDG scores around the world is increasing over the years, but very slowly. We also plot the average improvements/decrease in overall score across the years. Looking at the continents, we see that Europe is above the others, while Africa is below, but in general, all have increasing overall scores. In addition, we see that the different continent have quite steady score differences between the years, except Oceania that has greater fluctuations and has sometimes score decreases, for instance in 2010. But it also comes with the higher average increase in 2014. We also observe that toward the latest years (2021-2022), the improvements are smaller and that decreases are more frequent. However, we must keep in mind that all are very small differences, indeed, the higher improvement is a little above 1 point of percentage of the overall score in one year. 
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, fig.height=2.5}
 #### Mean overall SDG score and score difference by year ####
@@ -77,7 +77,7 @@ plot2 <- ggplot(data2) +
 plot1 + plot2
 ```
 
-This view that groups the countries by region gives us precision about the previous information. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below. Regarding the score difference from one year to another, we still see Oceania having the greater fluctuations, but Caucasus & Central Asia as well as Eastern Europe show a pick in the early two thousand's that we could not see before. South Asia also has a relatively high improvement in 2017. 
+This view that groups the countries by region gives us precision about the previous information. Indeed, it is Western Europe that is particularly above and Sub-Saharan Africa that is clearly below in terms of overall score level. Regarding the score difference from one year to another, we still see Oceania having the greater fluctuations, but Caucasus & Central Asia as well as Eastern Europe show a pick in the early two thousand's that we could not see before. South Asia also has a relatively high improvement in 2017. 
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE}
 #### Evoloution of the mean overall score and socre diff by region ####
@@ -147,8 +147,8 @@ legend <- cowplot::get_legend(legend)
 (plot3 + plot4) / legend
 ```
 
-Second, we look at the evolution of SDG achievement scores(16) over time for the whole world and by continent. We notice that all SDGs except from goal 9 (industry innovation and infrastructure) are close to one another in terms of level and growth. Goal 9 starts far below the others in 2000 and growths faster until exceeding 50%. In addition, some goals did not increase their scores much in the last two decades, for example goal 13 (climate action) and goal 12 (responsible consumption and production).
-The score differences are mostly contained between 0 and 0.5 point of percentage increase by year. Some of the goals have picks, these are goals 15, 3, 5, 17 and goal 9 has the highest of all average improvements in 2017 with an improvement of 4 points of percentage, which is almost two times higher than the other good improvements. Some goals have bad years, like goal 10 or goal 15, but never under -0.5, except goal 16 in 2022 that goes a little below. Finaly, some goals are very steady, for example goal 12 that stays around zero and goal 6 that is always a little above the zero (no change) line. 
+Second, we look at the evolution of SDG achievement scores (16) over time for the whole world and by continent. We notice that all SDGs except from goal 9 (industry innovation and infrastructure) are close to one another in terms of level and growth. Goal 9 starts far below the others in 2000 and growths faster until exceeding 50%. In addition, some goals did not increase their scores much in the last two decades, for example goal 13 (climate action) and goal 12 (responsible consumption and production).
+The score differences are mostly contained between 0 and 0.5 point of percentage increase by year. Some of the goals have picks, these are goals 15, 3, 5, 17, and goal 9 has the highest of all average improvements in 2017 with an improvement of 4 points of percentage, which is almost two times higher than the other good improvements. Some goals have bad years, like goal 10 or goal 15, but never under -0.5, except goal 16 in 2022 that goes a little below. Finally, some goals are very steady, for instance goal 12 that stays around zero and goal 6 that is always a little above the zero (no change) line. 
 
 ```{r, echo = TRUE, message = FALSE,  warning = FALSE, out.height="200%"}
 #### Evolution  of the mean scores and score difference by year ####
@@ -236,7 +236,7 @@ We observe that most of the time, Europe is at the top of the graph and Africa a
 
 -   Goal 9 (industry, innovation and infrastructure) show exponential growth for almost all continents.
 
-Third we create an interactive map of the world to be able to navigate from year 2000 to 2022, seeing the level of achievement of the SDGs (overall score) for each country.
+Third, we create an interactive map of the world to be able to navigate from year 2000 to 2022, seeing the level of achievement of the SDGs (overall score) for each country.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=1.5}
 #### Interactive map of the world showing the scores by contries ####
@@ -299,11 +299,11 @@ plot_ly(
   )
 ```
 
-Again, we see that the overall achievement score of the SDGs is increasing and that the countries that have the most red (bad score) are in Africa. However it is also there that it increases more rapidly. Our hypothesis is that when a score is very low, it is easier to make it better than when it becomes very high (around 90%) it may be hard to increase it, because it would mean perfection. In the next section, we will further investigate this idea.
+Again, we see that the overall achievement score of the SDGs is increasing and that the countries that have the most red (bad score) are in Africa. However it is also there that it increases more rapidly. Our hypothesis is that when a score is very low, it is easier to make it better than when it becomes very high (around 90%), it may be hard to increase it, because it would mean perfection. In the next section, we will further investigate this idea.
 
 ### Analysis: SDG adoption in 2015
 
-Preparing for the specific question around 2015, we only keep the years from 2009 to 2022 (7 years before and after 2015).In addition, we create a binary variable that take the value 1 if the observation occurred after 2015 and zero otherwise.
+Preparing for the specific question around the SDGs adoption in 2015, we only keep the years from 2009 to 2022 (7 years before and after 2015). In addition, we create a binary variable that take the value 1 if the observation occurred after 2015 and zero otherwise.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%", out.width="100%"}
 # Create a new column (binary variable) with value 1 if the year is after 2015 and zero otherwise. 
@@ -349,7 +349,7 @@ plot_ly() %>%
 
 We notice that across the years, the distribution stays on the right of the x-axis, which means that there are more improvement than deterioration. If there is deterioration, it is less than one percent per year, except some extreme cases, for instance in 2013, there was almost a 3% decrease in the overall SDG score of one country. It is also rare to see improvements of more than 2% per year. Regarding our specific question, we do not see a major improvement of the distribution after 2015, if it was the case we would see the distribution going more to the right, but except for 2017, there are more and more values centered around zero, which means less score improvements overall.
 
-After having visualized the improvements and declines of SDG overall score for the whole world, we are now interested in the top 5 countries in terms of improvement each year and we see that major improvement often comes from Sub-Saharan Africa countries or Middle East and North Africa. This confirms that more efforts are made in these regions to achieve better scores, but we also know from our previous visualizations that their initial scores are lower. Moreover, we record that the higher improvements are of 3% per year and were mostly achieved before 2015. Indeed, we can tell that in terms of maximum improvements, the adoption of SDGs in 2015 did not have a strong impact. We also notice that 2020 is the year with the smallest best improvements. We keep that in mind for the next question regarding events and specifically COVID.
+After having visualized the improvements and declines of SDG overall score for the whole world, we are now interested in the top 5 countries in terms of improvement each year and we see that major improvements often come from Sub-Saharan Africa countries or Middle East and North Africa. This confirms that more efforts are made in these regions to achieve better scores, but we also know from our previous visualizations that their initial scores are lower. Moreover, we record that the higher improvements are of 3% per year and were mostly achieved before 2015. Indeed, we can tell that in terms of maximum improvements, the adoption of SDGs in 2015 did not have a strong impact. We also notice that 2020 is the year with the smallest best improvements. We keep that in mind for the next question regarding events and specifically COVID.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.height="100%"}
 top_n_values <- 5
@@ -456,7 +456,7 @@ grid.draw(legend)
 
 ```
 
-We move on to the specific SDG scores and look at the 20 best improvements by score. We additionaly differentiate between the improvements than occurred before and after 2015. We want to see which goals get the best improvements and which countries put more effort into it.
+We move on to the specific SDG scores and look at the 20 best improvements by score. We additionally differentiate between the improvements than occurred before and after 2015. We want to see which goals get the best improvements and which countries put more effort into it.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width="100%", out.height="75%"}
 # Best improvements
