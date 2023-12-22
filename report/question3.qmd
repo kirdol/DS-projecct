@@ -750,7 +750,7 @@ Our last idea is to see the regressions between the SDG scores and the variables
 
 Let's see the regressions for each score depending of each variable in the disasters dataset (total_affected and total_deaths)
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2, out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2,5, out.width="100%"}
 library(plotly)
 library(dplyr)
 library(ggplot2)
