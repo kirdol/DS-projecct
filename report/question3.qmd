@@ -198,42 +198,37 @@ These is our time-analysis concerning climatic disasters with total affected per
 
 We can see that the regions the most affected by the climate disasters are East Asia, North America and South Asia. We will concentrate more in this regions and that the regions the most affected by the climate disasters are East Asia, Latin America & the Caribbean and South Asia.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.3}
 #### Trend of Climatic Disasters Variables Over Time graph ####
 
 library(ggplot2)
 library(plotly)
 
-# Replace all missing values with 0
 Q3.1[is.na(Q3.1)] <- 0
 
-# Create a combined ggplot
 combined_ggplot <- ggplot() +
   geom_smooth(data = Q3.1, aes(x = year, y = total_affected, group = region, color = region),
-              method = "loess", se = FALSE, span = 0.7, size = 0.5) +
+              method = "loess", se = FALSE, span = 0.5, size = 0.5, vjust = 2) +
   geom_smooth(data = Q3.1, aes(x = year, y = total_deaths, group = region, color = region),
-              method = "loess", se = FALSE, span = 0.7, size = 0.6) +
+              method = "loess", se = FALSE, span = 0.7, size = 0.6, vjust = 2) +
   facet_wrap(~ region, nrow = 5, scales = "fixed") +
+  colors_pal +
   labs(x = "Year", y = "") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, size = 8, hjust = 1),
+  theme(axis.text.x = element_text(angle = 25, size = 8, hjust = 1, vjust = -0.8),
         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
         strip.text = element_text(size = 8),
-        panel.spacing = unit(0.5, "lines"),
+        panel.spacing = unit(0.8, "lines"),
         plot.title = element_text(hjust = 0.5),
         legend.position = "none")
 
-# Convert the ggplot to a Plotly object
 combined_plotly <- ggplotly(combined_ggplot, dynamicTicks = TRUE)
 
-# Function to create a visibility vector
 make_visibility_vector <- function(total_traces, position) {
   c(rep(position == 1, total_traces / 2),
     rep(position == 2, total_traces / 2))
 }
 
-# Add interactive buttons to the Plotly layout
 combined_plotly <- combined_plotly %>%
   layout(
     title = "Trend of Total Affected and Deaths from Climatic Disasters Over Time",
@@ -255,53 +250,42 @@ combined_plotly <- combined_plotly %>%
     showlegend = FALSE
   )
 
-# Display the interactive plot
 combined_plotly
-
-
 ```
 
 These is our time-analysis concerning the COVID-19 cases per million, the COVID-19 deaths per million and the COVID-19 stringency by region between end 2018 and 2022.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
-
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.3}
 #### Trend of COVID-19 Variables Over Time graph ####
 
-library(ggplot2)
-library(plotly)
-
-# Assuming conflicts_filtered is already defined
 covid_filtered <- Q3.2[Q3.2$year >= 2018, ]
 
-# Create a combined ggplot
 combined_ggplot <- ggplot() +
   geom_smooth(data = covid_filtered, aes(x = year, y = cases_per_million, group = region, color = region),
-              method = "loess", se = FALSE, span = 0.3, size = 0.6) +
+              method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 2) +
   geom_smooth(data = covid_filtered, aes(x = year, y = deaths_per_million, group = region, color = region),
-              method = "loess", se = FALSE, span = 0.3, size = 0.6) +
+              method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 2) +
   geom_smooth(data = covid_filtered, aes(x = year, y = stringency, group = region, color = region),
-              method = "loess", se = FALSE, span = 0.3, size = 0.6) +
+              method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 2) +
   facet_wrap(~ region, nrow = 5) +
+  colors_pal +
   labs(x = "Year", y = "") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+  theme(axis.text.x = element_text(angle = 25, hjust = 1),
         axis.text.y = element_text(hjust = 1),
         strip.text = element_text(size = 8),
-        panel.spacing = unit(0.5, "lines"),
+        panel.spacing = unit(0.8, "lines"),
         plot.title = element_text(hjust = 0.5),
         legend.position = "none")
 
-# Convert the ggplot to a Plotly object
 combined_plotly <- ggplotly(combined_ggplot, dynamicTicks = TRUE)
 
-# Function to create a visibility vector
 make_visibility_vector <- function(total_traces, position) {
   c(rep(position == 1, total_traces / 3),
     rep(position == 2, total_traces / 3),
     rep(position == 3, total_traces / 3))
 }
 
-# Add interactive buttons to the Plotly layout
 combined_plotly <- combined_plotly %>%
   layout(
     title = "Trend of COVID-19 Over Time",
@@ -325,40 +309,32 @@ combined_plotly <- combined_plotly %>%
     ),
     showlegend = FALSE
   )
-
-# Display the interactive plot
 combined_plotly
 ```
-
-
-
-
 These is our time-analysis concerning conflicts deaths, conflicts affected population and maxintensity conflicts per region between 2000 and 2016
 
 We can see that the regions the most affected by the deaths are : Middle east and north Africa, Sub-Saharan Africa, South Asia, then very less America & the Caribbean and Eastern Europe. The regions the most affected by the affected population are : Middle east and north Africa, Sub-Saharan Africa, South Asia, Latin America & the Caribbean and Caucasus and Central Asia. Finally, the regions having a maxintensity in conflicts are : Caucasus and Central Asia, Eastern Europe, Middle east and north Africa, Sub-Saharan Africa, North America, South Asia, East Asia just at one precise moment, Latin America & the Caribbean less.
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.3}
 #### Trend of Conflicts Variables Over Time graph ####
-
-library(ggplot2)
-library(plotly)
 
 conflicts_filtered <- Q3.3[Q3.3$year >= 2000 & Q3.3$year <= 2016, ]
 
 combined_ggplot <- ggplot() +
   geom_smooth(data = conflicts_filtered, aes(x = year, y = sum_deaths, group = region, color = region),
-              method = "loess", se = FALSE, span = 0.3, size = 0.6) +
+              method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 3) +
   geom_smooth(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region, color = region),
-              method = "loess", se = FALSE, span = 0.3, size = 0.6) +
+              method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 3) +
   geom_smooth(data = conflicts_filtered, aes(x = year, y = maxintensity, group = region, color = region),
-              method = "loess", se = FALSE, span = 0.3, size = 0.6) +
+              method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 3) +
   facet_wrap(~ region, nrow = 5) +
+  colors_pal +
   labs(x = "Year", y = "") + 
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+  theme(axis.text.x = element_text(angle = 25, hjust = 1),
         axis.text.y = element_text(hjust = 1),
         strip.text = element_text(size = 8),
-        panel.spacing = unit(0.5, "lines"),
+        panel.spacing = unit(0.8, "lines"),
         plot.title = element_text(hjust = 0.5),
         legend.position = "none")
 
@@ -393,11 +369,8 @@ combined_plotly <- combined_plotly %>%
     ),
     showlegend = FALSE
   )
-
 combined_plotly
-
 ```
-
 Now that we could visualize which regions are the most impacted by these three events we can do correlations analysis per region to see if this events have indeed an impact on the evolution of SDG goals.
 
 ### Focus on the correlation between the SDG scores and the different events.
@@ -410,6 +383,7 @@ Here you can see an extract of:
 - Our correlation between the regions having a maxintensity in conflicts and the SDG goals only for Caucasus & Central Asia, Eastern Europe, Middle east & north Africa, Sub-Saharan Africa, North America, South Asia, East Asia, Latin America & the Caribbean.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.5}
+#### Correlation between the climate disasters and the SDG goals in South and East Asia and North America heatmap ####
 
 disaster_data <-
   Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
@@ -426,9 +400,6 @@ correlation_matrix_subset <-
 
 cor_melted <- reshape2::melt(correlation_matrix_subset)
 names(cor_melted) <- c("Variable2", "Variable1", "Correlation")
-
-
-#### Correlation between the climate disasters and the SDG goals in South and East Asia and North America heatmap ####
 
 ggplot(data = cor_melted,
        aes(Variable1,
@@ -684,7 +655,9 @@ Even with a year gap it doesn't seem that climate disaster with such consequence
 
 Here you can see an extrat of our interactive map of the correlation between the climate disasters and the SDG goals in South, East Asia and North America with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019). Unforthunatly, our shiny app is not supported in static R Markdown documents. For more details you can see our interactive maps in the "See Interactive" Folder, our document called "Interactive_Matrix_Plots.
 
-<img src="Climate_Dis_year_gap.png" height="190px" width="520" style="display: block; margin: 60px auto 0;"/>
+![Extract of the correlation between the climate disasters and the SDG goals with 1 yeat gap](report/pictures question3/Climate_Dis_year_gap.png) 
+
+" height="190px" width="520" style="display: block; margin: 60px auto 0;"/>
 
 
 here you can see the correlation between COVID-19 and the SDG goals with 1 year gap. And strangely, instead of having a negative correlation, we expected that the more cases and deaths happened because of COVID-19, the scores of the SDG would be negatively affected,but with the gap year we can see that the scores of the Goal3, Goal6, Goal9 and Goal16 are quite positively impacted by the COVID-19.
@@ -706,12 +679,9 @@ relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6",
                       "goal13", "goal15", "goal16", "stringency",
                       "cases_per_million", "deaths_per_million")
 
-# Function to generate a lagged correlation matrix for a given year
 generate_lagged_correlation_plot_covid <- function(year, data, relevant_columns) {
-  # Filter data for the specified year
   current_year_data <- data[data$year == year, relevant_columns]
 
-  # Lag the relevant COVID columns
   lagged_data <- current_year_data %>%
     mutate(
       lagged_stringency = lag(stringency, default = NA),
@@ -720,15 +690,12 @@ generate_lagged_correlation_plot_covid <- function(year, data, relevant_columns)
     ) %>%
     select(-stringency, -cases_per_million, -deaths_per_million)  # Exclude non-lagged variables
 
-  # Calculate the correlation matrix
   correlation_matrix <- cor(lagged_data[, c("lagged_stringency", "lagged_cases_per_million", "lagged_deaths_per_million")],
                             lagged_data, method = "spearman")
 
-  # Melt the correlation matrix for ggplot
   cor_melted <- melt(correlation_matrix)
   names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
 
-  # Create the ggplot
   p <- ggplot(cor_melted,
               aes(Variable2,
                   Variable1,
@@ -749,7 +716,6 @@ generate_lagged_correlation_plot_covid <- function(year, data, relevant_columns)
          title = paste('Lagged Correlation for COVID-19 in Year', year))
   return(p)}
 
-# Generate and display the plots for 2020, 2021, and 2022
 plot_2020 <- generate_lagged_correlation_plot_covid(2020,
                                                     Q3.2,
                                                     relevant_columns)
