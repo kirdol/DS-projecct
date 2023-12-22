@@ -1857,7 +1857,7 @@ question1_missing_Internet <- data_question1 %>%
   filter(NaInternet != 0)
 ```
 
-There are never more than 30% of NAs. We look at the evolution of the variable over time. We fill the missing values with linear interpolation, because all are increasing in time and they are almost straight lines, except for CIV that we delete.
+There are never more than 30% of NAs. We look at the evolution of the variable over time. We fill the missing values with linear interpolation, because all are increasing in time and they are almost straight lines, except for Côte d'Ivoire (CIV) that we delete.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=4}
 #### Evolution of the variable over time ####
@@ -2134,6 +2134,7 @@ Then, we look at the distribution of the variable per region. Seeing that the on
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 3}
 #### Distribution of ef_trade missing values ####
 
+# preparing the data for the plot
 question1_missing_ef_trade <- data_question1 %>%
   group_by(code) %>%
   mutate(PercentageMissing = mean(is.na(ef_trade))) %>% # Column % NAs
@@ -2141,6 +2142,7 @@ question1_missing_ef_trade <- data_question1 %>%
   group_by(region) %>%
   filter(sum(PercentageMissing, na.rm = TRUE) > 0)
 
+# Distribution of economic freedom: trade
 Freq_Missing_ef_trade <- ggplot(data = question1_missing_ef_trade) +
   geom_histogram(aes(x = ef_trade, 
                      fill = cut(PercentageMissing,
@@ -2169,13 +2171,13 @@ Freq_Missing_ef_trade <- ggplot(data = question1_missing_ef_trade) +
   theme(plot.title=element_text(hjust=0.5))+
   facet_wrap(~ region, nrow = 2)
 
+# showing the plot
 print(Freq_Missing_ef_trade)
 
 data_question1 <- data_question1 %>%
   group_by(code) %>%
   mutate(
-    PercentageMissingByCode = mean(is.na(ef_trade))
-  ) %>%
+    PercentageMissingByCode = mean(is.na(ef_trade))) %>%
   ungroup() %>% 
   group_by(region) %>%
   mutate(
@@ -2183,8 +2185,7 @@ data_question1 <- data_question1 %>%
     ef_trade = ifelse(
       PercentageMissingByCode < 0.3 & !is.na(ef_trade),
       ef_trade,
-      ifelse(PercentageMissingByCode < 0.3, MeanByRegion, ef_trade)
-    )) %>%
+      ifelse(PercentageMissingByCode < 0.3, MeanByRegion, ef_trade))) %>%
   select(-PercentageMissingByCode, -MeanByRegion)
 ```
 
@@ -2336,6 +2337,7 @@ COVID4 <- data_question3_2 %>%
             Na_stringency = mean(is.na(stringency))) %>%
   filter(Na_deaths != 0 | Na_cases!=0 |  Na_stringency !=0)
 
+# NAs by country: deaths per million plot
 g1 <- ggplot(COVID4, aes(x = reorder(code, Na_deaths), y = Na_deaths)) +
   geom_bar(stat = "identity",
            fill = MPer_30_100,
@@ -2351,6 +2353,7 @@ g1 <- ggplot(COVID4, aes(x = reorder(code, Na_deaths), y = Na_deaths)) +
         axis.title.y = element_text(size= 8)) +
   scale_y_continuous(limits = c(0, 1))
 
+# NAs by country: cases per million plot
 g2 <- ggplot(COVID4,
              aes(x = reorder(code, Na_cases),
                  y = Na_cases)) +
@@ -2368,6 +2371,7 @@ g2 <- ggplot(COVID4,
         axis.title.y = element_text(size= 8)) +
   scale_y_continuous(limits = c(0, 1))
 
+# NAs by country: stringency plot
 g3 <- ggplot(COVID4,
              aes(x = reorder(code, Na_stringency),
                  y = Na_stringency)) +
@@ -2383,8 +2387,10 @@ g3 <- ggplot(COVID4,
         axis.title.x = element_text(size= 8),
         axis.title.y = element_text(size= 8))
 
+# showing the graphs
 g1 + g2 + g3
 
+# removing countries
 data_question3_2 <- data_question3_2 %>%
   filter(!code %in% COVID4$code)
 ```
@@ -2398,13 +2404,12 @@ data_question3_2 <- data_question3_2 %>%
   mutate(
     cases_per_million = ifelse(is.na(cases_per_million), 0, cases_per_million),
     deaths_per_million = ifelse(is.na(deaths_per_million), 0, deaths_per_million),
-    stringency = ifelse(is.na(stringency), 0, stringency)
-  )
+    stringency = ifelse(is.na(stringency), 0, stringency))
 ```
 
 **Conflicts**
 
-We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Two countries have missing values, we remove them (MNE and SRB).
+We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Two countries have missing values, we remove the Montenegro and Serbia (MNE and SRB).
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Removing countries because of missing values ####
