@@ -1279,7 +1279,7 @@ datatable(D7_0_COVID,
 
 #### Dataset on Conflicts
 
-For our conflicts dataset, we imported the data from "The World Banck" data catalog. Once we made sure that our file called "Disasters" was convert into a data frame, we selected some specific columns that we where interested in.
+For our conflicts dataset, we imported the data from "The World Banck" data catalog. Once we made sure that our file called "Disasters" was convert into a data frame, we selected some specific columns that we were interested in.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Conflicts dataset ####
@@ -1290,7 +1290,7 @@ Conflicts <- read.csv(here("scripts", "data", "Conflicts.csv")) %>%
          peaceyearshigh, area_affected, maxintensity, maxcumulativeintensity)
 ```
 
-Our file showed all the Conflicts and consequences per country over the years (between 2000-2016). We couldn't find a better and more complete dataset, As we consider conflicts as events, we will only take into account results between 2000 and 2016. Then we rearranged our data, changing the data types of all the columns and their names in order to match our other datasets. We grouped the data by " year", "country", re-selected some variables and summarize the data.
+Our file showed all the conflicts and consequences per country over the years (between 2000-2016). We could not find a better and more complete dataset. As we consider conflicts as events, we will only take into account results between 2000 and 2016. Then, we rearranged our data, changing the data types of all the columns and their names in order to match our other datasets. We grouped the data by " year", "country", re-selected some variables and summarize the data.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Conflicts rearranging 1 ####
@@ -1319,7 +1319,7 @@ Conflicts <- Rearanged_Conflicts %>%
   )
 ```
 
-After we Selected specific columns from the summarized data and arrange the data by our specified columns. To make our dataset compatible with the main one and let the merging face succeed, we dd some adjustment concerning the country names' to ensure the compatibility. Then we standardize and merge by country names to finally rearrange the data to retain only the countries present in our main dataset. Note that in the end we can see that only one country is missing that wasn't in the initial conflicts database: BLR
+After we selected specific columns from the summarized data, we arrange the data by our specified columns. To make our dataset is compatible with the main dataset and let the merging phase succeed, we standardize the country names to ensure compatibility. Then we add the country codes and we retain only the countries present in our main dataset. Note that in the end we can see that only one country is missing that was not in the initial conflicts database: BLR.   
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Conflicts rearranging 2 ####
@@ -1422,9 +1422,9 @@ all_Merge <- merge_123456_7 |> left_join(D8_0_Conflicts,
 
 ### Cleaning of the final database
 
-#### Filing missing continents and regions colomns
+#### Filling missing continents and regions colomns
 
-When we merged our dataset, we noticed that some countries were not assigned their corresponding continents and/or region. This issue arose because we sourced the continent and region data from secondary databases, not from our main one. We now add this the corresponding missing continents and regions.
+When we merged our dataset, we noticed that some countries were not assigned their corresponding continents and/or region. This issue arose because we sourced the continent and region data from secondary databases, not from our main one. We complete the missing information. 
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE}
 #### Filling missing continents and regions ####
@@ -1476,7 +1476,7 @@ datatable(all_Merge, options = list(pageLength = 5,
 
 ### Treatment of missing values
 
-We load our final database and we visualize the missing values.We see that some variables have many NAs and that some patterns regarding row missingness emerge. 
+We load our final database and we visualize the missing values. We see that some variables have many NAs and that some patterns regarding row missingness emerge. For each of our research question, we will start with the merged data set and deal with the missing value separately, because there are often NAs for the same row across many columns that will be used for the same question. This will allow us to avoid deleting observations when we do not need to.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=4.5}
 #### Loading the final database to be cleaned ####
@@ -1510,8 +1510,6 @@ vis_dat(to_plot_missing, warn_large_data = FALSE) +
   )
 ```
 
-For each of our research question, we will start with the merged data set and deal with the missing value separately, because there are often NAs for the same row across many columns that will be used for the same question. This will allow us to not delete observations when we do not need to.
-
 **For question 1**, we only keep the years until 2020, because most of the explanatory variables that we want to use (those coming from the human freedom index) only have values until 2020.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
@@ -1535,7 +1533,8 @@ data_question24 <- all_Merge %>%
            goal12, goal13, goal15, goal16, goal17))
 ```
 
-**For question 3**, we create 3 distinct databases according to the different type of event that we will analyse: disasters, COVID19 and conflicts. For the disasters, we only keep the years until 2021, because after this date, we don't have data, moreover we decided to delete the country Bahrain, Brunei and Malta as we do not have any data concerning them. For the conflicts, we only keep the years until 2016, because after this date, we don't have data. Concerning the conflict dataset, we decided to erase Belarus because once again we do not have any data concerning this country.
+**For question 3**, we create 3 distinct databases according to the different type of event that we will analyse: disasters, COVID19 and conflicts. For the disasters, we only keep the years until 2021, because after this date, we do not have data, moreover we decided to delete the country Bahrain, Brunei and Malta as we do not have any data on them. For the conflicts, we only keep the years until 2016, because after this date, we do not have data. Concerning the conflicts' dataset, we decided to erase Belarus, because once again we do not have any data on
+this country.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Cleaning the database for question 3 ####
@@ -1566,9 +1565,9 @@ data_question3_3 <- all_Merge %>%
 
 #### Data for question 1 {.unnumbered}
 
-##### Dealing with missing values in colomns {.unnumbered}
+##### Dealing with missing values in columns {.unnumbered}
 
-We begin by visualizing the missing values. To have a less messy graph we group all the goals wihtout NAs into one single variable. We decide to remove MilitaryExpenditurePercentGovExp, because it has too many missing values and it contains similar information to MilitaryExpenditurePercentGDP.We also remove hf_score, pf_score and ef_score, because there are many missing values and since these variables summarize the other ones, deleting them will not make us loose information.
+We begin by visualizing the missing values. To have a less messy graph we group all the goals without NAs into one single variable. We decide to remove MilitaryExpenditurePercentGovExp, because it has too many missing values and it contains similar information to MilitaryExpenditurePercentGDP.We also remove hf_score, pf_score and ef_score, because there are many missing values and since these variables summarize the other ones, deleting them will not make us loose information.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=2}
 #### Visualizing missing values by variables ####
@@ -1639,7 +1638,7 @@ see_missing1_1 <- data_question1 %>%
 data_question1 <- data_question1 %>% filter(!code %in% see_missing1_1$code)
 ```
 
-Here is the graph that allows us to visualize the countries that have missing values and how many , when there are more than 50 NAs in total.
+Here is the graph that allows us to visualize the countries that have missing values and how many, when there are more than 50 NAs in total.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=2}
 #### Number of missing values per country (>50 NAs) ####
@@ -1670,7 +1669,7 @@ p_plotly <- ggplotly(p, tooltip = "text") %>%
 print(p_plotly)
 ```
 
-We also look at patterns of missing values in the rows and see that except for the two goals with NAs that we discussed earlier and for the triplet "ef_money", "ef_trade" and "ef_regulation" there are not well defined patterns. We removes the countries that have NAs in the three variables mentioned at the same time.
+We also look at patterns of missing values in the rows and see that except for the two goals with NAs that we discussed earlier and for the triplet "ef_money", "ef_trade" and "ef_regulation" there are not well defined patterns. We remove the countries that have NAs in the three variables mentioned, where they are missing at the same time.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=5}
 #### Visualizing the missing values in the rows ####
@@ -1931,7 +1930,7 @@ There are no more missing values, thanks to the previous steps.
 
 ###### ***Economic freedom: money*** {.unnumbered}
 
-5 countries have missing values, but the percentage of missing values is always below 25%.
+Five countries have missing values, but the percentage of missing values is always below 25%.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Missing values in 5 countries (<25%) ####
@@ -2055,7 +2054,7 @@ data_question1 <- data_question1 %>%
 
 ###### ***Economic freedom: trade***  {.unnumbered}
 
-6 countries have missing values, but the percentage of missing values is always below 25%.
+Six countries have missing values, but the percentage of missing values is always below 25%.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Missing values in 6 countries (<25%) ####
@@ -2232,7 +2231,7 @@ data_question1 <- data_question1 %>%
   filter(!code %in% question1_missing_goal10$code)
 ```
 
-Our dataset is now completely clean and ready to be used for our question 1.
+Our dataset is now completely clean and ready to be used for the first question guiding our analysis.
 
 #### Data for question 2 and 4  {.unnumbered}
 
@@ -2253,8 +2252,6 @@ data_question24 <- data_question24 %>%
 ```
 
 #### Data for question 3  {.unnumbered}
-
-We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Since there are no other missing values, we stop here.
 
 **Disasters**
 
@@ -2307,7 +2304,7 @@ p_plotly <- ggplotly(p,
 p_plotly
 ```
 
-In this particular case, even if there are many missing values in our disaster dataset, we made the hypothesis that disaster events can not happen every year for every country given that these are uncontrollable and non-recurring events. Therefore the NAs that we encounter will become zeroes, implying that there have been no climatic disasters.
+In this particular case, even if there are many missing values in our disaster dataset, we made the hypothesis that disaster events can not happen every year for every country given that these are uncontrollable and non-recurring events. Therefore the NAs that we encounter will become zeroes, implying that there have been no climate disasters.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = TRUE, out.width="100%"}
 #### Replacing NAs by 0 ####
@@ -2383,7 +2380,7 @@ data_question3_2 <- data_question3_2 %>%
   filter(!code %in% COVID4$code)
 ```
 
-We replace the NAs of the other COVID columns (years 2000 t0 2019) by 0 (because we don't have real missing, only introduced by merging with the other databases).
+We replace the NAs of the other COVID columns (years 2000 to 2019) by 0 (because we don't have real missing, only introduced by merging with the other databases).
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Replacing NAs by 0 ####
@@ -2398,7 +2395,7 @@ data_question3_2 <- data_question3_2 %>%
 
 **Conflicts**
 
-We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed.Two countries have missing values, we remove them (MNE and SRB).
+We create a column with the number of missing values by country over all the variables, except goal 1 and goal 10 that we already discussed. Two countries have missing values, we remove them (MNE and SRB).
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Removing countries because of missing values ####
