@@ -18,44 +18,75 @@ data <- read.csv(here("scripts", "data", "all_Merge.csv"))
 ```
 
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
-variables_to_test <- data_question3_1[, c("overallscore", "total_affected", "total_deaths")]
+#### Shapiro test on total_affected, total_deaths and overallscore ####
 
+# Selecting the variables to perform the test
+variables_to_test <- data_question3_1[, c("overallscore",
+                                          "total_affected",
+                                          "total_deaths")]
+
+# Shapiro test
 shapiro_test_overallscore <- shapiro.test(variables_to_test$overallscore)
 shapiro_test_total_affected <- shapiro.test(variables_to_test$total_affected)
 shapiro_test_total_deaths <- shapiro.test(variables_to_test$total_deaths)
 
 shapiro_results <- data.frame(
-  Variable = c("overallscore", "total_affected", "total_deaths"),
-  W_Value = c(shapiro_test_overallscore$statistic, shapiro_test_total_affected$statistic, shapiro_test_total_deaths$statistic),
-  P_Value = c(shapiro_test_overallscore$p.value, shapiro_test_total_affected$p.value, shapiro_test_total_deaths$p.value)
-)
+  Variable = c("overallscore",
+               "total_affected",
+               "total_deaths"),
+  W_Value = c(shapiro_test_overallscore$statistic,
+              shapiro_test_total_affected$statistic,
+              shapiro_test_total_deaths$statistic),
+  P_Value = c(shapiro_test_overallscore$p.value,
+              shapiro_test_total_affected$p.value,
+              shapiro_test_total_deaths$p.value))
 
+# printing the result of the shapiro test
 print(shapiro_results)
 ```
 The test statistic in the Shapiro-Wilk test is denoted as "W_value." It is a numerical value that summarizes how well the data fits a normal distribution. The value of W suggest whether there is a significant deviation from normality (if low value) or not (if high value). Here they are very close to zero (W = 0.06 and W=0.03) for the disasters variables, this suggests that the data diverge considerably from a normal distribution.
 
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
+#### Shapiro test on cases_per_million, deaths_per_million and stringency ####
 
-variables_to_test <- data_question3_2[, c("cases_per_million", "deaths_per_million", "stringency")]
+# Selecting the variables to perform the test
+variables_to_test <- data_question3_2[, c("cases_per_million",
+                                          "deaths_per_million",
+                                          "stringency")]
 
+# Shapiro test
 shapiro_test_cases_per_million <- shapiro.test(variables_to_test$cases_per_million)
 shapiro_test_deaths_per_million <- shapiro.test(variables_to_test$deaths_per_million)
 shapiro_test_stringency <- shapiro.test(variables_to_test$stringency)
 
 shapiro_results_2 <- data.frame(
-  Variable = c("cases_per_million", "deaths_per_million", "stringency"),
-  W_Value = c(shapiro_test_cases_per_million$statistic, shapiro_test_deaths_per_million$statistic, shapiro_test_stringency$statistic),
-  P_Value = c(shapiro_test_cases_per_million$p.value, shapiro_test_deaths_per_million$p.value, shapiro_test_stringency$p.value)
-)
+  Variable = c("cases_per_million",
+               "deaths_per_million",
+               "stringency"),
+  W_Value = c(shapiro_test_cases_per_million$statistic,
+              shapiro_test_deaths_per_million$statistic,
+              shapiro_test_stringency$statistic),
+  P_Value = c(shapiro_test_cases_per_million$p.value,
+              shapiro_test_deaths_per_million$p.value,
+              shapiro_test_stringency$p.value))
 
+# printing the result of the shapiro test
 print(shapiro_results_2)
 ```
 
 The value of W are close to zero (W = 0.2, W=0.2 and W=0.4) for the COVID-19 variables, this suggests that the data diverge from a normal distribution.
 
 ```{r echo = FALSE, message = FALSE, warning=FALSE}
-variables_to_test <- data_question3_3[, c("ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity")]
+#### Shapiro test on ongoing, sum_deaths, pop_affected, area_affected and maxintensity ####
 
+# Selecting the variables to perform the test
+variables_to_test <- data_question3_3[, c("ongoing",
+                                          "sum_deaths",
+                                          "pop_affected",
+                                          "area_affected",
+                                          "maxintensity")]
+
+# Shapiro test
 shapiro_test_ongoing <- shapiro.test(variables_to_test$ongoing)
 shapiro_test_sum_deaths <- shapiro.test(variables_to_test$sum_deaths)
 shapiro_test_pop_affected <- shapiro.test(variables_to_test$pop_affected)
@@ -63,11 +94,23 @@ shapiro_test_area_affected <- shapiro.test(variables_to_test$area_affected)
 shapiro_test_maxintensity <- shapiro.test(variables_to_test$maxintensity)
 
 shapiro_results_3 <- data.frame(
-  Variable = c("ongoing", "sum_deaths", "pop_affected", "area_affected", "maxintensity"),
-  W_Value = c(shapiro_test_ongoing$statistic, shapiro_test_sum_deaths$statistic, shapiro_test_pop_affected$statistic, shapiro_test_area_affected$statistic, shapiro_test_maxintensity$statistic),
-  P_Value = c(shapiro_test_ongoing$p.value, shapiro_test_sum_deaths$p.value, shapiro_test_pop_affected$p.value, shapiro_test_area_affected$p.value, shapiro_test_maxintensity$p.value)
-)
+  Variable = c("ongoing",
+               "sum_deaths",
+               "pop_affected",
+               "area_affected",
+               "maxintensity"),
+  W_Value = c(shapiro_test_ongoing$statistic,
+              shapiro_test_sum_deaths$statistic,
+              shapiro_test_pop_affected$statistic,
+              shapiro_test_area_affected$statistic,
+              shapiro_test_maxintensity$statistic),
+  P_Value = c(shapiro_test_ongoing$p.value,
+              shapiro_test_sum_deaths$p.value,
+              shapiro_test_pop_affected$p.value,
+              shapiro_test_area_affected$p.value,
+              shapiro_test_maxintensity$p.value))
 
+# printing the result of the shapiro test
 print(shapiro_results_3)
 ```
 The value of W are close to zero (W = 0.433, W= 0.137, W= 0.327, W= 0.288 and W=0.453) for the conflicts variables, this suggests that the data concerning conflicts diverge from a normal distribution.
@@ -77,6 +120,7 @@ To sum this results, it means that for further analysis between these events and
 In order to have an overview of the relationship between the different events variables and the SDG overall score, we make several graphs containing the Pearson correlation coefficient between the variable, the scatter plots describing the relationship between the variables, as well as the distribution of each variable.
 
 ```{r, echo = TRUE, message = FALSE, warning=FALSE}
+#### Correlation table and distribution of disasters variables ####
 
 lower.panel <-
   function(x, y, ...){
@@ -145,9 +189,9 @@ pairs(data_question3_2[,c("overallscore",
                           "deaths_per_million",
                           "stringency")],
       upper.panel = panel.cor_stars,
-      diag.panel=panel.hist,
+      diag.panel = panel.hist,
       lower.panel = lower.panel,
-      main="Correlation table and distribution of COVID variables")
+      main = "Correlation table and distribution of COVID variables")
 ```
 Meaning of the stars: \*\*\* : p_value \< 0.001; \*\* : p_value \< 0.01; \*: p_value \<0.05; no star if p_value is higher.
 
@@ -165,9 +209,9 @@ pairs(data_question3_3[,c("overallscore",
                           "area_affected",
                           "maxintensity")],
       upper.panel = panel.cor_stars,
-      diag.panel=panel.hist,
+      diag.panel = panel.hist,
       lower.panel = lower.panel,
-      main="Correlation table and distribution of conflicts variables")
+      main = "Correlation table and distribution of conflicts variables")
 ```
 Meaning of the stars: \*\*\* : p_value \< 0.001; \*\* : p_value \< 0.01; \*: p_value \<0.05; no star if p_value is higher.
 
@@ -194,18 +238,34 @@ We can see that the regions that are the most affected by climate disasters are 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 2.3}
 #### Trend of Climatic Disasters Variables Over Time graph ####
 
-library(ggplot2)
-library(plotly)
-
 Q3.1[is.na(Q3.1)] <- 0
 
 combined_ggplot <- ggplot() +
-  geom_smooth(data = Q3.1, aes(x = year, y = total_affected, group = region), color = "#8dce3e",
-              method = "loess", se = FALSE, span = 0.5, size = 0.5, vjust = 2) +
-  geom_smooth(data = Q3.1, aes(x = year, y = total_deaths, group = region), color = "darkgreen",
-              method = "loess", se = FALSE, span = 0.7, size = 0.6, vjust = 2) +
-  facet_wrap(~ region, nrow = 5, scales = "fixed") +
-  labs(x = "Year", y = "") +
+  geom_smooth(data = Q3.1,
+              aes(x = year,
+                  y = total_affected,
+                  group = region),
+              color = "#8dce3e",
+              method = "loess",
+              se = FALSE,
+              span = 0.5,
+              size = 0.5,
+              vjust = 2) +
+  geom_smooth(data = Q3.1,
+              aes(x = year,
+                  y = total_deaths,
+                  group = region),
+              color = "darkgreen",
+              method = "loess",
+              se = FALSE,
+              span = 0.7,
+              size = 0.6,
+              vjust = 2) +
+  facet_wrap(~ region,
+             nrow = 5,
+             scales = "fixed") +
+  labs(x = "Year",
+       y = "") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 25, size = 8, hjust = 1, vjust = -0.8),
         axis.text.y = element_text(vjust = 1, size = 8, hjust = 1),
@@ -218,8 +278,7 @@ combined_plotly <- ggplotly(combined_ggplot, dynamicTicks = TRUE)
 
 make_visibility_vector <- function(total_traces, position) {
   c(rep(position == 1, total_traces / 2),
-    rep(position == 2, total_traces / 2))
-}
+    rep(position == 2, total_traces / 2))}
 
 combined_plotly <- combined_plotly %>%
   layout(
@@ -231,17 +290,16 @@ combined_plotly <- combined_plotly %>%
         showactive = TRUE,
         buttons = list(
           list(method = "restyle",
-               args = list("visible", make_visibility_vector(length(combined_plotly$x$data), 1)),
+               args = list("visible",
+                           make_visibility_vector(length(combined_plotly$x$data), 1)),
                label = "Total Affected"),
           list(method = "restyle",
-               args = list("visible", make_visibility_vector(length(combined_plotly$x$data), 2)),
-               label = "Total Deaths")
-        )
-      )
-    ),
-    showlegend = FALSE
-  )
+               args = list("visible",
+                           make_visibility_vector(length(combined_plotly$x$data), 2)),
+               label = "Total Deaths")))),
+    showlegend = FALSE)
 
+# Show the combined plotly
 combined_plotly
 ```
 
@@ -253,14 +311,39 @@ This is our time-analysis concerning the COVID-19 cases per million, the COVID-1
 covid_filtered <- Q3.2[Q3.2$year >= 2018, ]
 
 combined_ggplot <- ggplot() +
-  geom_smooth(data = covid_filtered, aes(x = year, y = cases_per_million, group = region), 
-              color = "lightblue", method = "loess", se = FALSE, span = 0.3, size = 0.6) +
-  geom_smooth(data = covid_filtered, aes(x = year, y = deaths_per_million, group = region), color =
-                "#20908c",method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 2) +
-  geom_smooth(data = covid_filtered, aes(x = year, y = stringency, group = region), color =
-                "darkblue", method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 2) +
-  facet_wrap(~ region, nrow = 5) +
-  labs(x = "Year", y = "") +
+  geom_smooth(data = covid_filtered,
+              aes(x = year,
+                  y = cases_per_million,
+                  group = region), 
+              color = "lightblue",
+              method = "loess",
+              se = FALSE,
+              span = 0.3,
+              size = 0.6) +
+  geom_smooth(data = covid_filtered,
+              aes(x = year,
+                  y = deaths_per_million,
+                  group = region),
+              color = "#20908c",
+              method = "loess",
+              se = FALSE,
+              span = 0.3,
+              size = 0.6,
+              vjust = 2) +
+  geom_smooth(data = covid_filtered,
+              aes(x = year,
+                  y = stringency,
+                  group = region),
+              color = "darkblue",
+              method = "loess",
+              se = FALSE,
+              span = 0.3,
+              size = 0.6,
+              vjust = 2) +
+  facet_wrap(~ region,
+             nrow = 5) +
+  labs(x = "Year",
+       y = "") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 25, hjust = 1),
         axis.text.y = element_text(hjust = 1),
@@ -274,8 +357,7 @@ combined_plotly <- ggplotly(combined_ggplot, dynamicTicks = TRUE)
 make_visibility_vector <- function(total_traces, position) {
   c(rep(position == 1, total_traces / 3),
     rep(position == 2, total_traces / 3),
-    rep(position == 3, total_traces / 3))
-}
+    rep(position == 3, total_traces / 3))}
 
 combined_plotly <- combined_plotly %>%
   layout(
@@ -294,12 +376,10 @@ combined_plotly <- combined_plotly %>%
                label = "Deaths per Million"),
           list(method = "restyle",
                args = list("visible", make_visibility_vector(length(combined_plotly$x$data), 3)),
-               label = "Stringency")
-        )
-      )
-    ),
-    showlegend = FALSE
-  )
+               label = "Stringency")))),
+    showlegend = FALSE)
+
+# Show the plotlys
 combined_plotly
 ```
 
@@ -313,14 +393,39 @@ We can see that the regions that are the most affected by the deaths are: Middle
 conflicts_filtered <- Q3.3[Q3.3$year >= 2000 & Q3.3$year <= 2016, ]
 
 combined_ggplot <- ggplot() +
-  geom_smooth(data = conflicts_filtered, aes(x = year, y = sum_deaths, group = region), color =
-                "darkred", method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 3) +
-  geom_smooth(data = conflicts_filtered, aes(x = year, y = pop_affected, group = region), color =
-                "red",method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 3) +
-  geom_smooth(data = conflicts_filtered, aes(x = year, y = maxintensity, group = region), color =
-                "#e34e64", method = "loess", se = FALSE, span = 0.3, size = 0.6, vjust = 3) +
-  facet_wrap(~ region, nrow = 5) +
-  labs(x = "Year", y = "") + 
+  geom_smooth(data = conflicts_filtered,
+              aes(x = year,
+                  y = sum_deaths,
+                  group = region),
+              color = "darkred",
+              method = "loess",
+              se = FALSE,
+              span = 0.3,
+              size = 0.6,
+              vjust = 3) +
+  geom_smooth(data = conflicts_filtered,
+              aes(x = year,
+                  y = pop_affected,
+                  group = region),
+              color = "red",
+              method = "loess",
+              se = FALSE,
+              span = 0.3,
+              size = 0.6, vjust = 3) +
+  geom_smooth(data = conflicts_filtered,
+              aes(x = year,
+                  y = maxintensity,
+                  group = region),
+              color = "#e34e64",
+              method = "loess",
+              se = FALSE,
+              span = 0.3,
+              size = 0.6,
+              vjust = 3) +
+  facet_wrap(~ region,
+             nrow = 5) +
+  labs(x = "Year",
+       y = "") + 
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 25, hjust = 1),
         axis.text.y = element_text(hjust = 1),
@@ -334,8 +439,7 @@ combined_plotly <- ggplotly(combined_ggplot, dynamicTicks = TRUE)
 make_visibility_vector <- function(total_traces, position) {
   c(rep(position == 1, total_traces / 3),
     rep(position == 2, total_traces / 3),
-    rep(position == 3, total_traces / 3))
-}
+    rep(position == 3, total_traces / 3))}
 
 combined_plotly <- combined_plotly %>%
   layout(
@@ -354,12 +458,9 @@ combined_plotly <- combined_plotly %>%
                label = "Population Affected"),
           list(method = "restyle",
                args = list("visible", make_visibility_vector(length(combined_plotly$x$data), 3)),
-               label = "Maxintensity")
-        )
-      )
-    ),
-    showlegend = FALSE
-  )
+               label = "Maxintensity")))),
+    showlegend = FALSE)
+
 combined_plotly
 ```
 
@@ -611,8 +712,7 @@ subset_data <- disaster_data[, relevant_columns]
 lagged_subset_data <- subset_data %>%
   mutate(
     lagged_total_affected = lag(total_affected, default = NA),
-    lagged_total_deaths = lag(total_deaths, default = NA)
-  )
+    lagged_total_deaths = lag(total_deaths, default = NA))
 
 correlation_matrix_lagged <-
   cor(lagged_subset_data[, c("lagged_total_affected",
@@ -743,7 +843,7 @@ Our last idea is to make regressions between the SDG scores and the variables of
 
 Let's see the regressions for each score depending on each variable in the disasters dataset (total_affected and total_deaths).
 
-```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 3, out.width="100%"}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height = 5.7, out.width="100%"}
 library(plotly)
 library(dplyr)
 library(ggplot2)
@@ -758,7 +858,6 @@ subset_data <- disaster_data[, relevant_columns]
 
 plots <- list()
 for (goal in relevant_columns[1:15]) {
-  # Pour total_affected
   p_affected <- ggplot(subset_data,
                        aes_string(x = "total_affected", y = goal)) +
     geom_point(size = 0.1) +
@@ -789,12 +888,16 @@ for (goal in relevant_columns[1:15]) {
 subplot_plots <- lapply(plots, function(plot_pair) subplot(plot_pair[[1]],
                                                            plot_pair[[2]],
                                                            nrows = 1,
-                                                           margin = 0.05))
-subplot(subplot_plots,
-        nrows = length(subplot_plots),
-        margin = 0.05)
-```
+                                                           margin = 0.06))
+combined_plots <- subplot(subplot_plots, nrows = length(subplot_plots), margin = 0.06)
 
+# Add a main title using the layout function
+final_plot <- layout(combined_plots, 
+                     title = "Analysis of Disaster Variables Data per Goals<br><sub>Left: Total Affected Variable | Right: Total Deaths Variable</sub>", margin = list(t = 100))
+
+# Print or save the final plot
+final_plot
+```
 Most relationships between the goals and the variables ('total_affected' and 'total_deaths') are not statistically significant (indicated by p-values \> 0.05). More specifically, in several models, the coefficients for 'total_affected' and 'total_deaths' are small, indicating weak or negligible relationships with the respective goals. Some models have marginally significant p-values (close to 0.05) but still lack statistical significance. Goals 7, 8, 10, 13, 14, and 15 exhibit statistically significant relationships with 'total_affected,' indicating small to moderate positive relationships. Goals 7 and 8 also show statistically significant relationships with 'total_deaths,' indicating moderate negative relationships.
 
 These findings suggest that, in most cases, the relationships between the specified goals and Climate disasters variables (total affected and total deaths) are not statistically significant. However, some goals do indicate small to moderate associations with these variables.
