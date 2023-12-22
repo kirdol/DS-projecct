@@ -305,7 +305,7 @@ ggplot(medians_all,
                                    vjust = 0.5, hjust=1))
 ```
 
-We notice that Europe is the continent with most of its goals having a median score superior to 75 (represented by the dark blue color. We notice that only two goals have a median score lower than 25, which are goal 9 for Africa and goal 10 for America. As seen before, goal 9 is generally having lower scores than the other goals. It could mean that access to technology and sustainable/resilient infrastructures/industrialization is harder in Africa, due to various reasons such as the economical situation of these countries, corruption,...
+We notice that Europe is the continent with most of its goals having a median score superior to 75 (represented by the yellow color). We notice that only two goals have a median score lower than 25, which are goal 9 for Africa and goal 10 for America. As seen before, goal 9 is generally having lower scores than the other goals. It could mean that access to technology and sustainable/resilient infrastructures/industrialization is harder in Africa, due to various reasons such as the economical situation of these countries, corruption,...
 
 Goal 10 is about the reduction of inequalities within and among countries. Therefore, we presume that the investments made in the Americas to implement solutions for getting better scores towards this goal is maybe less effective due to for instance culture difference with other continent, or simply less money spent for solving the issue. 
 

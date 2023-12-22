@@ -1114,7 +1114,7 @@ D6_0_Disasters <- Disasters %>%
   arrange(code, country, year, continent)
 ```
 
-Finally we filtered our disasters data to keep only the countries that are present in our main dataset. We analysed the missing countries and identified three countries (BHR, BRN, MLT) that are unexpectedly missing.
+Finally we filtered our disasters data to keep only the countries that are present in our main dataset. We analysed the missing countries and identified three countries. The Kingdom of Bahrain (BHR), Brunei Darussalam (BRN) and Malta (MLT) that are unexpectedly missing.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Disasters pre-cleaning 4 ####
@@ -1157,7 +1157,7 @@ We perform a first round of investigation of the missing values before aggregati
 
 2.  **all are missing:** we can ignore the missing values when computing the mean, because it will still return a missing value.
 
-3.  **almost all are missing:** here the mean does not make sense -\> we will replace the values by NAs to be coherent. The countries with this issues are: ERI, GUM, PRI and VIR. We verify if they are in our main dataset and since none of these countries are, we can ignore the issue, the lines will be removed later anyway.
+3.  **almost all are missing:** here the mean does not make sense -\> we will replace the values by NAs to be coherent. The countries with this issues are: Eritrea (ERI), Guam (GUM), Puerto Rico (PRI) and Virgin Islands (U.S.) (VIR). We verify if they are in our main dataset and since none of these countries are, we can ignore the issue, the lines will be removed later anyway.
 
 We aggregate the observations of all days of a year in one observation per country using the mean.
 
