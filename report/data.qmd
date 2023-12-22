@@ -9,7 +9,7 @@ source(here::here("scripts","Clean","setup.R"))
 
 ## Sources
 
-We are collecting our Data from the sustainability development report (UN), the international labour organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn't find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs. The details about these data and the links are presented in the next section. Utilizing the `kableExtra` package, we provide a comprehensive list and corresponding links to our sources, as outlined below:
+We are collecting our Data from the sustainability development report (UN), the international labor organization (ILOSTAT), the World Bank, Our world in data, the CATO institute, one from Kaggle (disasters: we couldn't find relevant accessible information from somewhere else) and GitHub. We found different datasets containing useful information in relation with the SDGs that could be used as explaining factors. The details about these data and the links are presented in the next section. Utilizing the `kableExtra` package, we provide a comprehensive list and corresponding links to our sources, as outlined below:
 
 ```{r}
 #### Source Table ####
@@ -51,7 +51,7 @@ source_info %>%
 
 ## Description
 
-During the wrangling process, we pre-cleaned the different datasets and then merged them with our main table (D1_1_SDG) matching them based on the country code, and the year. The tables below show all the variables present in our 9 databases. We will then merge them to have our final table for the analysis.
+During the wrangling process, we pre-cleaned the different datasets and then merged them with our main table (D1_1_SDG), matching them based on the country code, and the year. The tables below show all the variables present in our 9 databases. We will then merge them to have our final table for the analysis.
 
 ### Our databases
 
@@ -97,7 +97,7 @@ D1_1_SDG_table_info %>%
 
 #### Unemployment rate database (*D2_2_Unemployment_rate*) {.unnumbered}
 
-This database give us comprehensive data on the unemployment rates for each country from 2000 to 2022. Originally, it included categories based on various age groups. However, for simplicity and coherence, the database has been streamlined to focus exclusively on the unemployment rates of individuals aged 15 years and older.
+This database gives us comprehensive data on the unemployment rates for each country from 2000 to 2022. Originally, it included categories based on various age groups. However, for simplicity and coherence, the database has been streamlined to focus exclusively on the unemployment rates of individuals aged 15 years and older.
 
 ```{r}
 #### D2_2_Unemployment_rate Table ####
@@ -225,7 +225,7 @@ D4_0_Internet_usage_table_info %>%
 
 #### Human freedom index database (*D5_0_Human_freedom_index*) {.unnumbered}
 
-This database provides information on the Human Freedom Index (HFI) for each country. The HFI is a composite index that measures the degree to which people are free to enjoy important rights and freedoms. It covers the period from 2000 to 2022.
+This database provides information on the Human Freedom Index (HFI) for each country. The HFI is a composite index that measures the degree to which people are free to enjoy important rights and freedoms. It covers the period from 2000 to 2020.
 
 ```{r}
 #### D5_0_Human_freedom_index Table ####
@@ -250,7 +250,7 @@ D5_0_Human_freedom_index_table_info <- data.frame(
               "ef_regulation"),
   Column2 = c("Country code (ISO)", 
               "Country name",
-              "Year of the observation (2000-2022)",
+              "Year of the observation (2000-2020)",
               "Part of the world, group of countries (e.g. Eastern Europe, Dub-Saharan Africa, South Asia, etc.)",
               "Rule of law, mean score of: Procedural justice, Civil, justice, Criminal justice, Rule of law (V-Dem)",
               "Security and safety, mean score of: Homicide, Disappearances conflicts, terrorism",
@@ -403,7 +403,7 @@ D8_0_Conflicts_table_info %>%
 
 ### Pre-cleaning
 
-To deal with the large scale of the datasets, we pre-cleaned each dataset before merging them together. This streamlined the process, simplifying the cleaning of the final, combined dataset. The treatment of missing values will be taken care of after merging our datasets.
+To deal with the large scale of the datasets, we pre-cleaned each dataset before merging them together. This streamlined the process, simplifying the cleaning of the final, combined dataset. The treatment of missing values will be taken care of after merging our datasets, except for our main dataset, where we investigate and treat them as soon as it is possible.
 
 #### Dataset on SDG
 
@@ -516,7 +516,7 @@ plotly_prop_missing <- ggplotly(gg_prop_missing,
 plotly_prop_missing
 ```
 
-Observing that the 'population' column contains numerous NAs, we investigate and discover that missing values are common. This come from observations representing regions and not countries. Therefore, we can safely exclude these observations.
+Observing that the 'population' column contains numerous NAs, we investigate and discover that missing values are common. This comes from observations representing regions and not countries. Therefore, we can safely exclude these observations.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, fig.height=2.5}
 #### D1_0_SDG missing values in population ####
@@ -527,9 +527,6 @@ SDG0 <- D1_0_SDG %>%
   select(population) %>%
   summarize(NaPop = mean(is.na(population))) %>%
   filter(NaPop != 0)
-
-
-
 
 # plot the graph
 ggplot(SDG0,
@@ -556,7 +553,7 @@ D1_0_SDG <- D1_0_SDG %>%
 
 Now that we have eliminated all missing values in the 'population' variable, we observe that our dataframe contains information on `r length(unique(D1_0_SDG$country))` countries.
 
-We now move to analysing the missing values for the SDGs and we find that NAs are only present in three SDG scores: 1, 10, and 14. Additionally, when a country has NAs, they occur across all years or not at all. Consequently, we decide to conduct further investigations on these three SDG scores to determine whether to include them in our analysis.
+We now move to analyzing the missing values for the SDGs and we find that NAs are only present in three SDG scores: 1, 10, and 14. Additionally, when a country has NAs, they occur across all years or none. Consequently, we decide to conduct further investigations on these three SDG scores to determine if we include them in our analysis.
 
 For goal 1, there are only 9.04% missing values in 15 different countries. Goal 1 being "End poverty", we decide to keep it and only remove the countries with no information for the analysis.
 
@@ -586,7 +583,7 @@ SDG3 <- D1_0_SDG |>
 length(unique(SDG3$code))/country_number
 ```
 
-For goal 14, there are 24.1% missing values in 40 different countries. Goal 14 being "life under water", we decide not to keep it, because other SDG such as "life on earth" and "clean water" already treat similar subjects.
+For goal 14, there are 24.1% missing values in 40 different countries. Goal 14 being "life under water", we decide delete it, because other SDGs such as "life on earth" and "clean water" already treat similar subjects.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### SDG4 missing values ####
@@ -603,7 +600,7 @@ D1_0_SDG <- D1_0_SDG %>%
   select(-goal14)
 ```
 
-We will work with various datasets and merge them using the country code and year as key identifiers. To ensure accurate matching, we first verify that country names are encoded in UTF-8 format. Then, we standardize the names of the countries (requiring a custom match for Turkey) and the country codes, utilizing the `countrycode` library. Additionally, we compile a list of all country codes from the main database to filter the other datasets. Lastly, we complete the database to include all possible "country, year" combinations, ensuring the total number of rows remains unchanged.
+We will work with various datasets and merge them using the country code and year as key identifiers. To ensure accurate matching, we first verify that country names are encoded in UTF-8 format. Then, we standardize the names of the countries (requiring a custom match for Turkey) and the country codes, utilizing the `countrycode` library. Additionally, we compile a list of all country codes from the main database to filter the other databases.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### D1_0_SDG country code ####
@@ -712,9 +709,9 @@ datatable(D2_1_Unemployment_rate,
 
 For this first dataset, we reduced the size from 82,800 observations across 8 variables to 3,812 observations for 5 variables.
 
-#### Dataset on GDP military Expenditures
+#### Dataset on GDP and Military Expenditures
 
-We have three different databases which contain information on each countries over the years. Each year represent one variable. We want to extract three variables for our analysis: GDP per capita, military expenditures in percentage of the GDP and military expenditures in percentage of government expenditures.
+We have three different databases which contain information on each countries over the years. Each year represents one variable. We want to extract three variables for our analysis: GDP per capita, military expenditures in percentage of the GDP and military expenditures in percentage of government expenditures.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### GDP per capita pre-cleaning ####
@@ -730,7 +727,7 @@ MiliratyExpenditurePercentGovExp <-
            sep = ";")
 ```
 
-After importing the data, we fill in the missing country codes using the column Indicator.Name, because we realized after some manipulations, that some of the country codes were false, but the next column contained the right ones.
+After importing the data, we fill in the missing country codes using the column Indicator.Name, because we realized after some manipulations, that some of the country codes were false, but another column contained the right ones.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE}
 #### GDP per capita fill code ####
@@ -742,7 +739,7 @@ fill_code <- function(data){
 }
 ```
 
-We create a set of functions that we will apply to each database. First, remove the variables that we don't need, which are the years before 2000. Second, make sure that the values are numeric and rename the year variables (because they all had an "X" before year number). Third, transform the database from wide to long, in order to match the main database. Fourth, transform the year variable into an integer variable and rearrange and rename the columns to match the ones of the other databases. Then, we apply these transformations to the three databases.
+We create a set of functions that we will apply to each database. First, remove the variables that we don't need, which are the years before 2000. Second, make sure that the values are numeric and rename the year variables (because they all had an "X" before the year number). Third, transform the database from wide to long, in order to match the main database. Fourth, transform the year variable into an integer variable and, rearrange and rename the columns to match the ones of the other databases. We apply these transformations to the three databases.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE}
 #### Useful functions ####
@@ -815,7 +812,7 @@ MiliratyExpenditurePercentGovExp <-
   cleanwide2long(MiliratyExpenditurePercentGovExp)
 ```
 
-We rename the colums with the main information, standardize the country code and remove the countries that are not in our main database. We see that all the 166 countries are there.
+We rename the columns with the main information, standardize the country code and remove the countries that are not in our main database. We see that all the 166 countries are there.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE}
 #### GDP per capita renamed and standardized ####
@@ -858,7 +855,7 @@ MiliratyExpenditurePercentGovExp <- MiliratyExpenditurePercentGovExp %>%
 length(unique(MiliratyExpenditurePercentGovExp$code))
 ```
 
-There were only 157 countries that were both in the main SDG dataset and in these 3 datasets, but we suspected that some of the missing countries were in the database but not rightly matched. Indeed, Bahamas was in the database but instead of the code "BHS" there was "The", for "COD" it was "Dem. Rep.", for "COG" it was "Rep", etc. We remarked that the code is in another column of the initial database: "Indicator.Name". We went back to the initial database and before cleaning it we put the right codes (as seen above) and after rerunning the code we see that we have all our 166 countries from the initial dataset.
+Note: at first, there were only 157 countries that were both in the main SDG dataset and in these three datasets, but we suspected that some of the missing countries were in the database, but not rightly matched. Indeed, Bahamas was in the database but instead of the code "BHS" there was "The", for "COD" it was "Dem. Rep.", for "COG" it was "Rep", etc. We remarked that the code is in another column of the initial database: "Indicator.Name". We went back to the initial database and before cleaning it we put the right codes (as seen above) and after rerunning the code we see that we have all our 166 countries from the initial dataset.
 
 ```{r, echo = TRUE, message = TRUE, warning = FALSE}
 #### Missing countries ####
@@ -938,11 +935,12 @@ datatable(D3_3_Miliraty_Expenditure_Percent_Gov_Exp,
                      "  return data}")))),
           rownames = FALSE)
 ```
+
 For this dataset, we went from 266 observations (wide format) for 68 variables to 3818 (long format) observations for 4 variables.
 
 #### Dataset on internet usage
 
-To prepare the dataset on internet usage in the world to be merge with the other data, we first, import the data. Then, we keep only the year that we are interested in (2000 to 2022). We also rename the column and keep only the country that match the list of the countries in the main dataset on the SDG.
+To prepare the dataset on internet usage to be merged with the rest if the data, we first import the data. Then, we only keep the years that we are interested in (2000 to 2022). We also rename the columns and keep only the countries that match the list of the countries in the main dataset on the SDG.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Internet usage pre-cleaning ####
@@ -1005,7 +1003,7 @@ datatibble <- datatibble %>%
   mutate(country = countrycode(country, "country.name", "country.name"))
 ```
 
-Once done, we could verify which countries were or were not present between these observations and our main SDG dataset. We have decided to keep the ones that were matching between the two datasets.
+Once done, we kept the countries that matched the countries of our main dataset. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Human Freedom Index pre-cleaning 2 ####
@@ -1028,7 +1026,7 @@ setdiff(list_country, list_country_free)
 D5_0_Human_freedom_index <- datatibble
 ```
 
-Then, we noticed that there were a lot of columns that were not important for us, as we had 141 variables taken into account. So we have decided to keep the ones that refers to the countries informations (such as code, year, ..) and their human freedom scores per category (pf for personnal freedom, ef for economical freedom).
+Then, we noticed that there were a lot of columns that were not important for us, as the human freedom index dataset contains 141 variables. We keep the ones that refers to the countries information (such as code, year, ...) and their human freedom scores per category ('pf' for personal freedom, 'ef' for economical freedom).
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Human Freedom Index pre-cleaning 3 ####
@@ -1072,7 +1070,7 @@ For this first dataset, we reduced the size from 3'465 observations across 141 v
 
 #### Dataset on Disasters
 
-For this dataset concerning the Disasters we imported the data from Kaggle as we couldn't find the original dataset that is private coming from the EOSDIS SYSTEM, an interactive interface for browsing full-resolution, global, daily satellite images from NASA. Once we made sure that our file called "Disasters" was convert into a data frame, we selected some specific columns that we where interested in.
+For this dataset on disasters, we imported the data from Kaggle as we could not find the original dataset that is private, coming from the EOSDIS SYSTEM, an interactive interface for browsing full-resolution, global, daily satellite images from NASA. Once we made sure that our file called "Disasters" was convert into a data frame, we selected some specific columns that we were interested in. 
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Disasters pre-cleaning 1 ####
@@ -1083,7 +1081,7 @@ Disasters <- read.csv(here("scripts", "data", "Disasters.csv")) %>%
          Total.Affected, Total.Damages...000.US..)
 ```
 
-Because we knew that our file showed all the disasters in each country over the years (between 1970-2021) and that we wanted to focus on a specific period, we filtered our data to show the years between 2000 and 2022. Then we rearranged our data, changing the data types of all the columns and their names in order to match our other datasets.
+Since we knew that our file showed all the disasters in each country over the years (between 1970-2021) and that we wanted to focus on a specific period, we filtered our data to show the years between 2000 and 2022. Then, we rearranged our data, changing the data types of all the columns and their names in order to match our other datasets.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Disasters pre-cleaning 2 ####
@@ -1108,7 +1106,7 @@ Rearanged_Disasters <- Disasters %>%
   )
 ```
 
-We then grouped the data by "year", "code", "country" and "continent" and summarize the data. Here you can see that we re-selected specific columns as we saw that our first pre-selection was still too wide and some variables as the disaster.subgroup and disaster.type weren't pertinent.We arranged the columns based on "code," "country," "year," and "continent" to match the other datasets.
+We then grouped the data by "year", "code", "country" and "continent" and summarize the data. Here you can see that we re-selected specific columns as we saw that our first pre-selection was still too wide and some variables as the disaster.subgroup and disaster.type weren't pertinent. We arranged the columns based on "code," "country," "year," and "continent" to match the other datasets.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### Disasters pre-cleaning 3 ####
@@ -1156,7 +1154,7 @@ datatable(D6_0_Disasters, options = list(pageLength = 5,
 
 #### Dataset on COVID
 
-This dataset contains information on the COVID19 pandemic between 2020 and 2022. The observation are by year, month, day. After importing the database, we transform the date in format YYYY-MM-DD in order to only keep the year.
+This dataset contains information on the COVID19 pandemic between 2020 and 2022. The observation are by year, month, day. After importing the database, we transform the date, which is in format YYYY-MM-DD in order to only keep the year.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### COVID pre-cleaning 1 ####
@@ -1167,13 +1165,13 @@ COVID <- read.csv(here("scripts", "data", "COVID.csv")) %>%
   mutate(date = as.integer(year(date)))
 ```
 
-We perform a first round of investigation of the missing values before aggregating the values by year. We begin with the variables "cases per million" and "deaths per million": seeing that for each country, we have either only missing values, either a very low percentage of missing values (\~1%), we can compute the sum over each year and ignore the missing values without altering the data. Indeed, where all the values are missing, the computation will return a NA. We then look at the "stringency" variable and we have 3 scenarios:
+We perform a first round of investigation of the missing values before aggregating the values by year. We begin with the variables "cases per million" and "deaths per million": seeing that for each country, we have either only missing values, or a very low percentage of missing values (\~1%), we can compute the sum over each year and ignore the missing values without altering the data. Indeed, where all the values are missing, the computation will return a NA. We then look at the "stringency" variable and we have 3 scenarios:
 
-1.  **\~20% of missing values:** we ignore missing values when computing the mean to have an idea of stringency each year (because we compute the mean stringency over the year, if some days are missing, it is not a problem, it can not evoluate that fast).
+1.  **\~20% of missing values:** we ignore missing values when computing the mean to have an idea of stringency each year (because we compute the mean stringency over the year, if some days are missing, it is not a problem, it can not change that fast).
 
-2.  **all are missing:** we can ignore the missing values when computing the mean, because it will still return a missing value
+2.  **all are missing:** we can ignore the missing values when computing the mean, because it will still return a missing value.
 
-3.  **almost all are missing:** here the mean doesn't make sense -\> we will replace the values by NAs to be coherent. The countries with this issues are: ERI, GUM, PRI and VIR. We verify if they are in our main dataset and since none of these countries are, we can ignore the issue, the lines will be remove later anyway.
+3.  **almost all are missing:** here the mean does not make sense -\> we will replace the values by NAs to be coherent. The countries with this issues are: ERI, GUM, PRI and VIR. We verify if they are in our main dataset and since none of these countries are, we can ignore the issue, the lines will be removed later anyway.
 
 We aggregate the observations of all days of a year in one observation per country using the mean.
 
@@ -1259,7 +1257,7 @@ COVID$code <- countrycode(
 )
 ```
 
-We remove the observations of countries that aren't in our main dataset on SDGs and find that all the 166 countries that we have in the main SDG dataset are also in this one.
+We remove the observations of countries that are not in our main dataset on SDGs and find that all the 166 countries that we have in the main SDG dataset are also in this one.
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE}
 #### COVID pre-cleaned dataset ####

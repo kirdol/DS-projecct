@@ -1,7 +1,7 @@
 ```{r echo = FALSE, message = FALSE}
 #### Setup ####
 
-# Running our setup script to load our packages
+# Running our setup script to load our packages and setup some variables
 source(here::here("scripts","Clean","setup.R"))
 
 # Import of our dataset for or question on the SDGs
@@ -18,7 +18,7 @@ To better analyse the relationships between the SDGs, we will first visualize th
 To do that, we select only the columns of interest and compute the correlation matrix using Spearman correlation. We then melt the matrix to be able to plot it. We then plot the heatmap using `ggplot2`.
 
 ```{r echo = TRUE, message = FALSE, warning = FALSE}
-#### Heatmap of the correlations ####
+#### Heatmap of the correlations between the SDGs ####
 
 # Selecting columns of interest
 data_4_goals <- data_4 %>%
@@ -26,7 +26,7 @@ data_4_goals <- data_4 %>%
                 goal6, goal7, goal8, goal9, goal10, goal11, goal12,
                 goal13, goal15, goal16, goal17)
 
-# Initialize matrices for correlations, p-values, and significance
+# Initialize matrices for correlations, p-values
 n <- ncol(data_4_goals)
 cor_matrix <- matrix(1, n, n)
 p_matrix <- matrix(NA, n, n)
@@ -37,7 +37,9 @@ rownames(cor_matrix) <- colnames(data_4_goals)
 for (i in 1:n) {
   for (j in 1:n) {
     if (i != j) {
-      test <- cor.test(data_4_goals[[i]], data_4_goals[[j]], method = "spearman")
+      test <- cor.test(data_4_goals[[i]],
+                       data_4_goals[[j]],
+                       method = "spearman")
       cor_matrix[i, j] <- test$estimate
       p_matrix[i, j] <- test$p.value}}}
 
@@ -72,11 +74,11 @@ ggplot(melted_corr, aes(x = Var1,
 
 The correlation can be read on the graph. The darker the color, the stronger the correlation. If the correlation value is not shown, it means that the goals correlation does not exceed our threshold of ±`r threshold_heatmap`.
 
-It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals seems to be less interrelated compared to others. We can see that SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) have a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also have a weacker interconnection with the other SDGs. It is also interesting to note that some goals are negatively correlated with others. For instance, based on the Spearman correlation, goal 12 (Responsable Consumption and Production) and goal 13 (Climate Action) are negatively correlated with the others goals. This suggest that when the higher a goal other than goal 12 or 13 is, the lower the goals 12 and 13 are. Given their similar nature, it is not surprising that they are highly correlated with each other.
+It is evident that the Sustainable Development Goals (SDGs) are intricately interconnected. However, certain goals seems to be less interrelated compared to others. We can see that SDG 1 (No Poverty) and SDG 10 (Reduced Inequalities) have a weaker correlation with the rest of the goals. Similarly, Goal 15 (Life on Land) also have a weaker interconnection with the other SDGs. It is also interesting to note that some goals are negatively correlated with others. For instance, based on the Spearman correlation, goal 12 (Responsible Consumption and Production) and goal 13 (Climate Action) are negatively correlated with the others goals. This suggests that the higher a goal, other than goals 12 or 13, is, the lower goals 12 and 13 are. Both are linked to the climate. Given their similar nature, it is not surprising that they are highly correlated with each other.
 
 ### Analysis: Factor analysis and Stepwise regression applied to the SDGs
 
-At this point, we saw that the goals were mostly correlated. We now want to see if we can group them in a smaller number of factors. To do that, we will use a principal component analysis (PCA). We will first look at the scree plot to see how many factors we should keep. We will then look at the biplot to see how the goals are grouped together.
+At this point, we saw that the goals were mostly correlated. We now want to see if we can group them in a smaller number of factors. To do so, we will use a principal component analysis (PCA). We will first look at the scree plot to see how the factors explain the variances. We will then look at the biplot to see how the goals are grouped together.
 
 ```{r echo = TRUE, message = FALSE}
 #### Scree Plot ####
@@ -110,7 +112,7 @@ fviz_eig(pca_result,
 eigenvalues <- pca_result$sdev^2
 ```
 
-We clearly see that the first component is the most important one. Guided by the Kaiser criterion, which advises retaining only those components with eigenvalues exceeding 1, the initial three components emerge as candidates with the third components having a eigenvalue of `r eigenvalues[3]`. We now want to see how those our two first components look on in a biplot.
+We clearly see that the first component is the most important one. Guided by the Kaiser criterion, which advises to retain only components with an eigenvalues exceeding 1, the initial three components emerge as candidates with their respective eigenvalue being `r eigenvalues[1]`, `r eigenvalues[2]` and `r eigenvalues[3]`. We now want to see how our two first components look on in a biplot.
 
 ```{r echo = TRUE, message = FALSE}
 #### Biplot ####
@@ -127,7 +129,7 @@ fviz_pca_biplot(pca_result,
   theme_minimal()
 ```
 
-The biplot offers an interesting visualization that clearly illustrate the relationship between the various goals and the first two components. We can see that the second dimension is mostly correlated with Goals 10 (Reduced inequalities) and 15 (Life on Land). The rest of the variables are more correlated with Dimension 1. With the biplot, we can see three disinct groups of variables, each playing a unique role. We see a group that regroup Goals 12 (Responsible Consumption and Production) and 13 (Climate Action). It is not a surprise to see that they are in the opposite direction from the rest of the variable. This comportment is due to the negative correlation between them and the rest of the variables as discussed previously. Both depicte environmental issues. We also see a group that regroup Goals 10 (Reduced inequalities) and 15 (Life on Land) which is suprising. To group the goal that treat the inequalities (goal 10) and the goal that concern the life on land (goal 15) does not make any sense. The last group regroup the rest of the variables. This categorization helps to understand the distinct influences and interactions between the goals.
+The biplot offers an interesting visualization that clearly illustrate the relationship between the various goals and the first two components. We can see that the second dimension is mostly correlated with Goals 10 (Reduced inequalities) and 15 (Life on Land). The rest of the variables are more correlated with Dimension 1. With the biplot, we can see three distinct groups of variables, each playing a unique role. We see a group that regroup Goals 12 (Responsible Consumption and Production) and 13 (Climate Action). It is not a surprise to see that they are in the opposite direction from the rest of the variable. This comportment is due to the negative correlation between them and the rest of the variables as discussed previously. Both depict environmental issues. We also see a group that regroup Goals 10 (Reduced inequalities) and 15 (Life on Land) which is surprising. To group the goal that treat the inequalities (goal 10) and the goal that concern the life on land (goal 15) does not make any sense. The last group regroup the rest of the variables. This categorization helps to understand the distinct influences and interactions between the goals.
 
 We also performed a stepwise regression trying to see more precisely how the goals are correlated with each other. We use the forward selection with the `leaps` package to do so.
 
@@ -268,7 +270,7 @@ mod_17 <- lm(
   data = goals_data)
 ```
 
-Below, we create a graph to present our different model that the stepwise regression chose based on the $R^2\:adjusted$ as best regression for each of our goals. The $R^2\:adjusted$ measure the quality of the models and takes into account the number of dependent variables. As expected, the model that explain the variable overallscore is explained by the other goals at a similar coefficient for each of our goals. This make sense since the overallscore has been directly calculated with the 17 scores. We can see that none of the goals seems to be more used in the regression that the others. And that none of our explanatory variables received a high coefficient. We also found that in general the model does not select all variables to explain the given goals. This comes from the high correlation between some goals.
+Below, we create a graph to present our different model that the stepwise regression chose based on the $R^2\:adjusted$ as best regression for each of our goals. The $R^2\:adjusted$ measures the quality of the models and takes into account the number of dependent variables. As expected, the model that explain the variable overallscore is explained by the other goals at a similar coefficient for each of our goals. This make sense since the overallscore has been directly calculated with the 17 scores. We can see that none of the goals seems to be more used in the regression that the others. And that none of our explanatory variables received a high coefficient. We also found that in general the model does not select all variables to explain the given goals. This comes from the high correlation between some goals.
 
 ```{r echo = TRUE, message = FALSE, warning=FALSE, fig.height = 4}
 #### Graph of the different models ####
@@ -294,7 +296,8 @@ names(models_tidy) <-
 df_tidy <-
   do.call(rbind,
           lapply(names(models_tidy),
-                 function(x) cbind(models_tidy[[x]], Model=x)))
+                 function(x) cbind(models_tidy[[x]],
+                                   Model=x)))
 
 # Assuming 'p.value' is the column name for p-values in your dataframe
 significance_level <- 0.05
@@ -309,6 +312,7 @@ ggplot(df_tidy_significant,
            x = estimate,
            color = term)) +
   geom_point() +
+  geom_vline(xintercept = 0, linetype = "solid", size = 0.5, color = viridis(1, option = "B", begin = 0.5)) +
   xlim(-1, 1) + # Changed from ylim to xlim
   theme(axis.text.y = element_text(angle = 0, vjust = 1, size = 8),
         axis.text.x = element_text(angle = 45, vjust = 1, size = 8),
@@ -322,7 +326,7 @@ ggplot(df_tidy_significant,
   colors_pal
 ```
 
-The following graphs show the Residuals versus our fitted values for our model that explained the overallscore and the goal 9. Let's first look at the model that explain the best the Overallscore variable:
+The following graphs show the Residuals versus our fitted values for our model that explained the overallscore and the goal 9. Let's first look at the model that explain the best the overallscore variable:
 
 $$
 \begin{split}
@@ -333,7 +337,7 @@ $$
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 #### Residuals vs Fitted plot for overallscore ####
 
-# Overallscore ~ others variables
+# Overallscore ~ others variables plot
 ggplot(mod_o,
        aes(x = .fitted,
            y = .resid)) +
@@ -358,7 +362,7 @@ ggplot(mod_o,
   theme(legend.position = "none")
 ```
 
-As the we now from the nature of the overallscore variable. It has been calculated using the 17 goal scores. Hence, the stepwise regression did not struggle to find a model with good results. The $R^2\:adjusted$ of 0.98 of this model suggest that the model is good quality. As we can see in the first graph, the residuals vs. fitted plot also suggest a good quality. The residuals are well distributed around 0, the residual and the red line, representing the mean residual, is almost flat and very close to 0. Let's now look at the model that according to our stepwise regression, is the best model at explaining our goal 9 scores with a $R^2\:adjusted$ of 0.81 but in reality that does not perform well according to the residual versus fitted plot. The predicted model looks as follow:
+As we know from the nature of the overallscore variable. It has been calculated using the 17 goal scores. Hence, the stepwise regression did not struggle to find a model with good results. The $R^2\:adjusted$ of 0.98 of this model suggest that the model is good quality. As we can see in the first graph, the residuals vs. fitted plot also suggest a good quality. The residuals are well distributed around 0, the residual and the red line, representing the mean residual line is almost flat and very close to 0. Let's now look at the model that according to our stepwise regression, is the best model at explaining our goal 9 scores with a $R^2\:adjusted$ of 0.81 but in reality does not perform well according to the residual versus fitted plot. The predicted model looks as follow:
 
 $$
 \begin{split}
@@ -369,7 +373,7 @@ $$
 ```{r echo = TRUE, message = FALSE, warning=FALSE}
 #### Residuals vs Fitted plot for goal 9 ####
 
-# Goal 9 ~ others variables
+# Goal 9 ~ others variables plot
 ggplot(mod_9,
        aes(x = .fitted,
            y = .resid)) +
@@ -394,6 +398,6 @@ ggplot(mod_9,
   theme(legend.position = "none")
 ```
 
-As we can see in the graph, the model that tried to explain goal 9 is not as good. The mean residual is not flat and vary a lot. This could suggest non-linearity.
+As we can see in the graph, the model that tries to explain goal 9 is not as good. The mean residual is not flat and vary a lot. This could suggest non-linearity.
 
-To conclude this part, we have seen some interesting relationships between the SDGs scores. We found that if a country is performing well in some goals, it does not necessary mean that it will perform well in the others. Some goals are negatively correlated. We then interested our-self on regrouping some goals together with a principal components analysis and we found that the analysis suggested to regroup some goals that at first sight, would not have been regrouped together. We also performed some stepwise regression to see how thw individual goals could be explained by the other and found that in general the model does not select all variables to explain the given goals. This comes from the high correlation between some goals.
+To conclude this part, we have seen some interesting relationships between the SDGs scores. We found that if a country is performing well in some goals, it does not necessary mean that it will perform well in the others. Some goals are negatively correlated. We then interested our-self on regrouping some goals together with a principal components analysis and we found that the analysis suggested to regroup some goals that at first sight, would not have been regrouped together. We also performed some stepwise regression to see how the individual goals could be explained by the other and found that in general the model does not select all variables to explain the given goals. This comes from the high correlation between some goals.

@@ -1,3 +1,5 @@
+# EDA and Analysis of the data
+
 ## Focus on the influence of the factors over the SDG scores
 
 ```{r setup, echo = FALSE, message = FALSE, warning=FALSE}
@@ -1167,6 +1169,10 @@ ggplot(df_tidy_significant,
            x = estimate,
            color = term)) +
   geom_point() +
+  geom_vline(xintercept = 0,
+             linetype = "solid",
+             size = 0.5,
+             color = viridis(1, option = "B", begin = 0.5)) +
   geom_errorbar(aes(xmin = estimate - std.error, xmax = estimate + std.error),
                 width = 0.2) +
   scale_color_manual(values = myColors) + 
@@ -1197,6 +1203,10 @@ ggplot(df_tidy_positive_p,
            x = estimate,
            color = term)) +
   geom_point() +
+  geom_vline(xintercept = 0,
+             linetype = "solid",
+             size = 0.5,
+             color = viridis(1, option = "B", begin = 0.5)) +
   geom_errorbar(aes(xmin = estimate - std.error, xmax = estimate + std.error),
                 width = 0.2) +
   scale_color_manual(values = myColors) + 
@@ -1223,6 +1233,10 @@ myColors <-
 
 ggplot(df_tidy_positive_n, aes(y = Model, x = estimate, color = term)) +
   geom_point() +
+  geom_vline(xintercept = 0,
+             linetype = "solid",
+             size = 0.5,
+             color = viridis(1, option = "B", begin = 0.5)) +
   geom_errorbar(aes(xmin = estimate - std.error, xmax = estimate + std.error), width = 0.2) +
   scale_color_manual(values = myColors) + 
   theme(axis.text.y = element_text(angle = 0, hjust = 1),
