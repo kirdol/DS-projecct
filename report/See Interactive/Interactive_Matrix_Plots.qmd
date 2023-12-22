@@ -24,109 +24,6 @@ Correlation_overall <- data_question1 %>%
 
 Here you can see an interactive map of the correlation between the climate disasters and the SDG goals in South and East Asia with 1 year gap. To better understand the results, if we select a specific year (e.g., 2020) in the app, the analysis will show correlations between the SDG scores for the selected year (e.g., 2020) and the disaster-related variables (total_affected and total_deaths) from the previous year (e.g., 2019).
 
-```{r, eval = TRUE, echo = FALSE, message = FALSE, warning=FALSE}
-
-library(viridis)
-
-Q3.1 <- Q3.1 %>%
-  arrange(code, year) %>%
-  group_by(code)
-
-disaster_data <- Q3.1[Q3.1$region %in% c("South Asia", "East Asia", "North America"), ]
-
-relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6",
-                      "goal7", "goal8", "goal9", "goal10", "goal11", "goal12",
-                      "goal13", "goal15", "goal16", "total_affected",
-                      "total_deaths")
-
-subset_data <- disaster_data[, relevant_columns]
-
-lagged_subset_data <- subset_data %>%
-  mutate(
-    lagged_total_affected = lag(total_affected, default = NA),
-    lagged_total_deaths = lag(total_deaths, default = NA)
-  )
-
-correlation_matrix_lagged <-
-  cor(lagged_subset_data[, c("lagged_total_affected", "lagged_total_deaths")],
-      subset_data,
-      method = "spearman")
-
-cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
-names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
-
-ui <- fluidPage(
-  titlePanel("Interactive Correlation Heatmap between the climate disasters and the SDG goals in South, East Asia and North America with 1 year gap"),
-  plotlyOutput("heatmap"),
-  sliderInput("year", "Select Year", min = 2000, max = 2021, value = 2012, step = 1),
-  verbatimTextOutput("correlation_output"),
-  actionButton("stopButton", "Stop application")
-)
-
-server <- function(input, output, session) {
-  selected_data <- reactive({
-    filtered_data <- disaster_data[disaster_data$year == input$year, ]
-    subset_data <- filtered_data[, relevant_columns]
-    lagged_subset_data <- subset_data %>%
-      mutate(
-        lagged_total_affected = lag(total_affected, default = NA),
-        lagged_total_deaths = lag(total_deaths, default = NA)
-      )
-    
-    correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_total_affected", "lagged_total_deaths")], subset_data)
-    
-    cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
-    names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
-    
-    return(cor_melted_lagged)
-  })
-  
-  output$heatmap <- renderPlotly({
-    # Generate the Viridis colorscale
-    viridis_scale <- viridis_pal(option = "D")(256)
-    normalized_colors <- seq(0, 1, length.out = length(viridis_scale))
-    viridis_colorscale <- setNames(as.list(viridis_scale), normalized_colors)
-  
-    # Convert to a format suitable for Plotly
-    plotly_colorscale <- lapply(1:length(viridis_colorscale), function(i) {
-      list(normalized_colors[i], viridis_colorscale[[i]])
-    })
-    p <- plot_ly(data = selected_data(),
-                 x = ~Variable1,
-                 y = ~Variable2,
-                 z = ~Correlation, 
-                 type = "heatmap",
-                 colorscale = plotly_colorscale,
-                 zmin = -1, zmax = 1)
-    
-    p <- p %>% layout(
-      title = "",
-      xaxis = list(title = ""),
-      yaxis = list(title = ""),
-      coloraxis = list(
-        colorbar = list(
-          title = "Correlation",  
-          tickvals = c(-1, 0, 1),  
-          ticktext = c("-1", "0", "1"),
-          len = 5,
-          thickness = 20,
-          x = 0,
-          xanchor = "left",
-          ticks = "outside" 
-        )
-      )
-    )
-    return(p)
-  })
-  
-  observeEvent(input$stopButton, {
-    stopApp()  
-  })
-}
-shinyApp(ui = ui, server = server)
-```
-
-
 ```{r, eval = TRUE, echo = FALSE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
 
 library(shiny)
@@ -286,12 +183,10 @@ server <- function(input, output, session) {
   })
   
   output$heatmap <- renderPlotly({
-    # Generate the Viridis colorscale
     viridis_scale <- viridis_pal(option = "D")(256)
     normalized_colors <- seq(0, 1, length.out = length(viridis_scale))
     viridis_colorscale <- setNames(as.list(viridis_scale), normalized_colors)
   
-    # Convert to a format suitable for Plotly
     plotly_colorscale <- lapply(1:length(viridis_colorscale), function(i) {
       list(normalized_colors[i], viridis_colorscale[[i]])
     })
@@ -349,10 +244,10 @@ subset_data <- conflicts_filtered[, relevant_columns]
 
 lagged_subset_data <- subset_data %>%
   mutate(
-    lagged_sum_deaths = lag(sum_deaths, default = NA),
+    lagged_sum_deaths = lag(sum_deaths, default = NA)
   )
 
-correlation_matrix_lagged <- cor(lagged_subset_data[, c("sum_deaths")], subset_data, method = "spearman")
+correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_sum_deaths")], subset_data, method = "spearman")
 
 cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
 names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
@@ -372,7 +267,7 @@ server <- function(input, output, session) {
       mutate(
         lagged_sum_deaths = lag(sum_deaths, default = NA))
     
-    correlation_matrix_lagged <- cor(lagged_subset_data[, c("sum_deaths")], subset_data)
+    correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_sum_deaths")], subset_data)
     
     cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
     names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
@@ -440,10 +335,15 @@ relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goa
 
 subset_data <- conflicts_filtered[, relevant_columns]
 
-correlation_matrix_Conflicts_Pop_Aff <- cor(subset_data, subset_data[, c("pop_affected")])
+lagged_subset_data <- subset_data %>%
+  mutate(
+    lagged_pop_affected = lag(pop_affected, default = NA)
+  )
 
-cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
-names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
+correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_pop_affected")], subset_data, method = "spearman")
+
+cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
+names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
 
 ui <- fluidPage(
   titlePanel("Interactive Correlation Heatmap between population affected in conflicts in selected regions and the SDG goal with one year gap"),
@@ -453,29 +353,128 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  selected_conflicts_data <- reactive({
+  selected_data <- reactive({
     filtered_data <- conflicts_filtered[conflicts_filtered$year == input$year, ]
     subset_data <- filtered_data[, relevant_columns]
-    return(subset_data)
+    lagged_subset_data <- subset_data %>%
+      mutate(
+        lagged_pop_affected = lag(pop_affected, default = NA))
+    
+    correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_pop_affected")], subset_data)
+    
+    cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
+    names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
+    
+    return(cor_melted_lagged)
   })
   
   output$heatmap <- renderPlotly({
-    correlation_matrix_Conflicts_Pop_Aff <- cor(selected_conflicts_data(), selected_conflicts_data()[, c("pop_affected")])
-    cor_melted <- as.data.frame(as.table(correlation_matrix_Conflicts_Pop_Aff))
-    names(cor_melted) <- c("Variable1", "Variable2", "Correlation")
-
-    # Generate the Viridis colorscale
     viridis_scale <- viridis_pal(option = "D")(256)
     normalized_colors <- seq(0, 1, length.out = length(viridis_scale))
     viridis_colorscale <- setNames(as.list(viridis_scale), normalized_colors)
   
-    # Convert to a format suitable for Plotly
     plotly_colorscale <- lapply(1:length(viridis_colorscale), function(i) {
       list(normalized_colors[i], viridis_colorscale[[i]])
     })
+    p <- plot_ly(data = selected_data(),
+                 x = ~Variable1,
+                 y = ~Variable2,
+                 z = ~Correlation, 
+                 type = "heatmap",
+                 colorscale = plotly_colorscale,
+                 zmin = -1, zmax = 1)
     
-    p <- plot_ly(data = cor_melted, x = ~Variable1, y = ~Variable2, z = ~Correlation,
-                 type = "heatmap", colorscale = plotly_colorscale,
+    p <- p %>% layout(
+      title = "",
+      xaxis = list(title = ""),
+      yaxis = list(title = ""),
+      coloraxis = list(
+        colorbar = list(
+          title = "Correlation",
+          tickvals = c(-1, 0, 1), 
+          ticktext = c("-1", "0", "1"), 
+          len = 5,  
+          thickness = 20,  
+          x = 0,  
+          xanchor = "left", 
+          ticks = "outside" 
+        )
+      )
+    )
+    return(p)
+  })
+  
+  observeEvent(input$stopButton, {
+    stopApp() 
+  })
+}
+shinyApp(ui = ui, server = server)
+```
+
+Here's the interactive map of the correlation between the maxintensity in conflicts and the SDG goals with 1 year gap.
+
+```{r, echo = TRUE, message = FALSE, warning=FALSE, cache = FALSE, out.width="100%"}
+
+library(shiny)
+library(plotly)
+
+Q3.3 <- Q3.3 %>%
+  arrange(code,year)%>%
+  group_by(code)
+
+conflicts_filtered <- Q3.3[Q3.3$region %in% c("Middle East & North Africa", "Sub-Saharan Africa", "North America", "South Asia", "East Asia", "Latin America & the Caribbean", "Caucasus & Central Asia", "Eastern Europe"), ]
+
+relevant_columns <- c("goal1", "goal2", "goal3", "goal4", "goal5", "goal6", "goal7", "goal8", "goal9", "goal10", "goal11", "goal12", "goal13", "goal15", "goal16", "maxintensity")
+
+subset_data <- conflicts_filtered[, relevant_columns]
+
+lagged_subset_data <- subset_data %>%
+  mutate(
+    lagged_maxintensity = lag(maxintensity, default = NA)
+  )
+
+correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_maxintensity")], subset_data, method = "spearman")
+
+cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
+names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
+
+ui <- fluidPage(
+  titlePanel("Interactive Correlation Heatmap between the maxintensity in conflicts in selected regions and the SDG goal with one year gap"),
+  plotlyOutput("heatmap"),
+  sliderInput("year", "Select Year", min = 2000, max = 2016, value = 2005, step = 1),
+  actionButton("stopButton", "Stop application")
+)
+
+server <- function(input, output, session) {
+  selected_data <- reactive({
+    filtered_data <- conflicts_filtered[conflicts_filtered$year == input$year, ]
+    subset_data <- filtered_data[, relevant_columns]
+    lagged_subset_data <- subset_data %>%
+      mutate(
+        lagged_maxintensity = lag(maxintensity, default = NA))
+    
+    correlation_matrix_lagged <- cor(lagged_subset_data[, c("lagged_maxintensity")], subset_data)
+    
+    cor_melted_lagged <- reshape2::melt(correlation_matrix_lagged)
+    names(cor_melted_lagged) <- c("Variable2", "Variable1", "Correlation")
+    
+    return(cor_melted_lagged)
+  })
+  
+  output$heatmap <- renderPlotly({
+    viridis_scale <- viridis_pal(option = "D")(256)
+    normalized_colors <- seq(0, 1, length.out = length(viridis_scale))
+    viridis_colorscale <- setNames(as.list(viridis_scale), normalized_colors)
+  
+    plotly_colorscale <- lapply(1:length(viridis_colorscale), function(i) {
+      list(normalized_colors[i], viridis_colorscale[[i]])
+    })
+    p <- plot_ly(data = selected_data(),
+                 x = ~Variable1,
+                 y = ~Variable2,
+                 z = ~Correlation, 
+                 type = "heatmap",
+                 colorscale = plotly_colorscale,
                  zmin = -1, zmax = 1)
     
     p <- p %>% layout(
