@@ -794,12 +794,29 @@ Regarding the impact of the adoption of SDGs in 2015, we can not tell that it ha
 data_after_2015 <- filter(binary2015, as.numeric(year) >= 2015)
 data_before_2016 <- filter(binary2015, as.numeric(year) <= 2015)
 
+# Different patterns across SDGs before and after 2015 plotly
 plotly::plot_ly() %>%
-  plotly::add_trace(data = data_after_2015, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_after_2015)), type = 'scatter', mode = 'lines', line = list(color = Fix_color), name = "After 2015") %>%
-  plotly::add_trace(data = data_before_2016, x = ~year, y = ~fitted(lm(overallscore ~ year, data = data_before_2016)), type = 'scatter', mode = 'lines', line = list(color = viridis(1)), name = "Before 2015") %>%
+  plotly::add_trace(data = data_after_2015,
+                    x = ~year,
+                    y = ~fitted(lm(overallscore ~ year,
+                                   data = data_after_2015)),
+                    type = 'scatter',
+                    mode = 'lines',
+                    line = list(color = Fix_color),
+                    name = "After 2015") %>%
+  plotly::add_trace(data = data_before_2016,
+                    x = ~year,
+                    y = ~fitted(lm(overallscore ~ year,
+                                   data = data_before_2016)),
+                    type = 'scatter',
+                    mode = 'lines',
+                    line = list(color = viridis(1,
+                                                direction = -1)),
+                    name = "Before 2015") %>%
   plotly::layout(title = "Different patterns across SDGs before and after 2015",
          xaxis = list(title = "Year"),
-         yaxis = list(title = "SDG achievement score", range = c(30, 90)),
+         yaxis = list(title = "SDG achievement score",
+                      range = c(30, 90)),
          shapes = list(
            list(
              type = 'line',
@@ -808,7 +825,11 @@ plotly::plot_ly() %>%
              y0 = 0,
              y1 = 1,
              yref = 'paper',
-             line = list(color = 'grey', width = 2, dash = 'dot')
+             line = list(color = viridis(1,
+                             option = "B",
+                             begin = 0.5) ,
+                         width = 2,
+                         dash = 'dot')
            )
          ),
          updatemenus = list(
