@@ -4,58 +4,64 @@
 
 # load the required packages and install them if they are not.
 packages <- c(
-  "here", # for the project's organization
-  "tidyverse", # for wrangling
-  "ggrepel", "gghighlight", "patchwork", "maps", "scales", # for plotting
-  "stringr",
-  "tidyr",
-  "lubridate",
-  "gridExtra",
-  "grid",
-  "readr",
-  "readxl",
-  "ggplot2",
-  "countrycode", 
-  "stringi",
-  "forecast",
-  "tibble",
-  "reshape2",
-  "corrplot",
-  "stargazer",
-  "tinytex",
-  "cowplot",
-  "sf",
-  "dplyr",
-  "rnaturalearth",
-  "knitr",
-  "kableExtra",
-  "DT",
-  "FactoMineR",
-  "factoextra",
-  "dplyr",
-  "visdat",
-  "huxtable",
-  "plm",
-  "plotly",
-  "stargazer",
-  "patchwork",
-  "e1071",
-  "car",
-  "naniar",
-  "ggridges",
-  "shiny",
-  "leaps",
-  "shinydashboard",
-  "broom",
-  "viridis",
-  "paletteer",
-  "RColorBrewer"
+  "here", # Path management
+  "tidyverse", # Data manipulation
+  "ggrepel", # Labeling
+  "gghighlight", # Highlighting
+  "patchwork", # Plot layout management
+  "maps", # Geographical map data
+  "scales", # Graph scaling tools
+  "stringr", # Strings manipulation
+  "tidyr", # Data tidying
+  "lubridate", # Date/time manipulation
+  "gridExtra", # Grid graphics enhancements
+  "grid", # Grids
+  "readr", # Data Reading
+  "readxl", # Excel file reading
+  "ggplot2", # Visualization (plot)
+  "countrycode", # Country code conversion
+  "stringi", # Strings manipulation
+  "forecast", # Forecasting
+  "tibble", # Data frames
+  "reshape2", # Reshaping
+  "corrplot", # Correlations
+  "stargazer", # Formatting
+  "tinytex", # LaTeX
+  "cowplot", # Plotting
+  "sf", # Simple features for spatial data
+  "dplyr", # Manipulation
+  "rnaturalearth", # Maps
+  "knitr", # Reporting
+  "kableExtra", # Tables
+  "DT", # Tables
+  "FactoMineR", # Multivariate analysis
+  "factoextra", # FactoMineR visualization
+  "dplyr", # Manipulation
+  "visdat", # Visualization
+  "huxtable", # Tables
+  "plm", # Models
+  "plotly", # Interactive
+  "stargazer", # Formatting
+  "patchwork", # Layouts
+  "e1071", # Functions
+  "car", # Regression
+  "naniar", # Missing data
+  "ggridges", # Plots
+  "shiny", # Apps
+  "leaps", # Regression subset selection
+  "shinydashboard", # Dashboards
+  "broom", # Tidy model outputs
+  "viridis", # Colors palettes
+  "paletteer", # Colors palettes
+  "RColorBrewer" # Colors palettes
 )
 
+# Function that install the packages if not already installed on your computer
 for (pkg in packages) {
   if (!pkg %in% installed.packages()) {
     install.packages(pkg)}}
 
+# load the packages
 for (pkg in packages) {
   library(pkg, character.only = TRUE)}
 
@@ -63,6 +69,7 @@ for (pkg in packages) {
 ## Setting some parameters ##
 #############################
 
+# Threshols
 threshold_heatmap <- 0.75
 p_value_threshold <- 0.05
 
@@ -130,8 +137,5 @@ knitr::opts_chunk$set(
   message = FALSE,
   echo = FALSE
 )
-
-# cleaning of the environment
-rm(packages, pkg)
 
    
