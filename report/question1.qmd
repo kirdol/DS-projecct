@@ -664,7 +664,9 @@ fviz_eig(myPCA_s,
                            option = "D",
                            begin = 0,
                            end = 0.8)) +
-  theme_minimal()
+  theme_minimal() + 
+  ggtitle("                                          PCA - Scree plot")
+
 
 summary(myPCA_s)
 ```
@@ -682,7 +684,8 @@ fviz_pca_biplot(myPCA_s,
                 pointsize = 0.05,
                 labelsize = 3,
                 repel = TRUE) +
-  theme_minimal()
+  theme_minimal() + 
+  ggtitle("                                          PCA - Biplot")
 
 ```
 

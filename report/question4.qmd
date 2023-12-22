@@ -121,7 +121,8 @@ fviz_pca_biplot(pca_result,
                 col.var = Fix_color,
                 geom = "point",
                 pointsize = 0.1,
-                labelsize = 3) + 
+                labelsize = 3,
+                repel = TRUE) + 
   ggtitle("                                           PCA - Biplot") +
   theme_minimal()
 ```
