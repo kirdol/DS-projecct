@@ -67,11 +67,11 @@ Now let's focus on the distribution of the Human Freedom Index scores. Same orde
 
 ggplot(long_df_hfi_distribution, aes(x = Value,
                                      y = Category,
-                                     fill = ..density..)) +
+                                     fill = ..count..)) +
   geom_density_ridges_gradient(scale = 3,
                                size = 0.3,
                                rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "density",
+  scale_fill_viridis_c(name = "Density",
                        option = "D") +
   theme(plot.title = element_text(hjust = 0.5),
         plot.title.position = "plot") + 
@@ -94,7 +94,7 @@ unempl_d <- ggplot(Correlation_overall,
   geom_density_ridges_gradient(scale = 3,
                                size = 0.3,
                                rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "",
+  scale_fill_viridis_c(name = "Density",
                        option = "D") +
   theme(plot.title = element_text(hjust = 0.5,
                                   size = 10),
@@ -111,7 +111,7 @@ gdp_d <- ggplot(Correlation_overall,
   geom_density_ridges_gradient(scale = 3,
                                size = 0.3,
                                rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "",
+  scale_fill_viridis_c(name = "Density",
                        option = "D") +
   theme(plot.title = element_text(hjust = 0.5,
                                   size = 10),
@@ -128,7 +128,7 @@ milit_d <- ggplot(Correlation_overall,
   geom_density_ridges_gradient(scale = 3,
                                size = 0.3,
                                rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "",
+  scale_fill_viridis_c(name = "Density",
                        option = "D") +
   theme(plot.title = element_text(hjust = 0.5,
                                   size = 10), # Center the title
@@ -145,7 +145,7 @@ internet_d <- ggplot(Correlation_overall,
   geom_density_ridges_gradient(scale = 3,
                                size = 0.3,
                                rel_min_height = 0.01) +
-  scale_fill_viridis_c(name = "",
+  scale_fill_viridis_c(name = "Density",
                        option = "D") + 
   theme(plot.title = element_text(hjust = 0.5,
                                   size = 10),
